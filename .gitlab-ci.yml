@@ -3,8 +3,25 @@ services:
   - name: docker:dind
 
 stages:
+  - build_app
   - build
   - deploy
+
+build_app:
+  stage: build_app
+  image: maven:3.8.2-jdk-11
+  script:
+    - cp src/main/resources/application.properties.staging src/main/resources/application.properties
+    - mvn clean package -DskipTests
+    - ls src/main/resources/
+    - cat src/main/resources/application.properties
+    - ls -lah target
+  only:
+    - staging
+  artifacts:
+    paths:
+      - "target/"
+    expire_in: 1 days
 
 image_build:
   stage: build
