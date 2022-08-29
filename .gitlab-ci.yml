@@ -38,7 +38,7 @@ deploy_staging:
       else
          kubectl create secret docker-registry regcred --docker-server="${CI_REGISTRY}" --docker-username=gitlab-ci-token --docker-password="${CI_JOB_TOKEN}" -n kawah || exit 1
       fi 
-- sed -i "s/__CI_ENVIRONMENT_SLUG__/${CI_ENVIRONMENT_SLUG}/" deployment.yaml service.yaml
+    - sed -i "s/__CI_ENVIRONMENT_SLUG__/${CI_ENVIRONMENT_SLUG}/" deployment.yaml service.yaml
     - sed -i "s/__CI_PROJECT_NAME__/${CI_PROJECT_NAME}/" deployment.yaml service.yaml
     - sed -i "s,__IMAGE__:__VERSION__,${CI_REGISTRY_IMAGE}:$CI_BUILD_REF," deployment.yaml
     - kubectl apply -f deployment.yaml -n kawah
