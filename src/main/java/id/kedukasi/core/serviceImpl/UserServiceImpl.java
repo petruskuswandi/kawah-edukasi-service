@@ -89,13 +89,13 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<?> createUser(SignupRequest signUpRequest) {
     result = new Result();
 
-    if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-      result.setMessage("Error: Username is already taken!");
-      result.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
-      return ResponseEntity
-          .badRequest()
-          .body(result);
-    }
+    // if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+    //   result.setMessage("Error: Username is already taken!");
+    //   result.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
+    //   return ResponseEntity
+    //       .badRequest()
+    //       .body(result);
+    // }
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
       result.setMessage("Error: Email is already in use!");
       result.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
@@ -103,8 +103,13 @@ public class UserServiceImpl implements UserService {
           .badRequest()
           .body(result);
     }
-    User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
+
+   
+    User user = new User(signUpRequest.getEmail(), signUpRequest.getEmail(),
         encoder.encode(signUpRequest.getPassword()), StringUtil.getRandomNumberString());
+
+    // User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
+    //     encoder.encode(signUpRequest.getPassword()), StringUtil.getRandomNumberString());
 
     Set<String> strRoles = signUpRequest.getRole();
     Set<Role> roles = new HashSet<>();

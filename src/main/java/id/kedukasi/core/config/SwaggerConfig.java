@@ -26,7 +26,7 @@ public class SwaggerConfig {
   public static final String AUTHORIZATION_HEADER = "Authorization";
 
   private ApiInfo apiInfo() {
-    return new ApiInfo("API User Management", "", "1.0", "Terms of service",
+    return new ApiInfo("Kedukasi API", "", "1.0", "Terms of service",
         new Contact("", "", ""), "License of API", "API license URL",
         Collections.emptyList());
   }
