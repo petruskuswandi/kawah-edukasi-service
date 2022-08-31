@@ -5,23 +5,23 @@ import java.util.Arrays;
 
 public class Result {
 
-  private String code;
+  private int code;
   private boolean success;
   private String message;
   private Object data;
 
   public Result() {
-    this.code = "";
+    this.code = 200;
     this.success = true;
     this.message = "success";
     this.data = Arrays.asList();
   }
 
-  public String getCode() {
+  public int getCode() {
     return code;
   }
 
-  public void setCode(String code) {
+  public void setCode(int code) {
     this.code = code;
   }
 

@@ -1,17 +1,22 @@
 package id.kedukasi.core.serviceImpl;
 
 import id.kedukasi.core.enums.EnumRole;
+import id.kedukasi.core.exception.TokenRefreshException;
 import id.kedukasi.core.models.JwtResponse;
 import id.kedukasi.core.models.LoginRequest;
+import id.kedukasi.core.models.RefreshToken;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.models.Role;
 import id.kedukasi.core.models.User;
 import id.kedukasi.core.repository.RoleRepository;
 import id.kedukasi.core.repository.UserRepository;
 import id.kedukasi.core.models.SignupRequest;
+import id.kedukasi.core.models.TokenRefreshRequest;
+import id.kedukasi.core.models.TokenRefreshResponse;
 import id.kedukasi.core.service.UserService;
 import id.kedukasi.core.utils.JwtUtils;
 import id.kedukasi.core.utils.StringUtil;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +27,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,6 +58,12 @@ public class UserServiceImpl implements UserService {
   @Autowired
   JwtUtils jwtUtils;
 
+  @Autowired
+  RefreshTokenService refreshTokenService;
+
+  @Value("${bezkoder.app.jwtExpirationMs}")
+  private int jwtExpirationMs;
+
   private Result result;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -62,7 +74,6 @@ public class UserServiceImpl implements UserService {
       Map items = new HashMap();
       items.put("items", userRepository.findAll());
       result.setData(items);
-      result.setCode(String.valueOf(HttpStatus.OK.value()));
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
     }
@@ -77,7 +88,6 @@ public class UserServiceImpl implements UserService {
       Map items = new HashMap();
       items.put("items", userRepository.findById(id));
       result.setData(items);
-      result.setCode(String.valueOf(HttpStatus.OK.value()));
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
     }
@@ -89,27 +99,23 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<?> createUser(SignupRequest signUpRequest) {
     result = new Result();
 
-    // if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-    //   result.setMessage("Error: Username is already taken!");
-    //   result.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
-    //   return ResponseEntity
-    //       .badRequest()
-    //       .body(result);
-    // }
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
       result.setMessage("Error: Email is already in use!");
-      result.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return ResponseEntity
+          .badRequest()
+          .body(result);
+    }
+    if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+      result.setMessage("Error: Usename is already taken!");
+      result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
           .badRequest()
           .body(result);
     }
 
-   
-    User user = new User(signUpRequest.getEmail(), signUpRequest.getEmail(),
+    User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
         encoder.encode(signUpRequest.getPassword()), StringUtil.getRandomNumberString());
-
-    // User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
-    //     encoder.encode(signUpRequest.getPassword()), StringUtil.getRandomNumberString());
 
     Set<String> strRoles = signUpRequest.getRole();
     Set<Role> roles = new HashSet<>();
@@ -143,28 +149,41 @@ public class UserServiceImpl implements UserService {
     userRepository.save(user);
 
     result.setMessage("User registered successfully!");
-    result.setCode(String.valueOf(HttpStatus.OK.value()));
+    result.setCode(HttpStatus.OK.value());
     return ResponseEntity.ok(result);
   }
 
   @Override
   public ResponseEntity signIn(LoginRequest loginRequest, String uri) {
-    Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    String jwt = jwtUtils.generateJwtToken(authentication);
+    result = new Result();
+    User getUser = userRepository.findByEmail(loginRequest.getEmail()).orElse(new User());
+    if (getUser.getUsername() != null) {
+      Date dateNow = new Date();
+      Date dateExpired = new Date((dateNow).getTime() + jwtExpirationMs);
 
-    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-    List<String> roles = userDetails.getAuthorities().stream()
-        .map(item -> item.getAuthority())
-        .collect(Collectors.toList());
+      Authentication authentication = authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(getUser.getUsername(), loginRequest.getPassword()));
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+      String jwt = jwtUtils.generateJwtToken(authentication, dateNow, dateExpired);
 
-    userRepository.setIsLogin(true, userDetails.getId());
-    return ResponseEntity.ok(new JwtResponse(jwt,
-        userDetails.getId(),
-        userDetails.getUsername(),
-        userDetails.getEmail(),
-        roles));
+      UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+      List<String> roles = userDetails.getAuthorities().stream()
+          .map(item -> item.getAuthority())
+          .collect(Collectors.toList());
+
+      RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
+      result.setSuccess(true);
+      result.setMessage("success");
+      result.setData(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(),
+          userDetails.getEmail(), roles, dateExpired.getTime()));
+    }else{
+      result.setSuccess(true);
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      result.setMessage("Email not registered");
+    }
+
+    return ResponseEntity.ok(result);
   }
 
   @Override
@@ -174,11 +193,10 @@ public class UserServiceImpl implements UserService {
       int status = userRepository.setIsLogin(false, id);
       if (status == 1) {
         result.setMessage("success");
-        result.setCode(String.valueOf(HttpStatus.OK.value()));
       } else {
         result.setMessage("failed");
         result.setSuccess(false);
-        result.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
+        result.setCode(HttpStatus.BAD_REQUEST.value());
       }
 
     } catch (Exception e) {
@@ -189,17 +207,18 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Result active(long id, String tokenVerification, String uri) {
+  public Result active(long id, String tokenVerification,
+      String uri
+  ) {
     result = new Result();
     try {
       int status = userRepository.setIsActive(true, id, tokenVerification);
       if (status == 1) {
         result.setMessage("user is actived");
-        result.setCode(String.valueOf(HttpStatus.OK.value()));
       } else {
         result.setMessage("failed");
         result.setSuccess(false);
-        result.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
+        result.setCode(HttpStatus.BAD_REQUEST.value());
       }
 
     } catch (Exception e) {
@@ -207,5 +226,34 @@ public class UserServiceImpl implements UserService {
     }
 
     return result;
+  }
+
+  @Override
+  public ResponseEntity<?> refreshToken(TokenRefreshRequest tokenRefreshRequest) {
+    String requestRefreshToken = tokenRefreshRequest.getRefreshToken();
+    return refreshTokenService.findByToken(requestRefreshToken)
+        .map(refreshTokenService::verifyExpiration)
+        .map(RefreshToken::getUser)
+        .map(user -> {
+          String token = jwtUtils.generateTokenFromUsername(user.getUsername());
+          return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+        })
+        .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+        "Refresh token is not in database!"));
+  }
+
+  @Override
+  public ResponseEntity<?> updateUser(User user) {
+    result = new Result();
+
+    if (userRepository.existsByEmail(user.getEmail())) {
+      result.setMessage("Error: Email is already in use!");
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return ResponseEntity
+          .badRequest()
+          .body(result);
+    }
+
+    return ResponseEntity.ok(result);
   }
 }

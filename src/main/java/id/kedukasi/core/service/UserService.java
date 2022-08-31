@@ -3,12 +3,18 @@ package id.kedukasi.core.service;
 import id.kedukasi.core.models.LoginRequest;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.models.SignupRequest;
+import id.kedukasi.core.models.TokenRefreshRequest;
+import id.kedukasi.core.models.User;
 import org.springframework.http.ResponseEntity;
 
 
 public interface UserService {
 
   ResponseEntity<?> createUser(SignupRequest signUpRequest);
+  
+  ResponseEntity<?> updateUser(User user);
+  
+  ResponseEntity<?> refreshToken(TokenRefreshRequest tokenRefreshRequest);
 
   ResponseEntity<?> signIn(LoginRequest loginRequest, String uri);
 
