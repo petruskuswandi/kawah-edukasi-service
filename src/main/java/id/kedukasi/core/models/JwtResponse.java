@@ -1,7 +1,5 @@
 package id.kedukasi.core.models;
 
-import java.util.List;
-
 public class JwtResponse {
 
   private String token;
@@ -10,17 +8,17 @@ public class JwtResponse {
   private Long id;
   private String username;
   private String email;
-  private List<String> roles;
+  private Role role;
   private long expired;
 
   public JwtResponse(String accessToken, String refreshToken, Long id, String username,
-      String email, List<String> roles, long expired) {
+      String email, Role role, long expired) {
     this.token = accessToken;
     this.refreshToken = refreshToken;
     this.id = id;
     this.username = username;
     this.email = email;
-    this.roles = roles;
+    this.role = role;
     this.expired = expired;
   }
 
@@ -39,7 +37,6 @@ public class JwtResponse {
   public void setRefreshToken(String refreshToken) {
     this.refreshToken = refreshToken;
   }
-  
 
   public String getTokenType() {
     return type;
@@ -73,8 +70,12 @@ public class JwtResponse {
     this.username = username;
   }
 
-  public List<String> getRoles() {
-    return roles;
+  public Role getRole() {
+    return role;
+  }
+
+  public void setRole(Role role) {
+    this.role = role;
   }
 
   public long getExpired() {
@@ -84,6 +85,5 @@ public class JwtResponse {
   public void setExpired(long expired) {
     this.expired = expired;
   }
-  
-  
+
 }

@@ -1,8 +1,8 @@
 package id.kedukasi.core.models;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,13 +10,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "users",
@@ -24,6 +25,7 @@ import javax.validation.constraints.Size;
       @UniqueConstraint(columnNames = "username"),
       @UniqueConstraint(columnNames = "email")
     })
+@DynamicUpdate
 public class User implements Serializable {
 
   @Id
@@ -39,21 +41,27 @@ public class User implements Serializable {
   @Email
   private String email;
 
+  @Lob
+  @Column(name = "profilePicture", updatable = false)
+  @ApiModelProperty(hidden = true)
+  private byte[] profilePicture;
+
   @NotBlank
   @Size(max = 120)
   private String password;
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles",
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private Set<Role> roles = new HashSet<>();
+  private Role roles;
 
-  private boolean isLogin = false;
-  private boolean isActive = false;
+  private boolean isLogin;
+  private boolean isActive;
 
-  @NotBlank
   @Size(max = 6)
+  @ApiModelProperty(hidden = true)
+  @Column(name = "tokenVerification", updatable = false)
   private String tokenVerification;
 
   public User() {
@@ -98,11 +106,11 @@ public class User implements Serializable {
     this.password = password;
   }
 
-  public Set<Role> getRoles() {
+  public Role getRoles() {
     return roles;
   }
 
-  public void setRoles(Set<Role> roles) {
+  public void setRoles(Role roles) {
     this.roles = roles;
   }
 
@@ -128,6 +136,14 @@ public class User implements Serializable {
 
   public void setTokenVerification(String tokenVerification) {
     this.tokenVerification = tokenVerification;
+  }
+
+  public byte[] getProfilePicture() {
+    return profilePicture;
+  }
+
+  public void setProfilePicture(byte[] profilePicture) {
+    this.profilePicture = profilePicture;
   }
 
 }

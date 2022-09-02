@@ -1,14 +1,10 @@
 package id.kedukasi.core.controller;
 
-import id.kedukasi.core.exception.TokenRefreshException;
 import id.kedukasi.core.models.LoginRequest;
-import id.kedukasi.core.models.RefreshToken;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.models.SignupRequest;
 import id.kedukasi.core.models.TokenRefreshRequest;
-import id.kedukasi.core.models.TokenRefreshResponse;
 import id.kedukasi.core.service.UserService;
-import id.kedukasi.core.serviceImpl.RefreshTokenService;
 import id.kedukasi.core.utils.StringUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -36,9 +32,6 @@ public class AuthController {
 
   @Autowired
   HttpServletRequest request;
-
-  @Autowired
-  RefreshTokenService refreshTokenService;
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

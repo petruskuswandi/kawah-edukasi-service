@@ -16,14 +16,12 @@ import id.kedukasi.core.models.TokenRefreshResponse;
 import id.kedukasi.core.service.UserService;
 import id.kedukasi.core.utils.JwtUtils;
 import id.kedukasi.core.utils.StringUtil;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import java.util.Objects;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -85,9 +84,17 @@ public class UserServiceImpl implements UserService {
   public Result getUserById(long id, String uri) {
     result = new Result();
     try {
-      Map items = new HashMap();
-      items.put("items", userRepository.findById(id));
-      result.setData(items);
+      User user = userRepository.findById(id);
+      if (user == null) {
+        result.setSuccess(false);
+        result.setMessage("cannot find user");
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+      } else {
+        Map items = new HashMap();
+        items.put("items", userRepository.findById(id));
+        result.setData(items);
+      }
+
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
     }
@@ -117,33 +124,31 @@ public class UserServiceImpl implements UserService {
     User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
         encoder.encode(signUpRequest.getPassword()), StringUtil.getRandomNumberString());
 
-    Set<String> strRoles = signUpRequest.getRole();
-    Set<Role> roles = new HashSet<>();
-    if (strRoles == null) {
+    Role role = signUpRequest.getRole();
+//    Set<Role> roles = new HashSet<>();
+    if (role == null) {
       Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
           .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-      roles.add(userRole);
+      role = userRole;
     } else {
-      strRoles.forEach(role -> {
-        switch (role) {
-          case "admin":
-            Role adminRole = roleRepository.findByName(EnumRole.ROLE_ADMIN)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(adminRole);
-            break;
-          case "mod":
-            Role modRole = roleRepository.findByName(EnumRole.ROLE_MODERATOR)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(modRole);
-            break;
-          default:
-            Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-        }
-      });
+      switch (role.getId()) {
+        case 1:
+          Role adminRole = roleRepository.findByName(EnumRole.ROLE_USER)
+              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+          role = adminRole;
+          break;
+        case 2:
+          Role modRole = roleRepository.findByName(EnumRole.ROLE_MODERATOR)
+              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+          role = modRole;
+          break;
+        default:
+          Role userRole = roleRepository.findByName(EnumRole.ROLE_ADMIN)
+              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+          role = userRole;
+      }
     }
-    user.setRoles(roles);
+    user.setRoles(role);
     user.setIsActive(false);
     user.setIsLogin(false);
     userRepository.save(user);
@@ -154,7 +159,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public ResponseEntity signIn(LoginRequest loginRequest, String uri) {
+  public ResponseEntity<?> signIn(LoginRequest loginRequest, String uri) {
     result = new Result();
     User getUser = userRepository.findByEmail(loginRequest.getEmail()).orElse(new User());
     if (getUser.getUsername() != null) {
@@ -167,22 +172,18 @@ public class UserServiceImpl implements UserService {
       String jwt = jwtUtils.generateJwtToken(authentication, dateNow, dateExpired);
 
       UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-      List<String> roles = userDetails.getAuthorities().stream()
-          .map(item -> item.getAuthority())
-          .collect(Collectors.toList());
-
+      Role role = roleRepository.findByName(EnumRole.valueOf(userDetails.getAuthorities().stream().findAny().get().getAuthority())).orElse(new Role());
       RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
       result.setSuccess(true);
       result.setMessage("success");
       result.setData(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(),
-          userDetails.getEmail(), roles, dateExpired.getTime()));
-    }else{
+          userDetails.getEmail(), role, dateExpired.getTime()));
+    } else {
       result.setSuccess(true);
       result.setCode(HttpStatus.BAD_REQUEST.value());
       result.setMessage("Email not registered");
     }
-
     return ResponseEntity.ok(result);
   }
 
@@ -245,13 +246,70 @@ public class UserServiceImpl implements UserService {
   @Override
   public ResponseEntity<?> updateUser(User user) {
     result = new Result();
+    try {
+      User checkUserEmail = userRepository.findByEmail(user.getEmail()).orElse(new User());
+      if (checkUserEmail.getUsername() != null && !Objects.equals(user.getId(), checkUserEmail.getId())) {
+        result.setMessage("Error: Email is already in use!");
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity
+            .badRequest()
+            .body(result);
+      }
+      
+      User checkUserUsername = userRepository.findByUsername(user.getUsername()).orElse(new User());
+      if (checkUserUsername.getUsername() != null && !Objects.equals(user.getId(), checkUserUsername.getId())) {
+        result.setMessage("Error: Username is already taken!");
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity
+            .badRequest()
+            .body(result);
+      }
 
-    if (userRepository.existsByEmail(user.getEmail())) {
-      result.setMessage("Error: Email is already in use!");
-      result.setCode(HttpStatus.BAD_REQUEST.value());
-      return ResponseEntity
-          .badRequest()
-          .body(result);
+      Role role = user.getRoles();
+
+      if (role == null) {
+        Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
+            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        role = userRole;
+      } else {
+
+        switch (role.getId()) {
+          case 3:
+            Role adminRole = roleRepository.findByName(EnumRole.ROLE_ADMIN)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            role = adminRole;
+            break;
+          case 2:
+            Role modRole = roleRepository.findByName(EnumRole.ROLE_MODERATOR)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            role = modRole;
+            break;
+          default:
+            Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            role = userRole;
+        }
+      }
+      user.setPassword(encoder.encode(user.getPassword()));
+      user.setRoles(role);
+      userRepository.save(user);
+
+      result.setMessage("User update successfully!");
+      result.setCode(HttpStatus.OK.value());
+    } catch (Exception e) {
+      logger.error(stringUtil.getError(e));
+    }
+
+    return ResponseEntity.ok(result);
+  }
+
+  @Override
+  public ResponseEntity<?> updateProfilePicture(long id, MultipartFile profilePicture, String uri) {
+    result = new Result();
+    try {
+      userRepository.updateProfilePicture(IOUtils.toByteArray(profilePicture.getInputStream()), id);
+    } catch (IOException e) {
+      logger.error(stringUtil.getError(e));
     }
 
     return ResponseEntity.ok(result);
