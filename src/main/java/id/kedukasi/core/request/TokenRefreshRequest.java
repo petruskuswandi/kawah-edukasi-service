@@ -1,4 +1,4 @@
-package id.kedukasi.core.models;
+package id.kedukasi.core.request;
 
 import javax.validation.constraints.NotBlank;
 

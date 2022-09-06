@@ -15,7 +15,7 @@ import id.kedukasi.core.repository.UserRepository;
 @Service
 public class RefreshTokenService {
 
-  @Value("${bezkoder.app.jwtRefreshExpirationMs}")
+  @Value("${kedukasi.app.jwtRefreshExpirationMs}")
   private Long refreshTokenDurationMs;
 
   @Autowired

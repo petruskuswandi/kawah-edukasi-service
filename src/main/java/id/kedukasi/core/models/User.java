@@ -2,6 +2,7 @@ package id.kedukasi.core.models;
 
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +14,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -46,6 +49,10 @@ public class User implements Serializable {
   @ApiModelProperty(hidden = true)
   private byte[] profilePicture;
 
+  @Column(name = "profilePicturePath", updatable = false)
+  @ApiModelProperty(hidden = true)
+  private String profilePicturePath;
+
   @NotBlank
   @Size(max = 120)
   private String password;
@@ -64,14 +71,35 @@ public class User implements Serializable {
   @Column(name = "tokenVerification", updatable = false)
   private String tokenVerification;
 
+  @Column(name = "created_time", updatable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date created_time;
+
+  @Column(name = "updated_time")
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date updated_time;
+
+  @Column(name = "banned", updatable = false)
+  private boolean banned;
+
+  @Column(name = "banned_time", updatable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date banned_time;
+
   public User() {
   }
 
   public User(String username, String email, String password, String tokenVerification) {
+    Date date = new Date();
+
     this.username = username;
     this.email = email;
     this.password = password;
     this.tokenVerification = tokenVerification;
+    this.created_time = date;
+    this.updated_time = date;
+    this.banned = false;
+    this.banned_time = date;
   }
 
   public Long getId() {
@@ -146,4 +174,44 @@ public class User implements Serializable {
     this.profilePicture = profilePicture;
   }
 
+  public Date getCreated_time() {
+    return created_time;
+  }
+
+  public void setCreated_time(Date created_time) {
+    this.created_time = created_time;
+  }
+
+  public Date getUpdated_time() {
+    return updated_time;
+  }
+
+  public void setUpdated_time(Date updated_time) {
+    this.updated_time = updated_time;
+  }
+
+  public boolean isBanned() {
+    return banned;
+  }
+
+  public void setBanned(boolean banned) {
+    this.banned = banned;
+  }
+
+  public Date getBanned_time() {
+    return banned_time;
+  }
+
+  public void setBanned_time(Date banned_time) {
+    this.banned_time = banned_time;
+  }
+
+  public String getProfilePicturePath() {
+    return profilePicturePath;
+  }
+
+  public void setProfilePicturePath(String profilePicturePath) {
+    this.profilePicturePath = profilePicturePath;
+  }
+  
 }

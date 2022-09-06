@@ -1,9 +1,9 @@
 package id.kedukasi.core.controller;
 
-import id.kedukasi.core.models.LoginRequest;
+import id.kedukasi.core.request.LoginRequest;
 import id.kedukasi.core.models.Result;
-import id.kedukasi.core.models.SignupRequest;
-import id.kedukasi.core.models.TokenRefreshRequest;
+import id.kedukasi.core.request.SignupRequest;
+import id.kedukasi.core.request.TokenRefreshRequest;
 import id.kedukasi.core.service.UserService;
 import id.kedukasi.core.utils.StringUtil;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,7 +59,7 @@ public class AuthController {
     return service.signOut(id, uri);
   }
 
-  @PostMapping("/active")
+  @GetMapping("/active")
   public Result active(
       @RequestParam(value = "id", defaultValue = "0", required = true) long id,
       @RequestParam(value = "tokenVerification", defaultValue = "", required = true) String tokenVerification
@@ -66,6 +68,25 @@ public class AuthController {
     logger.info(uri);
 
     return service.active(id, tokenVerification, uri);
+  }
+
+  @PatchMapping("/change_password")
+  public ResponseEntity<?> changePassword(
+      @RequestParam(value = "id", defaultValue = "0", required = true) long id,
+      @RequestParam(value = "password", defaultValue = "", required = true) String password) {
+    String uri = stringUtil.getLogParam(request);
+    logger.info(uri);
+
+    return service.changePassword(id, password, uri);
+  }
+
+  @PostMapping("/forgot_password")
+  public ResponseEntity<?> forgotPassword(
+      @RequestParam(value = "email", defaultValue = "", required = true) String email) {
+    String uri = stringUtil.getLogParam(request);
+    logger.info(uri);
+
+    return service.forgotPassword(email, uri);
   }
 
   @PostMapping("/refreshtoken")

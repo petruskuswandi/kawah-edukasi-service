@@ -40,4 +40,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Transactional
   @Query("update User u set u.profilePicture = ?1 where u.id = ?2 ")
   int updateProfilePicture(byte[] image, Long id);
+
+  @Modifying
+  @Transactional
+  @Query("update User u set u.banned = ?1, u.banned_time = CURRENT_TIMESTAMP where u.id = ?2")
+  int deleteUser(boolean banned, Long id);
+  
+  @Modifying
+  @Transactional
+  @Query("update User u set u.password = ?1, u.updated_time = CURRENT_TIMESTAMP where u.id = ?2")
+  int changePassword(String password, Long id);
+
+  @Modifying
+  @Transactional
+  @Query("update User u set u.profilePicturePath = ?1, u.updated_time = CURRENT_TIMESTAMP where u.id = ?2")
+  int setProfilePicturePath(String profilePicturePath, Long id);
 }

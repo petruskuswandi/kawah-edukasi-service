@@ -2,6 +2,7 @@ package id.kedukasi.core.controller;
 
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.models.User;
+import id.kedukasi.core.service.FilesStorageService;
 import id.kedukasi.core.service.UserService;
 import id.kedukasi.core.utils.StringUtil;
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,19 +64,40 @@ public class UserController {
     return service.updateUser(user);
   }
 
-  @PostMapping("/update")
+  @PutMapping("/update")
   public ResponseEntity<?> updateUser(@Valid @RequestBody User user) {
 
     return service.updateUser(user);
   }
 
-  @PostMapping(value = "/updateProfilePictureBlob", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PatchMapping(value = "/delete")
+  public ResponseEntity<?> deleteUser(
+      @RequestParam(value = "id", defaultValue = "0", required = true) long id,
+      @RequestParam(value = "banned", defaultValue = "true") boolean banned
+  ) {
+
+    String uri = stringUtil.getLogParam(request);
+    logger.info(uri);
+    return service.deleteUser(banned, id, uri);
+  }
+
+  @PatchMapping(value = "/updateProfilePictureBlob", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<?> updateProfilePicture(
       @RequestParam(value = "id", defaultValue = "0", required = true) long id,
       @RequestPart("profilePicture") MultipartFile profilePicture) {
 
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
-    return service.updateProfilePicture(id, profilePicture, uri);
+    return service.updateProfilePictureBlob(id, profilePicture, uri);
+  }
+
+  @PatchMapping("/updateProfilePictureFolder")
+  public ResponseEntity<?> updateProfilePictureFolder(
+      @RequestParam(value = "id", defaultValue = "0", required = true) long id,
+      @RequestPart("profilePicture") MultipartFile profilePicture) {
+
+    String uri = stringUtil.getLogParam(request);
+    logger.info(uri);
+    return service.updateProfilePictureFolder(id, profilePicture, uri);
   }
 }

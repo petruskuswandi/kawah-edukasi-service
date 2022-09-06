@@ -1,4 +1,6 @@
-package id.kedukasi.core.models;
+package id.kedukasi.core.response;
+
+import id.kedukasi.core.models.Role;
 
 public class JwtResponse {
 

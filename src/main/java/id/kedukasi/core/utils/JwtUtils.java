@@ -14,9 +14,9 @@ import io.jsonwebtoken.*;
 public class JwtUtils {
 
   private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-  @Value("${bezkoder.app.jwtSecret}")
+  @Value("${kedukasi.app.jwtSecret}")
   private String jwtSecret;
-  @Value("${bezkoder.app.jwtExpirationMs}")
+  @Value("${kedukasi.app.jwtExpirationMs}")
   private int jwtExpirationMs;
 
   public String generateJwtToken(Authentication authentication, Date dateNow, Date dateExpired) {
@@ -26,6 +26,18 @@ public class JwtUtils {
         .setIssuedAt(dateNow)
         .setExpiration(dateExpired)
         .signWith(SignatureAlgorithm.HS512, jwtSecret)
+        .compact();
+  }
+  
+  public String generateJwtActiveUser(Authentication authentication, Date dateNow, Date dateExpired) {
+    UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+    return Jwts.builder()
+        .setSubject("kedukasi")
+        .setIssuedAt(dateNow)
+        .setExpiration(dateExpired)
+        .signWith(SignatureAlgorithm.HS512, jwtSecret)
+        .setHeaderParam("id", userPrincipal.getId())
+        .setHeaderParam("email", userPrincipal.getEmail())
         .compact();
   }
 

@@ -2,18 +2,22 @@ package id.kedukasi.core.serviceImpl;
 
 import id.kedukasi.core.enums.EnumRole;
 import id.kedukasi.core.exception.TokenRefreshException;
-import id.kedukasi.core.models.JwtResponse;
-import id.kedukasi.core.models.LoginRequest;
+import id.kedukasi.core.models.EmailDetails;
+import id.kedukasi.core.response.JwtResponse;
+import id.kedukasi.core.request.LoginRequest;
 import id.kedukasi.core.models.RefreshToken;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.models.Role;
 import id.kedukasi.core.models.User;
 import id.kedukasi.core.repository.RoleRepository;
 import id.kedukasi.core.repository.UserRepository;
-import id.kedukasi.core.models.SignupRequest;
-import id.kedukasi.core.models.TokenRefreshRequest;
-import id.kedukasi.core.models.TokenRefreshResponse;
+import id.kedukasi.core.request.SignupRequest;
+import id.kedukasi.core.request.TokenRefreshRequest;
+import id.kedukasi.core.response.TokenRefreshResponse;
+import id.kedukasi.core.service.EmailService;
+import id.kedukasi.core.service.FilesStorageService;
 import id.kedukasi.core.service.UserService;
+import id.kedukasi.core.utils.GlobalUtil;
 import id.kedukasi.core.utils.JwtUtils;
 import id.kedukasi.core.utils.StringUtil;
 import java.io.IOException;
@@ -60,8 +64,20 @@ public class UserServiceImpl implements UserService {
   @Autowired
   RefreshTokenService refreshTokenService;
 
-  @Value("${bezkoder.app.jwtExpirationMs}")
+  @Autowired
+  EmailService emailService;
+
+  @Autowired
+  FilesStorageService storageService;
+
+  @Autowired
+  GlobalUtil globalUtil;
+
+  @Value("${kedukasi.app.jwtExpirationMs}")
   private int jwtExpirationMs;
+
+  @Value("${app.url.forgot-password}")
+  private String urlForgotPassword;
 
   private Result result;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -124,8 +140,7 @@ public class UserServiceImpl implements UserService {
     User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
         encoder.encode(signUpRequest.getPassword()), StringUtil.getRandomNumberString());
 
-    Role role = signUpRequest.getRole();
-//    Set<Role> roles = new HashSet<>();
+    Role role = roleRepository.findById(signUpRequest.getRole()).orElse(null);
     if (role == null) {
       Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
           .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -151,7 +166,11 @@ public class UserServiceImpl implements UserService {
     user.setRoles(role);
     user.setIsActive(false);
     user.setIsLogin(false);
-    userRepository.save(user);
+    User userResult = userRepository.save(user);
+
+    if (userResult != null) {
+      sendActivationEmail(userResult.getId(), userResult.getTokenVerification(), userResult.getEmail());
+    }
 
     result.setMessage("User registered successfully!");
     result.setCode(HttpStatus.OK.value());
@@ -208,9 +227,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Result active(long id, String tokenVerification,
-      String uri
-  ) {
+  public Result active(long id, String tokenVerification, String uri) {
     result = new Result();
     try {
       int status = userRepository.setIsActive(true, id, tokenVerification);
@@ -227,6 +244,18 @@ public class UserServiceImpl implements UserService {
     }
 
     return result;
+  }
+
+  @Override
+  public ResponseEntity<?> changePassword(long id, String password, String uri) {
+    result = new Result();
+
+    int resultModel = userRepository.changePassword(encoder.encode(password), id);
+    if (resultModel == 1) {
+      return ResponseEntity.ok(result);
+    } else {
+      return ResponseEntity.badRequest().body(result);
+    }
   }
 
   @Override
@@ -255,7 +284,7 @@ public class UserServiceImpl implements UserService {
             .badRequest()
             .body(result);
       }
-      
+
       User checkUserUsername = userRepository.findByUsername(user.getUsername()).orElse(new User());
       if (checkUserUsername.getUsername() != null && !Objects.equals(user.getId(), checkUserUsername.getId())) {
         result.setMessage("Error: Username is already taken!");
@@ -304,7 +333,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public ResponseEntity<?> updateProfilePicture(long id, MultipartFile profilePicture, String uri) {
+  public ResponseEntity<?> updateProfilePictureBlob(long id, MultipartFile profilePicture, String uri) {
     result = new Result();
     try {
       userRepository.updateProfilePicture(IOUtils.toByteArray(profilePicture.getInputStream()), id);
@@ -314,4 +343,89 @@ public class UserServiceImpl implements UserService {
 
     return ResponseEntity.ok(result);
   }
+
+  @Override
+  public ResponseEntity<?> deleteUser(boolean banned, long id, String uri) {
+    result = new Result();
+    try {
+      userRepository.deleteUser(banned, id);
+    } catch (Exception e) {
+      logger.error(stringUtil.getError(e));
+    }
+
+    return ResponseEntity.ok(result);
+  }
+
+  @Override
+  public ResponseEntity<?> updateProfilePictureFolder(long id, MultipartFile profilePicture, String uri) {
+    result = new Result();
+    try {
+      String filename = String.valueOf("profie_picture_" + id).concat(".")
+          .concat(globalUtil.getExtensionByStringHandling(profilePicture.getOriginalFilename()).orElse(""));
+      String filenameResult = storageService.save(profilePicture, filename);
+      userRepository.setProfilePicturePath(filenameResult, id);
+      result.setMessage("succes to save file ".concat(profilePicture.getOriginalFilename()));
+    } catch (Exception e) {
+      logger.error(stringUtil.getError(e));
+    }
+
+    return ResponseEntity.status(HttpStatus.OK).body(result);
+  }
+
+  private void sendActivationEmail(long id, String tokenVerification, String receiver) {
+    EmailDetails emailDetails = new EmailDetails();
+    emailDetails.setSubject("Activate User");
+
+    String url = "";
+    String body = "<html>"
+        + "<body>"
+        + "Click <a href=\"http://localhost:8880/api/auth/active?id=" + id + "&tokenVerification="
+        + tokenVerification + "\">here</a> to activate your account."
+        + "</body>"
+        + "</html>";
+    emailDetails.setMsgBody(body);
+    emailDetails.setRecipient(receiver);
+    logger.info(">>>> send email");
+    emailService.sendMailWithAttachment(emailDetails);
+  }
+
+  @Override
+  public ResponseEntity<?> forgotPassword(String email, String uri) {
+    result = new Result();
+    User checkUserEmail = userRepository.findByEmail(email).orElse(new User());
+    if (checkUserEmail.getUsername() == null) {
+      result.setMessage("Error: Email has not been registered!");
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return ResponseEntity
+          .badRequest()
+          .body(result);
+    }
+    EmailDetails emailDetails = new EmailDetails();
+    emailDetails.setSubject("Forgot Password");
+
+    String body = "<html>"
+        + "<body>"
+        + "Click <a href=\"" + urlForgotPassword + "\">here</a> to reset your password."
+        + "</body>"
+        + "</html>";
+    emailDetails.setMsgBody(body);
+    emailDetails.setRecipient(email);
+    logger.info(">>>> send email");
+    emailService.sendMailWithAttachment(emailDetails);
+
+    return ResponseEntity.ok(new Result());
+  }
+//
+//  private String getJwtActiveEmail() {
+//    jwtToken = JWT.create()
+//        .withIssuer(issuer)
+//        .withSubject(subject)
+//        .withClaim("u_id", id)
+//        .withClaim("u_email", email)
+//        .withClaim("city_code", location)
+//        .withIssuedAt(date)
+//        .withExpiresAt(expTime)
+//        .sign(algorithm);
+//  }
+
 }

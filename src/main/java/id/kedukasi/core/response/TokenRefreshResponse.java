@@ -1,4 +1,4 @@
-package id.kedukasi.core.models;
+package id.kedukasi.core.response;
 
 public class TokenRefreshResponse {
   private String accessToken;
