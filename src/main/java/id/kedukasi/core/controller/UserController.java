@@ -1,8 +1,7 @@
 package id.kedukasi.core.controller;
 
 import id.kedukasi.core.models.Result;
-import id.kedukasi.core.models.User;
-import id.kedukasi.core.service.FilesStorageService;
+import id.kedukasi.core.request.UserRequest;
 import id.kedukasi.core.service.UserService;
 import id.kedukasi.core.utils.StringUtil;
 import javax.servlet.http.HttpServletRequest;
@@ -59,15 +58,14 @@ public class UserController {
   }
 
   @PostMapping("/create")
-  public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
-
-    return service.updateUser(user);
+  public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest) {
+    return service.updateUser(userRequest);
   }
 
   @PutMapping("/update")
-  public ResponseEntity<?> updateUser(@Valid @RequestBody User user) {
+  public ResponseEntity<?> updateUser(@Valid @RequestBody UserRequest userRequest) {
 
-    return service.updateUser(user);
+    return service.updateUser(userRequest);
   }
 
   @PatchMapping(value = "/delete")

@@ -13,6 +13,7 @@ import id.kedukasi.core.repository.RoleRepository;
 import id.kedukasi.core.repository.UserRepository;
 import id.kedukasi.core.request.SignupRequest;
 import id.kedukasi.core.request.TokenRefreshRequest;
+import id.kedukasi.core.request.UserRequest;
 import id.kedukasi.core.response.TokenRefreshResponse;
 import id.kedukasi.core.service.EmailService;
 import id.kedukasi.core.service.FilesStorageService;
@@ -137,35 +138,11 @@ public class UserServiceImpl implements UserService {
           .body(result);
     }
 
-    User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
-        encoder.encode(signUpRequest.getPassword()), StringUtil.getRandomNumberString());
-
     Role role = roleRepository.findById(signUpRequest.getRole()).orElse(null);
-    if (role == null) {
-      Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
-          .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-      role = userRole;
-    } else {
-      switch (role.getId()) {
-        case 1:
-          Role adminRole = roleRepository.findByName(EnumRole.ROLE_USER)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-          role = adminRole;
-          break;
-        case 2:
-          Role modRole = roleRepository.findByName(EnumRole.ROLE_MODERATOR)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-          role = modRole;
-          break;
-        default:
-          Role userRole = roleRepository.findByName(EnumRole.ROLE_ADMIN)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-          role = userRole;
-      }
-    }
-    user.setRoles(role);
-    user.setIsActive(false);
-    user.setIsLogin(false);
+    User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
+        encoder.encode(signUpRequest.getPassword()), StringUtil.getRandomNumberString(),
+        role, false, false);
+
     User userResult = userRepository.save(user);
 
     if (userResult != null) {
@@ -198,6 +175,8 @@ public class UserServiceImpl implements UserService {
       result.setMessage("success");
       result.setData(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(),
           userDetails.getEmail(), role, dateExpired.getTime()));
+      
+      userRepository.setIsLogin(true, userDetails.getId());
     } else {
       result.setSuccess(true);
       result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -273,11 +252,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public ResponseEntity<?> updateUser(User user) {
+  public ResponseEntity<?> updateUser(UserRequest userRequest) {
     result = new Result();
     try {
-      User checkUserEmail = userRepository.findByEmail(user.getEmail()).orElse(new User());
-      if (checkUserEmail.getUsername() != null && !Objects.equals(user.getId(), checkUserEmail.getId())) {
+      User checkUserEmail = userRepository.findByEmail(userRequest.getEmail()).orElse(new User());
+      if (checkUserEmail.getEmail()!= null && !Objects.equals(userRequest.getId(), checkUserEmail.getId())) {
         result.setMessage("Error: Email is already in use!");
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
@@ -285,8 +264,8 @@ public class UserServiceImpl implements UserService {
             .body(result);
       }
 
-      User checkUserUsername = userRepository.findByUsername(user.getUsername()).orElse(new User());
-      if (checkUserUsername.getUsername() != null && !Objects.equals(user.getId(), checkUserUsername.getId())) {
+      User checkUserUsername = userRepository.findByUsername(userRequest.getUsername()).orElse(new User());
+      if (checkUserUsername.getUsername() != null && !Objects.equals(userRequest.getId(), checkUserUsername.getId())) {
         result.setMessage("Error: Username is already taken!");
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
@@ -294,36 +273,23 @@ public class UserServiceImpl implements UserService {
             .body(result);
       }
 
-      Role role = user.getRoles();
-
+      Role role = roleRepository.findById(userRequest.getRole()).orElse(null);
       if (role == null) {
-        Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
-            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-        role = userRole;
-      } else {
-
-        switch (role.getId()) {
-          case 3:
-            Role adminRole = roleRepository.findByName(EnumRole.ROLE_ADMIN)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            role = adminRole;
-            break;
-          case 2:
-            Role modRole = roleRepository.findByName(EnumRole.ROLE_MODERATOR)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            role = modRole;
-            break;
-          default:
-            Role userRole = roleRepository.findByName(EnumRole.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            role = userRole;
-        }
+        result.setMessage("Error: Role not found!");
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity
+            .badRequest()
+            .body(result);
       }
-      user.setPassword(encoder.encode(user.getPassword()));
-      user.setRoles(role);
+
+      User user = new User(userRequest.getUsername(), userRequest.getEmail(),
+          encoder.encode(userRequest.getPassword()), StringUtil.getRandomNumberString(),
+          role, userRequest.isIsActive(), true);
+
+      user.setId(userRequest.getId());
       userRepository.save(user);
 
-      result.setMessage("User update successfully!");
+      result.setMessage(userRequest.getId() == 0 ? "User registered successfully!" : "User updated successfully!");
       result.setCode(HttpStatus.OK.value());
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));

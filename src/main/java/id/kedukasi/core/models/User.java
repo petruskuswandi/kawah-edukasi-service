@@ -61,7 +61,7 @@ public class User implements Serializable {
   @JoinTable(name = "user_roles",
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private Role roles;
+  private Role role;
 
   private boolean isLogin;
   private boolean isActive;
@@ -89,13 +89,17 @@ public class User implements Serializable {
   public User() {
   }
 
-  public User(String username, String email, String password, String tokenVerification) {
+  public User(String username, String email, String password, String tokenVerification, 
+      Role role, boolean isActive, boolean isLogin) {
     Date date = new Date();
 
     this.username = username;
     this.email = email;
     this.password = password;
     this.tokenVerification = tokenVerification;
+    this.role = role;
+    this.isActive = isActive;
+    this.isLogin = isLogin;
     this.created_time = date;
     this.updated_time = date;
     this.banned = false;
@@ -134,12 +138,12 @@ public class User implements Serializable {
     this.password = password;
   }
 
-  public Role getRoles() {
-    return roles;
+  public Role getRole() {
+    return role;
   }
 
-  public void setRoles(Role roles) {
-    this.roles = roles;
+  public void setRole(Role role) {
+    this.role = role;
   }
 
   public boolean isIsLogin() {

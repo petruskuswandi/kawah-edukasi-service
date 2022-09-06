@@ -4,15 +4,15 @@ import id.kedukasi.core.request.LoginRequest;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.request.SignupRequest;
 import id.kedukasi.core.request.TokenRefreshRequest;
-import id.kedukasi.core.models.User;
+import id.kedukasi.core.request.UserRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
   ResponseEntity<?> createUser(SignupRequest signUpRequest);
-
-  ResponseEntity<?> updateUser(User user);
+  
+  ResponseEntity<?> updateUser(UserRequest UserRequest);
 
   ResponseEntity<?> refreshToken(TokenRefreshRequest tokenRefreshRequest);
 
