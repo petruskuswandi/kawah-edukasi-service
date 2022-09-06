@@ -12,5 +12,6 @@ ENV DATABASE_PORT=5432
 
 VOLUME /tmp
 ADD config ./
+RUN mkdir -p ./uploads
 COPY target/kedukasi-service-1.0-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]
