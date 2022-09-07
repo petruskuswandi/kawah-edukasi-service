@@ -1,22 +1,27 @@
-package id.kedukasi.core.models;
+package id.kedukasi.core.response;
 
-import java.util.List;
+import id.kedukasi.core.models.Role;
 
 public class JwtResponse {
 
   private String token;
   private String type = "Bearer";
+  private String refreshToken;
   private Long id;
   private String username;
   private String email;
-  private List<String> roles;
+  private Role role;
+  private long expired;
 
-  public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+  public JwtResponse(String accessToken, String refreshToken, Long id, String username,
+      String email, Role role, long expired) {
     this.token = accessToken;
+    this.refreshToken = refreshToken;
     this.id = id;
     this.username = username;
     this.email = email;
-    this.roles = roles;
+    this.role = role;
+    this.expired = expired;
   }
 
   public String getAccessToken() {
@@ -25,6 +30,14 @@ public class JwtResponse {
 
   public void setAccessToken(String accessToken) {
     this.token = accessToken;
+  }
+
+  public String getRefreshToken() {
+    return refreshToken;
+  }
+
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
   }
 
   public String getTokenType() {
@@ -59,7 +72,20 @@ public class JwtResponse {
     this.username = username;
   }
 
-  public List<String> getRoles() {
-    return roles;
+  public Role getRole() {
+    return role;
   }
+
+  public void setRole(Role role) {
+    this.role = role;
+  }
+
+  public long getExpired() {
+    return expired;
+  }
+
+  public void setExpired(long expired) {
+    this.expired = expired;
+  }
+
 }

@@ -10,23 +10,40 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.*;
 
-
 @Component
 public class JwtUtils {
 
   private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-  @Value("${bezkoder.app.jwtSecret}")
+  @Value("${kedukasi.app.jwtSecret}")
   private String jwtSecret;
-  @Value("${bezkoder.app.jwtExpirationMs}")
+  @Value("${kedukasi.app.jwtExpirationMs}")
   private int jwtExpirationMs;
 
-  public String generateJwtToken(Authentication authentication) {
+  public String generateJwtToken(Authentication authentication, Date dateNow, Date dateExpired) {
     UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
     return Jwts.builder()
         .setSubject((userPrincipal.getUsername()))
-        .setIssuedAt(new Date())
-        .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+        .setIssuedAt(dateNow)
+        .setExpiration(dateExpired)
         .signWith(SignatureAlgorithm.HS512, jwtSecret)
+        .compact();
+  }
+  
+  public String generateJwtActiveUser(Authentication authentication, Date dateNow, Date dateExpired) {
+    UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+    return Jwts.builder()
+        .setSubject("kedukasi")
+        .setIssuedAt(dateNow)
+        .setExpiration(dateExpired)
+        .signWith(SignatureAlgorithm.HS512, jwtSecret)
+        .setHeaderParam("id", userPrincipal.getId())
+        .setHeaderParam("email", userPrincipal.getEmail())
+        .compact();
+  }
+
+  public String generateTokenFromUsername(String username) {
+    return Jwts.builder().setSubject(username).setIssuedAt(new Date())
+        .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(SignatureAlgorithm.HS512, jwtSecret)
         .compact();
   }
 

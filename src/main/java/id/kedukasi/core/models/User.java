@@ -1,8 +1,9 @@
 package id.kedukasi.core.models;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,13 +11,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "users",
@@ -24,6 +28,7 @@ import javax.validation.constraints.Size;
       @UniqueConstraint(columnNames = "username"),
       @UniqueConstraint(columnNames = "email")
     })
+@DynamicUpdate
 public class User implements Serializable {
 
   @Id
@@ -39,31 +44,66 @@ public class User implements Serializable {
   @Email
   private String email;
 
+  @Lob
+  @Column(name = "profilePicture", updatable = false)
+  @ApiModelProperty(hidden = true)
+  private byte[] profilePicture;
+
+  @Column(name = "profilePicturePath", updatable = false)
+  @ApiModelProperty(hidden = true)
+  private String profilePicturePath;
+
   @NotBlank
   @Size(max = 120)
   private String password;
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles",
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private Set<Role> roles = new HashSet<>();
+  private Role role;
 
-  private boolean isLogin = false;
-  private boolean isActive = false;
+  private boolean isLogin;
+  private boolean isActive;
 
-  @NotBlank
   @Size(max = 6)
+  @ApiModelProperty(hidden = true)
+  @Column(name = "tokenVerification", updatable = false)
   private String tokenVerification;
+
+  @Column(name = "created_time", updatable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date created_time;
+
+  @Column(name = "updated_time")
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date updated_time;
+
+  @Column(name = "banned", updatable = false)
+  private boolean banned;
+
+  @Column(name = "banned_time", updatable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date banned_time;
 
   public User() {
   }
 
-  public User(String username, String email, String password, String tokenVerification) {
+  public User(String username, String email, String password, String tokenVerification, 
+      Role role, boolean isActive, boolean isLogin) {
+    Date date = new Date();
+
     this.username = username;
     this.email = email;
     this.password = password;
     this.tokenVerification = tokenVerification;
+    this.role = role;
+    this.isActive = isActive;
+    this.isLogin = isLogin;
+    this.created_time = date;
+    this.updated_time = date;
+    this.banned = false;
+    this.banned_time = date;
   }
 
   public Long getId() {
@@ -98,12 +138,12 @@ public class User implements Serializable {
     this.password = password;
   }
 
-  public Set<Role> getRoles() {
-    return roles;
+  public Role getRole() {
+    return role;
   }
 
-  public void setRoles(Set<Role> roles) {
-    this.roles = roles;
+  public void setRole(Role role) {
+    this.role = role;
   }
 
   public boolean isIsLogin() {
@@ -130,4 +170,52 @@ public class User implements Serializable {
     this.tokenVerification = tokenVerification;
   }
 
+  public byte[] getProfilePicture() {
+    return profilePicture;
+  }
+
+  public void setProfilePicture(byte[] profilePicture) {
+    this.profilePicture = profilePicture;
+  }
+
+  public Date getCreated_time() {
+    return created_time;
+  }
+
+  public void setCreated_time(Date created_time) {
+    this.created_time = created_time;
+  }
+
+  public Date getUpdated_time() {
+    return updated_time;
+  }
+
+  public void setUpdated_time(Date updated_time) {
+    this.updated_time = updated_time;
+  }
+
+  public boolean isBanned() {
+    return banned;
+  }
+
+  public void setBanned(boolean banned) {
+    this.banned = banned;
+  }
+
+  public Date getBanned_time() {
+    return banned_time;
+  }
+
+  public void setBanned_time(Date banned_time) {
+    this.banned_time = banned_time;
+  }
+
+  public String getProfilePicturePath() {
+    return profilePicturePath;
+  }
+
+  public void setProfilePicturePath(String profilePicturePath) {
+    this.profilePicturePath = profilePicturePath;
+  }
+  
 }
