@@ -1,5 +1,8 @@
 FROM adoptopenjdk/openjdk11:alpine-jre
-
+RUN apk add --no-cache tzdata &&\
+    cp /usr/share/zoneinfo/Asia/Jakarta /etc/localtime &&\
+    echo "Asia/Jakarta" >  /etc/timezone &&\
+    date
 LABEL maintener="Asep Ridwanullah <asep.ridwan@gmail.com>"
 
 ENV APPLICATION_PORT=8880
