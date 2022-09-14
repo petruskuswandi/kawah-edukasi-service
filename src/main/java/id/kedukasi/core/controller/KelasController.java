@@ -2,7 +2,6 @@ package id.kedukasi.core.controller;
 
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.request.KelasRequest;
-import id.kedukasi.core.request.UserRequest;
 import id.kedukasi.core.service.KelasService;
 import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
@@ -42,7 +41,7 @@ public class KelasController {
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public Result getUserByid(@PathVariable("id") long id) {
+    public Result getClassByid(@PathVariable("id") long id) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getClassById(id, uri);

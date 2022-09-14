@@ -3,7 +3,6 @@ package id.kedukasi.core.models;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -29,20 +28,23 @@ public class Kelas implements Serializable {
     @Size(max = 50)
     private String description;
 
-    @Column(name = "created_time", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created_time;
-
-    @Column(name = "updated_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updated_time;
-
     @Column(name = "banned", updatable = false)
     private boolean banned;
 
     @Column(name = "banned_time", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date banned_time;
+
+    @Column(name = "created_time", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created_time;
+
+    @Column(name = "created_by")
+    private String created_by;
+
+    @Column(name = "updated_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updated_time;
 
     public Kelas() {
     }
@@ -111,5 +113,13 @@ public class Kelas implements Serializable {
 
     public void setBanned_time(Date banned_time) {
         this.banned_time = banned_time;
+    }
+
+    public String getCreated_by() {
+        return created_by;
+    }
+
+    public void setCreated_by(String created_by) {
+        this.created_by = created_by;
     }
 }
