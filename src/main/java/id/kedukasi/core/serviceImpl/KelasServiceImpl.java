@@ -76,6 +76,11 @@ public class KelasServiceImpl implements KelasService {
                         .badRequest()
                         .body(result);
             }
+            if(kelasRequest.getClassname().length()<3 || kelasRequest.getClassname().length()>20) {
+                result.setMessage("Error: Class name must be 3-20 characters");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
 
             Kelas kelasbaru = new Kelas(kelasRequest.getClassname(), kelasRequest.getDescription());
 
