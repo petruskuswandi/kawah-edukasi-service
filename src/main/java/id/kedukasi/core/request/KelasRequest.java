@@ -9,11 +9,9 @@ public class KelasRequest implements Serializable {
     private Long id;
 
     @NotBlank
-    @Size(max = 20)
     private String classname ;
 
     @NotBlank
-    @Size(max = 50)
     private String description;
 
     public Long getId() {

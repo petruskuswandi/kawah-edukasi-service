@@ -81,6 +81,11 @@ public class KelasServiceImpl implements KelasService {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
+            if(kelasRequest.getDescription().length()>50) {
+                result.setMessage("Error: description must be at most 50 characters");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
 
             Kelas kelasbaru = new Kelas(kelasRequest.getClassname(), kelasRequest.getDescription());
 
