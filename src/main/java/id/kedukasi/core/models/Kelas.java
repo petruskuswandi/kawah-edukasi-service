@@ -49,10 +49,11 @@ public class Kelas implements Serializable {
     public Kelas() {
     }
 
-    public Kelas(String classname, String description) {
+    public Kelas(String classname, String description, String created_by) {
         Date date = new Date();
         this.classname = classname;
         this.description = description;
+        this.created_by = created_by;
         this.created_time = date;
         this.updated_time = date;
         this.banned = false;

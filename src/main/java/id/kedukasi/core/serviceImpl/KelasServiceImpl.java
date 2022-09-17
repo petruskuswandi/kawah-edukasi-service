@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -87,7 +89,8 @@ public class KelasServiceImpl implements KelasService {
                 return ResponseEntity.badRequest().body(result);
             }
 
-            Kelas kelasbaru = new Kelas(kelasRequest.getClassname(), kelasRequest.getDescription());
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Kelas kelasbaru = new Kelas(kelasRequest.getClassname(), kelasRequest.getDescription(), auth.getName());
 
             kelasbaru.setId(kelasRequest.getId());
             kelasRepository.save(kelasbaru);
