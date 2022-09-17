@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -204,5 +206,33 @@ public class PesertaServiceImpl implements PesertaService {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @Override
+    public Result filterByStatusPeserta(Long statusPesertaOrd) {
+        result = new Result();
+        try {
+            Map items = new HashMap();
+            Peserta peserta = new Peserta();
+            if (statusPesertaOrd==0) {
+                peserta.setStatusPeserta(EnumStatusPeserta.CALON);
+                Example<Peserta> example = Example.of(peserta);
+                items.put("items", pesertaRepository.findAll(example));
+                result.setData(items);
+            } else if (statusPesertaOrd==1) {
+                peserta.setStatusPeserta(EnumStatusPeserta.PESERTA);
+                Example<Peserta> example = Example.of(peserta);
+                items.put("items", pesertaRepository.findAll(example));
+                result.setData(items);
+            } else {
+                result.setMessage("Error: Use 0 for Calon dan 1 for Peserta");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return result;
+            }
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+
+        return result;
     }
 }

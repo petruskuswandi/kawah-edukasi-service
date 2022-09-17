@@ -3,7 +3,6 @@ package id.kedukasi.core.repository;
 import id.kedukasi.core.enums.EnumStatusPeserta;
 import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.Peserta;
-import id.kedukasi.core.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

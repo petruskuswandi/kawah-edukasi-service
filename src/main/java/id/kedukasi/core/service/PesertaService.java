@@ -21,4 +21,6 @@ public interface PesertaService {
     ResponseEntity<?> updateUploadImageBlob(long id, MultipartFile profilePicture, String uri);
 
     ResponseEntity<?> updateUploadImageFolder(long id, MultipartFile profilePicture, String uri);
+
+    Result filterByStatusPeserta(Long statusPesertaOrd);
 }

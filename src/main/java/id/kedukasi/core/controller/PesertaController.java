@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import java.util.List;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @CrossOrigin
@@ -107,6 +109,13 @@ public class PesertaController {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.updateUploadImageFolder(id, profilePicture, uri);
+    }
+
+    @GetMapping("/filterByStatusPeserta")
+    public Result filterByStatusPeserta(
+            @RequestParam(value = "filterByStatusPeserta", defaultValue = "0", required = true) Long statusPesertaOrd
+    ) {
+        return service.filterByStatusPeserta(statusPesertaOrd);
     }
 
 

@@ -6,6 +6,7 @@ import id.kedukasi.core.enums.EnumStatusTes;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.apachecommons.CommonsLog;
 import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -32,6 +33,7 @@ public class Peserta implements Serializable {
 //        Long Batch;
 
         @NotBlank
+        @Column(name = "namaPeserta")
         private String namaPeserta;
 
         @Temporal(TemporalType.TIMESTAMP)
@@ -69,6 +71,7 @@ public class Peserta implements Serializable {
 
         private String motivasi;
 
+        @Column(name = "kodeReferal")
         private String kodeReferal;
 
         @Enumerated(EnumType.STRING)
