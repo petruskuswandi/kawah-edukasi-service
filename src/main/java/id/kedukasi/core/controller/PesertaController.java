@@ -91,6 +91,17 @@ public class PesertaController {
         return service.statusTes(statusTesOrd, id, uri);
     }
 
+    @PatchMapping(value = ("/addPesertaToKelas"))
+    public ResponseEntity<?> addPesertaToKelas(
+            @RequestParam(value = "pesertaId", defaultValue = "0", required = true) long pesertaId,
+            @RequestParam(value = "kelasId", defaultValue = "0", required = true) long kelasId) {
+
+        String uri = stringUtil.getLogParam(request);
+        logger.info(uri);
+        return service.addPesertaToKelas(pesertaId, kelasId, uri);
+    }
+
+
     @PatchMapping(value = "/updateUploadImageBlob", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateProfilePicture(
             @RequestParam(value = "id", defaultValue = "0", required = true) long id,
@@ -113,9 +124,23 @@ public class PesertaController {
 
     @GetMapping("/filterByStatusPeserta")
     public Result filterByStatusPeserta(
-            @RequestParam(value = "filterByStatusPeserta", defaultValue = "0", required = true) Long statusPesertaOrd
+            @RequestParam(value = "statusPesertaOrd", defaultValue = "0", required = true) Long statusPesertaOrd
     ) {
         return service.filterByStatusPeserta(statusPesertaOrd);
+    }
+
+    @GetMapping("/search")
+    public Result search(@RequestParam(value = "keyword",required = true) String keyword) {
+        return service.search(keyword);
+    }
+
+    @GetMapping("/sortAndPaging")
+    public Result sortAndPaging(
+            @RequestParam(value = "page", defaultValue = "0", required = true) Integer page,
+            @RequestParam(value = "size", defaultValue = "1", required = true) Integer size,
+            @RequestParam(value = "ascending", defaultValue = "true", required = true) Boolean ascending
+    ) {
+        return service.sortAndPaging(page, size, ascending);
     }
 
 
@@ -130,6 +155,5 @@ public class PesertaController {
 //    "activeInactive"
 //    "search"
 //    "filterByBatch"
-//    "filterByStatus"
 //    "indexAndPaging"
 }

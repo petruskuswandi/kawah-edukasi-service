@@ -1,5 +1,6 @@
 package id.kedukasi.core.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "classes",
@@ -45,6 +47,10 @@ public class Kelas implements Serializable {
     @Column(name = "updated_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated_time;
+
+    @JsonIgnore
+    @OneToMany()
+    private Set<Peserta> peserta;
 
     public Kelas() {
     }

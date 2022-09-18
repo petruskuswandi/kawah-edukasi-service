@@ -18,9 +18,15 @@ public interface PesertaService {
 
     ResponseEntity<?> statusTes(Long statusTesOrd, long id, String uri);
 
+    ResponseEntity<?> addPesertaToKelas(long pesertaId, long kelasId, String uri);
+
     ResponseEntity<?> updateUploadImageBlob(long id, MultipartFile profilePicture, String uri);
 
     ResponseEntity<?> updateUploadImageFolder(long id, MultipartFile profilePicture, String uri);
 
     Result filterByStatusPeserta(Long statusPesertaOrd);
+
+    Result search(String keyword);
+
+    Result sortAndPaging(Integer page, Integer size, Boolean ascending);
 }

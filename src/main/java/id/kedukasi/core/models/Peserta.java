@@ -29,7 +29,12 @@ public class Peserta implements Serializable {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-//        String Kelas;
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinTable(name = "peserta_kelas",
+                joinColumns = @JoinColumn(name = "peserta_id"),
+                inverseJoinColumns = @JoinColumn(name = "kelas_id"))
+        private Kelas kelas;
+
 //        Long Batch;
 
         @NotBlank

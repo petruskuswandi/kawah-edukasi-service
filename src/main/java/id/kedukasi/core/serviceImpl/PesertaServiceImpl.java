@@ -2,8 +2,10 @@ package id.kedukasi.core.serviceImpl;
 
 import id.kedukasi.core.enums.EnumStatusPeserta;
 import id.kedukasi.core.enums.EnumStatusTes;
+import id.kedukasi.core.models.Kelas;
 import id.kedukasi.core.models.Peserta;
 import id.kedukasi.core.models.Result;
+import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.PesertaRepository;
 import id.kedukasi.core.request.PesertaRequest;
 import id.kedukasi.core.service.FilesStorageService;
@@ -15,6 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -32,6 +37,9 @@ public class PesertaServiceImpl implements PesertaService {
 
     @Autowired
     PesertaRepository pesertaRepository;
+
+    @Autowired
+    KelasRepository kelasRepository;
 
     @Autowired
     StringUtil stringUtil;
@@ -181,6 +189,31 @@ public class PesertaServiceImpl implements PesertaService {
     }
 
     @Override
+    public ResponseEntity<?> addPesertaToKelas(long pesertaId, long kelasId, String uri) {
+        result = new Result();
+        try {
+            Peserta peserta = pesertaRepository.findById(pesertaId);
+            Kelas kelas = kelasRepository.findById(kelasId);
+            if (peserta == null) {
+                result.setSuccess(false);
+                result.setMessage("cannot find peserta");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else if (kelas == null) {
+                result.setSuccess(false);
+                result.setMessage("cannot find kelas");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                peserta.setKelas(kelas);
+                pesertaRepository.save(peserta);
+            }
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+
+        return ResponseEntity.ok(result);
+    }
+
+    @Override
     public ResponseEntity<?> updateUploadImageBlob(long id, MultipartFile profilePicture, String uri) {
         result = new Result();
         try {
@@ -233,6 +266,41 @@ public class PesertaServiceImpl implements PesertaService {
             logger.error(stringUtil.getError(e));
         }
 
+        return result;
+    }
+
+    @Override
+    public Result search(String keyword) {
+        result = new Result();
+        try {
+            Map items = new HashMap();
+            items.put("items", pesertaRepository.search(keyword));
+            result.setData(items);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        return result;
+    }
+
+    @Override
+    public Result sortAndPaging(Integer page, Integer size, Boolean ascending) {
+        result = new Result();
+        try {
+            Map items = new HashMap();
+            if (ascending) {
+                Page<Peserta> pagePeserta = pesertaRepository.findAll(
+                        PageRequest.of(page, size, Sort.by("namaPeserta").ascending()));
+                items.put("items", pagePeserta);
+            }
+            else {
+                Page<Peserta> pagePeserta = pesertaRepository.findAll(
+                        PageRequest.of(page, size, Sort.by("namaPeserta").descending()));
+                items.put("items", pagePeserta);
+            }
+            result.setData(items);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
         return result;
     }
 }

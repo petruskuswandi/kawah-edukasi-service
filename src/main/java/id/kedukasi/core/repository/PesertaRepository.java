@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PesertaRepository extends JpaRepository<Peserta,Long> {
@@ -44,4 +45,8 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
     @Transactional
     @Query("update Peserta u set u.uploadImagePath = ?1, u.updated_time = CURRENT_TIMESTAMP where u.id = ?2")
     int setUploadImagePath(String uploadImagePath, Long id);
+
+    @Transactional
+    @Query("SELECT p FROM Peserta p WHERE p.namaPeserta LIKE %?1%")
+    List<Peserta> search(String keyword);
 }
