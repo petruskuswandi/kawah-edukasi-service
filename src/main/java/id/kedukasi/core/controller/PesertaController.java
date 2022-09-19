@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -38,7 +37,7 @@ public class PesertaController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
-    public Result getAll() {
+    public Result getAllPeserta() {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getAllPeserta(uri);
@@ -52,13 +51,19 @@ public class PesertaController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createPeserta(@Valid @RequestBody PesertaRequest pesertaRequest) {
-        return service.updatePeserta(pesertaRequest);
+    public ResponseEntity<?> createPeserta(
+            @Valid @RequestBody PesertaRequest pesertaRequest,
+            @RequestParam(value = "kelasId", defaultValue = "0", required = true) long kelasId,
+            @RequestPart("uploadImage") MultipartFile uploadImage) {
+        return service.updatePeserta(pesertaRequest, kelasId, uploadImage);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updatePeserta(@Valid @RequestBody PesertaRequest pesertaRequest) {
-        return service.updatePeserta(pesertaRequest);
+    public ResponseEntity<?> updatePeserta(
+            @Valid @RequestBody PesertaRequest pesertaRequest,
+            @RequestParam(value = "kelasId", defaultValue = "0", required = true) long kelasId,
+            @RequestPart("uploadImage") MultipartFile uploadImage) {
+        return service.updatePeserta(pesertaRequest, kelasId, uploadImage);
     }
 
     @PatchMapping(value = "/delete")
@@ -71,67 +76,28 @@ public class PesertaController {
         return service.deletePeserta(banned, id, uri);
     }
 
-    @PatchMapping(value = "/statusPeserta")
-    public ResponseEntity<?> statusPeserta(
-            @RequestParam(value = "id", defaultValue = "0", required = true) long id,
-            @RequestParam(value = "Status Peserta", defaultValue = "0") Long statusPesertaOrd
+    @PatchMapping(value = "/changeToCalonPeserta")
+    public ResponseEntity<?> changeToCalonPeserta(
+            @RequestParam(value = "id", defaultValue = "0", required = true) long id
     ) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
-        return service.statusPeserta(statusPesertaOrd, id, uri);
+        return service.changeToCalonPeserta(id, uri);
     }
 
-    @PatchMapping(value = "/statusTes")
-    public ResponseEntity<?> statusTes(
-            @RequestParam(value = "id", defaultValue = "0", required = true) long id,
-            @RequestParam(value = "Status Tes", defaultValue = "0") Long statusTesOrd
-    ) {
-        String uri = stringUtil.getLogParam(request);
-        logger.info(uri);
-        return service.statusTes(statusTesOrd, id, uri);
-    }
-
-    @PatchMapping(value = ("/addPesertaToKelas"))
-    public ResponseEntity<?> addPesertaToKelas(
+    @PatchMapping(value = ("/changeKelas"))
+    public ResponseEntity<?> changeKelas(
             @RequestParam(value = "pesertaId", defaultValue = "0", required = true) long pesertaId,
             @RequestParam(value = "kelasId", defaultValue = "0", required = true) long kelasId) {
 
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
-        return service.addPesertaToKelas(pesertaId, kelasId, uri);
+        return service.changeKelas(pesertaId, kelasId, uri);
     }
 
-
-    @PatchMapping(value = "/updateUploadImageBlob", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateProfilePicture(
-            @RequestParam(value = "id", defaultValue = "0", required = true) long id,
-            @RequestPart("uploadImage") MultipartFile profilePicture) {
-
-        String uri = stringUtil.getLogParam(request);
-        logger.info(uri);
-        return service.updateUploadImageBlob(id, profilePicture, uri);
-    }
-
-    @PatchMapping("/updateUploadImageFolder")
-    public ResponseEntity<?> updateProfilePictureFolder(
-            @RequestParam(value = "id", defaultValue = "0", required = true) long id,
-            @RequestPart("uploadImage") MultipartFile profilePicture) {
-
-        String uri = stringUtil.getLogParam(request);
-        logger.info(uri);
-        return service.updateUploadImageFolder(id, profilePicture, uri);
-    }
-
-    @GetMapping("/filterByStatusPeserta")
-    public Result filterByStatusPeserta(
-            @RequestParam(value = "statusPesertaOrd", defaultValue = "0", required = true) Long statusPesertaOrd
-    ) {
-        return service.filterByStatusPeserta(statusPesertaOrd);
-    }
-
-    @GetMapping("/search")
-    public Result search(@RequestParam(value = "keyword",required = true) String keyword) {
-        return service.search(keyword);
+    @GetMapping("/searchPeserta")
+    public Result searchPeserta(@RequestParam(value = "keyword",required = true) String keyword) {
+        return service.searchPeserta(keyword);
     }
 
     @GetMapping("/sortAndPaging")

@@ -47,6 +47,6 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
     int setUploadImagePath(String uploadImagePath, Long id);
 
     @Transactional
-    @Query("SELECT p FROM Peserta p WHERE p.namaPeserta LIKE %?1%")
-    List<Peserta> search(String keyword);
+    @Query("SELECT p FROM Peserta p WHERE p.namaPeserta LIKE %?1% AND p.statusPeserta = ?2")
+    List<Peserta> search(String keyword, EnumStatusPeserta statusPeserta);
 }

@@ -1,7 +1,6 @@
 package id.kedukasi.core.serviceImpl;
 
 import id.kedukasi.core.enums.EnumStatusPeserta;
-import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.Kelas;
 import id.kedukasi.core.models.Peserta;
 import id.kedukasi.core.models.Result;
@@ -26,9 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -51,6 +48,7 @@ public class PesertaServiceImpl implements PesertaService {
     FilesStorageService storageService;
 
     private Result result;
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
@@ -59,12 +57,14 @@ public class PesertaServiceImpl implements PesertaService {
         result = new Result();
         try {
             Map items = new HashMap();
-            items.put("items", pesertaRepository.findAll());
+            Peserta peserta = new Peserta();
+            peserta.setStatusPeserta(EnumStatusPeserta.PESERTA);
+            Example<Peserta> example = Example.of(peserta);
+            items.put("items", pesertaRepository.findAll(example));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return result;
     }
 
@@ -75,23 +75,25 @@ public class PesertaServiceImpl implements PesertaService {
             Peserta peserta = pesertaRepository.findById(id);
             if (peserta == null) {
                 result.setSuccess(false);
-                result.setMessage("cannot find user");
+                result.setMessage("cannot find peserta");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+                result.setSuccess(false);
+                result.setMessage("id: "+ id + " is not peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
                 items.put("items", pesertaRepository.findById(id));
                 result.setData(items);
             }
-
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return result;
     }
 
     @Override
-    public ResponseEntity<?> updatePeserta(PesertaRequest pesertaRequest) {
+    public ResponseEntity<?> updatePeserta(PesertaRequest pesertaRequest, long kelasId, MultipartFile uploadImage) {
         result = new Result();
         try {
             Peserta checkEmailPeserta = pesertaRepository.findByEmail(pesertaRequest.getEmail()).orElse(new Peserta());
@@ -119,14 +121,28 @@ public class PesertaServiceImpl implements PesertaService {
                     pesertaRequest.getMotivasi(), pesertaRequest.getKodeReferal());
 
             peserta.setId(pesertaRequest.getId());
+            peserta.setStatusPeserta(EnumStatusPeserta.PESERTA);
+
+            Kelas kelas = kelasRepository.findById(kelasId);
+            if (kelas == null) {
+                result.setSuccess(false);
+                result.setMessage("cannot find kelas");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                peserta.setKelas(kelas);
+            }
+
+            if (uploadImage!=null) {
+                peserta.setUploadImage(IOUtils.toByteArray(uploadImage.getInputStream()));
+            }
+
             pesertaRepository.save(peserta);
 
-            result.setMessage(pesertaRequest.getId() == 0 ? "User registered successfully!" : "User updated successfully!");
+            result.setMessage(pesertaRequest.getId() == 0 ? "Peserta registered successfully!" : "Peserta updated successfully!");
             result.setCode(HttpStatus.OK.value());
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return ResponseEntity.ok(result);
     }
 
@@ -134,62 +150,48 @@ public class PesertaServiceImpl implements PesertaService {
     public ResponseEntity<?> deletePeserta(boolean banned, long id, String uri) {
         result = new Result();
         try {
-            pesertaRepository.deletePeserta(banned, id);
+            Peserta peserta = pesertaRepository.findById(id);
+            if (peserta == null) {
+                result.setSuccess(false);
+                result.setMessage("cannot find peserta");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+                result.setSuccess(false);
+                result.setMessage("id: "+ id + " is not peserta");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                pesertaRepository.deletePeserta(banned, id);
+            }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return ResponseEntity.ok(result);
     }
 
     @Override
-    public ResponseEntity<?> statusPeserta(Long statusPesertaOrd, long id, String uri) {
+    public ResponseEntity<?> changeToCalonPeserta(long id, String uri) {
         result = new Result();
         try {
-            if (statusPesertaOrd==0) {
+            Peserta peserta = pesertaRepository.findById(id);
+            if (peserta == null) {
+                result.setSuccess(false);
+                result.setMessage("cannot find peserta");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+                result.setSuccess(false);
+                result.setMessage("id: "+ id + " is not Peserta");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
                 pesertaRepository.statusPeserta(EnumStatusPeserta.CALON, id);
-            } else if (statusPesertaOrd==1) {
-                pesertaRepository.statusPeserta(EnumStatusPeserta.PESERTA, id);
-            } else {
-                result.setMessage("Error: Use 0 for Calon dan 1 for Peserta");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
             }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return ResponseEntity.ok(result);
     }
 
     @Override
-    public ResponseEntity<?> statusTes(Long statusTesOrd, long id, String uri) {
-        result = new Result();
-        try {
-            if (statusTesOrd==0) {
-                pesertaRepository.statusTes(EnumStatusTes.LULUS, id);
-            } else if (statusTesOrd==1) {
-                pesertaRepository.statusTes(EnumStatusTes.MELAKSANAKANTES, id);
-            } else if (statusTesOrd==2) {
-                pesertaRepository.statusTes(EnumStatusTes.MENUNGGUFOLLOWUP, id);
-            } else {
-                result.setMessage("Error: Use 0 for Lulus, 1 for Melaksanakan Tes and 2 for Menunggu Follow Up");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            }
-        } catch (Exception e) {
-            logger.error(stringUtil.getError(e));
-        }
-
-        return ResponseEntity.ok(result);
-    }
-
-    @Override
-    public ResponseEntity<?> addPesertaToKelas(long pesertaId, long kelasId, String uri) {
+    public ResponseEntity<?> changeKelas(long pesertaId, long kelasId, String uri) {
         result = new Result();
         try {
             Peserta peserta = pesertaRepository.findById(pesertaId);
@@ -202,6 +204,10 @@ public class PesertaServiceImpl implements PesertaService {
                 result.setSuccess(false);
                 result.setMessage("cannot find kelas");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+                result.setSuccess(false);
+                result.setMessage("id: "+ peserta + " is not peserta");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 peserta.setKelas(kelas);
                 pesertaRepository.save(peserta);
@@ -209,72 +215,15 @@ public class PesertaServiceImpl implements PesertaService {
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return ResponseEntity.ok(result);
     }
 
     @Override
-    public ResponseEntity<?> updateUploadImageBlob(long id, MultipartFile profilePicture, String uri) {
-        result = new Result();
-        try {
-            pesertaRepository.updateUploadImage(IOUtils.toByteArray(profilePicture.getInputStream()), id);
-        } catch (IOException e) {
-            logger.error(stringUtil.getError(e));
-        }
-
-        return ResponseEntity.ok(result);
-    }
-
-    @Override
-    public ResponseEntity<?> updateUploadImageFolder(long id, MultipartFile profilePicture, String uri) {
-        result = new Result();
-        try {
-            String filename = String.valueOf("uploadImage" + id).concat(".")
-                    .concat(globalUtil.getExtensionByStringHandling(profilePicture.getOriginalFilename()).orElse(""));
-            String filenameResult = storageService.save(profilePicture, filename);
-            pesertaRepository.setUploadImagePath(filenameResult, id);
-            result.setMessage("succes to save file ".concat(profilePicture.getOriginalFilename()));
-        } catch (Exception e) {
-            logger.error(stringUtil.getError(e));
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
-
-    @Override
-    public Result filterByStatusPeserta(Long statusPesertaOrd) {
+    public Result searchPeserta(String keyword) {
         result = new Result();
         try {
             Map items = new HashMap();
-            Peserta peserta = new Peserta();
-            if (statusPesertaOrd==0) {
-                peserta.setStatusPeserta(EnumStatusPeserta.CALON);
-                Example<Peserta> example = Example.of(peserta);
-                items.put("items", pesertaRepository.findAll(example));
-                result.setData(items);
-            } else if (statusPesertaOrd==1) {
-                peserta.setStatusPeserta(EnumStatusPeserta.PESERTA);
-                Example<Peserta> example = Example.of(peserta);
-                items.put("items", pesertaRepository.findAll(example));
-                result.setData(items);
-            } else {
-                result.setMessage("Error: Use 0 for Calon dan 1 for Peserta");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return result;
-            }
-        } catch (Exception e) {
-            logger.error(stringUtil.getError(e));
-        }
-
-        return result;
-    }
-
-    @Override
-    public Result search(String keyword) {
-        result = new Result();
-        try {
-            Map items = new HashMap();
-            items.put("items", pesertaRepository.search(keyword));
+            items.put("items", pesertaRepository.search(keyword,EnumStatusPeserta.PESERTA));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -287,13 +236,16 @@ public class PesertaServiceImpl implements PesertaService {
         result = new Result();
         try {
             Map items = new HashMap();
+            Peserta peserta = new Peserta();
+            peserta.setStatusPeserta(EnumStatusPeserta.PESERTA);
+            Example<Peserta> example = Example.of(peserta);
             if (ascending) {
-                Page<Peserta> pagePeserta = pesertaRepository.findAll(
+                Page<Peserta> pagePeserta = pesertaRepository.findAll(example,
                         PageRequest.of(page, size, Sort.by("namaPeserta").ascending()));
                 items.put("items", pagePeserta);
             }
             else {
-                Page<Peserta> pagePeserta = pesertaRepository.findAll(
+                Page<Peserta> pagePeserta = pesertaRepository.findAll(example,
                         PageRequest.of(page, size, Sort.by("namaPeserta").descending()));
                 items.put("items", pagePeserta);
             }
