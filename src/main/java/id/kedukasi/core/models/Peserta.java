@@ -1,12 +1,10 @@
 package id.kedukasi.core.models;
 
-
 import id.kedukasi.core.enums.EnumStatusPeserta;
 import id.kedukasi.core.enums.EnumStatusTes;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.apachecommons.CommonsLog;
 import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -48,7 +46,8 @@ public class Peserta implements Serializable {
 
         private String pendidikanTerakhir;
 
-        private Long noHp;
+        @NotBlank
+        private String noHp;
 
         @NotBlank
         @Size(max = 50)
@@ -101,7 +100,9 @@ public class Peserta implements Serializable {
         public Peserta() {
         }
 
-        public Peserta(String namaPeserta, Date tanggalLahir, String jenisKelamin, String pendidikanTerakhir, Long noHp, String email, String provinsi, String kota, String kecamatan, String kelurahan, String alamatRumah, String motivasi, String kodeReferal) {
+        public Peserta(String namaPeserta, Date tanggalLahir, String jenisKelamin, String pendidikanTerakhir,
+                       String noHp, String email, String provinsi, String kota, String kecamatan, String kelurahan,
+                       String alamatRumah, String motivasi, String kodeReferal) {
 
                 Date date = new Date();
 

@@ -22,4 +22,6 @@ public interface PesertaService {
     Result searchPeserta(String keyword);
 
     Result sortAndPaging(Integer page, Integer size, Boolean ascending);
+
+    Result cekNoHP(String noHp);
 }

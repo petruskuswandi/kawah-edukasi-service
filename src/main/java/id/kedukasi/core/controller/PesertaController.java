@@ -108,4 +108,9 @@ public class PesertaController {
     ) {
         return service.sortAndPaging(page, size, ascending);
     }
+
+    @GetMapping("/cekNoHP")
+    public Result cekNoHP(@RequestParam(value = "nomer hp", required = true) String noHp) {
+        return service.cekNoHP(noHp);
+    }
 }

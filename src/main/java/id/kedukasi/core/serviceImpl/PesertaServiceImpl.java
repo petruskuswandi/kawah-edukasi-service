@@ -7,10 +7,9 @@ import id.kedukasi.core.models.Result;
 import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.PesertaRepository;
 import id.kedukasi.core.request.PesertaRequest;
-import id.kedukasi.core.service.FilesStorageService;
 import id.kedukasi.core.service.PesertaService;
-import id.kedukasi.core.utils.GlobalUtil;
 import id.kedukasi.core.utils.StringUtil;
+import id.kedukasi.core.utils.ValidatorUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,10 +41,7 @@ public class PesertaServiceImpl implements PesertaService {
     StringUtil stringUtil;
 
     @Autowired
-    GlobalUtil globalUtil;
-
-    @Autowired
-    FilesStorageService storageService;
+    ValidatorUtil validator;
 
     private Result result;
 
@@ -108,6 +104,14 @@ public class PesertaServiceImpl implements PesertaService {
             Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(pesertaRequest.getNamaPeserta()).orElse(new Peserta());
             if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(pesertaRequest.getId(), checkNamaPeserta.getId())) {
                 result.setMessage("Error: Username is already taken!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (!validator.isPhoneValid(pesertaRequest.getNoHp())) {
+                result.setMessage("Error: invalid phone number!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
@@ -250,6 +254,22 @@ public class PesertaServiceImpl implements PesertaService {
                 items.put("items", pagePeserta);
             }
             result.setData(items);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        return result;
+    }
+
+    @Override
+    public Result cekNoHP(String noHp) {
+        result = new Result();
+        try {
+            if (validator.isPhoneValid(noHp)) {
+                result.setMessage("valid");
+            }
+            else {
+                result.setMessage("invalid");
+            }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }

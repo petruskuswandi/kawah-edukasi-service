@@ -12,6 +12,7 @@ import id.kedukasi.core.service.CalonPesertaService;
 import id.kedukasi.core.service.FilesStorageService;
 import id.kedukasi.core.utils.GlobalUtil;
 import id.kedukasi.core.utils.StringUtil;
+import id.kedukasi.core.utils.ValidatorUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,10 +43,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
     StringUtil stringUtil;
 
     @Autowired
-    GlobalUtil globalUtil;
-
-    @Autowired
-    FilesStorageService storageService;
+    ValidatorUtil validator;
 
     private Result result;
 
@@ -107,6 +105,14 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(pesertaRequest.getNamaPeserta()).orElse(new Peserta());
             if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(pesertaRequest.getId(), checkNamaPeserta.getId())) {
                 result.setMessage("Error: Username is already taken!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (!validator.isPhoneValid(pesertaRequest.getNoHp())) {
+                result.setMessage("Error: invalid phone number!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()

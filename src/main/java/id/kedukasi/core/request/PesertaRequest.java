@@ -17,9 +17,6 @@ public class PesertaRequest implements Serializable {
 
     private Long id;
 
-//        String Kelas;
-//        Long Batch;
-
     @NotBlank
     String namaPeserta;
 
@@ -29,7 +26,8 @@ public class PesertaRequest implements Serializable {
 
     String pendidikanTerakhir;
 
-    Long noHp;
+    @NotBlank
+    String noHp;
 
     @NotBlank
     @Size(max = 50)
@@ -50,7 +48,4 @@ public class PesertaRequest implements Serializable {
     String motivasi;
 
     String kodeReferal;
-//        String statusTes (Lulus, Melaksanakan Test, Menunggu Follow Up);
-//        String statusPeserta (Calon, Peserta);
-
 }
