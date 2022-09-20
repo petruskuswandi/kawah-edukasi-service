@@ -29,6 +29,7 @@ public class KelasServiceImpl implements KelasService {
     StringUtil stringUtil;
 
     private Result result;
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
@@ -62,7 +63,6 @@ public class KelasServiceImpl implements KelasService {
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return result;
     }
 

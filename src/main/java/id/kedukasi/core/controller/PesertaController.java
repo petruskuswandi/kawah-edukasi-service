@@ -108,18 +108,4 @@ public class PesertaController {
     ) {
         return service.sortAndPaging(page, size, ascending);
     }
-
-
-//    "/getProvinsi"
-//    "/getProvinsi/{id}"
-//    "/getKota"
-//    "/getKota/{id}"
-//    "/getKecamatan"
-//    "/getKecamatan/{id}"
-//    "/getKelurahan"
-//    "/getkelurahan/{id}"
-//    "activeInactive"
-//    "search"
-//    "filterByBatch"
-//    "indexAndPaging"
 }
