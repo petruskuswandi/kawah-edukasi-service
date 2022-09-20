@@ -2,6 +2,10 @@ package id.kedukasi.core.models;
 
 import id.kedukasi.core.enums.EnumStatusPeserta;
 import id.kedukasi.core.enums.EnumStatusTes;
+import id.kedukasi.core.models.wilayah.MasterKecamatan;
+import id.kedukasi.core.models.wilayah.MasterKelurahan;
+import id.kedukasi.core.models.wilayah.MasterKota;
+import id.kedukasi.core.models.wilayah.MasterProvinsi;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,13 +67,29 @@ public class Peserta implements Serializable {
         @ApiModelProperty(hidden = true)
         private String uploadImagePath;
 
-        private String provinsi;
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinTable(name = "peserta_provinsi",
+                joinColumns = @JoinColumn(name = "peserta_id"),
+                inverseJoinColumns = @JoinColumn(name = "provinsi_id"))
+        private MasterProvinsi provinsi;
 
-        private String kota;
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinTable(name = "peserta_kota",
+                joinColumns = @JoinColumn(name = "peserta_id"),
+                inverseJoinColumns = @JoinColumn(name = "kota_id"))
+        private MasterKota kota;
 
-        private String kecamatan;
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinTable(name = "peserta_kecamatan",
+                joinColumns = @JoinColumn(name = "peserta_id"),
+                inverseJoinColumns = @JoinColumn(name = "kecamatan_id"))
+        private MasterKecamatan kecamatan;
 
-        private String kelurahan;
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinTable(name = "peserta_kelurahan",
+                joinColumns = @JoinColumn(name = "peserta_id"),
+                inverseJoinColumns = @JoinColumn(name = "kelurahan_id"))
+        private MasterKelurahan kelurahan;
 
         private String alamatRumah;
 
@@ -93,6 +113,10 @@ public class Peserta implements Serializable {
         @Temporal(TemporalType.TIMESTAMP)
         private Date banned_time;
 
+        @Column(name = "created_time")
+        @Temporal(TemporalType.TIMESTAMP)
+        private Date created_time;
+
         @Column(name = "updated_time")
         @Temporal(TemporalType.TIMESTAMP)
         private Date updated_time;
@@ -101,8 +125,7 @@ public class Peserta implements Serializable {
         }
 
         public Peserta(String namaPeserta, Date tanggalLahir, String jenisKelamin, String pendidikanTerakhir,
-                       String noHp, String email, String provinsi, String kota, String kecamatan, String kelurahan,
-                       String alamatRumah, String motivasi, String kodeReferal) {
+                       String noHp, String email,String alamatRumah, String motivasi, String kodeReferal) {
 
                 Date date = new Date();
 
@@ -112,13 +135,9 @@ public class Peserta implements Serializable {
                 this.pendidikanTerakhir = pendidikanTerakhir;
                 this.noHp = noHp;
                 this.email = email;
-                this.provinsi = provinsi;
-                this.kota = kota;
-                this.kecamatan = kecamatan;
-                this.kelurahan = kelurahan;
                 this.alamatRumah = alamatRumah;
                 this.motivasi = motivasi;
                 this.kodeReferal = kodeReferal;
-                this.updated_time = date;
+                this.created_time = date;
         }
 }

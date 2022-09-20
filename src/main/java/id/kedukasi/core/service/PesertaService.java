@@ -5,13 +5,18 @@ import id.kedukasi.core.request.PesertaRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
+
 public interface PesertaService {
 
     Result getAllPeserta(String uri);
 
     Result getPesertaById(long id, String uri);
 
-    ResponseEntity<?> updatePeserta(PesertaRequest pesertaRequest, long kelasId, MultipartFile uploadImage);
+    ResponseEntity<?> updatePeserta(Long id, Long kelasId, String namaPeserta, Date tanggalLahir,
+                                    String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
+                                    MultipartFile uploadImage, Integer provinsi, Integer kota, Integer kecamatan,
+                                    Integer kelurahan, String alamatRumah, String motivasi, String kodeReferal);
 
     ResponseEntity<?> deletePeserta(boolean banned, long id, String uri);
 

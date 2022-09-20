@@ -5,8 +5,16 @@ import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.Kelas;
 import id.kedukasi.core.models.Peserta;
 import id.kedukasi.core.models.Result;
+import id.kedukasi.core.models.wilayah.MasterKecamatan;
+import id.kedukasi.core.models.wilayah.MasterKelurahan;
+import id.kedukasi.core.models.wilayah.MasterKota;
+import id.kedukasi.core.models.wilayah.MasterProvinsi;
 import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.PesertaRepository;
+import id.kedukasi.core.repository.wilayah.KecamatanRepository;
+import id.kedukasi.core.repository.wilayah.KelurahanRepository;
+import id.kedukasi.core.repository.wilayah.KotaRepository;
+import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
 import id.kedukasi.core.request.PesertaRequest;
 import id.kedukasi.core.service.CalonPesertaService;
 import id.kedukasi.core.service.FilesStorageService;
@@ -26,6 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -38,6 +47,18 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
 
     @Autowired
     KelasRepository kelasRepository;
+
+    @Autowired
+    ProvinsiRepository provinsiRepository;
+
+    @Autowired
+    KotaRepository kotaRepository;
+
+    @Autowired
+    KecamatanRepository kecamatanRepository;
+
+    @Autowired
+    KelurahanRepository kelurahanRepository;
 
     @Autowired
     StringUtil stringUtil;
@@ -90,11 +111,14 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
     }
 
     @Override
-    public ResponseEntity<?> updateCalonPeserta(PesertaRequest pesertaRequest, long kelasId, MultipartFile uploadImage) {
+    public ResponseEntity<?> updateCalonPeserta(Long id, Long kelasId, String namaPeserta, Date tanggalLahir,
+                                                String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
+                                                MultipartFile uploadImage, Integer provinsiId, Integer kotaId, Integer kecamatanId,
+                                                Integer kelurahanId, String alamatRumah, String motivasi, String kodeReferal) {
         result = new Result();
         try {
-            Peserta checkEmailPeserta = pesertaRepository.findByEmail(pesertaRequest.getEmail()).orElse(new Peserta());
-            if (checkEmailPeserta.getEmail()!= null && !Objects.equals(pesertaRequest.getId(), checkEmailPeserta.getId())) {
+            Peserta checkEmailPeserta = pesertaRepository.findByEmail(email).orElse(new Peserta());
+            if (checkEmailPeserta.getEmail()!= null && !Objects.equals(id, checkEmailPeserta.getId())) {
                 result.setMessage("Error: Email is already in use!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
@@ -102,8 +126,8 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                         .body(result);
             }
 
-            Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(pesertaRequest.getNamaPeserta()).orElse(new Peserta());
-            if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(pesertaRequest.getId(), checkNamaPeserta.getId())) {
+            Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(namaPeserta).orElse(new Peserta());
+            if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
                 result.setMessage("Error: Username is already taken!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
@@ -111,7 +135,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                         .body(result);
             }
 
-            if (!validator.isPhoneValid(pesertaRequest.getNoHp())) {
+            if (!validator.isPhoneValid(noHp)) {
                 result.setMessage("Error: invalid phone number!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
@@ -119,36 +143,83 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                         .body(result);
             }
 
-            Peserta peserta = new Peserta(pesertaRequest.getNamaPeserta(), pesertaRequest.getTanggalLahir(),
-                    pesertaRequest.getJenisKelamin(), pesertaRequest.getPendidikanTerakhir(), pesertaRequest.getNoHp(),
-                    pesertaRequest.getEmail(), pesertaRequest.getProvinsi(),pesertaRequest.getKota(),
-                    pesertaRequest.getKecamatan(), pesertaRequest.getKelurahan(),pesertaRequest.getAlamatRumah(),
-                    pesertaRequest.getMotivasi(), pesertaRequest.getKodeReferal());
+            Peserta checkStatusPeserta = pesertaRepository.findById(id).orElse(new Peserta());
+            if (checkStatusPeserta.getStatusPeserta() != null && !Objects.equals(EnumStatusPeserta.CALON, checkNamaPeserta.getStatusPeserta())) {
+                result.setMessage("Error: id: " + id + " is not Calon Peserta");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
 
-            peserta.setId(pesertaRequest.getId());
+            Peserta peserta = new Peserta(namaPeserta, tanggalLahir, jenisKelamin, pendidikanTerakhir,noHp, email,
+                    alamatRumah, motivasi, kodeReferal);
+
+            peserta.setId(id);
             peserta.setStatusPeserta(EnumStatusPeserta.CALON);
 
-            Kelas kelas = kelasRepository.findById(kelasId);
-            if (kelas == null) {
+            //set kelas
+            if (kelasRepository.findById(kelasId).isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find kelas");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                peserta.setKelas(kelas);
+                peserta.setKelas(kelasRepository.findById(kelasId).get());
             }
 
+            //set image
             if (uploadImage!=null) {
                 peserta.setUploadImage(IOUtils.toByteArray(uploadImage.getInputStream()));
             }
 
+            //set provinsi
+            if (provinsiRepository.findById(provinsiId).isEmpty()) {
+                result.setSuccess(false);
+                result.setMessage("cannot find provinsi");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                peserta.setProvinsi(provinsiRepository.findById(provinsiId).get());
+            }
+
+            //set kota
+            if (kotaRepository.findById(kotaId).isEmpty()) {
+                result.setSuccess(false);
+                result.setMessage("cannot find kota");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                peserta.setKota(kotaRepository.findById(kotaId).get());
+            }
+
+            //set kecamatan
+            if (kecamatanRepository.findById(kecamatanId).isEmpty()) {
+                result.setSuccess(false);
+                result.setMessage("cannot find kecamatan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                peserta.setKecamatan(kecamatanRepository.findById(kecamatanId).get());
+            }
+
+            //set kelurahan
+            if (kelurahanRepository.findById(kelurahanId).isEmpty()) {
+                result.setSuccess(false);
+                result.setMessage("cannot find kelurahan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                peserta.setKelurahan(kelurahanRepository.findById(kelurahanId).get());
+            }
+
+            if (id!=0) {
+                Date date = new Date();
+                peserta.setUpdated_time(date);
+            }
+
             pesertaRepository.save(peserta);
 
-            result.setMessage(pesertaRequest.getId() == 0 ? "Calon peserta registered successfully!" : "Calon peserta updated successfully!");
+            result.setMessage(id == 0 ? "Calon peserta registered successfully!" : "Calon peserta updated successfully!");
             result.setCode(HttpStatus.OK.value());
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return ResponseEntity.ok(result);
     }
 

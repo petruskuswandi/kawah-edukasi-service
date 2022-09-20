@@ -7,6 +7,7 @@ import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+
+import java.util.Date;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -52,18 +55,48 @@ public class PesertaController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createPeserta(
-            @Valid @RequestBody PesertaRequest pesertaRequest,
-            @RequestParam(value = "kelasId", defaultValue = "0", required = true) long kelasId,
-            @RequestPart("uploadImage") MultipartFile uploadImage) {
-        return service.updatePeserta(pesertaRequest, kelasId, uploadImage);
+            @RequestParam(value = "Id Kelas", defaultValue = "0") Long kelasId,
+            @RequestParam(value = "Nama Peserta",defaultValue = "0") String namaPeserta,
+            @RequestParam(value = "Tanggal Lahir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalLahir,
+            @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
+            @RequestParam(value = "Pendidikan Terakhir",defaultValue = "0") String pendidikanTerakhir,
+            @RequestParam(value = "No Hp",defaultValue = "0") String noHp,
+            @RequestParam(value = "Email",defaultValue = "0") String email,
+            @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
+            @RequestParam(value = "Provinsi",defaultValue = "0") Integer provinsi,
+            @RequestParam(value = "Kota",defaultValue = "0") Integer kota,
+            @RequestParam(value = "Kecamatan",defaultValue = "0") Integer kecamatan,
+            @RequestParam(value = "Kelurahan",defaultValue = "0") Integer kelurahan,
+            @RequestParam(value = "Alamat Rumah",defaultValue = "0") String alamatRumah,
+            @RequestParam(value = "Motivasi",defaultValue = "0") String motivasi,
+            @RequestParam(value = "Kode Referal",defaultValue = "0") String kodeReferal
+    ) {
+        Long id = 0L;
+        return service.updatePeserta(id,kelasId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
+                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> updatePeserta(
-            @Valid @RequestBody PesertaRequest pesertaRequest,
-            @RequestParam(value = "kelasId", defaultValue = "0", required = true) long kelasId,
-            @RequestPart("uploadImage") MultipartFile uploadImage) {
-        return service.updatePeserta(pesertaRequest, kelasId, uploadImage);
+            @RequestParam(value = "Id",defaultValue = "0") Long id,
+            @RequestParam(value = "Id Kelas", defaultValue = "0") Long kelasId,
+            @RequestParam(value = "Nama Peserta",defaultValue = "0") String namaPeserta,
+            @RequestParam(value = "Tanggal Lahir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalLahir,
+            @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
+            @RequestParam(value = "Pendidikan Terakhir") String pendidikanTerakhir,
+            @RequestParam(value = "No Hp") String noHp,
+            @RequestParam(value = "Email",defaultValue = "email@gmail.com") String email,
+            @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
+            @RequestParam(value = "Provinsi",defaultValue = "0") Integer provinsi,
+            @RequestParam(value = "Kota",defaultValue = "0") Integer kota,
+            @RequestParam(value = "Kecamatan",defaultValue = "0") Integer kecamatan,
+            @RequestParam(value = "Kelurahan",defaultValue = "0") Integer kelurahan,
+            @RequestParam(value = "Alamat Rumah") String alamatRumah,
+            @RequestParam(value = "Motivasi") String motivasi,
+            @RequestParam(value = "Kode Referal") String kodeReferal
+    ) {
+        return service.updatePeserta(id,kelasId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
+                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
     }
 
     @PatchMapping(value = "/delete")

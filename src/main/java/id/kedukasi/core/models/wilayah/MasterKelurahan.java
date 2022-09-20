@@ -1,14 +1,14 @@
 package id.kedukasi.core.models.wilayah;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import id.kedukasi.core.models.Peserta;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -38,6 +38,10 @@ public class MasterKelurahan implements Serializable {
     @NotBlank
     @Column(name = "longitude")
     private Float longitude;
+
+    @JsonIgnore
+    @OneToMany()
+    private Set<Peserta> peserta;
 
     public MasterKelurahan() {
     }

@@ -5,12 +5,17 @@ import id.kedukasi.core.request.PesertaRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
+
 public interface CalonPesertaService {
     Result getAllCalonPeserta(String uri);
 
     Result getCalonPesertaById(long id, String uri);
 
-    ResponseEntity<?> updateCalonPeserta(PesertaRequest pesertaRequest,long kelasId, MultipartFile uploadImage);
+    ResponseEntity<?> updateCalonPeserta(Long id, Long kelasId, String namaPeserta, Date tanggalLahir,
+                                         String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
+                                         MultipartFile uploadImage, Integer provinsi, Integer kota, Integer kecamatan,
+                                         Integer kelurahan, String alamatRumah, String motivasi, String kodeReferal);
 
     ResponseEntity<?> deleteCalonPeserta(boolean banned, long id, String uri);
 
