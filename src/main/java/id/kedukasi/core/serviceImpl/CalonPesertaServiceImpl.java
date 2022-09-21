@@ -347,7 +347,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                 Example<Peserta> example = Example.of(peserta);
                 items.put("items", pesertaRepository.findAll(example));
                 result.setData(items);
-            } else if (statusTesOrd==3) {
+            } else if (statusTesOrd==2) {
                 peserta.setStatusTes(EnumStatusTes.LULUS);
                 peserta.setStatusPeserta(EnumStatusPeserta.CALON);
                 Example<Peserta> example = Example.of(peserta);
