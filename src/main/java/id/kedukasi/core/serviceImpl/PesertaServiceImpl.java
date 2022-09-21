@@ -14,7 +14,6 @@ import id.kedukasi.core.repository.wilayah.KecamatanRepository;
 import id.kedukasi.core.repository.wilayah.KelurahanRepository;
 import id.kedukasi.core.repository.wilayah.KotaRepository;
 import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
-import id.kedukasi.core.request.PesertaRequest;
 import id.kedukasi.core.service.PesertaService;
 import id.kedukasi.core.utils.StringUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
@@ -143,7 +142,7 @@ public class PesertaServiceImpl implements PesertaService {
             }
 
             Peserta checkStatusPeserta = pesertaRepository.findById(id).orElse(new Peserta());
-            if (checkStatusPeserta.getStatusPeserta() != null && !Objects.equals(EnumStatusPeserta.PESERTA, checkNamaPeserta.getStatusPeserta())) {
+            if (checkStatusPeserta.getStatusPeserta() != null && !Objects.equals(EnumStatusPeserta.PESERTA, checkStatusPeserta.getStatusPeserta())) {
                 result.setMessage("Error: id: " + id + " is not Peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
@@ -158,13 +157,15 @@ public class PesertaServiceImpl implements PesertaService {
             peserta.setStatusPeserta(EnumStatusPeserta.PESERTA);
 
             //set kelas
-            Kelas kelas = kelasRepository.findById(kelasId).get();
-            if (kelas == null) {
+            if (!kelasRepository.findById(kelasId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find kelas");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             } else {
-                peserta.setKelas(kelas);
+                peserta.setKelas(kelasRepository.findById(kelasId).get());
             }
 
             //set image
@@ -173,48 +174,51 @@ public class PesertaServiceImpl implements PesertaService {
             }
 
             //set provinsi
-            MasterProvinsi provinsi = provinsiRepository.findById(provinsiId).get();
-            if (provinsi == null) {
+            if (!provinsiRepository.findById(provinsiId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find provinsi");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             } else {
-                peserta.setProvinsi(provinsi);
+                peserta.setProvinsi(provinsiRepository.findById(provinsiId).get());
             }
 
             //set kota
-            MasterKota kota = kotaRepository.findById(kotaId).get();
-            if (kota == null) {
+            if (!kotaRepository.findById(kotaId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find kota");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             } else {
-                peserta.setKota(kota);
+                peserta.setKota(kotaRepository.findById(kotaId).get());
             }
 
             //set kecamatan
-            MasterKecamatan kecamatan = kecamatanRepository.findById(kecamatanId).get();
-            if (kecamatan == null) {
+            if (!kecamatanRepository.findById(kecamatanId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find kecamatan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             } else {
-                peserta.setKecamatan(kecamatan);
+                peserta.setKecamatan(kecamatanRepository.findById(kecamatanId).get());
             }
 
             //set kelurahan
-            MasterKelurahan kelurahan = kelurahanRepository.findById(kelurahanId).get();
-            if (kelurahan == null) {
+            if (!kelurahanRepository.findById(kelurahanId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find kelurahan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             } else {
-                peserta.setKelurahan(kelurahan);
-            }
-
-            if (id!=0) {
-                Date date = new Date();
-                peserta.setUpdated_time(date);
+                peserta.setKelurahan(kelurahanRepository.findById(kelurahanId).get());
             }
 
             pesertaRepository.save(peserta);

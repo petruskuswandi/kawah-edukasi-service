@@ -5,20 +5,13 @@ import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.Kelas;
 import id.kedukasi.core.models.Peserta;
 import id.kedukasi.core.models.Result;
-import id.kedukasi.core.models.wilayah.MasterKecamatan;
-import id.kedukasi.core.models.wilayah.MasterKelurahan;
-import id.kedukasi.core.models.wilayah.MasterKota;
-import id.kedukasi.core.models.wilayah.MasterProvinsi;
 import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.PesertaRepository;
 import id.kedukasi.core.repository.wilayah.KecamatanRepository;
 import id.kedukasi.core.repository.wilayah.KelurahanRepository;
 import id.kedukasi.core.repository.wilayah.KotaRepository;
 import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
-import id.kedukasi.core.request.PesertaRequest;
 import id.kedukasi.core.service.CalonPesertaService;
-import id.kedukasi.core.service.FilesStorageService;
-import id.kedukasi.core.utils.GlobalUtil;
 import id.kedukasi.core.utils.StringUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
 import org.apache.commons.io.IOUtils;
@@ -144,7 +137,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             }
 
             Peserta checkStatusPeserta = pesertaRepository.findById(id).orElse(new Peserta());
-            if (checkStatusPeserta.getStatusPeserta() != null && !Objects.equals(EnumStatusPeserta.CALON, checkNamaPeserta.getStatusPeserta())) {
+            if (checkStatusPeserta.getStatusPeserta() != null && !Objects.equals(EnumStatusPeserta.CALON, checkStatusPeserta.getStatusPeserta())) {
                 result.setMessage("Error: id: " + id + " is not Calon Peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
@@ -159,10 +152,13 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             peserta.setStatusPeserta(EnumStatusPeserta.CALON);
 
             //set kelas
-            if (kelasRepository.findById(kelasId).isEmpty()) {
+            if (!kelasRepository.findById(kelasId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find kelas");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             } else {
                 peserta.setKelas(kelasRepository.findById(kelasId).get());
             }
@@ -173,44 +169,51 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             }
 
             //set provinsi
-            if (provinsiRepository.findById(provinsiId).isEmpty()) {
+            if (!provinsiRepository.findById(provinsiId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find provinsi");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             } else {
                 peserta.setProvinsi(provinsiRepository.findById(provinsiId).get());
             }
 
             //set kota
-            if (kotaRepository.findById(kotaId).isEmpty()) {
+            if (!kotaRepository.findById(kotaId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find kota");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             } else {
                 peserta.setKota(kotaRepository.findById(kotaId).get());
             }
 
             //set kecamatan
-            if (kecamatanRepository.findById(kecamatanId).isEmpty()) {
+            if (!kecamatanRepository.findById(kecamatanId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find kecamatan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             } else {
                 peserta.setKecamatan(kecamatanRepository.findById(kecamatanId).get());
             }
 
             //set kelurahan
-            if (kelurahanRepository.findById(kelurahanId).isEmpty()) {
+            if (!kelurahanRepository.findById(kelurahanId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find kelurahan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             } else {
                 peserta.setKelurahan(kelurahanRepository.findById(kelurahanId).get());
-            }
-
-            if (id!=0) {
-                Date date = new Date();
-                peserta.setUpdated_time(date);
             }
 
             pesertaRepository.save(peserta);

@@ -30,10 +30,10 @@ public class Kelas implements Serializable {
     @Size(max = 50)
     private String description;
 
-    @Column(name = "banned", updatable = false)
+    @Column(name = "banned")
     private boolean banned;
 
-    @Column(name = "banned_time", updatable = false)
+    @Column(name = "banned_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date banned_time;
 
@@ -41,7 +41,7 @@ public class Kelas implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created_time;
 
-    @Column(name = "created_by")
+    @Column(name = "created_by", updatable = false)
     private String created_by;
 
     @Column(name = "updated_time")
@@ -62,8 +62,6 @@ public class Kelas implements Serializable {
         this.created_by = created_by;
         this.created_time = date;
         this.updated_time = date;
-        this.banned = false;
-        this.banned_time = date;
     }
 
     public Long getId() {

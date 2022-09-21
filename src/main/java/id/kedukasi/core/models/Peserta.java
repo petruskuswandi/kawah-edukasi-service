@@ -59,13 +59,9 @@ public class Peserta implements Serializable {
         private String email;
 
         @Lob
-        @Column(name = "uploadImage", updatable = false)
+        @Column(name = "uploadImage")
         @ApiModelProperty(hidden = true)
         private byte[] uploadImage;
-
-        @Column(name = "uploadImagePath", updatable = false)
-        @ApiModelProperty(hidden = true)
-        private String uploadImagePath;
 
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinTable(name = "peserta_provinsi",
@@ -106,14 +102,14 @@ public class Peserta implements Serializable {
         @Column(name = "statusPeserta",length = 20)
         private EnumStatusPeserta statusPeserta;
 
-        @Column(name = "banned", updatable = false)
+        @Column(name = "banned")
         private boolean banned;
 
-        @Column(name = "banned_time", updatable = false)
+        @Column(name = "banned_time")
         @Temporal(TemporalType.TIMESTAMP)
         private Date banned_time;
 
-        @Column(name = "created_time")
+        @Column(name = "created_time", updatable = false)
         @Temporal(TemporalType.TIMESTAMP)
         private Date created_time;
 
@@ -139,5 +135,6 @@ public class Peserta implements Serializable {
                 this.motivasi = motivasi;
                 this.kodeReferal = kodeReferal;
                 this.created_time = date;
+                this.updated_time = date;
         }
 }

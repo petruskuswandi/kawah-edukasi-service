@@ -1,7 +1,6 @@
 package id.kedukasi.core.controller;
 
 import id.kedukasi.core.models.Result;
-import id.kedukasi.core.request.PesertaRequest;
 import id.kedukasi.core.service.CalonPesertaService;
 import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import java.util.Date;
 

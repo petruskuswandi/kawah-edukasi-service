@@ -59,14 +59,13 @@ public class WilayahServiceImpl implements WilayahService {
     public Result getProvinsiByID(Integer provinsiId, String uri) {
         result = new Result();
         try {
-            MasterProvinsi provinsi = provinsiRepository.findById(provinsiId).get();
-            if (provinsi == null) {
+            if (!provinsiRepository.findById(provinsiId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find provinsi");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
-                items.put("items", provinsi);
+                items.put("items", provinsiRepository.findById(provinsiId).get());
                 result.setData(items);
             }
 
@@ -97,14 +96,13 @@ public class WilayahServiceImpl implements WilayahService {
     public Result getKotaById(Integer kotaId, String uri) {
         result = new Result();
         try {
-            MasterKota kota = kotaRepository.findById(kotaId).get();
-            if (kota == null) {
+            if (!kotaRepository.findById(kotaId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find provinsi");
+                result.setMessage("cannot find kota");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
-                items.put("items", kota);
+                items.put("items", kotaRepository.findById(kotaId).get());
                 result.setData(items);
             }
 
@@ -135,14 +133,13 @@ public class WilayahServiceImpl implements WilayahService {
     public Result getkecamatanById(Integer kecamatanId, String uri) {
         result = new Result();
         try {
-            MasterKecamatan kecamatan = kecamatanRepository.findById(kecamatanId).get();
-            if (kecamatan == null) {
+            if (!kecamatanRepository.findById(kecamatanId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find provinsi");
+                result.setMessage("cannot find kecamatan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
-                items.put("items", kecamatan);
+                items.put("items", kecamatanRepository.findById(kecamatanId).get());
                 result.setData(items);
             }
 
@@ -172,14 +169,13 @@ public class WilayahServiceImpl implements WilayahService {
     public Result getKelurahanById(Integer kelurahanId, String uri) {
         result = new Result();
         try {
-            MasterKelurahan kelurahan = kelurahanRepository.findById(kelurahanId).get();
-            if (kelurahan == null) {
+            if (!kelurahanRepository.findById(kelurahanId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find provinsi");
+                result.setMessage("cannot find kelurahan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
-                items.put("items", kelurahan);
+                items.put("items", kelurahanRepository.findById(kelurahanId).get());
                 result.setData(items);
             }
         } catch (Exception e) {
