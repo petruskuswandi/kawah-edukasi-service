@@ -6,17 +6,17 @@ public interface WilayahService {
     
     Result getAllProvinsi(String uri);
 
-    Result getProvinsiByID(Integer provinsiId, String uri);
+    Result getProvinsiByID(Long provinsiId, String uri);
 
-    Result getAllKotaInProvinsi(Integer provinsiId, String uri);
+    Result getAllKotaInProvinsi(Long provinsiId, String uri);
 
-    Result getKotaById(Integer kotaId, String uri);
+    Result getKotaById(Long kotaId, String uri);
 
-    Result getAllKecamatanInKota(Integer kotaId, String uri);
+    Result getAllKecamatanInKota(Long kotaId, String uri);
 
-    Result getkecamatanById(Integer kecamatanId, String uri);
+    Result getkecamatanById(Long kecamatanId, String uri);
 
-    Result getAllKelurahanInKecamatan(Integer kecamatanId, String uri);
+    Result getAllKelurahanInKecamatan(Long kecamatanId, String uri);
 
-    Result getKelurahanById(Integer kelurahanId, String uri);
+    Result getKelurahanById(Long kelurahanId, String uri);
 }

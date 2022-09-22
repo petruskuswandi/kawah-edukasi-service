@@ -77,10 +77,10 @@ public class MentorController {
   @RequestParam(value = "Tanggal Stop") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
   @RequestParam(value = "Alamat Rumah") String alamat_rumah,
   @RequestPart(value = "Upload Cv", required = false) MultipartFile cv,
-  @RequestParam(value = "Provinsi") Integer provinsi,
-  @RequestParam(value = "Kota") Integer kota,
-  @RequestParam(value = "Kecamatan") Integer kecamatan,
-  @RequestParam(value = "Kelurahan") Integer kelurahan )
+  @RequestParam(value = "Provinsi") Long provinsi,
+  @RequestParam(value = "Kota") Long kota,
+  @RequestParam(value = "Kecamatan") Long kecamatan,
+  @RequestParam(value = "Kelurahan") Long kelurahan )
   {
   Long id = 0L;
   return service.updateMentor(id, nama_mentor, kode, foto, no_ktp, no_telepon, status,
@@ -103,10 +103,10 @@ public class MentorController {
   @RequestParam(value = "Tanggal Stop") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
   @RequestParam(value = "Alamat Rumah") String alamat_rumah,
   @RequestPart(value = "Upload Cv", required = false) MultipartFile cv,
-  @RequestParam(value = "Provinsi",defaultValue = "0") Integer provinsi,
-  @RequestParam(value = "Kota",defaultValue = "0") Integer kota,
-  @RequestParam(value = "Kecamatan",defaultValue = "0") Integer kecamatan,
-  @RequestParam(value = "Kelurahan",defaultValue = "0") Integer kelurahan ) {
+  @RequestParam(value = "Provinsi",defaultValue = "0") Long provinsi,
+  @RequestParam(value = "Kota",defaultValue = "0") Long kota,
+  @RequestParam(value = "Kecamatan",defaultValue = "0") Long kecamatan,
+  @RequestParam(value = "Kelurahan",defaultValue = "0") Long kelurahan ) {
     return service.updateMentor(id, nama_mentor, kode, foto, no_ktp, no_telepon, status,
                                 class_name, pendidikan_univ, pendidikan_jurusan, tgl_start,
                                 tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan);

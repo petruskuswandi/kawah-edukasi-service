@@ -79,15 +79,15 @@ public class Mentor implements Serializable {
   private String alamat_rumah;
 
 
-  private int provinsi;
+  private Long provinsi;
 
 
-  private int kota;
+  private Long kota;
 
 
-  private int kecamatan;
+  private Long kecamatan;
 
-  private int kelurahan;
+  private Long kelurahan;
 
   @Column(name = "banned", updatable = false)
   private boolean banned;
@@ -243,35 +243,35 @@ public class Mentor implements Serializable {
     this.alamat_rumah = alamat_rumah;
   }
 
-  public Integer getProvinsi() {
+  public Long getProvinsi() {
     return provinsi;
   }
 
-  public void setProvinsi(Integer provinsi) {
+  public void setProvinsi(Long provinsi) {
     this.provinsi = provinsi;
   }
 
-  public Integer getKota() {
+  public Long getKota() {
     return kota;
   }
 
-  public void setKota(Integer kota) {
+  public void setKota(Long kota) {
     this.kota = kota;
   }
 
-  public Integer getKecamatan() {
+  public Long getKecamatan() {
     return kecamatan;
   }
 
-  public void setKecamatan(Integer kecamatan) {
+  public void setKecamatan(Long kecamatan) {
     this.kecamatan = kecamatan;
   }
 
-  public Integer getKelurahan() {
+  public Long getKelurahan() {
     return kelurahan;
   }
 
-  public void setKelurahan(Integer kelurahan) {
+  public void setKelurahan(Long kelurahan) {
     this.kelurahan = kelurahan;
   }
 

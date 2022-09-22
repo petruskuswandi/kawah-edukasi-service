@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import id.kedukasi.core.models.wilayah.Kota;
 
 @Repository
-public interface KotaRepository extends JpaRepository<Kota, Integer>{
+public interface KotaRepository extends JpaRepository<Kota, Long>{
     
 }

@@ -19,7 +19,7 @@ import lombok.Setter;
 public class Provinsi implements Serializable{
     
     @Id
-    private Integer id;
+    private Long id;
 
     @NotBlank
     @Column(name = "name")

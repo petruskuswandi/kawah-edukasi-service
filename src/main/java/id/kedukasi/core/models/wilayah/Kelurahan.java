@@ -16,11 +16,11 @@ import lombok.Setter;
 public class Kelurahan implements Serializable{
     
     @Id
-    private Integer id;
+    private Long id;
 
     @NotBlank
     @Column(name = "kecamatan_id")
-    private Integer kecamatan_id;
+    private Long kecamatan_id;
 
     @NotBlank
     @Column(name = "name")
@@ -41,7 +41,7 @@ public class Kelurahan implements Serializable{
     public Kelurahan() {
     }
 
-    public Kelurahan(Integer kecamatan_id, String name, String alt_name, Double latitude, Double longitude) {
+    public Kelurahan(Long kecamatan_id, String name, String alt_name, Double latitude, Double longitude) {
         this.kecamatan_id = kecamatan_id;
         this.name = name;
         this.alt_name = alt_name;

@@ -15,11 +15,11 @@ import lombok.Setter;
 public class Kecamatan implements Serializable{
     
     @Id
-    private Integer id;
+    private Long id;
 
     @NotBlank
     @Column(name = "kota_id")
-    private Integer kota_id;
+    private Long kota_id;
 
     @NotBlank
     @Column(name = "name")
@@ -40,7 +40,7 @@ public class Kecamatan implements Serializable{
     public Kecamatan() {
     }
 
-    public Kecamatan(Integer kota_id, String name, String alt_name, Double latitude, Double longitude) {
+    public Kecamatan(Long kota_id, String name, String alt_name, Double latitude, Double longitude) {
         this.kota_id = kota_id;
         this.name = name;
         this.alt_name = alt_name;

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import id.kedukasi.core.models.wilayah.Kecamatan;
 
 @Repository
-public interface KecamatanRepository extends JpaRepository<Kecamatan, Integer>{
+public interface KecamatanRepository extends JpaRepository<Kecamatan, Long>{
     
 }

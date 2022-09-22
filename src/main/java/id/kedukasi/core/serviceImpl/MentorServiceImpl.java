@@ -64,7 +64,7 @@ public class MentorServiceImpl implements MentorService{
     public ResponseEntity<?> updateMentor(Long id, String nama_mentor, String kode, MultipartFile foto, String no_ktp,
                                           String no_telepon, String status, String class_name, String pendidikan_univ,
                                           String pendidikan_jurusan, Date tgl_start, Date tgl_stop,  String alamat_rumah,
-                                          MultipartFile cv, Integer provinsiId, Integer kotaId, Integer kecamatanId, Integer kelurahanId) {
+                                          MultipartFile cv, Long provinsiId, Long kotaId, Long kecamatanId, Long kelurahanId) {
       result = new Result();
       try {
         Mentor checkKodeMentor = mentorRepository.findByKode(kode).orElse(new Mentor());
@@ -107,11 +107,13 @@ public class MentorServiceImpl implements MentorService{
           }
 
         //set provinsi
-        Provinsi provinsi = provinsiRepository.findById(provinsiId).get();
-        if (provinsi == null) {
+        if (!provinsiRepository.findById(provinsiId).isPresent()) {
             result.setSuccess(false);
             result.setMessage("cannot find provinsi");
             result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity
+                   .badRequest()
+                   .body(result);
         } else {
             mentor.setProvinsi(provinsiId);
         }
@@ -161,31 +163,7 @@ public class MentorServiceImpl implements MentorService{
   
       return ResponseEntity.ok(result);
     }
-
-    // @Override
-    // public ResponseEntity<?> updateFotoBlob(long id, MultipartFile foto, String uri) {
-    //   result = new Result();
-    //   try {
-    //     mentorRepository.updateCv(IOUtils.toByteArray(foto.getInputStream()), id);
-    //   } catch (IOException e) {
-    //     logger.error(stringUtil.getError(e));
-    //   }
-  
-    //   return ResponseEntity.ok(result);
-    // }
-
-    // @Override
-    // public ResponseEntity<?> updateCvBlob(long id, MultipartFile cv, String uri) {
-    //   result = new Result();
-    //   try {
-    //     mentorRepository.updateCv(IOUtils.toByteArray(cv.getInputStream()), id);
-    //   } catch (IOException e) {
-    //     logger.error(stringUtil.getError(e));
-    //   }
-  
-    //   return ResponseEntity.ok(result);
-    // }
-
+    
     @Override
     public ResponseEntity<?> deleteMentor(boolean banned, long id, String uri) {
       result = new Result();
