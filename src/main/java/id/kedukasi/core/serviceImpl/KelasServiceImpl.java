@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -27,6 +29,7 @@ public class KelasServiceImpl implements KelasService {
     StringUtil stringUtil;
 
     private Result result;
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
@@ -43,24 +46,22 @@ public class KelasServiceImpl implements KelasService {
     }
 
     @Override
-    public Result getClassById(long id, String uri) {
+    public Result getClassById(Long id, String uri) {
         result = new Result();
         try {
-            Kelas kelas = kelasRepository.findById(id);
-            if (kelas == null) {
+            if (!kelasRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find class");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
-                items.put("items", kelasRepository.findById(id));
+                items.put("items", kelasRepository.findById(id).get());
                 result.setData(items);
             }
 
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return result;
     }
 
@@ -87,7 +88,8 @@ public class KelasServiceImpl implements KelasService {
                 return ResponseEntity.badRequest().body(result);
             }
 
-            Kelas kelasbaru = new Kelas(kelasRequest.getClassname(), kelasRequest.getDescription());
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Kelas kelasbaru = new Kelas(kelasRequest.getClassname(), kelasRequest.getDescription(), auth.getName());
 
             kelasbaru.setId(kelasRequest.getId());
             kelasRepository.save(kelasbaru);
@@ -102,7 +104,7 @@ public class KelasServiceImpl implements KelasService {
     }
 
     @Override
-    public ResponseEntity<?> deleteClass(boolean banned, long id, String uri) {
+    public ResponseEntity<?> deleteClass(boolean banned, Long id, String uri) {
         result = new Result();
         try {
             kelasRepository.deleteKelas(banned, id);
