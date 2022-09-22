@@ -38,49 +38,49 @@ public class WilayahController {
     }
 
     @GetMapping(value = "/provinsi/{provinsiId}", produces = APPLICATION_JSON_VALUE)
-    public Result getProvinsiByID(@PathVariable("provinsiId") Integer provinsiId) {
+    public Result getProvinsiByID(@PathVariable("provinsiId") Long provinsiId) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getProvinsiByID(provinsiId, uri);
     }
 
     @GetMapping(value = "/provinsi/{provinsiId}/kota/all", produces = APPLICATION_JSON_VALUE)
-    public Result getAllKotaInProvinsi(@PathVariable("provinsiId") Integer provinsiId) {
+    public Result getAllKotaInProvinsi(@PathVariable("provinsiId") Long provinsiId) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getAllKotaInProvinsi(provinsiId, uri);
     }
 
     @GetMapping(value = "/kota/{kotaId}", produces = APPLICATION_JSON_VALUE)
-    public Result getKotaById(@PathVariable("kotaId") Integer kotaId) {
+    public Result getKotaById(@PathVariable("kotaId") Long kotaId) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getKotaById(kotaId, uri);
     }
 
     @GetMapping(value = "/kota/{kotaId}/kecamatan/all", produces = APPLICATION_JSON_VALUE)
-    public Result getAllKecamatanInKota(@PathVariable("kotaId") Integer kotaId) {
+    public Result getAllKecamatanInKota(@PathVariable("kotaId") Long kotaId) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getAllKecamatanInKota(kotaId, uri);
     }
 
     @GetMapping(value = "/kecamatan/{kecamatanId}", produces = APPLICATION_JSON_VALUE)
-    public Result getkecamatanById(@PathVariable("kecamatanId") Integer kecamatanId) {
+    public Result getkecamatanById(@PathVariable("kecamatanId") Long kecamatanId) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getkecamatanById(kecamatanId, uri);
     }
 
     @GetMapping(value = "/kecamatan/{kecamatanId}/kelurahan/all", produces = APPLICATION_JSON_VALUE)
-    public Result getAllKelurahanInKecamatan(@PathVariable("kecamatanId") Integer kecamatanId) {
+    public Result getAllKelurahanInKecamatan(@PathVariable("kecamatanId") Long kecamatanId) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getAllKelurahanInKecamatan(kecamatanId, uri);
     }
 
     @GetMapping(value = "/kelurahan/{kelurahanId}", produces = APPLICATION_JSON_VALUE)
-    public Result getKelurahanById(@PathVariable("kelurahanId") Integer kelurahanId) {
+    public Result getKelurahanById(@PathVariable("kelurahanId") Long kelurahanId) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getKelurahanById(kelurahanId, uri);

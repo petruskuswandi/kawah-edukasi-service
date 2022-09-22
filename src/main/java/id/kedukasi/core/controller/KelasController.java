@@ -41,7 +41,7 @@ public class KelasController {
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public Result getClassByid(@PathVariable("id") long id) {
+    public Result getClassByid(@PathVariable("id") Long id) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getClassById(id, uri);
@@ -60,7 +60,7 @@ public class KelasController {
 
     @PatchMapping(value = "/delete")
     public ResponseEntity<?> deleteClass(
-            @RequestParam(value = "id", defaultValue = "0", required = true) long id,
+            @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
             @RequestParam(value = "banned", defaultValue = "true") boolean banned
     ) {
         String uri = stringUtil.getLogParam(request);

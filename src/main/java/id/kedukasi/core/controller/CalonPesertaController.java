@@ -44,7 +44,7 @@ public class CalonPesertaController {
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public Result getCalonPesertaByid(@PathVariable("id") long id) {
+    public Result getCalonPesertaByid(@PathVariable("id") Long id) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getCalonPesertaById(id, uri);
@@ -60,10 +60,10 @@ public class CalonPesertaController {
             @RequestParam(value = "No Hp",defaultValue = "0") String noHp,
             @RequestParam(value = "Email",defaultValue = "0") String email,
             @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
-            @RequestParam(value = "Provinsi",defaultValue = "0") Integer provinsi,
-            @RequestParam(value = "Kota",defaultValue = "0") Integer kota,
-            @RequestParam(value = "Kecamatan",defaultValue = "0") Integer kecamatan,
-            @RequestParam(value = "Kelurahan",defaultValue = "0") Integer kelurahan,
+            @RequestParam(value = "Provinsi",defaultValue = "0") Long provinsi,
+            @RequestParam(value = "Kota",defaultValue = "0") Long kota,
+            @RequestParam(value = "Kecamatan",defaultValue = "0") Long kecamatan,
+            @RequestParam(value = "Kelurahan",defaultValue = "0") Long kelurahan,
             @RequestParam(value = "Alamat Rumah",defaultValue = "0") String alamatRumah,
             @RequestParam(value = "Motivasi",defaultValue = "0") String motivasi,
             @RequestParam(value = "Kode Referal",defaultValue = "0") String kodeReferal
@@ -84,10 +84,10 @@ public class CalonPesertaController {
             @RequestParam(value = "No Hp") String noHp,
             @RequestParam(value = "Email",defaultValue = "email@gmail.com") String email,
             @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
-            @RequestParam(value = "Provinsi",defaultValue = "0") Integer provinsi,
-            @RequestParam(value = "Kota",defaultValue = "0") Integer kota,
-            @RequestParam(value = "Kecamatan",defaultValue = "0") Integer kecamatan,
-            @RequestParam(value = "Kelurahan",defaultValue = "0") Integer kelurahan,
+            @RequestParam(value = "Provinsi",defaultValue = "0") Long provinsi,
+            @RequestParam(value = "Kota",defaultValue = "0") Long kota,
+            @RequestParam(value = "Kecamatan",defaultValue = "0") Long kecamatan,
+            @RequestParam(value = "Kelurahan",defaultValue = "0") Long kelurahan,
             @RequestParam(value = "Alamat Rumah") String alamatRumah,
             @RequestParam(value = "Motivasi") String motivasi,
             @RequestParam(value = "Kode Referal") String kodeReferal
@@ -98,7 +98,7 @@ public class CalonPesertaController {
 
     @PatchMapping(value = "/delete")
     public ResponseEntity<?> deleteCalonPeserta(
-            @RequestParam(value = "id", defaultValue = "0", required = true) long id,
+            @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
             @RequestParam(value = "banned", defaultValue = "true") boolean banned
     ) {
         String uri = stringUtil.getLogParam(request);
@@ -108,7 +108,7 @@ public class CalonPesertaController {
 
     @PatchMapping(value = "/changeToPeserta")
     public ResponseEntity<?> changeToPeserta(
-            @RequestParam(value = "id", defaultValue = "0", required = true) long id
+            @RequestParam(value = "id", defaultValue = "0", required = true) Long id
     ) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
@@ -117,7 +117,7 @@ public class CalonPesertaController {
 
     @PatchMapping(value = "/changeStatusTes")
     public ResponseEntity<?> changeStatusTes(
-            @RequestParam(value = "id", defaultValue = "0", required = true) long id,
+            @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
             @RequestParam(value = "Status Tes", defaultValue = "0") Long statusTesOrd
     ) {
         String uri = stringUtil.getLogParam(request);
@@ -127,8 +127,8 @@ public class CalonPesertaController {
 
     @PatchMapping(value = ("/changeKelas"))
     public ResponseEntity<?> changeKelas(
-            @RequestParam(value = "calonPesertaId", defaultValue = "0", required = true) long calonPesertaId,
-            @RequestParam(value = "kelasId", defaultValue = "0", required = true) long kelasId) {
+            @RequestParam(value = "calonPesertaId", defaultValue = "0", required = true) Long calonPesertaId,
+            @RequestParam(value = "kelasId", defaultValue = "0", required = true) Long kelasId) {
 
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);

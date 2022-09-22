@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface KelurahanRepository extends JpaRepository<MasterKelurahan,Integer> {
+public interface KelurahanRepository extends JpaRepository<MasterKelurahan,Long> {
 }

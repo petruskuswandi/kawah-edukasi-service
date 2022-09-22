@@ -56,7 +56,7 @@ public class WilayahServiceImpl implements WilayahService {
     }
 
     @Override
-    public Result getProvinsiByID(Integer provinsiId, String uri) {
+    public Result getProvinsiByID(Long provinsiId, String uri) {
         result = new Result();
         try {
             if (!provinsiRepository.findById(provinsiId).isPresent()) {
@@ -77,7 +77,7 @@ public class WilayahServiceImpl implements WilayahService {
     }
 
     @Override
-    public Result getAllKotaInProvinsi(Integer provinsiId, String uri) {
+    public Result getAllKotaInProvinsi(Long provinsiId, String uri) {
         result = new Result();
         try {
             Map items = new HashMap();
@@ -93,7 +93,7 @@ public class WilayahServiceImpl implements WilayahService {
     }
 
     @Override
-    public Result getKotaById(Integer kotaId, String uri) {
+    public Result getKotaById(Long kotaId, String uri) {
         result = new Result();
         try {
             if (!kotaRepository.findById(kotaId).isPresent()) {
@@ -114,7 +114,7 @@ public class WilayahServiceImpl implements WilayahService {
     }
 
     @Override
-    public Result getAllKecamatanInKota(Integer kotaId, String uri) {
+    public Result getAllKecamatanInKota(Long kotaId, String uri) {
         result = new Result();
         try {
             Map items = new HashMap();
@@ -130,7 +130,7 @@ public class WilayahServiceImpl implements WilayahService {
     }
 
     @Override
-    public Result getkecamatanById(Integer kecamatanId, String uri) {
+    public Result getkecamatanById(Long kecamatanId, String uri) {
         result = new Result();
         try {
             if (!kecamatanRepository.findById(kecamatanId).isPresent()) {
@@ -150,7 +150,7 @@ public class WilayahServiceImpl implements WilayahService {
     }
 
     @Override
-    public Result getAllKelurahanInKecamatan(Integer kecamatanId, String uri) {
+    public Result getAllKelurahanInKecamatan(Long kecamatanId, String uri) {
         result = new Result();
         try {
             Map items = new HashMap();
@@ -166,7 +166,7 @@ public class WilayahServiceImpl implements WilayahService {
     }
 
     @Override
-    public Result getKelurahanById(Integer kelurahanId, String uri) {
+    public Result getKelurahanById(Long kelurahanId, String uri) {
         result = new Result();
         try {
             if (!kelurahanRepository.findById(kelurahanId).isPresent()) {

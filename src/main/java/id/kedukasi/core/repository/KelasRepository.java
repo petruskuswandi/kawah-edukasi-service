@@ -15,9 +15,6 @@ public interface KelasRepository extends JpaRepository<Kelas,Long> {
     @Transactional
     Optional<Kelas> findByClassname(String username);
 
-    @Transactional
-    Kelas findById(long id);
-
     @Modifying
     @Transactional
     @Query("update Kelas u set u.banned = ?1, u.banned_time = CURRENT_TIMESTAMP where u.id = ?2")

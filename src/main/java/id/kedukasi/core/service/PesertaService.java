@@ -10,22 +10,20 @@ public interface PesertaService {
 
     Result getAllPeserta(String uri);
 
-    Result getPesertaById(long id, String uri);
+    Result getPesertaById(Long id, String uri);
 
     ResponseEntity<?> updatePeserta(Long id, Long kelasId, String namaPeserta, Date tanggalLahir,
                                     String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
-                                    MultipartFile uploadImage, Integer provinsi, Integer kota, Integer kecamatan,
-                                    Integer kelurahan, String alamatRumah, String motivasi, String kodeReferal);
+                                    MultipartFile uploadImage, Long provinsi, Long kota, Long kecamatan,
+                                    Long kelurahan, String alamatRumah, String motivasi, String kodeReferal);
 
-    ResponseEntity<?> deletePeserta(boolean banned, long id, String uri);
+    ResponseEntity<?> deletePeserta(boolean banned, Long id, String uri);
 
-    ResponseEntity<?> changeToCalonPeserta(long id, String uri);
+    ResponseEntity<?> changeToCalonPeserta(Long id, String uri);
 
-    ResponseEntity<?> changeKelas(long pesertaId, long kelasId, String uri);
+    ResponseEntity<?> changeKelas(Long pesertaId, Long kelasId, String uri);
 
     Result searchPeserta(String keyword);
 
     Result sortAndPaging(Integer page, Integer size, Boolean ascending);
-
-    Result cekNoHP(String noHp);
 }

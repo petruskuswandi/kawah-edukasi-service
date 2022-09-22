@@ -44,7 +44,7 @@ public class PesertaController {
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public Result getPesertaByid(@PathVariable("id") long id) {
+    public Result getPesertaByid(@PathVariable("id") Long id) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getPesertaById(id, uri);
@@ -60,10 +60,10 @@ public class PesertaController {
             @RequestParam(value = "No Hp",defaultValue = "0") String noHp,
             @RequestParam(value = "Email",defaultValue = "0") String email,
             @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
-            @RequestParam(value = "Provinsi",defaultValue = "0") Integer provinsi,
-            @RequestParam(value = "Kota",defaultValue = "0") Integer kota,
-            @RequestParam(value = "Kecamatan",defaultValue = "0") Integer kecamatan,
-            @RequestParam(value = "Kelurahan",defaultValue = "0") Integer kelurahan,
+            @RequestParam(value = "Provinsi",defaultValue = "0") Long provinsi,
+            @RequestParam(value = "Kota",defaultValue = "0") Long kota,
+            @RequestParam(value = "Kecamatan",defaultValue = "0") Long kecamatan,
+            @RequestParam(value = "Kelurahan",defaultValue = "0") Long kelurahan,
             @RequestParam(value = "Alamat Rumah",defaultValue = "0") String alamatRumah,
             @RequestParam(value = "Motivasi",defaultValue = "0") String motivasi,
             @RequestParam(value = "Kode Referal",defaultValue = "0") String kodeReferal
@@ -84,10 +84,10 @@ public class PesertaController {
             @RequestParam(value = "No Hp") String noHp,
             @RequestParam(value = "Email",defaultValue = "email@gmail.com") String email,
             @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
-            @RequestParam(value = "Provinsi",defaultValue = "0") Integer provinsi,
-            @RequestParam(value = "Kota",defaultValue = "0") Integer kota,
-            @RequestParam(value = "Kecamatan",defaultValue = "0") Integer kecamatan,
-            @RequestParam(value = "Kelurahan",defaultValue = "0") Integer kelurahan,
+            @RequestParam(value = "Provinsi",defaultValue = "0") Long provinsi,
+            @RequestParam(value = "Kota",defaultValue = "0") Long kota,
+            @RequestParam(value = "Kecamatan",defaultValue = "0") Long kecamatan,
+            @RequestParam(value = "Kelurahan",defaultValue = "0") Long kelurahan,
             @RequestParam(value = "Alamat Rumah") String alamatRumah,
             @RequestParam(value = "Motivasi") String motivasi,
             @RequestParam(value = "Kode Referal") String kodeReferal
@@ -98,7 +98,7 @@ public class PesertaController {
 
     @PatchMapping(value = "/delete")
     public ResponseEntity<?> deletePeserta(
-            @RequestParam(value = "id", defaultValue = "0", required = true) long id,
+            @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
             @RequestParam(value = "banned", defaultValue = "true") boolean banned
     ) {
         String uri = stringUtil.getLogParam(request);
@@ -108,7 +108,7 @@ public class PesertaController {
 
     @PatchMapping(value = "/changeToCalonPeserta")
     public ResponseEntity<?> changeToCalonPeserta(
-            @RequestParam(value = "id", defaultValue = "0", required = true) long id
+            @RequestParam(value = "id", defaultValue = "0", required = true) Long id
     ) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
@@ -117,8 +117,8 @@ public class PesertaController {
 
     @PatchMapping(value = ("/changeKelas"))
     public ResponseEntity<?> changeKelas(
-            @RequestParam(value = "pesertaId", defaultValue = "0", required = true) long pesertaId,
-            @RequestParam(value = "kelasId", defaultValue = "0", required = true) long kelasId) {
+            @RequestParam(value = "pesertaId", defaultValue = "0", required = true) Long pesertaId,
+            @RequestParam(value = "kelasId", defaultValue = "0", required = true) Long kelasId) {
 
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
@@ -134,13 +134,8 @@ public class PesertaController {
     public Result sortAndPaging(
             @RequestParam(value = "page", defaultValue = "0", required = true) Integer page,
             @RequestParam(value = "size", defaultValue = "1", required = true) Integer size,
-            @RequestParam(value = "ascending", defaultValue = "true", required = true) Boolean ascending
+            @RequestParam(value = "ascending", defaultValue = "true") Boolean ascending
     ) {
         return service.sortAndPaging(page, size, ascending);
-    }
-
-    @GetMapping("/cekNoHP")
-    public Result cekNoHP(@RequestParam(value = "nomer hp", required = true) String noHp) {
-        return service.cekNoHP(noHp);
     }
 }

@@ -80,21 +80,20 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
     }
 
     @Override
-    public Result getCalonPesertaById(long id, String uri) {
+    public Result getCalonPesertaById(Long id, String uri) {
         result = new Result();
         try {
-            Peserta peserta = pesertaRepository.findById(id);
-            if (peserta == null) {
+            if (!pesertaRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
+            } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
                 result.setSuccess(false);
                 result.setMessage("id: "+ id + " is not calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
-                items.put("items", pesertaRepository.findById(id));
+                items.put("items", pesertaRepository.findById(id).get());
                 result.setData(items);
             }
         } catch (Exception e) {
@@ -106,8 +105,8 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
     @Override
     public ResponseEntity<?> updateCalonPeserta(Long id, Long kelasId, String namaPeserta, Date tanggalLahir,
                                                 String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
-                                                MultipartFile uploadImage, Integer provinsiId, Integer kotaId, Integer kecamatanId,
-                                                Integer kelurahanId, String alamatRumah, String motivasi, String kodeReferal) {
+                                                MultipartFile uploadImage, Long provinsiId, Long kotaId, Long kecamatanId,
+                                                Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal) {
         result = new Result();
         try {
             Peserta checkEmailPeserta = pesertaRepository.findByEmail(email).orElse(new Peserta());
@@ -227,15 +226,14 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
     }
 
     @Override
-    public ResponseEntity<?> deleteCalonPeserta(boolean banned, long id, String uri) {
+    public ResponseEntity<?> deleteCalonPeserta(boolean banned, Long id, String uri) {
         result = new Result();
         try {
-            Peserta peserta = pesertaRepository.findById(id);
-            if (peserta == null) {
+            if (!pesertaRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
+            } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
                 result.setSuccess(false);
                 result.setMessage("id: "+ id + " is not calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -249,15 +247,14 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
     }
 
     @Override
-    public ResponseEntity<?> changeToPeserta(long id, String uri) {
+    public ResponseEntity<?> changeToPeserta(Long id, String uri) {
         result = new Result();
         try {
-            Peserta peserta = pesertaRepository.findById(id);
-            if (peserta == null) {
+            if (!pesertaRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
+            } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
                 result.setSuccess(false);
                 result.setMessage("id: "+ id + " is not calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -271,15 +268,14 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
     }
 
     @Override
-    public ResponseEntity<?> changeStatusTes(Long statusTesOrd, long id, String uri) {
+    public ResponseEntity<?> changeStatusTes(Long statusTesOrd, Long id, String uri) {
         result = new Result();
         try {
-            Peserta peserta = pesertaRepository.findById(id);
-            if (peserta == null) {
+            if (!pesertaRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
+            } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
                 result.setSuccess(false);
                 result.setMessage("id: "+ id + " is not calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -305,16 +301,16 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
     }
 
     @Override
-    public ResponseEntity<?> changeKelas(long calonPesertaId, long kelasId, String uri) {
+    public ResponseEntity<?> changeKelas(Long calonPesertaId, Long kelasId, String uri) {
         result = new Result();
         try {
-            Peserta calonPeserta = pesertaRepository.findById(calonPesertaId);
-            Kelas kelas = kelasRepository.findById(kelasId);
-            if (calonPeserta == null) {
+            Peserta calonPeserta = pesertaRepository.findById(calonPesertaId).get();
+            Kelas kelas = kelasRepository.findById(kelasId).get();
+            if (!pesertaRepository.findById(calonPesertaId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (kelas == null) {
+            } else if (!kelasRepository.findById(kelasId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find kelas");
                 result.setCode(HttpStatus.BAD_REQUEST.value());

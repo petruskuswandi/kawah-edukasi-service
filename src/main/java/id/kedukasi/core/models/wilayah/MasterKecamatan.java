@@ -17,11 +17,11 @@ import java.util.Set;
 public class MasterKecamatan implements Serializable {
 
     @Id
-    private Integer id;
+    private Long id;
 
     @NotBlank
     @Column(name = "kota_id")
-    private Integer kota_id;
+    private Long kota_id;
 
     @NotBlank
     @Column(name = "name")
@@ -33,11 +33,11 @@ public class MasterKecamatan implements Serializable {
 
     @NotBlank
     @Column(name = "latitude")
-    private Float latitude;
+    private Double latitude;
 
     @NotBlank
     @Column(name = "longitude")
-    private Float longitude;
+    private Double longitude;
 
     @JsonIgnore
     @OneToMany()
@@ -46,7 +46,7 @@ public class MasterKecamatan implements Serializable {
     public MasterKecamatan() {
     }
 
-    public MasterKecamatan(Integer id, Integer kota_id, String name, String alt_name, Float latitude, Float longitude) {
+    public MasterKecamatan(Long id, Long kota_id, String name, String alt_name, Double latitude, Double longitude) {
         this.id = id;
         this.kota_id = kota_id;
         this.name = name;

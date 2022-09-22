@@ -85,21 +85,20 @@ public class PesertaServiceImpl implements PesertaService {
     }
 
     @Override
-    public Result getPesertaById(long id, String uri) {
+    public Result getPesertaById(Long id, String uri) {
         result = new Result();
         try {
-            Peserta peserta = pesertaRepository.findById(id);
-            if (peserta == null) {
+            if (!pesertaRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+            } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
                 result.setSuccess(false);
                 result.setMessage("id: "+ id + " is not peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
-                items.put("items", pesertaRepository.findById(id));
+                items.put("items", pesertaRepository.findById(id).get());
                 result.setData(items);
             }
         } catch (Exception e) {
@@ -111,8 +110,8 @@ public class PesertaServiceImpl implements PesertaService {
     @Override
     public ResponseEntity<?> updatePeserta(Long id, Long kelasId, String namaPeserta, Date tanggalLahir,
                                            String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
-                                           MultipartFile uploadImage, Integer provinsiId, Integer kotaId, Integer kecamatanId,
-                                           Integer kelurahanId, String alamatRumah, String motivasi, String kodeReferal) {
+                                           MultipartFile uploadImage, Long provinsiId, Long kotaId, Long kecamatanId,
+                                           Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal) {
         result = new Result();
         try {
             Peserta checkEmailPeserta = pesertaRepository.findByEmail(email).orElse(new Peserta());
@@ -232,15 +231,14 @@ public class PesertaServiceImpl implements PesertaService {
     }
 
     @Override
-    public ResponseEntity<?> deletePeserta(boolean banned, long id, String uri) {
+    public ResponseEntity<?> deletePeserta(boolean banned, Long id, String uri) {
         result = new Result();
         try {
-            Peserta peserta = pesertaRepository.findById(id);
-            if (peserta == null) {
+            if (!pesertaRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+            } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
                 result.setSuccess(false);
                 result.setMessage("id: "+ id + " is not peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -254,15 +252,14 @@ public class PesertaServiceImpl implements PesertaService {
     }
 
     @Override
-    public ResponseEntity<?> changeToCalonPeserta(long id, String uri) {
+    public ResponseEntity<?> changeToCalonPeserta(Long id, String uri) {
         result = new Result();
         try {
-            Peserta peserta = pesertaRepository.findById(id);
-            if (peserta == null) {
+            if (!pesertaRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+            } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
                 result.setSuccess(false);
                 result.setMessage("id: "+ id + " is not Peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -276,22 +273,22 @@ public class PesertaServiceImpl implements PesertaService {
     }
 
     @Override
-    public ResponseEntity<?> changeKelas(long pesertaId, long kelasId, String uri) {
+    public ResponseEntity<?> changeKelas(Long pesertaId, Long kelasId, String uri) {
         result = new Result();
         try {
-            Peserta peserta = pesertaRepository.findById(pesertaId);
-            Kelas kelas = kelasRepository.findById(kelasId);
-            if (peserta == null) {
+            Peserta peserta = pesertaRepository.findById(pesertaId).get();
+            Kelas kelas = kelasRepository.findById(kelasId).get();
+            if (!pesertaRepository.findById(pesertaId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (kelas == null) {
+            } else if (!kelasRepository.findById(kelasId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find kelas");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
                 result.setSuccess(false);
-                result.setMessage("id: "+ peserta + " is not peserta");
+                result.setMessage("id: "+ pesertaId + " is not peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 peserta.setKelas(kelas);
@@ -335,22 +332,6 @@ public class PesertaServiceImpl implements PesertaService {
                 items.put("items", pagePeserta);
             }
             result.setData(items);
-        } catch (Exception e) {
-            logger.error(stringUtil.getError(e));
-        }
-        return result;
-    }
-
-    @Override
-    public Result cekNoHP(String noHp) {
-        result = new Result();
-        try {
-            if (validator.isPhoneValid(noHp)) {
-                result.setMessage("valid");
-            }
-            else {
-                result.setMessage("invalid");
-            }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }

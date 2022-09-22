@@ -17,7 +17,7 @@ import java.util.Set;
 public class MasterProvinsi implements Serializable {
 
     @Id
-    private Integer id;
+    private Long id;
 
     @NotBlank
     @Column(name = "name")
@@ -29,11 +29,11 @@ public class MasterProvinsi implements Serializable {
 
     @NotBlank
     @Column(name = "latitude")
-    private Float latitude;
+    private Double latitude;
 
     @NotBlank
     @Column(name = "longitude")
-    private Float longitude;
+    private Double longitude;
 
     @JsonIgnore
     @OneToMany()
@@ -42,7 +42,7 @@ public class MasterProvinsi implements Serializable {
     public MasterProvinsi() {
     }
 
-    public MasterProvinsi(Integer id, String name, String alt_name, Float latitude, Float longitude) {
+    public MasterProvinsi(Long id, String name, String alt_name, Double latitude, Double longitude) {
         this.id = id;
         this.name = name;
         this.alt_name = alt_name;

@@ -46,17 +46,16 @@ public class KelasServiceImpl implements KelasService {
     }
 
     @Override
-    public Result getClassById(long id, String uri) {
+    public Result getClassById(Long id, String uri) {
         result = new Result();
         try {
-            Kelas kelas = kelasRepository.findById(id);
-            if (kelas == null) {
+            if (!kelasRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find class");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
-                items.put("items", kelasRepository.findById(id));
+                items.put("items", kelasRepository.findById(id).get());
                 result.setData(items);
             }
 
@@ -105,7 +104,7 @@ public class KelasServiceImpl implements KelasService {
     }
 
     @Override
-    public ResponseEntity<?> deleteClass(boolean banned, long id, String uri) {
+    public ResponseEntity<?> deleteClass(boolean banned, Long id, String uri) {
         result = new Result();
         try {
             kelasRepository.deleteKelas(banned, id);
