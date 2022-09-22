@@ -1,5 +1,6 @@
 package id.kedukasi.core.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "classes",
@@ -28,10 +30,10 @@ public class Kelas implements Serializable {
     @Size(max = 50)
     private String description;
 
-    @Column(name = "banned", updatable = false)
+    @Column(name = "banned")
     private boolean banned;
 
-    @Column(name = "banned_time", updatable = false)
+    @Column(name = "banned_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date banned_time;
 
@@ -39,7 +41,7 @@ public class Kelas implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created_time;
 
-    @Column(name = "created_by")
+    @Column(name = "created_by", updatable = false)
     private String created_by;
 
     @Column(name = "updated_time")
@@ -49,14 +51,13 @@ public class Kelas implements Serializable {
     public Kelas() {
     }
 
-    public Kelas(String classname, String description) {
+    public Kelas(String classname, String description, String created_by) {
         Date date = new Date();
         this.classname = classname;
         this.description = description;
+        this.created_by = created_by;
         this.created_time = date;
         this.updated_time = date;
-        this.banned = false;
-        this.banned_time = date;
     }
 
     public Long getId() {

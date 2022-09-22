@@ -1,7 +1,6 @@
 package id.kedukasi.core.request;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 public class KelasRequest implements Serializable {
