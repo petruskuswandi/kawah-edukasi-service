@@ -48,10 +48,6 @@ public class Kelas implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated_time;
 
-    @JsonIgnore
-    @OneToMany()
-    private Set<Peserta> peserta;
-
     public Kelas() {
     }
 

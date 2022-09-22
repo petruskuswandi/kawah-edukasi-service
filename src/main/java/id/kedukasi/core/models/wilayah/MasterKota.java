@@ -39,10 +39,6 @@ public class MasterKota implements Serializable {
     @Column(name = "longitude")
     private Double longitude;
 
-    @JsonIgnore
-    @OneToMany()
-    private Set<Peserta> peserta;
-
     public MasterKota() {
     }
 

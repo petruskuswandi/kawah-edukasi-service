@@ -35,10 +35,6 @@ public class MasterProvinsi implements Serializable {
     @Column(name = "longitude")
     private Double longitude;
 
-    @JsonIgnore
-    @OneToMany()
-    private Set<Peserta> peserta;
-
     public MasterProvinsi() {
     }
 
