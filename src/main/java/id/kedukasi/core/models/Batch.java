@@ -28,23 +28,39 @@ public class Batch implements Serializable {
     @Size(max = 100)
     private String alamatrumahmentor;
 
-    @NotBlank
-    private Integer classid;
 
-    @NotBlank
-    private Integer mentorid;
+    // class dan mentor
+//    @OneToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "classes",
+//            joinColumns = @JoinColumn(name = "classname"),
+//            inverseJoinColumns = @JoinColumn(name = "classname"))
+//    private String classname;
+//
+//    @OneToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "mentores",
+//            joinColumns = @JoinColumn(name = "mentorname"),
+//            inverseJoinColumns = @JoinColumn(name = "mentorname"))
+//    private String mentorname;
 
-
-    @Column(name = "banned", updatable = false)
+    @Column(name = "banned")
     private boolean banned;
 
-    @Column(name = "banned_time", updatable = false)
+    @Column(name = "banned_time", updatable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date banned_time;
 
-    @Column(name = "created_time", updatable = false)
+    @Column(name = "created_time", updatable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created_time;
+
+    // menambahkan stadate & Endedate
+    @Column(name = "started_time", updatable = true)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startedtime;
+
+    @Column(name = "ended_time", updatable = true)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endedtime;
 
     @Column(name = "created_by")
     private String created_by;
@@ -53,30 +69,7 @@ public class Batch implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated_time;
 
-    @Column(name = "started_time", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date starDate;
-
-    @Column(name = "ended_time", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endDate;
-
     public Batch() {
-
-    }
-
-    public Batch(String batchname, String alamatrumahmentor, Integer classid, Integer mentorid, Date starDate, Date endDate) {
-        Date date = new Date();
-        this.batchname = batchname;
-        this.alamatrumahmentor = alamatrumahmentor;
-        this.classid = classid;
-        this.mentorid = mentorid;
-        this.starDate = starDate;
-        this.endDate = endDate;
-        this.created_time = date;
-        this.updated_time = date;
-        this.banned = false;
-        this.banned_time = date;
     }
 
     public Long getId() {
@@ -101,22 +94,6 @@ public class Batch implements Serializable {
 
     public void setAlamatrumahmentor(String alamatrumahmentor) {
         this.alamatrumahmentor = alamatrumahmentor;
-    }
-
-    public int getClassid() {
-        return classid;
-    }
-
-    public void setClassid(int classid) {
-        this.classid = classid;
-    }
-
-    public int getMentorid() {
-        return mentorid;
-    }
-
-    public void setMentorid(int mentorid) {
-        this.mentorid = mentorid;
     }
 
     public boolean isBanned() {
@@ -159,19 +136,31 @@ public class Batch implements Serializable {
         this.updated_time = updated_time;
     }
 
-    public Date getStarDate() {
-        return starDate;
+    public Date getStartedtime() {
+        return startedtime;
     }
 
-    public void setStarDate(Date starDate) {
-        this.starDate = starDate;
+    public void setStartedtime(Date startedtime) {
+        this.startedtime = startedtime;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public Date getEndedtime() {
+        return endedtime;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setEndedtime(Date endedtime) {
+        this.endedtime = endedtime;
+    }
+
+    public Batch(String batchname, String alamatrumahmentor,Date startedtime, Date endedtime) {
+        Date date = new Date();
+        this.batchname = batchname;
+        this.alamatrumahmentor = alamatrumahmentor;
+        this.startedtime = startedtime;
+        this.endedtime = endedtime;
+        this.created_time = date;
+        this.updated_time = date;
+        this.banned = false;
+        this.banned_time = date;
     }
 }

@@ -14,21 +14,29 @@ public class BatchRequest {
     private String batchname;
 
     @NotBlank
-    private String alamarrumahmentor;
+    private String alamatrumahmentor;
 
     @NotBlank
-    private Integer mentorid;
+    private Date startedtime;
 
     @NotBlank
-    private Integer classid;
+    private Date endedtime;
 
-    @Column(name = "started_time", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date starDate;
+    public Date getStartedtime() {
+        return startedtime;
+    }
 
-    @Column(name = "ended_time", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endDate;
+    public void setStartedtime(Date startedtime) {
+        this.startedtime = startedtime;
+    }
+
+    public Date getEndedtime() {
+        return endedtime;
+    }
+
+    public void setEndedtime(Date endedtime) {
+        this.endedtime = endedtime;
+    }
 
     public Long getId() {
         return id;
@@ -46,43 +54,11 @@ public class BatchRequest {
         this.batchname = batchname;
     }
 
-    public String getAlamarrumahmentor() {
-        return alamarrumahmentor;
+    public String getAlamatrumahmentor() {
+        return alamatrumahmentor;
     }
 
-    public void setAlamarrumahmentor(String alamarrumahmentor) {
-        this.alamarrumahmentor = alamarrumahmentor;
-    }
-
-    public Integer getMentorid() {
-        return mentorid;
-    }
-
-    public void setMentorid(Integer mentorid) {
-        this.mentorid = mentorid;
-    }
-
-    public Integer getClassid() {
-        return classid;
-    }
-
-    public void setClassid(Integer classid) {
-        this.classid = classid;
-    }
-
-    public Date getStarDate() {
-        return starDate;
-    }
-
-    public void setStarDate(Date starDate) {
-        this.starDate = starDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setAlamatrumahmentor(String alamatrumahmentor) {
+        this.alamatrumahmentor = alamatrumahmentor;
     }
 }

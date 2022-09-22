@@ -39,7 +39,8 @@ public class cekBatchServiceImpl implements BatchService {
         try{
             Map items = new HashMap();
             items.put("items", batchRepository.findAll());
-        } catch (Exception e){
+            result.setData(items);
+        }catch (Exception e){
             logger.error(stringUtil.getError(e));
         }
 
@@ -70,26 +71,25 @@ public class cekBatchServiceImpl implements BatchService {
     @Override
     public ResponseEntity<?> updateBatch(BatchRequest batchRequest) {
         result = new Result();
-        try {
-            Batch checkBatchname = batchRepository.findByBatchname(batchRequest.getBatchname()).orElse(new Batch());
-            if (checkBatchname.getBatchname()!= null && !Objects.equals(batchRequest.getId(), checkBatchname.getId())) {
-                result.setMessage("Error: Batch name is already in use!");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            }
-
-            Batch batchBaru = new Batch(batchRequest.getBatchname(), batchRequest.getAlamarrumahmentor(), batchRequest.getMentorid(), batchRequest.getClassid(), batchRequest.getStarDate(),batchRequest.getEndDate());
-
-            batchBaru.setId(batchRequest.getId());
-            batchRepository.save(batchBaru);
-
-            result.setMessage(batchRequest.getId() == 0 ? "Batch registered successfully!" : "Class updated successfully!");
-            result.setCode(HttpStatus.OK.value());
-        } catch (Exception e) {
-            logger.error(stringUtil.getError(e));
-        }
+//        try {
+//            Batch checkBatchname = batchRepository.findByBatchname(batchRequest.getBatchname()).orElse(new Batch());
+//            if (checkBatchname.getBatchname()!= null && !Objects.equals(batchRequest.getId(), checkBatchname.getId())) {
+//                result.setMessage("Error: Batch name is already in use!");
+//                result.setCode(HttpStatus.BAD_REQUEST.value());
+//                return ResponseEntity
+//                        .badRequest()
+//                        .body(result);
+//            }
+//
+//            Batch batchbaru = new Batch(batchRequest.getBatchname(), batchRequest.getAlamatrumahmentor(),batchRequest.getStartedtime(),batchRequest.getEndedtime());
+//            batchbaru.setId(batchRequest.getId());
+//            batchRepository.save(batchbaru);
+//
+//            result.setMessage(batchRequest.getId() == 0 ? "batch registered successfully!" : "Class updated successfully!");
+//            result.setCode(HttpStatus.OK.value());
+//        } catch (Exception e) {
+//            logger.error(stringUtil.getError(e));
+//        }
 
         return ResponseEntity.ok(result);
     }

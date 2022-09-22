@@ -1,6 +1,5 @@
 package id.kedukasi.core.controller;
 
-
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.request.BatchRequest;
 import id.kedukasi.core.service.BatchService;
@@ -41,7 +40,7 @@ public class BatchController {
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public Result getUserByid(@PathVariable("id") long id) {
+    public Result getBatchByid(@PathVariable("id") long id) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getBatchById(id, uri);
@@ -61,17 +60,10 @@ public class BatchController {
     @PatchMapping(value = "/delete")
     public ResponseEntity<?> deleteBatch(
             @RequestParam(value = "id", defaultValue = "0", required = true) long id,
-            @RequestParam(value = "banned", defaultValue = "true") boolean banned
-    ) {
+            @RequestParam(value = "banned", defaultValue = "true") boolean banned) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.deleteBatch(banned, id, uri);
     }
 
-
-
-
-
-
 }
-
