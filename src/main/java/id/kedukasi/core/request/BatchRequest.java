@@ -14,7 +14,7 @@ public class BatchRequest {
     private String batchname;
 
     @NotBlank
-    private String alamatrumahmentor;
+    private String description;
 
     @NotBlank
     private Date startedtime;
@@ -54,11 +54,11 @@ public class BatchRequest {
         this.batchname = batchname;
     }
 
-    public String getAlamatrumahmentor() {
-        return alamatrumahmentor;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAlamatrumahmentor(String alamatrumahmentor) {
-        this.alamatrumahmentor = alamatrumahmentor;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

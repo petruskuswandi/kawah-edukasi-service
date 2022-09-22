@@ -14,9 +14,6 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
     @Transactional
     Optional<Batch> findByBatchname(String username);
 
-    @Transactional
-    Batch findById(long id);
-
     @Modifying
     @Transactional
     @Query("update Batch u set u.banned = ?1, u.banned_time = CURRENT_TIMESTAMP where u.id = ?2")

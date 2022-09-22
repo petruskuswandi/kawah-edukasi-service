@@ -20,7 +20,7 @@ import java.util.Objects;
 
 
 @Service
-public class cekBatchServiceImpl implements BatchService {
+public class BatchServiceImpl implements BatchService {
 
     @Autowired
     BatchRepository batchRepository;
@@ -48,17 +48,16 @@ public class cekBatchServiceImpl implements BatchService {
     }
 
     @Override
-    public Result getBatchById(long id, String uri){
+    public Result getBatchById(Long id, String uri){
         result = new Result();
         try{
-            Batch batch = batchRepository.findById(id);
-            if (batch == null){
+            if (!batchRepository.findById(id).isPresent()){
                 result.setSuccess(false);
                 result.setMessage("cannot find batch");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             }else {
                 Map items = new HashMap();
-                items.put("items", batchRepository.findById(id));
+                items.put("items", batchRepository.findById(id).get());
                 result.setData(items);
             }
         }catch (Exception e){
@@ -71,39 +70,38 @@ public class cekBatchServiceImpl implements BatchService {
     @Override
     public ResponseEntity<?> updateBatch(BatchRequest batchRequest) {
         result = new Result();
-//        try {
-//            Batch checkBatchname = batchRepository.findByBatchname(batchRequest.getBatchname()).orElse(new Batch());
-//            if (checkBatchname.getBatchname()!= null && !Objects.equals(batchRequest.getId(), checkBatchname.getId())) {
-//                result.setMessage("Error: Batch name is already in use!");
-//                result.setCode(HttpStatus.BAD_REQUEST.value());
-//                return ResponseEntity
-//                        .badRequest()
-//                        .body(result);
-//            }
-//
-//            Batch batchbaru = new Batch(batchRequest.getBatchname(), batchRequest.getAlamatrumahmentor(),batchRequest.getStartedtime(),batchRequest.getEndedtime());
-//            batchbaru.setId(batchRequest.getId());
-//            batchRepository.save(batchbaru);
-//
-//            result.setMessage(batchRequest.getId() == 0 ? "batch registered successfully!" : "Class updated successfully!");
-//            result.setCode(HttpStatus.OK.value());
-//        } catch (Exception e) {
-//            logger.error(stringUtil.getError(e));
-//        }
+        try {
+            Batch checkBatchname = batchRepository.findByBatchname(batchRequest.getBatchname()).orElse(new Batch());
+            if (checkBatchname.getBatchname()!= null && !Objects.equals(batchRequest.getId(), checkBatchname.getId())) {
+                result.setMessage("Error: Batch name is already in use!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
 
+            Batch batchbaru = new Batch(batchRequest.getBatchname(), batchRequest.getDescription(),
+                    batchRequest.getStartedtime(),batchRequest.getEndedtime());
+            batchbaru.setId(batchRequest.getId());
+            batchRepository.save(batchbaru);
+
+            result.setMessage(batchRequest.getId() == 0 ? "Batch registered successfully!" : "Batch updated successfully!");
+            result.setCode(HttpStatus.OK.value());
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
         return ResponseEntity.ok(result);
     }
 
 
     @Override
-    public ResponseEntity<?> deleteBatch(boolean banned, long id, String uri) {
+    public ResponseEntity<?> deleteBatch(boolean banned, Long id, String uri) {
         result = new Result();
         try {
             batchRepository.deleteBatch(banned, id);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return ResponseEntity.ok(result);
     }
 

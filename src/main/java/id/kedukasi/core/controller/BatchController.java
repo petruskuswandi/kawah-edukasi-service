@@ -40,26 +40,26 @@ public class BatchController {
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public Result getBatchByid(@PathVariable("id") long id) {
+    public Result getBatchByid(@PathVariable("id") Long id) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getBatchById(id, uri);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createBatch(@Valid @RequestBody BatchRequest batchRequest) {
+    public ResponseEntity<?> createBatch(@RequestBody BatchRequest batchRequest) {
         return service.updateBatch(batchRequest);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateBatch(@Valid @RequestBody BatchRequest batchRequest) {
+    public ResponseEntity<?> updateBatch(@RequestBody BatchRequest batchRequest) {
 
         return service.updateBatch(batchRequest);
     }
 
     @PatchMapping(value = "/delete")
     public ResponseEntity<?> deleteBatch(
-            @RequestParam(value = "id", defaultValue = "0", required = true) long id,
+            @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
             @RequestParam(value = "banned", defaultValue = "true") boolean banned) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
