@@ -1,8 +1,16 @@
 package id.kedukasi.core.serviceImpl;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import id.kedukasi.core.models.Result;
+import id.kedukasi.core.models.wilayah.MasterKecamatan;
+import id.kedukasi.core.models.wilayah.MasterKelurahan;
+import id.kedukasi.core.models.wilayah.MasterKota;
+import id.kedukasi.core.models.wilayah.MasterProvinsi;
+import id.kedukasi.core.repository.wilayah.KecamatanRepository;
+import id.kedukasi.core.repository.wilayah.KelurahanRepository;
+import id.kedukasi.core.repository.wilayah.KotaRepository;
+import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
+import id.kedukasi.core.service.WilayahService;
+import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,21 +18,11 @@ import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import id.kedukasi.core.models.Result;
-import id.kedukasi.core.models.wilayah.Kecamatan;
-import id.kedukasi.core.models.wilayah.Kelurahan;
-import id.kedukasi.core.models.wilayah.Kota;
-import id.kedukasi.core.models.wilayah.Provinsi;
-import id.kedukasi.core.repository.wilayah.KecamatanRepository;
-import id.kedukasi.core.repository.wilayah.KelurahanRepository;
-import id.kedukasi.core.repository.wilayah.KotaRepository;
-import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
-import id.kedukasi.core.service.WilayahService;
-import id.kedukasi.core.utils.StringUtil;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
-public class WilayahServiceImpl implements WilayahService{
-    
+public class WilayahServiceImpl implements WilayahService {
     @Autowired
     ProvinsiRepository provinsiRepository;
 
@@ -61,14 +59,13 @@ public class WilayahServiceImpl implements WilayahService{
     public Result getProvinsiByID(Long provinsiId, String uri) {
         result = new Result();
         try {
-            Provinsi provinsi = provinsiRepository.findById(provinsiId).get();
-            if (provinsi == null) {
+            if (!provinsiRepository.findById(provinsiId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("cannot find provinsi");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
-                items.put("items", provinsi);
+                items.put("items", provinsiRepository.findById(provinsiId).get());
                 result.setData(items);
             }
 
@@ -84,9 +81,9 @@ public class WilayahServiceImpl implements WilayahService{
         result = new Result();
         try {
             Map items = new HashMap();
-            Kota kota = new Kota();
-            kota.setProvince_id(provinsiId);;
-            Example<Kota> example = Example.of(kota);
+            MasterKota kota = new MasterKota();
+            kota.setProvince_id(provinsiId);
+            Example<MasterKota> example = Example.of(kota);
             items.put("items", kotaRepository.findAll(example));
             result.setData(items);
         } catch (Exception e) {
@@ -99,14 +96,13 @@ public class WilayahServiceImpl implements WilayahService{
     public Result getKotaById(Long kotaId, String uri) {
         result = new Result();
         try {
-            Kota kota = kotaRepository.findById(kotaId).get();
-            if (kota == null) {
+            if (!kotaRepository.findById(kotaId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find provinsi");
+                result.setMessage("cannot find kota");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
-                items.put("items", kota);
+                items.put("items", kotaRepository.findById(kotaId).get());
                 result.setData(items);
             }
 
@@ -122,9 +118,9 @@ public class WilayahServiceImpl implements WilayahService{
         result = new Result();
         try {
             Map items = new HashMap();
-            Kecamatan kecamatan = new Kecamatan();
+            MasterKecamatan kecamatan = new MasterKecamatan();
             kecamatan.setKota_id(kotaId);
-            Example<Kecamatan> example = Example.of(kecamatan);
+            Example<MasterKecamatan> example = Example.of(kecamatan);
             items.put("items", kecamatanRepository.findAll(example));
             result.setData(items);
         } catch (Exception e) {
@@ -137,14 +133,13 @@ public class WilayahServiceImpl implements WilayahService{
     public Result getkecamatanById(Long kecamatanId, String uri) {
         result = new Result();
         try {
-            Kecamatan kecamatan = kecamatanRepository.findById(kecamatanId).get();
-            if (kecamatan == null) {
+            if (!kecamatanRepository.findById(kecamatanId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find provinsi");
+                result.setMessage("cannot find kecamatan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
-                items.put("items", kecamatan);
+                items.put("items", kecamatanRepository.findById(kecamatanId).get());
                 result.setData(items);
             }
 
@@ -159,9 +154,9 @@ public class WilayahServiceImpl implements WilayahService{
         result = new Result();
         try {
             Map items = new HashMap();
-            Kelurahan kelurahan = new Kelurahan();
+            MasterKelurahan kelurahan = new MasterKelurahan();
             kelurahan.setKecamatan_id(kecamatanId);
-            Example<Kelurahan> example = Example.of(kelurahan);
+            Example<MasterKelurahan> example = Example.of(kelurahan);
             items.put("items", kelurahanRepository.findAll(example));
             result.setData(items);
         } catch (Exception e) {
@@ -174,14 +169,13 @@ public class WilayahServiceImpl implements WilayahService{
     public Result getKelurahanById(Long kelurahanId, String uri) {
         result = new Result();
         try {
-            Kelurahan kelurahan = kelurahanRepository.findById(kelurahanId).get();
-            if (kelurahan == null) {
+            if (!kelurahanRepository.findById(kelurahanId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find provinsi");
+                result.setMessage("cannot find kelurahan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
-                items.put("items", kelurahan);
+                items.put("items", kelurahanRepository.findById(kelurahanId).get());
                 result.setData(items);
             }
         } catch (Exception e) {
@@ -189,5 +183,4 @@ public class WilayahServiceImpl implements WilayahService{
         }
         return result;
     }
-    
 }

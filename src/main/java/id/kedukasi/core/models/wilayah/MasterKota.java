@@ -1,26 +1,24 @@
 package id.kedukasi.core.models.wilayah;
 
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-
-import lombok.Getter;
-import lombok.Setter;
+import java.io.Serializable;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "master_kelurahan")
+@Table(name = "master_kota")
+public class MasterKota implements Serializable {
 
-public class Kelurahan implements Serializable{
-    
     @Id
     private Long id;
 
     @NotBlank
-    @Column(name = "kecamatan_id")
-    private Long kecamatan_id;
+    @Column(name = "province_id")
+    private Long province_id;
 
     @NotBlank
     @Column(name = "name")
@@ -38,11 +36,12 @@ public class Kelurahan implements Serializable{
     @Column(name = "longitude")
     private Double longitude;
 
-    public Kelurahan() {
+    public MasterKota() {
     }
 
-    public Kelurahan(Long kecamatan_id, String name, String alt_name, Double latitude, Double longitude) {
-        this.kecamatan_id = kecamatan_id;
+    public MasterKota(Long id, Long province_id, String name, String alt_name, Double latitude, Double longitude) {
+        this.id = id;
+        this.province_id = province_id;
         this.name = name;
         this.alt_name = alt_name;
         this.latitude = latitude;

@@ -3,7 +3,6 @@ package id.kedukasi.core.service;
 import id.kedukasi.core.models.Result;
 
 public interface WilayahService {
-    
     Result getAllProvinsi(String uri);
 
     Result getProvinsiByID(Long provinsiId, String uri);

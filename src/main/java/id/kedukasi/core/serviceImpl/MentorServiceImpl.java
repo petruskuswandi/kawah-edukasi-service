@@ -18,10 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import id.kedukasi.core.models.Mentor;
 import id.kedukasi.core.models.Result;
-import id.kedukasi.core.models.wilayah.Kecamatan;
-import id.kedukasi.core.models.wilayah.Kelurahan;
-import id.kedukasi.core.models.wilayah.Kota;
-import id.kedukasi.core.models.wilayah.Provinsi;
+import id.kedukasi.core.models.wilayah.MasterKecamatan;
+import id.kedukasi.core.models.wilayah.MasterKelurahan;
+import id.kedukasi.core.models.wilayah.MasterKota;
+import id.kedukasi.core.models.wilayah.MasterProvinsi;
 import id.kedukasi.core.repository.MentorRepository;
 import id.kedukasi.core.repository.wilayah.KecamatanRepository;
 import id.kedukasi.core.repository.wilayah.KelurahanRepository;
@@ -119,7 +119,7 @@ public class MentorServiceImpl implements MentorService{
         }
 
         //set kota
-        Kota kota = kotaRepository.findById(kotaId).get();
+        MasterKota kota = kotaRepository.findById(kotaId).get();
         if (kota == null) {
             result.setSuccess(false);
             result.setMessage("cannot find kota");
@@ -129,7 +129,7 @@ public class MentorServiceImpl implements MentorService{
         }
 
         //set kecamatan
-        Kecamatan kecamatan = kecamatanRepository.findById(kecamatanId).get();
+        MasterKecamatan kecamatan = kecamatanRepository.findById(kecamatanId).get();
         if (kecamatan == null) {
             result.setSuccess(false);
             result.setMessage("cannot find kecamatan");
@@ -139,7 +139,7 @@ public class MentorServiceImpl implements MentorService{
         }
 
         //set kelurahan
-        Kelurahan kelurahan = kelurahanRepository.findById(kelurahanId).get();
+        MasterKelurahan kelurahan = kelurahanRepository.findById(kelurahanId).get();
         if (kelurahan == null) {
             result.setSuccess(false);
             result.setMessage("cannot find kelurahan");
