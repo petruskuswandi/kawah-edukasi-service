@@ -1,0 +1,1419 @@
+{
+	"info": {
+		"_postman_id": "36f6f4a3-c805-4e87-8955-87d759adebcf",
+		"name": "Peserta",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21966944"
+	},
+	"item": [
+		{
+			"name": "Calon Peserta",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3OTc4NTEsImV4cCI6MTY2Mzc5ODQ1MX0.zkaKnQlDeRpeEt3LfwMAAgYedvVmsdk_9IffdlVP3X6hE3SBT8FoMpVkVgHc6_-79uAB11gKTuUr-B1Du-0Qdg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/calonPeserta/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"calonPeserta",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM4MDIyNzUsImV4cCI6MTY2MzgwMjg3NX0.hBIs7CQfdmKRdDfbPYS-8DoA9hjIdXBxnoDtOt3AJmgHT2ijW7HdQY7nmky93mjjRksXn3NJRXjz7TkEwnvGyw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/calonPeserta/7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"calonPeserta",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3OTg0MDUsImV4cCI6MTY2Mzc5OTAwNX0.SozwYHXhw_nGAkJErzeZqz53cTFMYY9EVGM3LDvCVBf8clAtkkXncTnUXcDSdsEIGP9cLtu9V-OEYBQ30F5sqw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Id Kelas",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "Nama Peserta",
+									"value": "Kado",
+									"type": "text"
+								},
+								{
+									"key": "Tanggal Lahir",
+									"value": "1999-3-29",
+									"type": "text"
+								},
+								{
+									"key": "Jenis Kelamin",
+									"value": "Laki Laki",
+									"type": "text"
+								},
+								{
+									"key": "Pendidikan Terakhir",
+									"value": "Kuliah",
+									"type": "text"
+								},
+								{
+									"key": "No Hp",
+									"value": "081338083351",
+									"type": "text"
+								},
+								{
+									"key": "Email",
+									"value": "kado@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "Upload Image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "Provinsi",
+									"value": "11",
+									"type": "text"
+								},
+								{
+									"key": "Kota",
+									"value": "1101",
+									"type": "text"
+								},
+								{
+									"key": "Kecamatan",
+									"value": "1101010",
+									"type": "text"
+								},
+								{
+									"key": "Kelurahan",
+									"value": "1101010001",
+									"type": "text"
+								},
+								{
+									"key": "Alamat Rumah",
+									"value": "Kalikebo, Trucuk, Klaten, Jawa Tengah",
+									"type": "text"
+								},
+								{
+									"key": "Motivasi",
+									"value": "belajar menjadi fullstack",
+									"type": "text"
+								},
+								{
+									"key": "Kode Referal",
+									"value": "asdfgh",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/calonPeserta/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"calonPeserta",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM4MDIyNzUsImV4cCI6MTY2MzgwMjg3NX0.hBIs7CQfdmKRdDfbPYS-8DoA9hjIdXBxnoDtOt3AJmgHT2ijW7HdQY7nmky93mjjRksXn3NJRXjz7TkEwnvGyw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Id Kelas",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "Nama Peserta",
+									"value": "Xavier",
+									"type": "text"
+								},
+								{
+									"key": "Tanggal Lahir",
+									"value": "1999-3-29",
+									"type": "text"
+								},
+								{
+									"key": "Jenis Kelamin",
+									"value": "Laki Laki",
+									"type": "text"
+								},
+								{
+									"key": "Pendidikan Terakhir",
+									"value": "Kuliah",
+									"type": "text"
+								},
+								{
+									"key": "No Hp",
+									"value": "081338083351",
+									"type": "text"
+								},
+								{
+									"key": "Email",
+									"value": "kado@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "Upload Image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "Provinsi",
+									"value": "11",
+									"type": "text"
+								},
+								{
+									"key": "Kota",
+									"value": "1101",
+									"type": "text"
+								},
+								{
+									"key": "Kecamatan",
+									"value": "1101010",
+									"type": "text"
+								},
+								{
+									"key": "Kelurahan",
+									"value": "1101010001",
+									"type": "text"
+								},
+								{
+									"key": "Alamat Rumah",
+									"value": "Kalikebo, Trucuk, Klaten, Jawa Tengah",
+									"type": "text"
+								},
+								{
+									"key": "Motivasi",
+									"value": "tes tes tes",
+									"type": "text"
+								},
+								{
+									"key": "Kode Referal",
+									"value": "asdfgh",
+									"type": "text"
+								},
+								{
+									"key": "Id",
+									"value": "7",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/calonPeserta/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"calonPeserta",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3OTg0MDUsImV4cCI6MTY2Mzc5OTAwNX0.SozwYHXhw_nGAkJErzeZqz53cTFMYY9EVGM3LDvCVBf8clAtkkXncTnUXcDSdsEIGP9cLtu9V-OEYBQ30F5sqw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "7",
+									"type": "text"
+								},
+								{
+									"key": "banned",
+									"value": "false",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/calonPeserta/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"calonPeserta",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Jadikan Peserta",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3OTg0MDUsImV4cCI6MTY2Mzc5OTAwNX0.SozwYHXhw_nGAkJErzeZqz53cTFMYY9EVGM3LDvCVBf8clAtkkXncTnUXcDSdsEIGP9cLtu9V-OEYBQ30F5sqw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "7",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/calonPeserta/changeToPeserta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"calonPeserta",
+								"changeToPeserta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ubah Status Tes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3Mzg4OTMsImV4cCI6MTY2MzczOTQ5M30.vT21i3DR5uf8ULnRYOyTyh3vngoFhcQvOa167xNjBzNBaqIaTXr5b4_6SCJIRgrbXpgdlAGIAAckgz8kRDkfsA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "Status Tes",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/calonPeserta/changeStatusTes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"calonPeserta",
+								"changeStatusTes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ubah Kelas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3Mzg4OTMsImV4cCI6MTY2MzczOTQ5M30.vT21i3DR5uf8ULnRYOyTyh3vngoFhcQvOa167xNjBzNBaqIaTXr5b4_6SCJIRgrbXpgdlAGIAAckgz8kRDkfsA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "calonPesertaId",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "kelasId",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/calonPeserta/changeKelas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"calonPeserta",
+								"changeKelas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter Status Tes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3Mzg4OTMsImV4cCI6MTY2MzczOTQ5M30.vT21i3DR5uf8ULnRYOyTyh3vngoFhcQvOa167xNjBzNBaqIaTXr5b4_6SCJIRgrbXpgdlAGIAAckgz8kRDkfsA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "statusTesOrd",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/calonPeserta/filterByStatusTes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"calonPeserta",
+								"filterByStatusTes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3Mzg4OTMsImV4cCI6MTY2MzczOTQ5M30.vT21i3DR5uf8ULnRYOyTyh3vngoFhcQvOa167xNjBzNBaqIaTXr5b4_6SCJIRgrbXpgdlAGIAAckgz8kRDkfsA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "keyword",
+									"value": "Andika",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/calonPeserta/searchCalonPeserta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"calonPeserta",
+								"searchCalonPeserta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sort & Paging",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3Mzk1MjIsImV4cCI6MTY2Mzc0MDEyMn0.QRvpxj0Elt99d8ukX4EJrqmwj7xOXQfxZflY-S6P80NaY2lyNKDFrnZY1KpdydsTimzptMp3Acfuo7Cg68CVkg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "page",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "size",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "ascending",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/calonPeserta/sortAndPaging",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"calonPeserta",
+								"sortAndPaging"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Peserta",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3OTk2NTIsImV4cCI6MTY2MzgwMDI1Mn0.84UrUzDKMC3vZYuc1-cnuRGjC3HDUEHVKQQKdu4kf4D46bj1oEDCVWSiXx_toUIndiID9mA3HUYAsxOA3o-TEw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/peserta/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"peserta",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM4MDIyNzUsImV4cCI6MTY2MzgwMjg3NX0.hBIs7CQfdmKRdDfbPYS-8DoA9hjIdXBxnoDtOt3AJmgHT2ijW7HdQY7nmky93mjjRksXn3NJRXjz7TkEwnvGyw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/peserta/8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"peserta",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3OTg0MDUsImV4cCI6MTY2Mzc5OTAwNX0.SozwYHXhw_nGAkJErzeZqz53cTFMYY9EVGM3LDvCVBf8clAtkkXncTnUXcDSdsEIGP9cLtu9V-OEYBQ30F5sqw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Id Kelas",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "Nama Peserta",
+									"value": "Hadiah",
+									"type": "text"
+								},
+								{
+									"key": "Tanggal Lahir",
+									"value": "1999-3-29",
+									"type": "text"
+								},
+								{
+									"key": "Jenis Kelamin",
+									"value": "Laki Laki",
+									"type": "text"
+								},
+								{
+									"key": "Pendidikan Terakhir",
+									"value": "Kuliah",
+									"type": "text"
+								},
+								{
+									"key": "No Hp",
+									"value": "081338083351",
+									"type": "text"
+								},
+								{
+									"key": "Email",
+									"value": "hadiah@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "Upload Image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "Provinsi",
+									"value": "11",
+									"type": "text"
+								},
+								{
+									"key": "Kota",
+									"value": "1101",
+									"type": "text"
+								},
+								{
+									"key": "Kecamatan",
+									"value": "1101010",
+									"type": "text"
+								},
+								{
+									"key": "Kelurahan",
+									"value": "1101010001",
+									"type": "text"
+								},
+								{
+									"key": "Alamat Rumah",
+									"value": "Kalikebo, Trucuk, Klaten, Jawa Tengah",
+									"type": "text"
+								},
+								{
+									"key": "Motivasi",
+									"value": "tes tes tes",
+									"type": "text"
+								},
+								{
+									"key": "Kode Referal",
+									"value": "asdfgh",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/peserta/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"peserta",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM4MDIwMTAsImV4cCI6MTY2MzgwMjYxMH0.AOPL7YH57Sv9EYLkW8yn6mK_QURFdiQ31Qqj9MPC3cw_Xm1rU7KhtIgFdaldc4iTo2k0Vjo_rrllbItrzmiLHg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Id Kelas",
+									"value": "7",
+									"type": "text"
+								},
+								{
+									"key": "Nama Peserta",
+									"value": "Hadiah",
+									"type": "text"
+								},
+								{
+									"key": "Tanggal Lahir",
+									"value": "1999-3-29",
+									"type": "text"
+								},
+								{
+									"key": "Jenis Kelamin",
+									"value": "Laki",
+									"type": "text"
+								},
+								{
+									"key": "Pendidikan Terakhir",
+									"value": "Kuliah",
+									"type": "text"
+								},
+								{
+									"key": "No Hp",
+									"value": "081338083351",
+									"type": "text"
+								},
+								{
+									"key": "Email",
+									"value": "hadiah@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "Upload Image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "Provinsi",
+									"value": "11",
+									"type": "text"
+								},
+								{
+									"key": "Kota",
+									"value": "1101",
+									"type": "text"
+								},
+								{
+									"key": "Kecamatan",
+									"value": "1101010",
+									"type": "text"
+								},
+								{
+									"key": "Kelurahan",
+									"value": "1101010001",
+									"type": "text"
+								},
+								{
+									"key": "Alamat Rumah",
+									"value": "Kalikebo, Trucuk, Klaten, Jawa Tengah",
+									"type": "text"
+								},
+								{
+									"key": "Motivasi",
+									"value": "tes tes tes",
+									"type": "text"
+								},
+								{
+									"key": "Kode Referal",
+									"value": "asdfgh",
+									"type": "text"
+								},
+								{
+									"key": "Id",
+									"value": "8",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/peserta/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"peserta",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3MzgyMDUsImV4cCI6MTY2MzczODgwNX0.nhJciFCw3jJTkyvvRPrprKTZ_2X55gxeLC04s3nCzDEhk5EdrlLMuZoPVXfyGv3tYdLgiZe3aCgJQqjUDOTpew",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "banned",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/peserta/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"peserta",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Jadikan Calon Peserta",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3OTk2NTIsImV4cCI6MTY2MzgwMDI1Mn0.84UrUzDKMC3vZYuc1-cnuRGjC3HDUEHVKQQKdu4kf4D46bj1oEDCVWSiXx_toUIndiID9mA3HUYAsxOA3o-TEw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "7",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/peserta/changeToCalonPeserta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"peserta",
+								"changeToCalonPeserta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ubah Kelas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3Mzk1MjIsImV4cCI6MTY2Mzc0MDEyMn0.QRvpxj0Elt99d8ukX4EJrqmwj7xOXQfxZflY-S6P80NaY2lyNKDFrnZY1KpdydsTimzptMp3Acfuo7Cg68CVkg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "pesertaId",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "kelasId",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/peserta/changeKelas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"peserta",
+								"changeKelas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3NDAxNDUsImV4cCI6MTY2Mzc0MDc0NX0.IQ3ujFxPGO1N7jRh_sirKnbfE3yQElU95Xnfd8xBDee96bZxaStzGdp51BeBd5wuS1u5uC-XbFpHyYUZCQEUow",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "keyword",
+									"value": "Andika",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/peserta/searchPeserta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"peserta",
+								"searchPeserta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sort & Paging",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3NDAxNDUsImV4cCI6MTY2Mzc0MDc0NX0.IQ3ujFxPGO1N7jRh_sirKnbfE3yQElU95Xnfd8xBDee96bZxaStzGdp51BeBd5wuS1u5uC-XbFpHyYUZCQEUow",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "page",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "size",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "ascending",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/peserta/sortAndPaging",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"peserta",
+								"sortAndPaging"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Wilayah",
+			"item": [
+				{
+					"name": "All Provinsi",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3NDM0OTEsImV4cCI6MTY2Mzc0NDA5MX0.TgHesURkAKEAjAMYRvt-Hy_Sb_ouzzjhsno7Isq9R6LNAptgqfhi3KuNuXJUb2i2AukqWoOh33V0kfY4CAh4sw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/wilayah/provinsi/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"provinsi",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Kota In Provinsi",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3NDM0OTEsImV4cCI6MTY2Mzc0NDA5MX0.TgHesURkAKEAjAMYRvt-Hy_Sb_ouzzjhsno7Isq9R6LNAptgqfhi3KuNuXJUb2i2AukqWoOh33V0kfY4CAh4sw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/wilayah/provinsi/12/kota/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"provinsi",
+								"12",
+								"kota",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Kecamatan In Kota",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3NDAxNDUsImV4cCI6MTY2Mzc0MDc0NX0.IQ3ujFxPGO1N7jRh_sirKnbfE3yQElU95Xnfd8xBDee96bZxaStzGdp51BeBd5wuS1u5uC-XbFpHyYUZCQEUow",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/wilayah/kota/1101/kecamatan/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"kota",
+								"1101",
+								"kecamatan",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Kelurahan In Kecamatan",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3NDAxNDUsImV4cCI6MTY2Mzc0MDc0NX0.IQ3ujFxPGO1N7jRh_sirKnbfE3yQElU95Xnfd8xBDee96bZxaStzGdp51BeBd5wuS1u5uC-XbFpHyYUZCQEUow",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/wilayah/kecamatan/1101010/kelurahan/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"kecamatan",
+								"1101010",
+								"kelurahan",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Provinsi By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM4MDExMjEsImV4cCI6MTY2MzgwMTcyMX0.wGC4SNXbT_5uiAX61UttTQBPNnGME5JA9zuZmt9cRocffeviat5Ipp7P72e16wJjLEdewmPZTF66ndYOqCrfPQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/wilayah/provinsi/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"provinsi",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Kota By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3NDA3OTAsImV4cCI6MTY2Mzc0MTM5MH0.-ZczcFbmulGt3caymaAiB0T6WxQeE0Qv0T7fRS9R74txOfhccZgSmnvE5tBc05wPMwnVsUKfkNrgmAR-qF9HhQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/wilayah/provinsi/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"provinsi",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Kecamatan By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM4MDE2MzEsImV4cCI6MTY2MzgwMjIzMX0.0CuY8DDAfQbBIb_Sa26IexOIURcp87USuXxSf1mnT7eQcLCOtIUzfUj7_lSyJxkaLxbLWuNIRx2oDAcyanmgVw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/wilayah/kecamatan/1101010",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"kecamatan",
+								"1101010"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Kelurahan By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3NDA3OTAsImV4cCI6MTY2Mzc0MTM5MH0.-ZczcFbmulGt3caymaAiB0T6WxQeE0Qv0T7fRS9R74txOfhccZgSmnvE5tBc05wPMwnVsUKfkNrgmAR-qF9HhQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/wilayah/kelurahan/1101010001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"kelurahan",
+								"1101010001"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sign In",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"andikatrik17@gmail.com\",\r\n    \"password\" : \"rahasia\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8880/api/auth/signin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8880",
+					"path": [
+						"api",
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
