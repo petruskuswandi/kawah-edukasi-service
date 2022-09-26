@@ -2,8 +2,12 @@ package id.kedukasi.core.serviceImpl;
 
 
 import id.kedukasi.core.models.Batch;
+import id.kedukasi.core.models.Kelas;
+import id.kedukasi.core.models.Mentor;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.repository.BatchRepository;
+import id.kedukasi.core.repository.KelasRepository;
+import id.kedukasi.core.repository.MentorRepository;
 import id.kedukasi.core.request.BatchRequest;
 import id.kedukasi.core.service.BatchService;
 import id.kedukasi.core.utils.StringUtil;
@@ -21,6 +25,12 @@ import java.util.Objects;
 
 @Service
 public class BatchServiceImpl implements BatchService {
+
+    @Autowired
+    KelasRepository kelasRepository;
+
+    @Autowired
+    MentorRepository mentorRepository;
 
     @Autowired
     BatchRepository batchRepository;
@@ -79,9 +89,23 @@ public class BatchServiceImpl implements BatchService {
                         .badRequest()
                         .body(result);
             }
+            if(batchRequest.getStartedtime().after(batchRequest.getEndedtime())){
+                result.setMessage("Error : Batch start date cannot be greater than end date ");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
 
             Batch batchbaru = new Batch(batchRequest.getBatchname(), batchRequest.getDescription(),
                     batchRequest.getStartedtime(),batchRequest.getEndedtime());
+
+            Kelas kelas = kelasRepository.findById(batchRequest.getClassname()).get();
+            batchbaru.setClassname(kelas);
+
+//            Mentor mentor = mentorRepository.findById(batchRequest.getMentorname()).get();
+//            batchbaru.setMentorname(mentor);
+
             batchbaru.setId(batchRequest.getId());
             batchRepository.save(batchbaru);
 
