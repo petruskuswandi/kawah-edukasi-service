@@ -1,5 +1,8 @@
 package id.kedukasi.core.request;
 
+import id.kedukasi.core.models.Kelas;
+import id.kedukasi.core.models.Mentor;
+
 import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,6 +24,28 @@ public class BatchRequest {
 
     @NotBlank
     private Date endedtime;
+
+    @NotBlank
+    private Long classname;
+
+
+    private Long mentorname;
+
+    public Long getClassname() {
+        return classname;
+    }
+
+    public void setClassname(Long classname) {
+        this.classname = classname;
+    }
+
+    public Long getMentorname() {
+        return mentorname;
+    }
+
+    public void setMentorname(Long mentorname) {
+        this.mentorname = mentorname;
+    }
 
     public Date getStartedtime() {
         return startedtime;

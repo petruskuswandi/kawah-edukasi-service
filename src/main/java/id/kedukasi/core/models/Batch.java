@@ -36,17 +36,17 @@ public class Batch implements Serializable {
 
 
     // class dan mentor
-//    @OneToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "classes",
-//            joinColumns = @JoinColumn(name = "classname"),
-//            inverseJoinColumns = @JoinColumn(name = "classname"))
-//    private String classname;
-//
-//    @OneToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "mentores",
-//            joinColumns = @JoinColumn(name = "mentorname"),
-//            inverseJoinColumns = @JoinColumn(name = "mentorname"))
-//    private String mentorname;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = "batch_class",
+            joinColumns = @JoinColumn(name = "batch_id"),
+            inverseJoinColumns = @JoinColumn(name = "class_id"))
+    private Kelas classname;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = "batch_mentor",
+            joinColumns = @JoinColumn(name = "batch_id"),
+            inverseJoinColumns = @JoinColumn(name = "mentor_id"))
+    private Mentor mentorname;
 
     @Column(name = "banned")
     private boolean banned;
