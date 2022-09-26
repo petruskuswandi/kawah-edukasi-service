@@ -8,7 +8,7 @@ spring.datasource.password=${DATABASE_PASSWORD:Password09!}
 
 app.upload-file-path=./uploads/
 app.url.active-user=
-app.url.forgot-password=http://localhost:8880/forgot/
+app.url.forgot-password=https://be-stg.kawahedukasi.id/forgot/
 
 spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
@@ -20,8 +20,19 @@ spring.mail.password=faivbilqqaekqnpd
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
 
-spring.servlet.multipart.max-file-size=1024KB
-spring.servlet.multipart.max-request-size=1024KB
+#spring.mail.host=smtp.mailtrap.io
+#spring.mail.port=465
+#spring.mail.username=6cc9ded6ed5d30
+#spring.mail.password=927f7ae823cb47
+#spring.mail.properties.mail.smtp.auth=true
+#spring.mail.properties.mail.smtp.starttls.enable=true
+
+### Using upload file
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+spring.servlet.multipart.enabled=true
+server.tomcat.max-http-post-size=10MB
+server.tomcat.max-swallow-size=10MB
 
 spring.jpa.hibernate.ddl-auto=update
 kedukasi.app.jwtSecret=kedukasi2022
