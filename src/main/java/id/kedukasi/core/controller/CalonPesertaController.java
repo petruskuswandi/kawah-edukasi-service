@@ -53,6 +53,7 @@ public class CalonPesertaController {
     @PostMapping("/create")
     public ResponseEntity<?> createCalonPeserta(
             @RequestParam(value = "Id Kelas", defaultValue = "0") Long kelasId,
+            @RequestParam(value = "Id Batch", defaultValue = "0") Long batchId,
             @RequestParam(value = "Nama Peserta",defaultValue = "0") String namaPeserta,
             @RequestParam(value = "Tanggal Lahir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalLahir,
             @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
@@ -69,7 +70,7 @@ public class CalonPesertaController {
             @RequestParam(value = "Kode Referal",defaultValue = "0") String kodeReferal
             ) {
         Long id = 0L;
-        return service.updateCalonPeserta(id,kelasId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
+        return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
                 email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
     }
 
@@ -77,6 +78,7 @@ public class CalonPesertaController {
     public ResponseEntity<?> updateCalonPeserta(
             @RequestParam(value = "Id",defaultValue = "0") Long id,
             @RequestParam(value = "Id Kelas", defaultValue = "0") Long kelasId,
+            @RequestParam(value = "Id Batch", defaultValue = "0") Long batchId,
             @RequestParam(value = "Nama Peserta",defaultValue = "0") String namaPeserta,
             @RequestParam(value = "Tanggal Lahir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalLahir,
             @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
@@ -92,7 +94,7 @@ public class CalonPesertaController {
             @RequestParam(value = "Motivasi") String motivasi,
             @RequestParam(value = "Kode Referal") String kodeReferal
             ) {
-        return service.updateCalonPeserta(id,kelasId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
+        return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
                 email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
     }
 

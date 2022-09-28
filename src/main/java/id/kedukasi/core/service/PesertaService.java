@@ -12,7 +12,7 @@ public interface PesertaService {
 
     Result getPesertaById(Long id, String uri);
 
-    ResponseEntity<?> updatePeserta(Long id, Long kelasId, String namaPeserta, Date tanggalLahir,
+    ResponseEntity<?> updatePeserta(Long id, Long kelasId,Long batchId, String namaPeserta, Date tanggalLahir,
                                     String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
                                     MultipartFile uploadImage, Long provinsi, Long kota, Long kecamatan,
                                     Long kelurahan, String alamatRumah, String motivasi, String kodeReferal);

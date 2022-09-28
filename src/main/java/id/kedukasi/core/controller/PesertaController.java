@@ -53,6 +53,7 @@ public class PesertaController {
     @PostMapping("/create")
     public ResponseEntity<?> createPeserta(
             @RequestParam(value = "Id Kelas", defaultValue = "0") Long kelasId,
+            @RequestParam(value = "Id Batch", defaultValue = "0") Long batchId,
             @RequestParam(value = "Nama Peserta",defaultValue = "0") String namaPeserta,
             @RequestParam(value = "Tanggal Lahir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalLahir,
             @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
@@ -69,13 +70,14 @@ public class PesertaController {
             @RequestParam(value = "Kode Referal",defaultValue = "0") String kodeReferal
     ) {
         Long id = 0L;
-        return service.updatePeserta(id,kelasId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
+        return service.updatePeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
                 email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> updatePeserta(
             @RequestParam(value = "Id",defaultValue = "0") Long id,
+            @RequestParam(value = "Id Batch", defaultValue = "0") Long batchId,
             @RequestParam(value = "Id Kelas", defaultValue = "0") Long kelasId,
             @RequestParam(value = "Nama Peserta",defaultValue = "0") String namaPeserta,
             @RequestParam(value = "Tanggal Lahir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalLahir,
@@ -92,7 +94,7 @@ public class PesertaController {
             @RequestParam(value = "Motivasi") String motivasi,
             @RequestParam(value = "Kode Referal") String kodeReferal
     ) {
-        return service.updatePeserta(id,kelasId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
+        return service.updatePeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
                 email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
     }
 

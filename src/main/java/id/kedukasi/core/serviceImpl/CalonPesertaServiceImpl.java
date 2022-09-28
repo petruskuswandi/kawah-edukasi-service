@@ -5,6 +5,7 @@ import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.Kelas;
 import id.kedukasi.core.models.Peserta;
 import id.kedukasi.core.models.Result;
+import id.kedukasi.core.repository.BatchRepository;
 import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.PesertaRepository;
 import id.kedukasi.core.repository.wilayah.KecamatanRepository;
@@ -40,6 +41,9 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
 
     @Autowired
     KelasRepository kelasRepository;
+
+    @Autowired
+    BatchRepository batchRepository;
 
     @Autowired
     ProvinsiRepository provinsiRepository;
@@ -103,7 +107,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
     }
 
     @Override
-    public ResponseEntity<?> updateCalonPeserta(Long id, Long kelasId, String namaPeserta, Date tanggalLahir,
+    public ResponseEntity<?> updateCalonPeserta(Long id, Long kelasId,Long batchId, String namaPeserta, Date tanggalLahir,
                                                 String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
                                                 MultipartFile uploadImage, Long provinsiId, Long kotaId, Long kecamatanId,
                                                 Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal) {
@@ -160,6 +164,18 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                         .body(result);
             } else {
                 peserta.setKelas(kelasRepository.findById(kelasId).get());
+            }
+
+            //set batch
+            if (!batchRepository.findById(batchId).isPresent()) {
+                result.setSuccess(false);
+                result.setMessage("cannot find batch");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            } else {
+                peserta.setBatch(batchRepository.findById(batchId).get());
             }
 
             //set image

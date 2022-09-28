@@ -11,7 +11,7 @@ public interface CalonPesertaService {
 
     Result getCalonPesertaById(Long id, String uri);
 
-    ResponseEntity<?> updateCalonPeserta(Long id, Long kelasId, String namaPeserta, Date tanggalLahir,
+    ResponseEntity<?> updateCalonPeserta(Long id, Long kelasId,Long batchId, String namaPeserta, Date tanggalLahir,
                                          String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
                                          MultipartFile uploadImage, Long provinsi, Long kota, Long kecamatan,
                                          Long kelurahan, String alamatRumah, String motivasi, String kodeReferal);
