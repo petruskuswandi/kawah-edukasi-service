@@ -57,6 +57,15 @@ public class User implements Serializable {
   @Size(max = 120)
   private String password;
 
+
+  @NotBlank
+  @Size(max = 50)
+  private String namaLengkap;
+
+  @NotBlank
+  @Size(max = 20)
+  private String noHp;
+
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles",
       joinColumns = @JoinColumn(name = "user_id"),
@@ -89,13 +98,15 @@ public class User implements Serializable {
   public User() {
   }
 
-  public User(String username, String email, String password, String tokenVerification, 
+  public User(String username, String email, String password,String namaLengkap, String noHp, String tokenVerification,
       Role role, boolean isActive, boolean isLogin) {
     Date date = new Date();
 
     this.username = username;
     this.email = email;
     this.password = password;
+    this.namaLengkap = namaLengkap;
+    this.noHp = noHp;
     this.tokenVerification = tokenVerification;
     this.role = role;
     this.isActive = isActive;
@@ -136,6 +147,22 @@ public class User implements Serializable {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public String getNamaLengkap() {
+    return namaLengkap;
+  }
+
+  public void setNamaLengkap(String namaLengkap) {
+    this.namaLengkap = namaLengkap;
+  }
+
+  public String getNoHp() {
+    return noHp;
+  }
+
+  public void setNoHp(String noHp) {
+    this.noHp = noHp;
   }
 
   public Role getRole() {

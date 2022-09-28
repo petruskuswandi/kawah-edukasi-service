@@ -22,10 +22,13 @@ import id.kedukasi.core.utils.GlobalUtil;
 import id.kedukasi.core.utils.JwtUtils;
 import id.kedukasi.core.utils.StringUtil;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import id.kedukasi.core.utils.ValidatorUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +55,9 @@ public class UserServiceImpl implements UserService {
 
   @Autowired
   StringUtil stringUtil;
+
+  @Autowired
+  ValidatorUtil validator;
 
   @Autowired
   PasswordEncoder encoder;
@@ -138,10 +144,18 @@ public class UserServiceImpl implements UserService {
           .body(result);
     }
 
+    if (!validator.isPhoneValid(signUpRequest.getNoHp())) {
+      result.setMessage("Error: invalid phone number!");
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return ResponseEntity
+              .badRequest()
+              .body(result);
+    }
+
     Role role = roleRepository.findById(signUpRequest.getRole()).orElse(null);
     User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
-        encoder.encode(signUpRequest.getPassword()), StringUtil.getRandomNumberString(),
-        role, false, false);
+        encoder.encode(signUpRequest.getPassword()),signUpRequest.getNamaLengkap(),
+        signUpRequest.getNoHp(), StringUtil.getRandomNumberString(), role, false, false);
 
     User userResult = userRepository.save(user);
 
@@ -162,6 +176,12 @@ public class UserServiceImpl implements UserService {
       Date dateNow = new Date();
       Date dateExpired = new Date((dateNow).getTime() + jwtExpirationMs);
 
+      if (!encoder.matches(loginRequest.getPassword(), getUser.getPassword())){
+        result.setSuccess(true);
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        result.setMessage("Password salah");
+        return ResponseEntity.ok(result);
+      }
       Authentication authentication = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(getUser.getUsername(), loginRequest.getPassword()));
       SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -282,9 +302,17 @@ public class UserServiceImpl implements UserService {
             .body(result);
       }
 
+      if (!validator.isPhoneValid(userRequest.getNoHp())) {
+        result.setMessage("Error: invalid phone number!");
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity
+                .badRequest()
+                .body(result);
+      }
+
       User user = new User(userRequest.getUsername(), userRequest.getEmail(),
-          encoder.encode(userRequest.getPassword()), StringUtil.getRandomNumberString(),
-          role, userRequest.isIsActive(), true);
+          encoder.encode(userRequest.getPassword()),userRequest.getNamaLengkap(), userRequest.getNoHp(),
+              StringUtil.getRandomNumberString(), role, userRequest.isIsActive(), true);
 
       user.setId(userRequest.getId());
       userRepository.save(user);

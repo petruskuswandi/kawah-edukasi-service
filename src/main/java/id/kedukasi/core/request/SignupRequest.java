@@ -24,6 +24,16 @@ public class SignupRequest {
   @ApiModelProperty(example = "iam123", required = true)
   private String password;
 
+  @NotBlank
+  @Size(max = 50)
+  @ApiModelProperty(example = "Nama Lengkap", required = true)
+  private String namaLengkap;
+
+  @NotBlank
+  @Size(max = 20)
+  @ApiModelProperty(example = "08xxxx", required = true)
+  private String noHp;
+
   public String getUsername() {
     return username;
   }
@@ -46,6 +56,22 @@ public class SignupRequest {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public String getNamaLengkap() {
+    return namaLengkap;
+  }
+
+  public void setNamaLengkap(String namaLengkap) {
+    this.namaLengkap = namaLengkap;
+  }
+
+  public String getNoHp() {
+    return noHp;
+  }
+
+  public void setNoHp(String noHp) {
+    this.noHp = noHp;
   }
 
   public Integer getRole() {
