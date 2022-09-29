@@ -103,8 +103,8 @@ public class BatchServiceImpl implements BatchService {
             Kelas kelas = kelasRepository.findById(batchRequest.getClassname()).get();
             batchbaru.setClassname(kelas);
 
-//            Mentor mentor = mentorRepository.findById(batchRequest.getMentorname()).get();
-//            batchbaru.setMentorname(mentor);
+            Mentor mentor = mentorRepository.findById(batchRequest.getMentorname()).get();
+            batchbaru.setMentorname(mentor);
 
             batchbaru.setId(batchRequest.getId());
             batchRepository.save(batchbaru);

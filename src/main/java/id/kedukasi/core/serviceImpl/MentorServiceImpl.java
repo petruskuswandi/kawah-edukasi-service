@@ -16,12 +16,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import id.kedukasi.core.models.Batch;
 import id.kedukasi.core.models.Mentor;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.models.wilayah.MasterKecamatan;
 import id.kedukasi.core.models.wilayah.MasterKelurahan;
 import id.kedukasi.core.models.wilayah.MasterKota;
 import id.kedukasi.core.models.wilayah.MasterProvinsi;
+import id.kedukasi.core.repository.BatchRepository;
+import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.MentorRepository;
 import id.kedukasi.core.repository.wilayah.KecamatanRepository;
 import id.kedukasi.core.repository.wilayah.KelurahanRepository;
@@ -37,6 +40,12 @@ public class MentorServiceImpl implements MentorService{
 
     @Autowired
     MentorRepository mentorRepository;
+
+    @Autowired
+    BatchRepository batchRepository;
+
+    @Autowired
+    KelasRepository kelasRepository;
 
     @Autowired
     ProvinsiRepository provinsiRepository;
@@ -61,8 +70,8 @@ public class MentorServiceImpl implements MentorService{
 
   
     @Override
-    public ResponseEntity<?> updateMentor(Long id, String nama_mentor, String kode, MultipartFile foto, String no_ktp,
-                                          String no_telepon, String status, String class_name, String pendidikan_univ,
+    public ResponseEntity<?> updateMentor(Long id, Long batchId,String nama_mentor, String kode, MultipartFile foto, String no_ktp,
+                                          String no_telepon, String status, Long classID, String pendidikan_univ,
                                           String pendidikan_jurusan, Date tgl_start, Date tgl_stop,  String alamat_rumah,
                                           MultipartFile cv, Long provinsiId, Long kotaId, Long kecamatanId, Long kelurahanId) {
       result = new Result();
@@ -86,22 +95,42 @@ public class MentorServiceImpl implements MentorService{
           result.setCode(HttpStatus.BAD_REQUEST.value());
           return ResponseEntity.badRequest().body(result);
       }
-
-      if(class_name.length() < 2 || class_name.length() > 15) {
-        result.setMessage("Error: Name Class can must be 2-15 characters");
-        result.setCode(HttpStatus.BAD_REQUEST.value());
-        return ResponseEntity.badRequest().body(result);
-      }
   
-        Mentor mentor = new Mentor(nama_mentor, kode, no_ktp, no_telepon, status, class_name, pendidikan_univ,
+        Mentor mentor = new Mentor(nama_mentor, kode, no_ktp, no_telepon, status, pendidikan_univ,
                                    pendidikan_jurusan, tgl_start, tgl_stop, alamat_rumah);
 
         mentor.setId(id);
 
+        //set batch
+        if (!batchRepository.findById(batchId).isPresent()) {
+          result.setSuccess(false);
+          result.setMessage("cannot find kelas");
+          result.setCode(HttpStatus.BAD_REQUEST.value());
+          return ResponseEntity
+                  .badRequest()
+                  .body(result);
+          } else {
+            mentor.setBatch(batchId);
+          }
+        
+        //set kelas
+        if (!kelasRepository.findById(classID).isPresent()) {
+          result.setSuccess(false);
+          result.setMessage("cannot find provinsi");
+          result.setCode(HttpStatus.BAD_REQUEST.value());
+          return ResponseEntity
+                 .badRequest()
+                 .body(result);
+      } else {
+          mentor.setClass_name(classID);
+      }  
+
+        //set foto
         if (foto!=null) {
             mentor.setFoto(IOUtils.toByteArray(foto.getInputStream()));
           }
 
+        //set cv  
         if (cv!=null) {
           mentor.setCv(IOUtils.toByteArray(cv.getInputStream()));
           }
