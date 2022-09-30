@@ -84,6 +84,16 @@
 				{
 					"name": "AddMentor",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpcWJhbDEyMyIsImlhdCI6MTY2NDU0MjY2MSwiZXhwIjoxNjY0NTQzMjYxfQ.IuWDiGzQ2A3Kngu-1jOKEKMRpTGljyx5T_klmKGIPvwZ5L6QMniWzs4UtizPrQGM1v7D4dR1Gzk4d1C_kxLhfQ",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -96,93 +106,88 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "nama_mentor",
+									"key": "Nama Mentor",
+									"value": "melati",
+									"type": "text"
+								},
+								{
+									"key": "Kode Mentor",
 									"value": "",
 									"type": "text"
 								},
 								{
-									"key": "kode",
-									"value": "",
-									"type": "text"
-								},
-								{
-									"key": "foto",
+									"key": "Upload Image",
 									"type": "file",
 									"src": []
 								},
 								{
-									"key": "no_ktp",
-									"value": "",
+									"key": "No Ktp",
+									"value": "9876567898765434",
 									"type": "text"
 								},
 								{
-									"key": "no_telepon",
-									"value": "",
+									"key": "No Telepon",
+									"value": "098765456789",
 									"type": "text"
 								},
 								{
-									"key": "status",
-									"value": "",
+									"key": "Status",
+									"value": "Apply",
 									"type": "text"
 								},
 								{
-									"key": "class_name",
-									"value": "",
+									"key": "Class Name",
+									"value": "1",
 									"type": "text"
 								},
 								{
-									"key": "pendidikan_univ",
-									"value": "",
+									"key": "Pendidikan Univ",
+									"value": "Padjadjaran",
 									"type": "text"
 								},
 								{
-									"key": "pendidikan_jurusan",
-									"value": "",
+									"key": "Pendidikan Jurusan",
+									"value": "Sistem Informasi",
 									"type": "text"
 								},
 								{
-									"key": "tgl_start",
-									"value": "",
+									"key": "Tanggal Start",
+									"value": "2022-02-21",
 									"type": "text"
 								},
 								{
-									"key": "tgl_stop",
-									"value": "",
+									"key": "Tanggal Stop",
+									"value": "2022-05-21",
 									"type": "text"
 								},
 								{
-									"key": "alamat_rumah",
-									"value": "",
+									"key": "Alamat Rumah",
+									"value": "jl.sekar",
 									"type": "text"
 								},
 								{
-									"key": "cv",
+									"key": "Upload Cv",
 									"type": "file",
 									"src": []
 								},
 								{
-									"key": "provinsi",
-									"value": "",
+									"key": "Provinsi",
+									"value": "32",
 									"type": "text"
 								},
 								{
-									"key": "kota",
-									"value": "",
+									"key": "Kota",
+									"value": "3273",
 									"type": "text"
 								},
 								{
-									"key": "kecamatan",
-									"value": "",
+									"key": "Kecamatan",
+									"value": "3273010",
 									"type": "text"
 								},
 								{
-									"key": "kelurahan",
-									"value": "",
-									"type": "text"
-								},
-								{
-									"key": "batch",
-									"value": "",
+									"key": "Kelurahan",
+									"value": "3273010002",
 									"type": "text"
 								}
 							]
@@ -204,6 +209,16 @@
 				{
 					"name": "UpdateMentor",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpcWJhbDEyMyIsImlhdCI6MTY2NDU0MjY2MSwiZXhwIjoxNjY0NTQzMjYxfQ.IuWDiGzQ2A3Kngu-1jOKEKMRpTGljyx5T_klmKGIPvwZ5L6QMniWzs4UtizPrQGM1v7D4dR1Gzk4d1C_kxLhfQ",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [
 							{
@@ -216,97 +231,92 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "id",
+									"key": "Nama Mentor",
+									"value": "melati",
+									"type": "text"
+								},
+								{
+									"key": "Kode Mentor",
 									"value": "",
 									"type": "text"
 								},
 								{
-									"key": "kode",
-									"value": "",
-									"type": "text"
-								},
-								{
-									"key": "foto",
+									"key": "Upload Image",
 									"type": "file",
 									"src": []
 								},
 								{
-									"key": "no_ktp",
-									"value": "",
+									"key": "No Ktp",
+									"value": "9876567898765434",
 									"type": "text"
 								},
 								{
-									"key": "no_telepon",
-									"value": "",
+									"key": "No Telepon",
+									"value": "098765456789",
 									"type": "text"
 								},
 								{
-									"key": "status",
-									"value": "",
+									"key": "Status",
+									"value": "Apply",
 									"type": "text"
 								},
 								{
-									"key": "class_name",
-									"value": "",
+									"key": "Class Name",
+									"value": "1",
 									"type": "text"
 								},
 								{
-									"key": "pendidikan_univ",
-									"value": "",
+									"key": "Pendidikan Univ",
+									"value": "Padjadjaran",
 									"type": "text"
 								},
 								{
-									"key": "pendidikan_jurusan",
-									"value": "",
+									"key": "Pendidikan Jurusan",
+									"value": "Sistem Informasi",
 									"type": "text"
 								},
 								{
-									"key": "tgl_start",
-									"value": "",
+									"key": "Tanggal Start",
+									"value": "2022-02-21",
 									"type": "text"
 								},
 								{
-									"key": "tgl_stop",
-									"value": "",
+									"key": "Tanggal Stop",
+									"value": "2022-05-21",
 									"type": "text"
 								},
 								{
-									"key": "alamat_rumah",
-									"value": "",
+									"key": "Alamat Rumah",
+									"value": "jl.sekar",
 									"type": "text"
 								},
 								{
-									"key": "cv",
+									"key": "Upload Cv",
 									"type": "file",
 									"src": []
 								},
 								{
-									"key": "provinsi",
-									"value": "",
+									"key": "Provinsi",
+									"value": "32",
 									"type": "text"
 								},
 								{
-									"key": "kota",
-									"value": "",
+									"key": "Kota",
+									"value": "3273",
 									"type": "text"
 								},
 								{
-									"key": "kecamatan",
-									"value": "",
+									"key": "Kecamatan",
+									"value": "3273010",
 									"type": "text"
 								},
 								{
-									"key": "kelurahan",
-									"value": "",
+									"key": "Kelurahan",
+									"value": "3273010002",
 									"type": "text"
 								},
 								{
-									"key": "nama_mentor",
-									"value": "",
-									"type": "text"
-								},
-								{
-									"key": "batch",
+									"key": "Id",
 									"value": "",
 									"type": "text"
 								}

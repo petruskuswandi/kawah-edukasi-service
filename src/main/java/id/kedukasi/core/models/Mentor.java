@@ -37,8 +37,6 @@ public class Mentor implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private Long batch;
-
   @NotBlank
   @Size(max = 100)
   private String nama_mentor;
