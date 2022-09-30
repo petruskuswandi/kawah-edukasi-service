@@ -10,6 +10,10 @@ public interface BatchService {
 
     Result getBatchById(Long id, String uri);
 
+//    Result getClassBybatch(Long id, String uri);
+//
+//    Result getMentorClassByBatch(Long id, String uri);
+
     ResponseEntity<?> updateBatch(BatchRequest batchRequest);
 
     ResponseEntity<?> deleteBatch(boolean banned, Long id, String uri);

@@ -77,6 +77,16 @@ public class BatchServiceImpl implements BatchService {
         return result;
     }
 
+//    @Override
+//    public Result getClassBybatch(Long id, String uri) {
+//        return null;
+//    }
+//
+//    @Override
+//    public Result getMentorClassByBatch(Long id, String uri) {
+//        return null;
+//    }
+
     @Override
     public ResponseEntity<?> updateBatch(BatchRequest batchRequest) {
         result = new Result();
@@ -84,7 +94,7 @@ public class BatchServiceImpl implements BatchService {
             // cek Batch name sudah di gunakan apa tidak
             Batch checkBatchname = batchRepository.findByBatchname(batchRequest.getBatchname()).orElse(new Batch());
             if (checkBatchname.getBatchname()!= null && !Objects.equals(batchRequest.getId(), checkBatchname.getId())) {
-                result.setMessage("Error: Batch name is already in use!");
+                result.setMessage("Error: Batch telah di gunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
@@ -92,7 +102,7 @@ public class BatchServiceImpl implements BatchService {
             }
             // cek Stardate tidak boleh lebih besar dari end date
             if(batchRequest.getStartedtime().after(batchRequest.getEndedtime())){
-                result.setMessage("Error : Batch start date cannot be greater than end date ");
+                result.setMessage("Error : Start date tidak boleh lebih besar dari end date ");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
