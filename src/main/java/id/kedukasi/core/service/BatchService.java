@@ -10,9 +10,9 @@ public interface BatchService {
 
     Result getBatchById(Long id, String uri);
 
-//    Result getClassBybatch(Long id, String uri);
-//
-//    Result getMentorClassByBatch(Long id, String uri);
+    Result getClassBybatch(Long id, String uri);
+
+    Result getMentorClassByBatch(Long id, String uri);
 
     ResponseEntity<?> updateBatch(BatchRequest batchRequest);
 

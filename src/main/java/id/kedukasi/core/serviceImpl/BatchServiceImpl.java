@@ -77,15 +77,30 @@ public class BatchServiceImpl implements BatchService {
         return result;
     }
 
-//    @Override
-//    public Result getClassBybatch(Long id, String uri) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Result getMentorClassByBatch(Long id, String uri) {
-//        return null;
-//    }
+    // find classby batch
+    @Override
+    public Result getClassBybatch(Long id, String uri) {
+        result =  new Result();
+        try {
+
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        return null;
+
+    }
+
+    // find mentor class by batch
+    @Override
+    public Result getMentorClassByBatch(Long id, String uri) {
+        result = new Result();
+        try {
+
+        }catch (Exception e){
+            logger.error(stringUtil.getError(e));
+        }
+        return null;
+    }
 
     @Override
     public ResponseEntity<?> updateBatch(BatchRequest batchRequest) {
@@ -103,6 +118,13 @@ public class BatchServiceImpl implements BatchService {
             // cek Stardate tidak boleh lebih besar dari end date
             if(batchRequest.getStartedtime().after(batchRequest.getEndedtime())){
                 result.setMessage("Error : Start date tidak boleh lebih besar dari end date ");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            if(batchRequest.getStartedtime()!=null && batchRequest.getEndedtime()!=null){
+                result.setMessage("Error : batch harus di masuki data tanggal ");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
