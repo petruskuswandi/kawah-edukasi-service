@@ -9,8 +9,8 @@ import id.kedukasi.core.models.Result;
 
 public interface MentorService {
   
-    ResponseEntity<?> updateMentor(Long id, String nama_mentor, String kode,MultipartFile foto, String no_ktp,
-    String no_telepon, String status, String class_name, String pendidikan_univ,
+    ResponseEntity<?> updateMentor(Long id, Long batch,String nama_mentor, String kode,MultipartFile foto, String no_ktp,
+    String no_telepon, String status, Long class_name, String pendidikan_univ,
     String pendidikan_jurusan, Date tgl_start, Date tgl_stop,  String alamat_rumah, MultipartFile cv, Long provinsi, Long kota,
     Long kecamatan, Long kelurahan);
     

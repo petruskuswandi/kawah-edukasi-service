@@ -41,7 +41,7 @@
 			]
 		},
 		{
-			"name": "mentor",
+			"name": "Mentor",
 			"item": [
 				{
 					"name": "getMentorById",
@@ -179,6 +179,11 @@
 									"key": "kelurahan",
 									"value": "",
 									"type": "text"
+								},
+								{
+									"key": "batch",
+									"value": "",
+									"type": "text"
 								}
 							]
 						},
@@ -297,6 +302,11 @@
 								},
 								{
 									"key": "nama_mentor",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "batch",
 									"value": "",
 									"type": "text"
 								}
