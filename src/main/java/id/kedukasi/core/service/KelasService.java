@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 public interface KelasService {
     Result getAllClass(String uri);
 
+    Result getAllBannedKelas(String uri);
+
     Result getClassById(Long id, String uri);
 
     ResponseEntity<?> updateClass(KelasRequest kelasRequest);

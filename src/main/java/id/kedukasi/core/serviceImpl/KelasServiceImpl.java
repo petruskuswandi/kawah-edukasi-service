@@ -9,6 +9,8 @@ import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -37,7 +39,26 @@ public class KelasServiceImpl implements KelasService {
         result = new Result();
         try {
             Map items = new HashMap();
-            items.put("items", kelasRepository.findAll());
+            Kelas kelas = new Kelas();
+            kelas.setBanned(false);
+            Example<Kelas> example = Example.of(kelas);
+            items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC,"id")));
+            result.setData(items);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        return result;
+    }
+
+    @Override
+    public Result getAllBannedKelas(String uri) {
+        result = new Result();
+        try {
+            Map items = new HashMap();
+            Kelas kelas = new Kelas();
+            kelas.setBanned(true);
+            Example<Kelas> example = Example.of(kelas);
+            items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC,"id")));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -51,7 +72,7 @@ public class KelasServiceImpl implements KelasService {
         try {
             if (!kelasRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find class");
+                result.setMessage("Error: Tidak ada kelas dengan id " + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
@@ -71,19 +92,21 @@ public class KelasServiceImpl implements KelasService {
         try {
             Kelas checkClassname = kelasRepository.findByClassname(kelasRequest.getClassname()).orElse(new Kelas());
             if (checkClassname.getClassname()!= null && !Objects.equals(kelasRequest.getId(), checkClassname.getId())) {
-                result.setMessage("Error: Class name is already in use!");
+                result.setMessage("Error: Nama kelas sudah digunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             }
-            if(kelasRequest.getClassname().length()<3 || kelasRequest.getClassname().length()>20) {
-                result.setMessage("Error: Class name must be 3-20 characters");
+            if(kelasRequest.getClassname().length()<3
+                    || kelasRequest.getClassname().length()>20
+                    || kelasRequest.getClassname().isBlank()) {
+                result.setMessage("Error: Nama kelas tidak boleh kosong dan harus terdiri dari 3-20 karakter");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
-            if(kelasRequest.getDescription().length()>50) {
-                result.setMessage("Error: description must be at most 50 characters");
+            if(kelasRequest.getDescription().length()>50 || kelasRequest.getDescription().isBlank()) {
+                result.setMessage("Error: Deskripsi kelas tidak boleh kosong dan harus kurang dari 50 karakter");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -94,7 +117,7 @@ public class KelasServiceImpl implements KelasService {
             kelasbaru.setId(kelasRequest.getId());
             kelasRepository.save(kelasbaru);
 
-            result.setMessage(kelasRequest.getId() == 0 ? "Class registered successfully!" : "Class updated successfully!");
+            result.setMessage(kelasRequest.getId() == 0 ? "Berhasil membuat kelas baru!" : "Berhasil memperbarui kelas!");
             result.setCode(HttpStatus.OK.value());
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -107,11 +130,21 @@ public class KelasServiceImpl implements KelasService {
     public ResponseEntity<?> deleteClass(boolean banned, Long id, String uri) {
         result = new Result();
         try {
-            kelasRepository.deleteKelas(banned, id);
+            if (!kelasRepository.findById(id).isPresent()) {
+                result.setSuccess(false);
+                result.setMessage("Error: Tidak ada kelas dengan id " + id);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                kelasRepository.deleteKelas(banned, id);
+                if (banned) {
+                    result.setMessage("Berhasil menghapus kelas");
+                } else {
+                    result.setMessage("Berhasil mengembalikan kelas");
+                }
+            }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return ResponseEntity.ok(result);
     }
 }

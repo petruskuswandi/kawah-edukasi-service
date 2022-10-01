@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "36f6f4a3-c805-4e87-8955-87d759adebcf",
-		"name": "Peserta",
+		"name": "Peserta dan Kelas",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21966944"
 	},
@@ -17,7 +17,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQzNTc1MTAsImV4cCI6MTY2NDM1ODExMH0.kJurlIvUlb7sS_P4ol6L-zJ7lHGKNcWGIj9DDFIDI7Q0QPjiCBQmwb3gLKcD4iXqKPZIj-z8bxbfNk_TY5jVQA",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1ODkwMTYsImV4cCI6MTY2NDU4OTYxNn0.--xPagNKcuXBooerf5tsKP2KSIZakU-2gILoJw1b5SfpZ8nFWV_xR68GxeKBezKKrM5n2CaljZG2UX6UD-7z3A",
 									"type": "string"
 								}
 							]
@@ -40,14 +40,14 @@
 					"response": []
 				},
 				{
-					"name": "Get By Id",
+					"name": "Get All Banned",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM4MTcyMDksImV4cCI6MTY2MzgxNzgwOX0.lKigldydv5F_IeTaKKlXwVBbKLGhO6nXjfrBCQb8ssW50FfiT3pQ5w7M6O8l8jZIAwsAZTp358z3VlBaRx1V-A",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1ODkwMTYsImV4cCI6MTY2NDU4OTYxNn0.--xPagNKcuXBooerf5tsKP2KSIZakU-2gILoJw1b5SfpZ8nFWV_xR68GxeKBezKKrM5n2CaljZG2UX6UD-7z3A",
 									"type": "string"
 								}
 							]
@@ -55,7 +55,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8880/calonPeserta/8",
+							"raw": "http://localhost:8880/calonPeserta/allBanned",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -63,7 +63,37 @@
 							"port": "8880",
 							"path": [
 								"calonPeserta",
-								"8"
+								"allBanned"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1NTM4OTAsImV4cCI6MTY2NDU1NDQ5MH0.I_H0es3XIi46Xjn6mcjjVswfs1WzO05umUDzAozPZLJgsqxGYtFGjqzBw10hsGyMwFaU8DT4ralfafgBSUrcKg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/calonPeserta/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"calonPeserta",
+								"2"
 							]
 						}
 					},
@@ -77,7 +107,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQzNTc1MTAsImV4cCI6MTY2NDM1ODExMH0.kJurlIvUlb7sS_P4ol6L-zJ7lHGKNcWGIj9DDFIDI7Q0QPjiCBQmwb3gLKcD4iXqKPZIj-z8bxbfNk_TY5jVQA",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1MTgwNzIsImV4cCI6MTY2NDUxODY3Mn0.Vgt5OvlDeE3wyvPj9A29ggIo23vJeecisu3qtp0Qvx2lJk-OVcsVT6CzJ7Q4QIeB6d_t_HbqQnjD-DFZ1ya30g",
 									"type": "string"
 								}
 							]
@@ -99,7 +129,7 @@
 								},
 								{
 									"key": "Nama Peserta",
-									"value": "Yogi",
+									"value": "Laptop",
 									"type": "text"
 								},
 								{
@@ -124,7 +154,7 @@
 								},
 								{
 									"key": "Email",
-									"value": "yogi@gmail.com",
+									"value": "laptop@gmail.com",
 									"type": "text"
 								},
 								{
@@ -192,7 +222,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQzNTc1MTAsImV4cCI6MTY2NDM1ODExMH0.kJurlIvUlb7sS_P4ol6L-zJ7lHGKNcWGIj9DDFIDI7Q0QPjiCBQmwb3gLKcD4iXqKPZIj-z8bxbfNk_TY5jVQA",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1OTAxODgsImV4cCI6MTY2NDU5MDc4OH0.2YKaKRKvylr0nJ3CxaSdffpSJSK6o6_H-E9-Oba9aRnku5TEu8VHPGZvKtYTXdiGJE6krvXN20NT4jZCdjXunA",
 									"type": "string"
 								}
 							]
@@ -214,7 +244,7 @@
 								},
 								{
 									"key": "Nama Peserta",
-									"value": "Tri",
+									"value": "an",
 									"type": "text"
 								},
 								{
@@ -224,12 +254,12 @@
 								},
 								{
 									"key": "Jenis Kelamin",
-									"value": "Laki Laki",
+									"value": "Laki laki",
 									"type": "text"
 								},
 								{
 									"key": "Pendidikan Terakhir",
-									"value": "Kuliah",
+									"value": "kuliah",
 									"type": "text"
 								},
 								{
@@ -239,7 +269,7 @@
 								},
 								{
 									"key": "Email",
-									"value": "tri@gmail.com",
+									"value": "an@gmail.com",
 									"type": "text"
 								},
 								{
@@ -279,7 +309,7 @@
 								},
 								{
 									"key": "Kode Referal",
-									"value": "asdfgh",
+									"value": "",
 									"type": "text"
 								},
 								{
@@ -533,7 +563,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM3Mzg4OTMsImV4cCI6MTY2MzczOTQ5M30.vT21i3DR5uf8ULnRYOyTyh3vngoFhcQvOa167xNjBzNBaqIaTXr5b4_6SCJIRgrbXpgdlAGIAAckgz8kRDkfsA",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1MTgwNzIsImV4cCI6MTY2NDUxODY3Mn0.Vgt5OvlDeE3wyvPj9A29ggIo23vJeecisu3qtp0Qvx2lJk-OVcsVT6CzJ7Q4QIeB6d_t_HbqQnjD-DFZ1ya30g",
 									"type": "string"
 								}
 							]
@@ -545,7 +575,7 @@
 							"formdata": [
 								{
 									"key": "keyword",
-									"value": "Andika",
+									"value": "Laptop",
 									"type": "text"
 								}
 							]
@@ -631,7 +661,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQzNTc1MTAsImV4cCI6MTY2NDM1ODExMH0.kJurlIvUlb7sS_P4ol6L-zJ7lHGKNcWGIj9DDFIDI7Q0QPjiCBQmwb3gLKcD4iXqKPZIj-z8bxbfNk_TY5jVQA",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1ODkwMTYsImV4cCI6MTY2NDU4OTYxNn0.--xPagNKcuXBooerf5tsKP2KSIZakU-2gILoJw1b5SfpZ8nFWV_xR68GxeKBezKKrM5n2CaljZG2UX6UD-7z3A",
 									"type": "string"
 								}
 							]
@@ -648,6 +678,36 @@
 							"path": [
 								"peserta",
 								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Banned",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1ODkwMTYsImV4cCI6MTY2NDU4OTYxNn0.--xPagNKcuXBooerf5tsKP2KSIZakU-2gILoJw1b5SfpZ8nFWV_xR68GxeKBezKKrM5n2CaljZG2UX6UD-7z3A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/peserta/allBanned",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"peserta",
+								"allBanned"
 							]
 						}
 					},
@@ -926,7 +986,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjM4MTY1OTEsImV4cCI6MTY2MzgxNzE5MX0._Ow1DLetJAYAsL_gxc4ecd_I8FcYDRxIITfO7xurzskDx529XjKD1EfSdkk6GXyv2iQ8d-JFvHyCvPMuU2aGmA",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1ODkwMTYsImV4cCI6MTY2NDU4OTYxNn0.--xPagNKcuXBooerf5tsKP2KSIZakU-2gILoJw1b5SfpZ8nFWV_xR68GxeKBezKKrM5n2CaljZG2UX6UD-7z3A",
 									"type": "string"
 								}
 							]
@@ -943,7 +1003,7 @@
 								},
 								{
 									"key": "banned",
-									"value": "false",
+									"value": "true",
 									"type": "text"
 								}
 							]
@@ -1398,6 +1458,224 @@
 								"wilayah",
 								"kelurahan",
 								"3273010002"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Kelas",
+			"item": [
+				{
+					"name": "All Kelas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1ODgxODIsImV4cCI6MTY2NDU4ODc4Mn0.autT_audZjPhMBlUDO2r5SnTLMggNVCDrnKXVBt6p4pGH4YDAntZFVf10f3REjs1nhs6TKbVxrdi0z8dQYzn7g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/kelas/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"kelas",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Kelas Banned",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1ODkwMTYsImV4cCI6MTY2NDU4OTYxNn0.--xPagNKcuXBooerf5tsKP2KSIZakU-2gILoJw1b5SfpZ8nFWV_xR68GxeKBezKKrM5n2CaljZG2UX6UD-7z3A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/kelas/allBanned",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"kelas",
+								"allBanned"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Kelas By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1ODkwMTYsImV4cCI6MTY2NDU4OTYxNn0.--xPagNKcuXBooerf5tsKP2KSIZakU-2gILoJw1b5SfpZ8nFWV_xR68GxeKBezKKrM5n2CaljZG2UX6UD-7z3A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8880/kelas/9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"kelas",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ1Mjg1OTQsImV4cCI6MTY2NDUyOTE5NH0.OmVagQeMEz27Srz1zleNBGQfROypP1WusKL5EAQcFTsFfHSbOe_Ct882eH3CZ4CT6BYrmCWgM95PmT3NbJS3PA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : 0,\r\n  \"classname\": \"Python 4\",\r\n  \"description\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8880/kelas/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"kelas",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ0NTUzNTAsImV4cCI6MTY2NDQ1NTk1MH0.Z5kzOGaYQq7pelizkpw2oTEP7mlgop-5vBX2TUYpPqgBBfSeesLawTXjuV51Gp4PLCk6u52ofC0Zofo9usXqgA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : 9,\r\n  \"classname\": \"Python\",\r\n  \"description\": \"kelas bahasa pemrograman python\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8880/kelas/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"kelas",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRpa2F0cmlrMTciLCJpYXQiOjE2NjQ0NjM1MzgsImV4cCI6MTY2NDQ2NDEzOH0.lMcKPgDdHM0UOreddO2hi8DQ_07ohWfs-b0n1Gx1QHvXEGrKp8BQu-MtGe62N3McinDdvM_n4r6DU2_NdfzJ1A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "banned",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8880/kelas/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"kelas",
+								"delete"
 							]
 						}
 					},

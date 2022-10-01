@@ -28,6 +28,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,8 +76,26 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             Map items = new HashMap();
             Peserta calonPeserta = new Peserta();
             calonPeserta.setStatusPeserta(EnumStatusPeserta.CALON);
+            calonPeserta.setBanned(false);
             Example<Peserta> example = Example.of(calonPeserta);
-            items.put("items", pesertaRepository.findAll(example));
+            items.put("items", pesertaRepository.findAll(example,Sort.by(Sort.Direction.ASC,"id")));
+            result.setData(items);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        return result;
+    }
+
+    @Override
+    public Result getAllBannedCalonPeserta(String uri) {
+        result = new Result();
+        try {
+            Map items = new HashMap();
+            Peserta calonPeserta = new Peserta();
+            calonPeserta.setStatusPeserta(EnumStatusPeserta.CALON);
+            calonPeserta.setBanned(false);
+            Example<Peserta> example = Example.of(calonPeserta);
+            items.put("items", pesertaRepository.findAll(example,Sort.by(Sort.Direction.ASC,"id")));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -89,11 +109,11 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         try {
             if (!pesertaRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find calon peserta");
+                result.setMessage("Error: Tidak ada peserta dengan id: " + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
                 result.setSuccess(false);
-                result.setMessage("id: "+ id + " is not calon peserta");
+                result.setMessage("Error: id "+ id + " bukan calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
@@ -107,48 +127,104 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
     }
 
     @Override
-    public ResponseEntity<?> updateCalonPeserta(Long id, Long kelasId,Long batchId, String namaPeserta, Date tanggalLahir,
+    public ResponseEntity<?> updateCalonPeserta(Long id, Long kelasId,Long batchId, String namaPeserta, String tanggalLahir,
                                                 String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
                                                 MultipartFile uploadImage, Long provinsiId, Long kotaId, Long kecamatanId,
                                                 Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal) {
         result = new Result();
         try {
+            //cek email
             Peserta checkEmailPeserta = pesertaRepository.findByEmail(email).orElse(new Peserta());
-            if (checkEmailPeserta.getEmail()!= null && !Objects.equals(id, checkEmailPeserta.getId())) {
-                result.setMessage("Error: Email is already in use!");
+            if (checkEmailPeserta.getEmail() != null && !Objects.equals(id, checkEmailPeserta.getId())) {
+                result.setMessage("Error: Email sudah digunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             }
-
+            if (email.isBlank()) {
+                result.setMessage("Error: Email tidak boleh kosong!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            //cek username
             Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(namaPeserta).orElse(new Peserta());
             if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
-                result.setMessage("Error: Username is already taken!");
+                result.setMessage("Error: Username sudah digunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             }
-
+            if (namaPeserta.isBlank()) {
+                result.setMessage("Error: Nama Peserta tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            //cek tanggal lahir
+            if (tanggalLahir.isBlank()) {
+                result.setMessage("Error: Tanggal lahir tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            Date tanggalLahirTypeDate = new SimpleDateFormat("dd-MM-yyyy").parse(tanggalLahir);
+            //cek jenis kelamin
+            if (jenisKelamin.isBlank()) {
+                result.setMessage("Error: Jenis kelamin tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            //cek pendidikan terakhir
+            if (pendidikanTerakhir.isBlank()) {
+                result.setMessage("Error: Pendidikan terakhir tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            //cek alamat rumah
+            if (alamatRumah.isBlank()) {
+                result.setMessage("Error: Alamat rumah tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            //cek motivasi
+            if (motivasi.isBlank()) {
+                result.setMessage("Error: Motivasi tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            //cek nomer hp
             if (!validator.isPhoneValid(noHp)) {
-                result.setMessage("Error: invalid phone number!");
+                result.setMessage("Error: nomor telepon tidak boleh kosong dan gunakan format 08xxx/+628xxx/628xxx!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             }
-
+            //cek status peserta
             Peserta checkStatusPeserta = pesertaRepository.findById(id).orElse(new Peserta());
             if (checkStatusPeserta.getStatusPeserta() != null && !Objects.equals(EnumStatusPeserta.CALON, checkStatusPeserta.getStatusPeserta())) {
-                result.setMessage("Error: id: " + id + " is not Calon Peserta");
+                result.setMessage("Error: id: " + id + " bukan Calon Peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             }
 
-            Peserta peserta = new Peserta(namaPeserta, tanggalLahir, jenisKelamin, pendidikanTerakhir,noHp, email,
+            Peserta peserta = new Peserta(namaPeserta, tanggalLahirTypeDate, jenisKelamin, pendidikanTerakhir, noHp, email,
                     alamatRumah, motivasi, kodeReferal);
 
             peserta.setId(id);
@@ -157,7 +233,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             //set kelas
             if (!kelasRepository.findById(kelasId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find kelas");
+                result.setMessage("Error: Tidak ada kelas dengan id " + kelasId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
@@ -169,7 +245,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             //set batch
             if (!batchRepository.findById(batchId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find batch");
+                result.setMessage("Error: Tidak ada batch dengan id " + batchId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
@@ -179,14 +255,14 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             }
 
             //set image
-            if (uploadImage!=null) {
+            if (uploadImage != null) {
                 peserta.setUploadImage(IOUtils.toByteArray(uploadImage.getInputStream()));
             }
 
             //set provinsi
             if (!provinsiRepository.findById(provinsiId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find provinsi");
+                result.setMessage("Error: Tidak ada provinsi dengan id " + provinsiId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
@@ -198,7 +274,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             //set kota
             if (!kotaRepository.findById(kotaId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find kota");
+                result.setMessage("Error: Tidak ada kota dengan id " + kotaId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
@@ -210,7 +286,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             //set kecamatan
             if (!kecamatanRepository.findById(kecamatanId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find kecamatan");
+                result.setMessage("Error: Tidak ada kecamatan dengan id " + kecamatanId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
@@ -222,7 +298,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             //set kelurahan
             if (!kelurahanRepository.findById(kelurahanId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find kelurahan");
+                result.setMessage("Error: Tidak ada kelurahan dengan id " + kelurahanId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
@@ -233,8 +309,15 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
 
             pesertaRepository.save(peserta);
 
-            result.setMessage(id == 0 ? "Calon peserta registered successfully!" : "Calon peserta updated successfully!");
+            result.setMessage(id == 0 ? "Berhasil membuat calon peserta baru!" : "Berhasil memperbarui calon peserta!");
             result.setCode(HttpStatus.OK.value());
+        } catch (ParseException e) {
+            result.setSuccess(false);
+            result.setMessage("Error: Gunakan format \"dd-MM-yyyy\" pada tanggal lahir");
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity
+                    .badRequest()
+                    .body(result);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
@@ -247,14 +330,19 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         try {
             if (!pesertaRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find calon peserta");
+                result.setMessage("Error: Tidak ada calon peserta dengan id " + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
                 result.setSuccess(false);
-                result.setMessage("id: "+ id + " is not calon peserta");
+                result.setMessage("Error: id "+ id + " bukan calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 pesertaRepository.deletePeserta(banned, id);
+                if (banned) {
+                    result.setMessage("Berhasil menghapus calon peserta");
+                } else {
+                    result.setMessage("Berhasil mengembalikan calon peserta");
+                }
             }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -268,11 +356,11 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         try {
             if (!pesertaRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find calon peserta");
+                result.setMessage("Error: Tidak ada calon peserta dengan id " + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
                 result.setSuccess(false);
-                result.setMessage("id: "+ id + " is not calon peserta");
+                result.setMessage("Error: id "+ id + " bukan calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 pesertaRepository.statusPeserta(EnumStatusPeserta.PESERTA, id);
@@ -289,11 +377,11 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         try {
             if (!pesertaRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find calon peserta");
+                result.setMessage("Error: Tidak ada calon peserta dengan id " + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
                 result.setSuccess(false);
-                result.setMessage("id: "+ id + " is not calon peserta");
+                result.setMessage("Error: id "+ id + " bukan calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 if (statusTesOrd==0) {
@@ -303,7 +391,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                 } else if (statusTesOrd==2) {
                     pesertaRepository.statusTes(EnumStatusTes.MENUNGGUFOLLOWUP, id);
                 } else {
-                    result.setMessage("Error: Use 0 for Lulus, 1 for Melaksanakan Tes and 2 for Menunggu Follow Up");
+                    result.setMessage("Error: gunakan 0 untuk Lulus, 1 untuk Melaksanakan Tes dan 2 untuk Menunggu Follow Up");
                     result.setCode(HttpStatus.BAD_REQUEST.value());
                     return ResponseEntity
                             .badRequest()
@@ -324,15 +412,15 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             Kelas kelas = kelasRepository.findById(kelasId).get();
             if (!pesertaRepository.findById(calonPesertaId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find peserta");
+                result.setMessage("Error: Tidak ada calon peserta dengan id " + calonPesertaId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else if (!kelasRepository.findById(kelasId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find kelas");
+                result.setMessage("Error: Tidak ada kelas dengan id " + kelasId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else if (calonPeserta.getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
                 result.setSuccess(false);
-                result.setMessage("id: "+ calonPesertaId + " is not calon peserta");
+                result.setMessage("Error: id "+ calonPesertaId + " bukan calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 calonPeserta.setKelas(kelas);
@@ -354,22 +442,22 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                 peserta.setStatusTes(EnumStatusTes.MELAKSANAKANTES);
                 peserta.setStatusPeserta(EnumStatusPeserta.CALON);
                 Example<Peserta> example = Example.of(peserta);
-                items.put("items", pesertaRepository.findAll(example));
+                items.put("items", pesertaRepository.findAll(example,Sort.by(Sort.Direction.ASC,"id")));
                 result.setData(items);
             } else if (statusTesOrd==1) {
                 peserta.setStatusTes(EnumStatusTes.MENUNGGUFOLLOWUP);
                 peserta.setStatusPeserta(EnumStatusPeserta.CALON);
                 Example<Peserta> example = Example.of(peserta);
-                items.put("items", pesertaRepository.findAll(example));
+                items.put("items", pesertaRepository.findAll(example,Sort.by(Sort.Direction.ASC,"id")));
                 result.setData(items);
             } else if (statusTesOrd==2) {
                 peserta.setStatusTes(EnumStatusTes.LULUS);
                 peserta.setStatusPeserta(EnumStatusPeserta.CALON);
                 Example<Peserta> example = Example.of(peserta);
-                items.put("items", pesertaRepository.findAll(example));
+                items.put("items", pesertaRepository.findAll(example,Sort.by(Sort.Direction.ASC,"id")));
                 result.setData(items);
             } else {
-                result.setMessage("Error: Use 0 for Melaksanakan Tes, 1 for Menunggu Follow Up dan 2 for Lulus");
+                result.setMessage("Error: gunakan 0 untuk Melaksanakan Tes, 1 untuk Menunggu Follow Up dan 2 untuk Lulus");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return result;
             }
@@ -402,12 +490,12 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             Example<Peserta> example = Example.of(calonPeserta);
             if (ascending) {
                 Page<Peserta> pagePeserta = pesertaRepository.findAll(example,
-                        PageRequest.of(page, size, Sort.by("namaPeserta").ascending()));
+                        PageRequest.of(page, size, Sort.by("id").ascending()));
                 items.put("items", pagePeserta);
             }
             else {
                 Page<Peserta> pagePeserta = pesertaRepository.findAll(example,
-                        PageRequest.of(page, size, Sort.by("namaPeserta").descending()));
+                        PageRequest.of(page, size, Sort.by("id").descending()));
                 items.put("items", pagePeserta);
             }
             result.setData(items);

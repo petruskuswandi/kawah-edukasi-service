@@ -17,6 +17,7 @@ public class SignupRequest {
   @ApiModelProperty(example = "iamEmail@gmail.com", required = true)
   private String email;
 
+  @ApiModelProperty(example = "3", required = true)
   private Integer role;
 
   @NotBlank

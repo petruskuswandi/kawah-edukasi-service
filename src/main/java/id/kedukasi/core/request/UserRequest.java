@@ -21,6 +21,7 @@ public class UserRequest implements Serializable {
   @ApiModelProperty(example = "iamEmail@gmail.com", required = true)
   private String email;
 
+  @ApiModelProperty(example = "3", required = true)
   private Integer role;
 
   @NotBlank
@@ -28,14 +29,12 @@ public class UserRequest implements Serializable {
   @ApiModelProperty(example = "iam123", required = true)
   private String password;
 
-  @NotBlank
   @Size(max = 50)
-  @ApiModelProperty(example = "Nama Lengkap", required = true)
+  @ApiModelProperty(example = "Nama Lengkap")
   private String namaLengkap;
 
-  @NotBlank
   @Size(max = 20)
-  @ApiModelProperty(example = "08xxxx", required = true)
+  @ApiModelProperty(example = "08xxxx")
   private String noHp;
   
   private boolean isActive;
