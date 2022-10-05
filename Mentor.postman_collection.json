@@ -1,0 +1,522 @@
+{
+	"info": {
+		"_postman_id": "ddb15ddb-2bdb-4b57-b77f-0da7e87a1fdf",
+		"name": "Mentor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14047280"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"string\",\n  \"password\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8880/api/auth/signin",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "mentor",
+			"item": [
+				{
+					"name": "getMentorById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8880/mentor​/{id}",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"mentor​",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8880/mentor/all",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"mentor",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddMentor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "nama_mentor",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nama_mentor",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "kode",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "foto",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "no_ktp",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "no_telepon",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "class_name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "pendidikan_univ",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "pendidikan_jurusan",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "tgl_start",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "tgl_stop",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "alamat_rumah",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "cv",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "provinsi",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "kota",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "kecamatan",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "kelurahan",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8880/mentor/create",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"mentor",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateMentor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "nama_mentor",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "kode",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "foto",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "no_ktp",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "no_telepon",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "class_name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "pendidikan_univ",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "pendidikan_jurusan",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "tgl_start",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "tgl_stop",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "alamat_rumah",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "cv",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "provinsi",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "kota",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "kecamatan",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "kelurahan",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "nama_mentor",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8880/mentor/update",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"mentor",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMentor",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8880/mentor/delete",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"mentor",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Wilayah",
+			"item": [
+				{
+					"name": "getAllProvinsi",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8880/wilayah/provinsi/all",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"provinsi",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getProvinsiById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8880/wilayah/provinsi/{provinsiId}",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"provinsi",
+								"{provinsiId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllKotaInProvinsi",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8880/wilayah/provinsi/{provinsiId}/kota/all",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"provinsi",
+								"{provinsiId}",
+								"kota",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllKecamatanInKota",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8880/wilayah/kota/{kotaId}/kecamatan/all",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"kota",
+								"{kotaId}",
+								"kecamatan",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllKelurahanInKecamatan",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8880/wilayah/kecamatan/{kecamatanId}/kelurahan/all",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"kecamatan",
+								"{kecamatanId}",
+								"kelurahan",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getKotaById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8880/wilayah/kota/{kotaId}",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"kota",
+								"{kotaId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getKecamatanById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8880/wilayah/kecamatan/{kecamatanId}",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"kecamatan",
+								"{kecamatanId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getKelurahanById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8880/wilayah/kelurahan/{kelurahanId}",
+							"host": [
+								"localhost"
+							],
+							"port": "8880",
+							"path": [
+								"wilayah",
+								"kelurahan",
+								"{kelurahanId}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,14 +1,11 @@
 package id.kedukasi.core.models.wilayah;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import id.kedukasi.core.models.Peserta;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.Set;
 
 @Entity
 @Getter
