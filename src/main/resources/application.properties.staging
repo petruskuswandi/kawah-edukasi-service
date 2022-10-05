@@ -2,13 +2,14 @@ server.port=8880
 logging.config=./logback.xml
 swagger.enabled=true
 
+spring.datasource.url=jdbc:postgresql://${DATABASE_HOST:postgres}:${DATABASE_PORT:5432}/${DATABASE_NAME:kawah_db}
+spring.datasource.username=${DATABASE_USER:postgres}
+spring.datasource.password=${DATABASE_PASSWORD:Password09!}
+
 app.upload-file-path=./uploads/
 app.url.active-user=
 app.url.forgot-password=https://be-stg.kawahedukasi.id/forgot/
 
-spring.datasource.url=jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:kedukasi}
-spring.datasource.username=${DATABASE_USER:docker}
-spring.datasource.password=${DATABASE_PASSWORD:docker}
 spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 

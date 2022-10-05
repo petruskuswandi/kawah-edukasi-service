@@ -7,10 +7,8 @@ public class KelasRequest implements Serializable {
 
     private Long id;
 
-    @NotBlank
     private String classname ;
 
-    @NotBlank
     private String description;
 
     public Long getId() {

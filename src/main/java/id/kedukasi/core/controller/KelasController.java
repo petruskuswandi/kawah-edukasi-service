@@ -40,6 +40,13 @@ public class KelasController {
         return service.getAllClass(uri);
     }
 
+    @GetMapping(value = "/allBanned", produces = APPLICATION_JSON_VALUE)
+    public Result getAllBannedKelas() {
+        String uri = stringUtil.getLogParam(request);
+        logger.info(uri);
+        return service.getAllBannedKelas(uri);
+    }
+
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     public Result getClassByid(@PathVariable("id") Long id) {
         String uri = stringUtil.getLogParam(request);
