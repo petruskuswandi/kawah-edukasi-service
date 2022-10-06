@@ -14,9 +14,9 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
     @Transactional
     Optional<Batch> findByBatchname(String username);
 
-    Optional<Batch> findClassByBatch(String username);
-
-    Optional <Batch> findMentorClassByBatch(String username)
+//    Optional<Batch> findClassByBatch(String username);
+//
+//    Optional <Batch> findMentorClassByBatch(String username)
 
     @Modifying
     @Transactional
