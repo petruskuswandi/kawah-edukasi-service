@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +48,7 @@ public class WilayahServiceImpl implements WilayahService {
         result = new Result();
         try {
             Map items = new HashMap();
-            items.put("items", provinsiRepository.findAll());
+            items.put("items", provinsiRepository.findAll(Sort.by(Sort.Direction.ASC,"id")));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -61,7 +62,7 @@ public class WilayahServiceImpl implements WilayahService {
         try {
             if (!provinsiRepository.findById(provinsiId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find provinsi");
+                result.setMessage("Error: Tidak ada provinsi dengan id " + provinsiId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
@@ -84,7 +85,7 @@ public class WilayahServiceImpl implements WilayahService {
             MasterKota kota = new MasterKota();
             kota.setProvince_id(provinsiId);
             Example<MasterKota> example = Example.of(kota);
-            items.put("items", kotaRepository.findAll(example));
+            items.put("items", kotaRepository.findAll(example,Sort.by(Sort.Direction.ASC,"id")));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -98,7 +99,7 @@ public class WilayahServiceImpl implements WilayahService {
         try {
             if (!kotaRepository.findById(kotaId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find kota");
+                result.setMessage("Error: Tidak ada kota dengan id " + kotaId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
@@ -121,7 +122,7 @@ public class WilayahServiceImpl implements WilayahService {
             MasterKecamatan kecamatan = new MasterKecamatan();
             kecamatan.setKota_id(kotaId);
             Example<MasterKecamatan> example = Example.of(kecamatan);
-            items.put("items", kecamatanRepository.findAll(example));
+            items.put("items", kecamatanRepository.findAll(example,Sort.by(Sort.Direction.ASC,"id")));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -135,7 +136,7 @@ public class WilayahServiceImpl implements WilayahService {
         try {
             if (!kecamatanRepository.findById(kecamatanId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find kecamatan");
+                result.setMessage("Error: Tidak ada kecamatan dengan id " + kecamatanId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
@@ -157,7 +158,7 @@ public class WilayahServiceImpl implements WilayahService {
             MasterKelurahan kelurahan = new MasterKelurahan();
             kelurahan.setKecamatan_id(kecamatanId);
             Example<MasterKelurahan> example = Example.of(kelurahan);
-            items.put("items", kelurahanRepository.findAll(example));
+            items.put("items", kelurahanRepository.findAll(example,Sort.by(Sort.Direction.ASC,"id")));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -171,7 +172,7 @@ public class WilayahServiceImpl implements WilayahService {
         try {
             if (!kelurahanRepository.findById(kelurahanId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("cannot find kelurahan");
+                result.setMessage("Error: Tidak ada kelurahan dengan id " + kelurahanId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();

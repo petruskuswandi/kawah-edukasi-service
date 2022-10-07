@@ -46,6 +46,20 @@ public class BatchController {
         return service.getBatchById(id, uri);
     }
 
+//    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
+//    public Result getClassBybatch(@PathVariable("id") Long id) {
+//        String uri = stringUtil.getLogParam(request);
+//        logger.info(uri);
+//        return service.getClassBybatch(id, uri);
+//    }
+////
+//    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
+//    public Result getMentorClassByBatch(@PathVariable("id") Long id) {
+//        String uri = stringUtil.getLogParam(request);
+//        logger.info(uri);
+//        return service.getMentorClassByBatch(id, uri);
+//    }
+
     @PostMapping("/create")
     public ResponseEntity<?> createBatch(@RequestBody BatchRequest batchRequest) {
         return service.updateBatch(batchRequest);

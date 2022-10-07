@@ -81,16 +81,18 @@ public class BatchServiceImpl implements BatchService {
     public ResponseEntity<?> updateBatch(BatchRequest batchRequest) {
         result = new Result();
         try {
+            // cek Batch name sudah di gunakan apa tidak
             Batch checkBatchname = batchRepository.findByBatchname(batchRequest.getBatchname()).orElse(new Batch());
             if (checkBatchname.getBatchname()!= null && !Objects.equals(batchRequest.getId(), checkBatchname.getId())) {
-                result.setMessage("Error: Batch name is already in use!");
+                result.setMessage("Error: Batch telah di gunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             }
+            // cek Stardate tidak boleh lebih besar dari end date
             if(batchRequest.getStartedtime().after(batchRequest.getEndedtime())){
-                result.setMessage("Error : Batch start date cannot be greater than end date ");
+                result.setMessage("Error : Start date tidak boleh lebih besar dari end date ");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
