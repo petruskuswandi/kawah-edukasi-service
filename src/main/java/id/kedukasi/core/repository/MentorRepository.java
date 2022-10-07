@@ -1,17 +1,19 @@
 package id.kedukasi.core.repository;
 
-import id.kedukasi.core.models.Mentor;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import id.kedukasi.core.models.Mentor;
+
 @Repository
 public interface MentorRepository extends JpaRepository<Mentor, Long>{
-  
+
   @Transactional
   Optional<Mentor> findByKode(String kode);
 

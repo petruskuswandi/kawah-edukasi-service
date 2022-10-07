@@ -41,24 +41,24 @@ public class MentorRequest implements Serializable {
   @ApiModelProperty(example = "Back-End", required = true)
   private String class_name;
 
-  
+
   @ApiModelProperty(example = "Universitas Padjadjaran", required = true)
   private String pendidikan_univ;
 
-  
+
   @ApiModelProperty(example = "Teknik Informatika", required = true)
   private String pendidikan_jurusan;
 
- 
+
   @ApiModelProperty(example = "2022-05-17", required = true)
   private Date tgl_start;
 
-  
+
   @ApiModelProperty(example = "2022-08-17", required = true)
   private Date tgl_stop;
 
-  
-  
+
+
   @ApiModelProperty(example = "jl.mencari cinta", required = true)
   private String alamat_rumah;
 
@@ -66,7 +66,7 @@ public class MentorRequest implements Serializable {
   @ApiModelProperty(example = "1", required = true)
   private int provinsi;
 
- 
+
   @ApiModelProperty(example = "1", required = true)
   private int kota;
 
