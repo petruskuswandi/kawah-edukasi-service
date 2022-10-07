@@ -37,7 +37,11 @@ public class Peserta implements Serializable {
                 inverseJoinColumns = @JoinColumn(name = "kelas_id"))
         private Kelas kelas;
 
-//        Long Batch;
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinTable(name = "peserta_batch",
+                joinColumns = @JoinColumn(name = "peserta_id"),
+                inverseJoinColumns = @JoinColumn(name = "batch_id"))
+        private Batch batch;
 
         @NotBlank
         @Column(name = "namaPeserta")

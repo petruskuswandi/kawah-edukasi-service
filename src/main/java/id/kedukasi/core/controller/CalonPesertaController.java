@@ -43,6 +43,13 @@ public class CalonPesertaController {
         return service.getAllCalonPeserta(uri);
     }
 
+    @GetMapping(value = "/allBanned", produces = APPLICATION_JSON_VALUE)
+    public Result getAllBannedCalonPeserta() {
+        String uri = stringUtil.getLogParam(request);
+        logger.info(uri);
+        return service.getAllBannedCalonPeserta(uri);
+    }
+
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     public Result getCalonPesertaByid(@PathVariable("id") Long id) {
         String uri = stringUtil.getLogParam(request);
@@ -53,46 +60,48 @@ public class CalonPesertaController {
     @PostMapping("/create")
     public ResponseEntity<?> createCalonPeserta(
             @RequestParam(value = "Id Kelas", defaultValue = "0") Long kelasId,
-            @RequestParam(value = "Nama Peserta",defaultValue = "0") String namaPeserta,
-            @RequestParam(value = "Tanggal Lahir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalLahir,
+            @RequestParam(value = "Id Batch", defaultValue = "0") Long batchId,
+            @RequestParam(value = "Nama Peserta") String namaPeserta,
+            @RequestParam(value = "Tanggal Lahir") String tanggalLahir,
             @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
-            @RequestParam(value = "Pendidikan Terakhir",defaultValue = "0") String pendidikanTerakhir,
-            @RequestParam(value = "No Hp",defaultValue = "0") String noHp,
-            @RequestParam(value = "Email",defaultValue = "0") String email,
+            @RequestParam(value = "Pendidikan Terakhir") String pendidikanTerakhir,
+            @RequestParam(value = "No Hp") String noHp,
+            @RequestParam(value = "Email") String email,
             @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
-            @RequestParam(value = "Provinsi",defaultValue = "0") Long provinsi,
-            @RequestParam(value = "Kota",defaultValue = "0") Long kota,
-            @RequestParam(value = "Kecamatan",defaultValue = "0") Long kecamatan,
-            @RequestParam(value = "Kelurahan",defaultValue = "0") Long kelurahan,
-            @RequestParam(value = "Alamat Rumah",defaultValue = "0") String alamatRumah,
-            @RequestParam(value = "Motivasi",defaultValue = "0") String motivasi,
-            @RequestParam(value = "Kode Referal",defaultValue = "0") String kodeReferal
+            @RequestParam(value = "Provinsi", defaultValue = "0") Long provinsi,
+            @RequestParam(value = "Kota", defaultValue = "0") Long kota,
+            @RequestParam(value = "Kecamatan", defaultValue = "0") Long kecamatan,
+            @RequestParam(value = "Kelurahan", defaultValue = "0") Long kelurahan,
+            @RequestParam(value = "Alamat Rumah") String alamatRumah,
+            @RequestParam(value = "Motivasi") String motivasi,
+            @RequestParam(value = "Kode Referal",required = false) String kodeReferal
             ) {
         Long id = 0L;
-        return service.updateCalonPeserta(id,kelasId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
+        return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
                 email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> updateCalonPeserta(
-            @RequestParam(value = "Id",defaultValue = "0") Long id,
+            @RequestParam(value = "Id") Long id,
             @RequestParam(value = "Id Kelas", defaultValue = "0") Long kelasId,
-            @RequestParam(value = "Nama Peserta",defaultValue = "0") String namaPeserta,
-            @RequestParam(value = "Tanggal Lahir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalLahir,
+            @RequestParam(value = "Id Batch", defaultValue = "0") Long batchId,
+            @RequestParam(value = "Nama Peserta") String namaPeserta,
+            @RequestParam(value = "Tanggal Lahir") String tanggalLahir,
             @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
             @RequestParam(value = "Pendidikan Terakhir") String pendidikanTerakhir,
             @RequestParam(value = "No Hp") String noHp,
-            @RequestParam(value = "Email",defaultValue = "email@gmail.com") String email,
+            @RequestParam(value = "Email") String email,
             @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
-            @RequestParam(value = "Provinsi",defaultValue = "0") Long provinsi,
-            @RequestParam(value = "Kota",defaultValue = "0") Long kota,
-            @RequestParam(value = "Kecamatan",defaultValue = "0") Long kecamatan,
-            @RequestParam(value = "Kelurahan",defaultValue = "0") Long kelurahan,
+            @RequestParam(value = "Provinsi", defaultValue = "0") Long provinsi,
+            @RequestParam(value = "Kota", defaultValue = "0") Long kota,
+            @RequestParam(value = "Kecamatan", defaultValue = "0") Long kecamatan,
+            @RequestParam(value = "Kelurahan", defaultValue = "0") Long kelurahan,
             @RequestParam(value = "Alamat Rumah") String alamatRumah,
             @RequestParam(value = "Motivasi") String motivasi,
-            @RequestParam(value = "Kode Referal") String kodeReferal
+            @RequestParam(value = "Kode Referal",required = false) String kodeReferal
             ) {
-        return service.updateCalonPeserta(id,kelasId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
+        return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
                 email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
     }
 
