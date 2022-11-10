@@ -1,0 +1,12 @@
+2022-11-10 23:22:34.644 [main] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15.1 on Mac21s-MacBook-Pro.local with PID 16367 (/Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev/target/classes started by mac21 in /Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev)
+2022-11-10 23:22:34.650 [main] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-11-10 23:22:34.652 [main] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-11-10 23:22:44.322 [main] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-11-10 23:22:49.140 [main] INFO  id.kedukasi.core.Application - Started Application in 16.37 seconds (JVM running for 19.136)
+2022-11-10 23:23:24.658 [http-nio-8880-exec-4] INFO  i.k.c.c.SimpanPesertaController - << /simpanPeserta/all? >>
+2022-11-11 00:18:07.528 [main] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15.1 on Mac21s-MacBook-Pro.local with PID 19705 (/Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev/target/classes started by mac21 in /Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev)
+2022-11-11 00:18:07.542 [main] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-11-11 00:18:07.544 [main] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-11-11 00:18:15.444 [main] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-11-11 00:18:18.504 [main] INFO  id.kedukasi.core.Application - Started Application in 12.161 seconds (JVM running for 13.862)
+2022-11-11 00:18:22.447 [http-nio-8880-exec-2] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-11T00:18:22Z, a difference of 3659256446 milliseconds.  Allowed clock skew: 0 milliseconds.
