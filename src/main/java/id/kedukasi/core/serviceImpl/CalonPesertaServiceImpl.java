@@ -130,7 +130,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
     public ResponseEntity<?> updateCalonPeserta(Long id, Long kelasId,Long batchId, String namaPeserta, String tanggalLahir,
                                                 String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
                                                 MultipartFile uploadImage, Long provinsiId, Long kotaId, Long kecamatanId,
-                                                Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal) {
+                                                Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal, String nomorKtp, MultipartFile uploadCv) {
         result = new Result();
         try {
             //cek email
@@ -149,6 +149,223 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                         .badRequest()
                         .body(result);
             }
+//            if (nomorKtp.isBlank()) {
+//                result.setMessage("Error: KTP tidak boleh kosong!");
+//                result.setCode(HttpStatus.BAD_REQUEST.value());
+//                return ResponseEntity
+//                        .badRequest()
+//                        .body(result);
+//            }
+            //cek username
+            Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(namaPeserta).orElse(new Peserta());
+            if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
+                result.setMessage("Error: Username sudah digunakan!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            if (namaPeserta.isBlank()) {
+                result.setMessage("Error: Nama Peserta tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            //cek tanggal lahir
+            if (tanggalLahir.isBlank()) {
+                result.setMessage("Error: Tanggal lahir tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            Date tanggalLahirTypeDate = new SimpleDateFormat("dd-MM-yyyy").parse(tanggalLahir);
+            //cek jenis kelamin
+            if (jenisKelamin.isBlank()) {
+                result.setMessage("Error: Jenis kelamin tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            //cek pendidikan terakhir
+            if (pendidikanTerakhir.isBlank()) {
+                result.setMessage("Error: Pendidikan terakhir tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            //cek alamat rumah
+            if (alamatRumah.isBlank()) {
+                result.setMessage("Error: Alamat rumah tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            //cek motivasi
+            if (motivasi.isBlank()) {
+                result.setMessage("Error: Motivasi tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            //cek nomer hp
+            if (!validator.isPhoneValid(noHp)) {
+                result.setMessage("Error: nomor telepon tidak boleh kosong dan gunakan format 08xxx/+628xxx/628xxx!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            //cek status peserta
+            Peserta checkStatusPeserta = pesertaRepository.findById(id).orElse(new Peserta());
+            if (checkStatusPeserta.getStatusPeserta() != null && !Objects.equals(EnumStatusPeserta.CALON, checkStatusPeserta.getStatusPeserta())) {
+                result.setMessage("Error: id: " + id + " bukan Calon Peserta");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            Peserta peserta = new Peserta(namaPeserta, tanggalLahirTypeDate, jenisKelamin, pendidikanTerakhir, noHp, email,
+                    alamatRumah, motivasi, kodeReferal, nomorKtp);
+
+            peserta.setId(id);
+            peserta.setStatusPeserta(EnumStatusPeserta.CALON);
+
+            //set kelas
+            if (!kelasRepository.findById(kelasId).isPresent()) {
+                result.setSuccess(false);
+                result.setMessage("Error: Tidak ada kelas dengan id " + kelasId);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            } else {
+                peserta.setKelas(kelasRepository.findById(kelasId).get());
+            }
+
+            //set batch
+            if (!batchRepository.findById(batchId).isPresent()) {
+                result.setSuccess(false);
+                result.setMessage("Error: Tidak ada batch dengan id " + batchId);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            } else {
+                peserta.setBatch(batchRepository.findById(batchId).get());
+            }
+
+            //set image
+            if (uploadImage != null) {
+                peserta.setUploadImage(IOUtils.toByteArray(uploadImage.getInputStream()));
+            }
+            if (uploadCv != null) {
+                peserta.setUploadCv(IOUtils.toByteArray(uploadImage.getInputStream()));
+            }
+
+            //set provinsi
+            if (!provinsiRepository.findById(provinsiId).isPresent()) {
+                result.setSuccess(false);
+                result.setMessage("Error: Tidak ada provinsi dengan id " + provinsiId);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            } else {
+                peserta.setProvinsi(provinsiRepository.findById(provinsiId).get());
+            }
+
+            //set kota
+            if (!kotaRepository.findById(kotaId).isPresent()) {
+                result.setSuccess(false);
+                result.setMessage("Error: Tidak ada kota dengan id " + kotaId);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            } else {
+                peserta.setKota(kotaRepository.findById(kotaId).get());
+            }
+
+            //set kecamatan
+            if (!kecamatanRepository.findById(kecamatanId).isPresent()) {
+                result.setSuccess(false);
+                result.setMessage("Error: Tidak ada kecamatan dengan id " + kecamatanId);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            } else {
+                peserta.setKecamatan(kecamatanRepository.findById(kecamatanId).get());
+            }
+
+            //set kelurahan
+            if (!kelurahanRepository.findById(kelurahanId).isPresent()) {
+                result.setSuccess(false);
+                result.setMessage("Error: Tidak ada kelurahan dengan id " + kelurahanId);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            } else {
+                peserta.setKelurahan(kelurahanRepository.findById(kelurahanId).get());
+            }
+
+            pesertaRepository.save(peserta);
+
+            result.setMessage(id == 0 ? "Berhasil membuat calon peserta baru!" : "Berhasil memperbarui calon peserta!");
+            result.setCode(HttpStatus.OK.value());
+        } catch (ParseException e) {
+            result.setSuccess(false);
+            result.setMessage("Error: Gunakan format \"dd-MM-yyyy\" pada tanggal lahir");
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity
+                    .badRequest()
+                    .body(result);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @Override
+    public ResponseEntity<?> updateCalonPeserta(Long id, Long kelasId,Long batchId, String namaPeserta, String tanggalLahir,
+                                                String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
+                                                MultipartFile uploadImage, Long provinsiId, Long kotaId, Long kecamatanId,
+                                                Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal) {
+        result = new Result();
+        try {
+            //cek email
+            Peserta checkEmailPeserta = pesertaRepository.findByEmail(email).orElse(new Peserta());
+            if (checkEmailPeserta.getEmail() != null && !Objects.equals(id, checkEmailPeserta.getId())) {
+                result.setMessage("Error: Email sudah digunakan!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (email.isBlank()) {
+                result.setMessage("Error: Email tidak boleh kosong!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+//            if (nomorKtp.isBlank()) {
+//                result.setMessage("Error: Nomor KTP tidak boleh kosong!");
+//                result.setCode(HttpStatus.BAD_REQUEST.value());
+//                return ResponseEntity
+//                        .badRequest()
+//                        .body(result);
+//            }
             //cek username
             Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(namaPeserta).orElse(new Peserta());
             if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(id, checkNamaPeserta.getId())) {

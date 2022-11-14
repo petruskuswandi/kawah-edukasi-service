@@ -46,6 +46,8 @@ public class Peserta implements Serializable {
         @NotBlank
         @Column(name = "namaPeserta")
         private String namaPeserta;
+        @Column(name = "nomorKtp")
+        private String nomorKtp;
 
         @Temporal(TemporalType.TIMESTAMP)
         private Date tanggalLahir;
@@ -66,6 +68,11 @@ public class Peserta implements Serializable {
         @Column(name = "uploadImage")
         @ApiModelProperty(hidden = true)
         private byte[] uploadImage;
+
+        @Lob
+        @Column(name = "uploadCv")
+        @ApiModelProperty(hidden = true)
+        private byte[] uploadCv;
 
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinTable(name = "peserta_provinsi",
@@ -140,5 +147,24 @@ public class Peserta implements Serializable {
                 this.kodeReferal = kodeReferal;
                 this.created_time = date;
                 this.updated_time = date;
+        }
+        public Peserta(String namaPeserta, Date tanggalLahir, String jenisKelamin, String pendidikanTerakhir,
+                       String noHp, String email,String alamatRumah, String motivasi, String kodeReferal, String nomorKtp) {
+
+                Date date = new Date();
+
+                this.namaPeserta = namaPeserta;
+                this.tanggalLahir = tanggalLahir;
+                this.jenisKelamin = jenisKelamin;
+                this.pendidikanTerakhir = pendidikanTerakhir;
+                this.noHp = noHp;
+                this.email = email;
+                this.alamatRumah = alamatRumah;
+                this.motivasi = motivasi;
+                this.kodeReferal = kodeReferal;
+                this.created_time = date;
+                this.updated_time = date;
+                this.nomorKtp = nomorKtp;
+
         }
 }

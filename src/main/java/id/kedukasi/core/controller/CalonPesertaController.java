@@ -75,7 +75,7 @@ public class CalonPesertaController {
             @RequestParam(value = "Alamat Rumah") String alamatRumah,
             @RequestParam(value = "Motivasi") String motivasi,
             @RequestParam(value = "Kode Referal",required = false) String kodeReferal
-            ) {
+    ) {
         Long id = 0L;
         return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
                 email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
@@ -100,7 +100,7 @@ public class CalonPesertaController {
             @RequestParam(value = "Alamat Rumah") String alamatRumah,
             @RequestParam(value = "Motivasi") String motivasi,
             @RequestParam(value = "Kode Referal",required = false) String kodeReferal
-            ) {
+    ) {
         return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
                 email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
     }
