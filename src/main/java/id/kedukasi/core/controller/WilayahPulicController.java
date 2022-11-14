@@ -28,7 +28,7 @@ public class WilayahPulicController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @GetMapping(value = "/publicprovinsi/all", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/provinsi/all", produces = APPLICATION_JSON_VALUE)
     public Result allProvinsi() {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
@@ -42,14 +42,14 @@ public class WilayahPulicController {
         return service.getAllKotaInProvinsi(provinsiId, uri);
     }
 
-    @GetMapping(value = "/publickecamatan/{kotaId}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/kecamatan/{kotaId}", produces = APPLICATION_JSON_VALUE)
     public Result getAllKecamatanInKota(@PathVariable("kotaId") Long kotaId) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getAllKecamatanInKota(kotaId, uri);
     }
 
-    @GetMapping(value = "/publickelurahan/{kecamatanId}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/kelurahan/{kecamatanId}", produces = APPLICATION_JSON_VALUE)
     public Result getAllKelurahanInKecamatan(@PathVariable("kecamatanId") Long kecamatanId) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
