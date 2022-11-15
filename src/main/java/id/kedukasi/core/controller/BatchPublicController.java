@@ -44,6 +44,13 @@ public class BatchPublicController {
         return service.getBatchById(id, uri);
     }
 
+    @GetMapping(value = "/running", produces = APPLICATION_JSON_VALUE)
+    public Result getBatchRunning() {
+        String uri = stringUtil.getLogParam(request);
+        logger.info(uri);
+        return service.getAllBatchRunning(uri);
+    }
+
 //    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
 //    public Result getClassBybatch(@PathVariable("id") Long id) {
 //        String uri = stringUtil.getLogParam(request);

@@ -9,7 +9,7 @@ public interface BatchService {
     Result getAllBatch(String uri);
 
     Result getBatchById(Long id, String uri);
-
+Result getAllBatchRunning(String uri);
     ResponseEntity<?> updateBatch(BatchRequest batchRequest);
 
     ResponseEntity<?> deleteBatch(boolean banned, Long id, String uri);

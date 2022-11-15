@@ -1,5 +1,6 @@
 package id.kedukasi.core.serviceImpl;
 
+import id.kedukasi.core.models.Batch;
 import id.kedukasi.core.models.Kelas;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.repository.KelasRepository;
@@ -85,7 +86,21 @@ public class KelasServiceImpl implements KelasService {
         }
         return result;
     }
+    public Result getProgramRunning(String uri) {
+        result = new Result();
+        try {
 
+            Map items = new HashMap();
+            Kelas kelas = new Kelas();
+            kelas.setBanned(false);
+            Example<Kelas> example = Example.of(kelas);
+            items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC,"id")));
+            result.setData(items);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        return result;
+    }
     @Override
     public ResponseEntity<?> updateClass(KelasRequest kelasRequest) {
         result = new Result();

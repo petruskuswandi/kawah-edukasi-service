@@ -1,10 +1,8 @@
 package id.kedukasi.core.serviceImpl;
 
 
-import id.kedukasi.core.models.Batch;
-import id.kedukasi.core.models.Kelas;
-import id.kedukasi.core.models.Mentor;
-import id.kedukasi.core.models.Result;
+import id.kedukasi.core.enums.EnumStatusPeserta;
+import id.kedukasi.core.models.*;
 import id.kedukasi.core.repository.BatchRepository;
 import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.MentorRepository;
@@ -14,6 +12,8 @@ import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -76,7 +76,21 @@ public class BatchServiceImpl implements BatchService {
 
         return result;
     }
+    public Result getAllBatchRunning(String uri) {
+        result = new Result();
+        try {
 
+            Map items = new HashMap();
+            Batch batch = new Batch();
+            batch.setBanned(false);
+            Example<Batch> example = Example.of(batch);
+            items.put("items", batchRepository.findAll(example, Sort.by(Sort.Direction.ASC,"batchname")));
+            result.setData(items);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        return result;
+    }
     @Override
     public ResponseEntity<?> updateBatch(BatchRequest batchRequest) {
         result = new Result();

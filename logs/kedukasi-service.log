@@ -721,3 +721,168 @@ Caused by: org.postgresql.util.PSQLException: ERROR: duplicate key value violate
 2022-11-14 06:14:03.906 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2022-11-14 06:14:03.908 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2022-11-14 06:14:03.914 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2022-11-14 07:04:28.336 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.4.Final
+2022-11-14 07:04:28.414 [main] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15.1 on Mac21s-MacBook-Pro.local with PID 77150 (/Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev/target/classes started by mac21 in /Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev)
+2022-11-14 07:04:28.425 [main] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-11-14 07:04:28.427 [main] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-11-14 07:04:30.264 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-11-14 07:04:30.425 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 142 ms. Found 11 JPA repository interfaces.
+2022-11-14 07:04:31.496 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8880 (http)
+2022-11-14 07:04:31.510 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8880"]
+2022-11-14 07:04:31.511 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2022-11-14 07:04:31.511 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.65]
+2022-11-14 07:04:31.700 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-11-14 07:04:31.700 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3110 ms
+2022-11-14 07:04:31.833 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-11-14 07:04:32.008 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-11-14 07:04:32.095 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.10.Final
+2022-11-14 07:04:32.328 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-11-14 07:04:32.482 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-11-14 07:04:32.724 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-11-14 07:04:32.749 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2022-11-14 07:04:34.345 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-11-14 07:04:34.358 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-11-14 07:04:35.528 [main] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-11-14 07:04:37.642 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@445d4517, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3284f91f, org.springframework.security.web.context.SecurityContextPersistenceFilter@3fe7c87c, org.springframework.security.web.header.HeaderWriterFilter@50e32998, org.springframework.web.filter.CorsFilter@125bc00d, org.springframework.security.web.authentication.logout.LogoutFilter@2aacf54b, id.kedukasi.core.config.AuthTokenFilter@71dfca65, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5bbb351e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1aee0f49, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@77e4ffe5, org.springframework.security.web.session.SessionManagementFilter@72f91c91, org.springframework.security.web.access.ExceptionTranslationFilter@54ee423f, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@33f059ad]
+2022-11-14 07:04:38.100 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8880"]
+2022-11-14 07:04:38.122 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8880 (http) with context path ''
+2022-11-14 07:04:38.916 [main] INFO  id.kedukasi.core.Application - Started Application in 11.941 seconds (JVM running for 14.247)
+2022-11-14 07:05:51.786 [http-nio-8880-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-11-14 07:05:52.114 [http-nio-8880-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-11-14 07:05:52.117 [http-nio-8880-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2022-11-14 07:05:52.201 [http-nio-8880-exec-2] INFO  i.k.c.c.PublicProgramController - << /publickelas/all? >>
+2022-11-14 07:14:11.495 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-11-14 07:14:11.523 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2022-11-14 07:14:11.532 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2022-11-14 19:14:07.588 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.4.Final
+2022-11-14 19:14:07.901 [main] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15.1 on Mac21s-MacBook-Pro.local with PID 11385 (/Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev/target/classes started by mac21 in /Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev)
+2022-11-14 19:14:07.928 [main] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-11-14 19:14:07.932 [main] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-11-14 19:14:13.594 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-11-14 19:14:14.055 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 424 ms. Found 11 JPA repository interfaces.
+2022-11-14 19:14:16.762 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8880 (http)
+2022-11-14 19:14:16.781 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8880"]
+2022-11-14 19:14:16.782 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2022-11-14 19:14:16.782 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.65]
+2022-11-14 19:14:17.017 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-11-14 19:14:17.018 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 8706 ms
+2022-11-14 19:14:17.178 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-11-14 19:14:17.432 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-11-14 19:14:17.550 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.10.Final
+2022-11-14 19:14:17.872 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-11-14 19:14:18.088 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-11-14 19:14:18.449 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-11-14 19:14:18.482 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2022-11-14 19:14:20.712 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-11-14 19:14:20.725 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-11-14 19:14:21.786 [main] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-11-14 19:14:24.144 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@5ab7e997, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2552cb80, org.springframework.security.web.context.SecurityContextPersistenceFilter@124b8fe9, org.springframework.security.web.header.HeaderWriterFilter@7a80ebcd, org.springframework.web.filter.CorsFilter@1b3b5252, org.springframework.security.web.authentication.logout.LogoutFilter@1f4d9c7f, id.kedukasi.core.config.AuthTokenFilter@308d4981, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3e9e7a70, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3638120f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@adb15df, org.springframework.security.web.session.SessionManagementFilter@5cdf2c83, org.springframework.security.web.access.ExceptionTranslationFilter@5b476930, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@9742012]
+2022-11-14 19:14:24.693 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8880"]
+2022-11-14 19:14:24.724 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8880 (http) with context path ''
+2022-11-14 19:14:25.764 [main] INFO  id.kedukasi.core.Application - Started Application in 20.721 seconds (JVM running for 25.303)
+2022-11-14 19:14:31.438 [http-nio-8880-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-11-14 19:14:31.439 [http-nio-8880-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-11-14 19:14:31.443 [http-nio-8880-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+2022-11-14 19:49:08.086 [http-nio-8880-exec-6] INFO  i.k.core.controller.AuthController - << /api/auth/signin? >>
+2022-11-14 19:51:20.121 [http-nio-8880-exec-3] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-11-14T07:37:10Z. Current time: 2022-11-14T19:51:20Z, a difference of 44050119 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 19:51:50.881 [http-nio-8880-exec-4] INFO  i.k.core.controller.KelasController - << /kelas/all? >>
+2022-11-14 19:52:28.697 [http-nio-8880-exec-7] INFO  i.k.core.controller.AuthController - << /api/auth/active? >>
+2022-11-14 19:52:42.873 [http-nio-8880-exec-6] INFO  i.k.core.controller.AuthController - << /api/auth/active? >>
+2022-11-14 20:00:53.004 [http-nio-8880-exec-10] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-11-14T07:37:10Z. Current time: 2022-11-14T20:00:53Z, a difference of 44623004 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:00:53.006 [http-nio-8880-exec-10] INFO  i.k.c.c.BatchPublicController - << /publicbatch/all? >>
+2022-11-14 20:01:37.665 [http-nio-8880-exec-2] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-11-14T07:37:10Z. Current time: 2022-11-14T20:01:37Z, a difference of 44667665 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:01:37.670 [http-nio-8880-exec-2] INFO  i.k.c.c.BatchPublicController - << /publicbatch/1? >>
+2022-11-14 20:03:03.960 [http-nio-8880-exec-1] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:03:03Z, a difference of 3989537959 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:03:07.948 [http-nio-8880-exec-4] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:03:07Z, a difference of 3989541948 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:03:26.010 [http-nio-8880-exec-6] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:03:26Z, a difference of 3989560009 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:07:33.940 [http-nio-8880-exec-10] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:07:33Z, a difference of 3989807939 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:08:02.100 [http-nio-8880-exec-2] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:08:02Z, a difference of 3989836100 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:08:02.101 [http-nio-8880-exec-2] INFO  i.k.c.c.SimpanPesertaController - << /simpanPeserta/all? >>
+2022-11-14 20:08:31.727 [http-nio-8880-exec-5] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:08:31Z, a difference of 3989865727 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:09:03.227 [http-nio-8880-exec-1] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:09:03Z, a difference of 3989897227 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:09:08.258 [http-nio-8880-exec-7] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:09:08Z, a difference of 3989902258 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:13:19.949 [http-nio-8880-exec-8] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:13:19Z, a difference of 3990153949 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:13:19.951 [http-nio-8880-exec-8] WARN  o.s.web.servlet.PageNotFound - No mapping for GET /publicwilayah/provinsi/all
+2022-11-14 20:13:48.251 [http-nio-8880-exec-9] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:13:48Z, a difference of 3990182251 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:13:48.253 [http-nio-8880-exec-9] WARN  o.s.web.servlet.PageNotFound - No mapping for GET /publicwilayah/kota/33
+2022-11-14 20:14:58.124 [http-nio-8880-exec-2] INFO  i.k.c.c.WilayahPulicController - << /publicwilayah/publicprovinsi/all? >>
+2022-11-14 20:15:33.382 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-11-14 20:15:33.388 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2022-11-14 20:15:33.397 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2022-11-14 20:15:55.038 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.4.Final
+2022-11-14 20:15:55.274 [main] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15.1 on Mac21s-MacBook-Pro.local with PID 14759 (/Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev/target/classes started by mac21 in /Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev)
+2022-11-14 20:15:55.289 [main] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-11-14 20:15:55.291 [main] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-11-14 20:15:58.998 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-11-14 20:15:59.201 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 187 ms. Found 11 JPA repository interfaces.
+2022-11-14 20:16:00.908 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8880 (http)
+2022-11-14 20:16:00.923 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8880"]
+2022-11-14 20:16:00.924 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2022-11-14 20:16:00.924 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.65]
+2022-11-14 20:16:01.118 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-11-14 20:16:01.118 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 5473 ms
+2022-11-14 20:16:01.444 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-11-14 20:16:01.731 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-11-14 20:16:01.821 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.10.Final
+2022-11-14 20:16:02.047 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-11-14 20:16:02.223 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-11-14 20:16:02.456 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-11-14 20:16:02.486 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2022-11-14 20:16:04.452 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-11-14 20:16:04.465 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-11-14 20:16:06.255 [main] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-11-14 20:16:09.291 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@f28ee19, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7c07deff, org.springframework.security.web.context.SecurityContextPersistenceFilter@7bf3bf2e, org.springframework.security.web.header.HeaderWriterFilter@62d4dac4, org.springframework.web.filter.CorsFilter@65374526, org.springframework.security.web.authentication.logout.LogoutFilter@71979130, id.kedukasi.core.config.AuthTokenFilter@4d359c69, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6a77953c, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6fc84468, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@664c0466, org.springframework.security.web.session.SessionManagementFilter@7a2b3cfd, org.springframework.security.web.access.ExceptionTranslationFilter@5834fd3f, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@adb15df]
+2022-11-14 20:16:09.771 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8880"]
+2022-11-14 20:16:09.807 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8880 (http) with context path ''
+2022-11-14 20:16:10.857 [main] INFO  id.kedukasi.core.Application - Started Application in 18.31 seconds (JVM running for 22.534)
+2022-11-14 20:24:04.217 [http-nio-8880-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-11-14 20:24:04.217 [http-nio-8880-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-11-14 20:24:04.222 [http-nio-8880-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+2022-11-14 20:24:04.666 [http-nio-8880-exec-2] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-11-14T07:37:10Z. Current time: 2022-11-14T20:24:04Z, a difference of 46014661 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:24:04.877 [http-nio-8880-exec-2] INFO  i.k.c.c.BatchPublicController - << /publicbatch/all? >>
+2022-11-14 20:24:23.613 [http-nio-8880-exec-3] INFO  i.k.c.c.PublicProgramController - << /publickelas/all? >>
+2022-11-14 20:26:05.198 [http-nio-8880-exec-7] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-11-14T07:37:10Z. Current time: 2022-11-14T20:26:05Z, a difference of 46135198 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:26:05.200 [http-nio-8880-exec-7] INFO  i.k.c.c.BatchPublicController - << /publicbatch/all? >>
+2022-11-14 20:26:29.489 [http-nio-8880-exec-8] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-11-14T07:37:10Z. Current time: 2022-11-14T20:26:29Z, a difference of 46159489 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:26:29.492 [http-nio-8880-exec-8] INFO  i.k.c.c.BatchPublicController - << /publicbatch/all? >>
+2022-11-14 20:29:23.505 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-11-14 20:29:23.509 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2022-11-14 20:29:23.517 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2022-11-15 10:30:47.282 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.4.Final
+2022-11-15 10:30:47.322 [main] INFO  id.kedukasi.core.Application - Starting Application using Java 18.0.2.1 on Mac21s-MacBook-Pro.local with PID 33151 (/Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev/target/classes started by mac21 in /Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev)
+2022-11-15 10:30:47.335 [main] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-11-15 10:30:47.336 [main] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-11-15 10:30:52.327 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-11-15 10:30:52.525 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 177 ms. Found 11 JPA repository interfaces.
+2022-11-15 10:30:54.052 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8880 (http)
+2022-11-15 10:30:54.097 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8880"]
+2022-11-15 10:30:54.100 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2022-11-15 10:30:54.100 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.65]
+2022-11-15 10:30:54.671 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2022-11-15 10:30:54.672 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 7171 ms
+2022-11-15 10:30:54.814 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-11-15 10:30:55.058 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-11-15 10:30:55.173 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.10.Final
+2022-11-15 10:30:55.555 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-11-15 10:30:56.031 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2022-11-15 10:30:56.740 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2022-11-15 10:30:56.787 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2022-11-15 10:30:59.223 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-11-15 10:30:59.237 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-11-15 10:31:00.571 [main] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-11-15 10:31:03.971 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@71c2cb26, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@593db293, org.springframework.security.web.context.SecurityContextPersistenceFilter@1545ef47, org.springframework.security.web.header.HeaderWriterFilter@1ef8f7e6, org.springframework.web.filter.CorsFilter@5220e6ff, org.springframework.security.web.authentication.logout.LogoutFilter@1315f1d5, id.kedukasi.core.config.AuthTokenFilter@32bae609, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@eccaf1b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@106f0051, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@602d5417, org.springframework.security.web.session.SessionManagementFilter@73a5cc47, org.springframework.security.web.access.ExceptionTranslationFilter@3ce067bd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6d028c7e]
+2022-11-15 10:31:04.611 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8880"]
+2022-11-15 10:31:04.662 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8880 (http) with context path ''
+2022-11-15 10:31:07.579 [main] INFO  id.kedukasi.core.Application - Started Application in 21.396 seconds (JVM running for 22.324)
+2022-11-15 10:32:17.017 [http-nio-8880-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-11-15 10:32:17.056 [http-nio-8880-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2022-11-15 10:32:17.059 [http-nio-8880-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2022-11-15 10:32:27.333 [http-nio-8880-exec-2] INFO  i.k.c.c.BatchPublicController - << /publicbatch/running? >>
+2022-11-15 10:33:13.011 [http-nio-8880-exec-2] INFO  i.k.c.c.BatchPublicController - << /publicbatch/running? >>
+2022-11-15 10:33:29.729 [http-nio-8880-exec-4] INFO  i.k.c.c.BatchPublicController - << /publicbatch/all? >>
+2022-11-15 10:35:59.748 [http-nio-8880-exec-1] INFO  i.k.c.c.PublicProgramController - << /publickelas/1? >>
+2022-11-15 10:36:11.870 [http-nio-8880-exec-1] INFO  i.k.c.c.PublicProgramController - << /publickelas/all? >>
+2022-11-15 10:36:13.325 [http-nio-8880-exec-2] INFO  i.k.c.c.PublicProgramController - << /publickelas/all? >>
+2022-11-15 10:52:40.074 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-11-15 10:52:40.118 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2022-11-15 10:52:40.122 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
