@@ -18,7 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/publickelas")
+@RequestMapping("/publicprogram")
 public class PublicProgramController {
 
     @Autowired
@@ -43,5 +43,11 @@ public class PublicProgramController {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getClassById(id, uri);
+    }
+    @GetMapping(value = "/running", produces = APPLICATION_JSON_VALUE)
+    public Result getProgramRunning() {
+        String uri = stringUtil.getLogParam(request);
+        logger.info(uri);
+        return service.getProgramRunning(uri);
     }
 }

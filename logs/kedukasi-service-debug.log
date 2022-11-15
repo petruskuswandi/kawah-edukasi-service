@@ -476,3 +476,58 @@ Caused by: org.postgresql.util.PSQLException: ERROR: duplicate key value violate
 2022-11-14 06:12:54.373 [main] INFO  id.kedukasi.core.Application - Started Application in 11.963 seconds (JVM running for 14.296)
 2022-11-14 06:13:00.246 [http-nio-8880-exec-2] INFO  i.k.c.c.PublicProgramController - << /publickelas/1? >>
 2022-11-14 06:13:04.339 [http-nio-8880-exec-3] INFO  i.k.c.c.PublicProgramController - << /publickelas/all? >>
+2022-11-14 07:04:28.414 [main] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15.1 on Mac21s-MacBook-Pro.local with PID 77150 (/Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev/target/classes started by mac21 in /Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev)
+2022-11-14 07:04:28.425 [main] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-11-14 07:04:28.427 [main] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-11-14 07:04:35.528 [main] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-11-14 07:04:38.916 [main] INFO  id.kedukasi.core.Application - Started Application in 11.941 seconds (JVM running for 14.247)
+2022-11-14 07:05:52.201 [http-nio-8880-exec-2] INFO  i.k.c.c.PublicProgramController - << /publickelas/all? >>
+2022-11-14 19:14:07.901 [main] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15.1 on Mac21s-MacBook-Pro.local with PID 11385 (/Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev/target/classes started by mac21 in /Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev)
+2022-11-14 19:14:07.928 [main] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-11-14 19:14:07.932 [main] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-11-14 19:14:21.786 [main] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-11-14 19:14:25.764 [main] INFO  id.kedukasi.core.Application - Started Application in 20.721 seconds (JVM running for 25.303)
+2022-11-14 19:49:08.086 [http-nio-8880-exec-6] INFO  i.k.core.controller.AuthController - << /api/auth/signin? >>
+2022-11-14 19:51:20.121 [http-nio-8880-exec-3] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-11-14T07:37:10Z. Current time: 2022-11-14T19:51:20Z, a difference of 44050119 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 19:51:50.881 [http-nio-8880-exec-4] INFO  i.k.core.controller.KelasController - << /kelas/all? >>
+2022-11-14 19:52:28.697 [http-nio-8880-exec-7] INFO  i.k.core.controller.AuthController - << /api/auth/active? >>
+2022-11-14 19:52:42.873 [http-nio-8880-exec-6] INFO  i.k.core.controller.AuthController - << /api/auth/active? >>
+2022-11-14 20:00:53.004 [http-nio-8880-exec-10] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-11-14T07:37:10Z. Current time: 2022-11-14T20:00:53Z, a difference of 44623004 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:00:53.006 [http-nio-8880-exec-10] INFO  i.k.c.c.BatchPublicController - << /publicbatch/all? >>
+2022-11-14 20:01:37.665 [http-nio-8880-exec-2] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-11-14T07:37:10Z. Current time: 2022-11-14T20:01:37Z, a difference of 44667665 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:01:37.670 [http-nio-8880-exec-2] INFO  i.k.c.c.BatchPublicController - << /publicbatch/1? >>
+2022-11-14 20:03:03.960 [http-nio-8880-exec-1] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:03:03Z, a difference of 3989537959 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:03:07.948 [http-nio-8880-exec-4] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:03:07Z, a difference of 3989541948 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:03:26.010 [http-nio-8880-exec-6] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:03:26Z, a difference of 3989560009 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:07:33.940 [http-nio-8880-exec-10] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:07:33Z, a difference of 3989807939 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:08:02.100 [http-nio-8880-exec-2] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:08:02Z, a difference of 3989836100 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:08:02.101 [http-nio-8880-exec-2] INFO  i.k.c.c.SimpanPesertaController - << /simpanPeserta/all? >>
+2022-11-14 20:08:31.727 [http-nio-8880-exec-5] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:08:31Z, a difference of 3989865727 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:09:03.227 [http-nio-8880-exec-1] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:09:03Z, a difference of 3989897227 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:09:08.258 [http-nio-8880-exec-7] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:09:08Z, a difference of 3989902258 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:13:19.949 [http-nio-8880-exec-8] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:13:19Z, a difference of 3990153949 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:13:48.251 [http-nio-8880-exec-9] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-09-29T15:50:46Z. Current time: 2022-11-14T20:13:48Z, a difference of 3990182251 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:14:58.124 [http-nio-8880-exec-2] INFO  i.k.c.c.WilayahPulicController - << /publicwilayah/publicprovinsi/all? >>
+2022-11-14 20:15:55.274 [main] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15.1 on Mac21s-MacBook-Pro.local with PID 14759 (/Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev/target/classes started by mac21 in /Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev)
+2022-11-14 20:15:55.289 [main] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-11-14 20:15:55.291 [main] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-11-14 20:16:06.255 [main] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-11-14 20:16:10.857 [main] INFO  id.kedukasi.core.Application - Started Application in 18.31 seconds (JVM running for 22.534)
+2022-11-14 20:24:04.666 [http-nio-8880-exec-2] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-11-14T07:37:10Z. Current time: 2022-11-14T20:24:04Z, a difference of 46014661 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:24:04.877 [http-nio-8880-exec-2] INFO  i.k.c.c.BatchPublicController - << /publicbatch/all? >>
+2022-11-14 20:24:23.613 [http-nio-8880-exec-3] INFO  i.k.c.c.PublicProgramController - << /publickelas/all? >>
+2022-11-14 20:26:05.198 [http-nio-8880-exec-7] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-11-14T07:37:10Z. Current time: 2022-11-14T20:26:05Z, a difference of 46135198 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:26:05.200 [http-nio-8880-exec-7] INFO  i.k.c.c.BatchPublicController - << /publicbatch/all? >>
+2022-11-14 20:26:29.489 [http-nio-8880-exec-8] ERROR id.kedukasi.core.utils.JwtUtils - JWT token is expired: JWT expired at 2022-11-14T07:37:10Z. Current time: 2022-11-14T20:26:29Z, a difference of 46159489 milliseconds.  Allowed clock skew: 0 milliseconds.
+2022-11-14 20:26:29.492 [http-nio-8880-exec-8] INFO  i.k.c.c.BatchPublicController - << /publicbatch/all? >>
+2022-11-15 10:30:47.322 [main] INFO  id.kedukasi.core.Application - Starting Application using Java 18.0.2.1 on Mac21s-MacBook-Pro.local with PID 33151 (/Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev/target/classes started by mac21 in /Volumes/Mac HD/aplikasijava/spring boot/MIS/kedukasi-service-B3IrfanRifai-dev)
+2022-11-15 10:30:47.335 [main] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-11-15 10:30:47.336 [main] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-11-15 10:31:00.571 [main] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-11-15 10:31:07.579 [main] INFO  id.kedukasi.core.Application - Started Application in 21.396 seconds (JVM running for 22.324)
+2022-11-15 10:32:27.333 [http-nio-8880-exec-2] INFO  i.k.c.c.BatchPublicController - << /publicbatch/running? >>
+2022-11-15 10:33:13.011 [http-nio-8880-exec-2] INFO  i.k.c.c.BatchPublicController - << /publicbatch/running? >>
+2022-11-15 10:33:29.729 [http-nio-8880-exec-4] INFO  i.k.c.c.BatchPublicController - << /publicbatch/all? >>
+2022-11-15 10:35:59.748 [http-nio-8880-exec-1] INFO  i.k.c.c.PublicProgramController - << /publickelas/1? >>
+2022-11-15 10:36:11.870 [http-nio-8880-exec-1] INFO  i.k.c.c.PublicProgramController - << /publickelas/all? >>
+2022-11-15 10:36:13.325 [http-nio-8880-exec-2] INFO  i.k.c.c.PublicProgramController - << /publickelas/all? >>
