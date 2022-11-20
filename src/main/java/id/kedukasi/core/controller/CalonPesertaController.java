@@ -37,10 +37,12 @@ public class CalonPesertaController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
-    public Result getAllCalonPeserta() {
+    public Result getAllCalonPeserta(
+            @RequestParam(value = "search") String search
+    ) {
         String uri = stringUtil.getLogParam(request);
-        logger.info(uri);
-        return service.getAllCalonPeserta(uri);
+        logger.info("tes "+uri);
+        return service.getAllCalonPeserta(uri,search);
     }
 
     @GetMapping(value = "/allBanned", produces = APPLICATION_JSON_VALUE)
@@ -61,6 +63,7 @@ public class CalonPesertaController {
     public ResponseEntity<?> createCalonPeserta(
             @RequestParam(value = "Id Kelas", defaultValue = "0") Long kelasId,
             @RequestParam(value = "Id Batch", defaultValue = "0") Long batchId,
+            @RequestParam(value = "Nomor Ktp", defaultValue = "0") String nomorKtp,
             @RequestParam(value = "Nama Peserta") String namaPeserta,
             @RequestParam(value = "Tanggal Lahir") String tanggalLahir,
             @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
@@ -68,6 +71,7 @@ public class CalonPesertaController {
             @RequestParam(value = "No Hp") String noHp,
             @RequestParam(value = "Email") String email,
             @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
+            @RequestPart(value = "Upload Cv", required = false) MultipartFile uploadCv,
             @RequestParam(value = "Provinsi", defaultValue = "0") Long provinsi,
             @RequestParam(value = "Kota", defaultValue = "0") Long kota,
             @RequestParam(value = "Kecamatan", defaultValue = "0") Long kecamatan,
@@ -78,7 +82,7 @@ public class CalonPesertaController {
     ) {
         Long id = 0L;
         return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
-                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
+                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv);
     }
 
     @PutMapping("/update")
@@ -86,6 +90,7 @@ public class CalonPesertaController {
             @RequestParam(value = "Id") Long id,
             @RequestParam(value = "Id Kelas", defaultValue = "0") Long kelasId,
             @RequestParam(value = "Id Batch", defaultValue = "0") Long batchId,
+            @RequestParam(value = "Nomor Ktp", defaultValue = "0") String nomorKtp,
             @RequestParam(value = "Nama Peserta") String namaPeserta,
             @RequestParam(value = "Tanggal Lahir") String tanggalLahir,
             @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
@@ -93,6 +98,7 @@ public class CalonPesertaController {
             @RequestParam(value = "No Hp") String noHp,
             @RequestParam(value = "Email") String email,
             @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
+            @RequestPart(value = "Upload Cv", required = false) MultipartFile uploadCv,
             @RequestParam(value = "Provinsi", defaultValue = "0") Long provinsi,
             @RequestParam(value = "Kota", defaultValue = "0") Long kota,
             @RequestParam(value = "Kecamatan", defaultValue = "0") Long kecamatan,
@@ -102,7 +108,7 @@ public class CalonPesertaController {
             @RequestParam(value = "Kode Referal",required = false) String kodeReferal
     ) {
         return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
-                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
+                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv);
     }
 
     @PatchMapping(value = "/delete")

@@ -17,7 +17,7 @@ public interface PesertaService {
     ResponseEntity<?> updatePeserta(Long id, Long kelasId,Long batchId, String namaPeserta, String tanggalLahir,
                                     String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
                                     MultipartFile uploadImage, Long provinsi, Long kota, Long kecamatan,
-                                    Long kelurahan, String alamatRumah, String motivasi, String kodeReferal);
+                                    Long kelurahan, String alamatRumah, String motivasi, String kodeReferal, String nomorKtp);
 
     ResponseEntity<?> deletePeserta(boolean banned, Long id, String uri);
 

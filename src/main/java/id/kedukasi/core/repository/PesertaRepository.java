@@ -19,6 +19,10 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
     Optional<Peserta> findByNamaPeserta(String username);
 
     @Transactional
+    @Query("SELECT p FROM Peserta p WHERE p.namaPeserta LIKE %?1% AND p.statusPeserta = 'CALON' AND p.banned=false ")
+    List<Peserta> getCalonPeserta(String name);
+
+    @Transactional
     Optional<Peserta> findByEmail(String email);
 
     @Modifying
@@ -49,4 +53,12 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
     @Transactional
     @Query("SELECT p FROM Peserta p WHERE p.namaPeserta LIKE %?1% AND p.statusPeserta = ?2")
     List<Peserta> search(String keyword, EnumStatusPeserta statusPeserta);
+
+    @Transactional
+    @Query("select max(p.id) from Peserta p")
+    int getPesertaMaxId();
+
+    @Transactional
+    @Query("select p from Peserta p where p.id=?1")
+    Peserta getPesertaById(Long id);
 }
