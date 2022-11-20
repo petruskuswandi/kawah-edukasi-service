@@ -130,7 +130,7 @@ public class PesertaServiceImpl implements PesertaService {
     public ResponseEntity<?> updatePeserta(Long id, Long kelasId,Long batchId, String namaPeserta, String tanggalLahir,
                                            String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
                                            MultipartFile uploadImage, Long provinsiId, Long kotaId, Long kecamatanId,
-                                           Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal) {
+                                           Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal, String nomorKtp) {
         result = new Result();
         try {
             //cek email
@@ -225,7 +225,7 @@ public class PesertaServiceImpl implements PesertaService {
             }
 
             Peserta peserta = new Peserta(namaPeserta, tanggalLahirTypeDate, jenisKelamin, pendidikanTerakhir,noHp, email,
-                    alamatRumah, motivasi, kodeReferal);
+                    alamatRumah, motivasi, kodeReferal, nomorKtp);
 
             peserta.setId(id);
             peserta.setStatusPeserta(EnumStatusPeserta.PESERTA);

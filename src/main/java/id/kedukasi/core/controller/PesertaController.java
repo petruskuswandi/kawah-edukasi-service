@@ -74,11 +74,12 @@ public class PesertaController {
             @RequestParam(value = "Kelurahan", defaultValue = "0") Long kelurahan,
             @RequestParam(value = "Alamat Rumah") String alamatRumah,
             @RequestParam(value = "Motivasi") String motivasi,
-            @RequestParam(value = "Kode Referal", required = false) String kodeReferal
+            @RequestParam(value = "Kode Referal", required = false) String kodeReferal,
+            @RequestParam(value = "Nomor Ktp",required = false) String nomorKtp
     ) {
         Long id = 0L;
         return service.updatePeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
-                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
+                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp);
     }
 
     @PutMapping("/update")
@@ -99,10 +100,11 @@ public class PesertaController {
             @RequestParam(value = "Kelurahan") Long kelurahan,
             @RequestParam(value = "Alamat Rumah") String alamatRumah,
             @RequestParam(value = "Motivasi") String motivasi,
-            @RequestParam(value = "Kode Referal", required = false) String kodeReferal
+            @RequestParam(value = "Kode Referal", required = false) String kodeReferal,
+            @RequestParam(value = "Nomor Ktp",required = false) String nomorKtp
     ) {
         return service.updatePeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
-                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal);
+                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp);
     }
 
     @PatchMapping(value = "/delete")

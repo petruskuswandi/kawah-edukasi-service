@@ -28,7 +28,7 @@ import java.util.Date;
 @DynamicUpdate
 public class Peserta implements Serializable {
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.AUTO)
         private Long id;
 
         @ManyToOne(fetch = FetchType.EAGER)
@@ -50,6 +50,7 @@ public class Peserta implements Serializable {
         private String nomorKtp;
 
         @Temporal(TemporalType.TIMESTAMP)
+        @Column(name = "tanggal_lahir")
         private Date tanggalLahir;
 
         private String jenisKelamin;
@@ -132,23 +133,6 @@ public class Peserta implements Serializable {
         }
 
         public Peserta(String namaPeserta, Date tanggalLahir, String jenisKelamin, String pendidikanTerakhir,
-                       String noHp, String email,String alamatRumah, String motivasi, String kodeReferal) {
-
-                Date date = new Date();
-
-                this.namaPeserta = namaPeserta;
-                this.tanggalLahir = tanggalLahir;
-                this.jenisKelamin = jenisKelamin;
-                this.pendidikanTerakhir = pendidikanTerakhir;
-                this.noHp = noHp;
-                this.email = email;
-                this.alamatRumah = alamatRumah;
-                this.motivasi = motivasi;
-                this.kodeReferal = kodeReferal;
-                this.created_time = date;
-                this.updated_time = date;
-        }
-        public Peserta(String namaPeserta, Date tanggalLahir, String jenisKelamin, String pendidikanTerakhir,
                        String noHp, String email,String alamatRumah, String motivasi, String kodeReferal, String nomorKtp) {
 
                 Date date = new Date();
@@ -165,6 +149,24 @@ public class Peserta implements Serializable {
                 this.created_time = date;
                 this.updated_time = date;
                 this.nomorKtp = nomorKtp;
-
         }
+//        public Peserta(String namaPeserta, Date tanggalLahir, String jenisKelamin, String pendidikanTerakhir,
+//                       String noHp, String email,String alamatRumah, String motivasi, String kodeReferal, String nomorKtp) {
+//
+//                Date date = new Date();
+//
+//                this.namaPeserta = namaPeserta;
+//                this.tanggalLahir = tanggalLahir;
+//                this.jenisKelamin = jenisKelamin;
+//                this.pendidikanTerakhir = pendidikanTerakhir;
+//                this.noHp = noHp;
+//                this.email = email;
+//                this.alamatRumah = alamatRumah;
+//                this.motivasi = motivasi;
+//                this.kodeReferal = kodeReferal;
+//                this.created_time = date;
+//                this.updated_time = date;
+//                this.nomorKtp = nomorKtp;
+//
+//        }
 }

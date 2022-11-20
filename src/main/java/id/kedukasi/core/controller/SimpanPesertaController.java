@@ -32,10 +32,12 @@ public class SimpanPesertaController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
-    public Result getAllCalonPeserta() {
+    public Result getAllCalonPeserta(
+            @RequestParam(value = "search") String search
+    ) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
-        return service.getAllCalonPeserta(uri);
+        return service.getAllCalonPeserta(uri,search);
     }
     @PostMapping("/create")
     public ResponseEntity<?> createCalonPeserta(
