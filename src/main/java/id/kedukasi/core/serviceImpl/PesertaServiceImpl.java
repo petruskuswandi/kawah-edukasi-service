@@ -1,19 +1,26 @@
 package id.kedukasi.core.serviceImpl;
 
+import com.google.gson.Gson;
 import id.kedukasi.core.enums.EnumStatusPeserta;
-import id.kedukasi.core.models.Kelas;
-import id.kedukasi.core.models.Peserta;
-import id.kedukasi.core.models.Result;
+import id.kedukasi.core.models.*;
+import id.kedukasi.core.models.wilayah.MasterKecamatan;
+import id.kedukasi.core.models.wilayah.MasterKelurahan;
+import id.kedukasi.core.models.wilayah.MasterKota;
+import id.kedukasi.core.models.wilayah.MasterProvinsi;
 import id.kedukasi.core.repository.BatchRepository;
 import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.PesertaRepository;
+import id.kedukasi.core.repository.ProgramRepository;
 import id.kedukasi.core.repository.wilayah.KecamatanRepository;
 import id.kedukasi.core.repository.wilayah.KelurahanRepository;
 import id.kedukasi.core.repository.wilayah.KotaRepository;
 import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
+import id.kedukasi.core.request.RegisterRequest;
+import id.kedukasi.core.service.EmailService;
 import id.kedukasi.core.service.PesertaService;
 import id.kedukasi.core.utils.StringUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,15 +32,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Id;
+import javax.mail.MessagingException;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class PesertaServiceImpl implements PesertaService {
@@ -65,11 +75,17 @@ public class PesertaServiceImpl implements PesertaService {
     @Autowired
     ValidatorUtil validator;
 
+    @Autowired
+    EmailService emailService;
+
     private Result result;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    ProgramRepository programRepository;
 
     @Override
+    @Transactional
     public Result getAllPeserta(String uri) {
         result = new Result();
         try {
@@ -124,6 +140,371 @@ public class PesertaServiceImpl implements PesertaService {
             logger.error(stringUtil.getError(e));
         }
         return result;
+    }
+
+    public class SetPenambahanData {
+        private String namaProgram;
+        private String namaProvinsi;
+        private String namaKota;
+        private String namaKecamatan;
+        private String namaKelurahan;
+        private String laptop;
+        private String komitmen;
+        private String siapBekerja;
+        private String tgllahir;
+
+        private String namaBatch;
+        private String kesibukan;
+
+        public String getKesibukan() {
+            return kesibukan;
+        }
+
+        public void setKesibukan(String kesibukan) {
+            this.kesibukan = kesibukan;
+        }
+
+        public String getNamaBatch() {
+            return namaBatch;
+        }
+
+        public void setNamaBatch(String namaBatch) {
+            this.namaBatch = namaBatch;
+        }
+
+        public String getTgllahir() {
+            return tgllahir;
+        }
+
+        public void setTgllahir(String tgllahir) {
+            this.tgllahir = tgllahir;
+        }
+
+        public String getLaptop() {
+            return laptop;
+        }
+
+        public void setLaptop(String laptop) {
+            this.laptop = laptop;
+        }
+
+        public String getKomitmen() {
+            return komitmen;
+        }
+
+        public void setKomitmen(String komitmen) {
+            this.komitmen = komitmen;
+        }
+
+        public String getSiapBekerja() {
+            return siapBekerja;
+        }
+
+        public void setSiapBekerja(String siapBekerja) {
+            this.siapBekerja = siapBekerja;
+        }
+
+        public SetPenambahanData() {
+        }
+
+        public String getNamaProgram() {
+            return namaProgram;
+        }
+
+        public void setNamaProgram(String namaProgram) {
+            this.namaProgram = namaProgram;
+        }
+
+        public String getNamaProvinsi() {
+            return namaProvinsi;
+        }
+
+        public void setNamaProvinsi(String namaProvinsi) {
+            this.namaProvinsi = namaProvinsi;
+        }
+
+        public String getNamaKota() {
+            return namaKota;
+        }
+
+        public void setNamaKota(String namaKota) {
+            this.namaKota = namaKota;
+        }
+
+        public String getNamaKecamatan() {
+            return namaKecamatan;
+        }
+
+        public void setNamaKecamatan(String namaKecamatan) {
+            this.namaKecamatan = namaKecamatan;
+        }
+
+        public String getNamaKelurahan() {
+            return namaKelurahan;
+        }
+
+        public void setNamaKelurahan(String namaKelurahan) {
+            this.namaKelurahan = namaKelurahan;
+        }
+    }
+
+    @Override
+    public ResponseEntity<Result> registerPeserta(RegisterRequest old, String jsonString, List<MultipartFile> files) throws ParseException, MessagingException, IOException {
+
+        logger.info("files length >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + files.size());
+        Map<String, String> keteranganLain =
+                new HashMap<>();
+
+        SetPenambahanData setPenambahanData =
+                new SetPenambahanData();
+
+        Peserta registerPeserta = new Peserta();
+        result = new Result();
+        result.setMessage("ok");
+
+
+        Gson g = new Gson();
+        RegisterRequest p = g.fromJson(jsonString, RegisterRequest.class);
+
+       // cek email
+        Peserta checkEmailPeserta = pesertaRepository.findByEmail(p.getEmail()).orElse(new Peserta());
+        if (checkEmailPeserta.getEmail()!= null) {
+            result.setMessage("Error: Email sudah digunakan!");
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity
+                    .badRequest()
+                    .body(result);
+        }
+
+        Peserta checkNoHpPeserta = pesertaRepository.findByNoHp(p.getNoHp()).orElse(new Peserta());
+        if (checkNoHpPeserta.getNoHp()!= null) {
+            result.setMessage("Error: No HP sudah digunakan!");
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity
+                    .badRequest()
+                    .body(result);
+        }
+
+
+        if(files.size() == 0) {
+            result.setMessage("Error: Bad Request untuk File Upload");
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
+        }
+
+        Optional<Batch> batch = batchRepository.findById(p.getBatch());
+        if (!batch.isPresent()) {
+            result.setSuccess(false);
+            result.setMessage("Error: Tidak ada program dengan id " + p.getProgramName());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
+        } else {
+            registerPeserta.setBatch(batch.get());
+            setPenambahanData.setNamaBatch(batch.get().getBatchname());
+        }
+
+        Optional<Program> program = programRepository.findById(p.getProgramName());
+        if (!program.isPresent()) {
+            result.setSuccess(false);
+            result.setMessage("Error: Tidak ada program dengan id " + p.getProgramName());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
+        } else {
+            registerPeserta.setProgram(program.get());
+            setPenambahanData.setNamaProgram(program.get().getProgramName());
+        }
+
+        Optional<MasterProvinsi> provinsi = provinsiRepository.findById(p.getProvinsi());
+        //set provinsi
+        if (!provinsi.isPresent()) {
+            result.setSuccess(false);
+            result.setMessage("Error: Tidak ada provinsi dengan id " + p.getProgramName());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity
+                    .badRequest()
+                    .body(result);
+        } else {
+            registerPeserta.setProvinsi(provinsi.get());
+            setPenambahanData.setNamaProvinsi(provinsi.get().getName());
+        }
+
+        //set kota
+        Optional<MasterKota> kota = kotaRepository.findById(p.getKota());
+        if (!kota.isPresent()) {
+            result.setSuccess(false);
+            result.setMessage("Error: Tidak ada kota dengan id " + p.getKota());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity
+                    .badRequest()
+                    .body(result);
+        } else {
+            registerPeserta.setKota(kota.get());
+            setPenambahanData.setNamaKota(kota.get().getName());
+        }
+
+        //set kecamatan
+        Optional<MasterKecamatan> kecamatan = kecamatanRepository.findById(p.getKecamatan());
+        if (!kecamatan.isPresent()) {
+            result.setSuccess(false);
+            result.setMessage("Error: Tidak ada kecamatan dengan id " + p.getKecamatan());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity
+                    .badRequest()
+                    .body(result);
+        } else {
+            registerPeserta.setKecamatan(kecamatan.get());
+            setPenambahanData.setNamaKecamatan(kecamatan.get().getName());
+        }
+
+        //set kelurahan
+        Optional<MasterKelurahan> kelurahan = kelurahanRepository.findById(p.getKelurahan());
+        if (!kelurahan.isPresent()) {
+            result.setSuccess(false);
+            result.setMessage("Error: Tidak ada kelurahan dengan id " + p.getKelurahan());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity
+                    .badRequest()
+                    .body(result);
+        } else {
+            registerPeserta.setKelurahan(kelurahan.get());
+            setPenambahanData.setNamaKelurahan(kelurahan.get().getName());
+        }
+
+        if(p.getPemrograman() == 3){
+            if(p.getKeteranganPemrograman().isEmpty()){
+                result.setSuccess(false);
+                result.setMessage("Error: Keterangan Pemrograman Tidak Boleh Kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
+        }
+
+        if(p.isStatBootcamp() == true){
+            if(p.getNamaBootcamp().isEmpty()){
+                result.setSuccess(false);
+                result.setMessage("Error: Nama Bootcamp Tidak Boleh Kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
+        }
+
+        /**
+         * 1. Kuliah/Sekolah
+         * 2. kerja
+         * 3. tidak keduanya
+         */
+
+       setPenambahanData.setKesibukan("tidak Keduanya");
+
+       if(p.getKesibukan() == 1){
+           setPenambahanData.setKesibukan("Kuliah/Sekolah");
+       }else if(p.getKesibukan() == 2){
+           setPenambahanData.setKesibukan("kerja");
+       }
+
+        setPenambahanData.setLaptop("Ya");
+        setPenambahanData.setKomitmen("Ya");
+        setPenambahanData.setSiapBekerja("Ya");
+
+        if(p.isLaptop() == false){
+            setPenambahanData.setLaptop("Tidak");
+        }
+
+        if(p.isKomitmen() == false){
+            setPenambahanData.setKomitmen("Tidak");
+        }
+
+        if(p.isSiapBekerja() == false){
+            setPenambahanData.setSiapBekerja(
+                    "tidak");
+        }
+
+
+        registerPeserta.setEmail(p.getEmail());
+        registerPeserta.setStatTwibbon(p.isStatTwibbon());
+        registerPeserta.setLinkTwiitbon(p.getLinkTwiitbon());
+        registerPeserta.setPemrograman(p.getPemrograman());
+        registerPeserta.setKeteranganPemrograman(p.getKeteranganPemrograman());
+        registerPeserta.setStatBootcamp(p.isStatBootcamp());
+        registerPeserta.setNamaBootcamp(p.getNamaBootcamp());
+
+        /**
+         * selanjut nya
+         */
+
+        registerPeserta.setNamaPeserta(p.getNamaPeserta());
+        Date tanggalLahirTypeDate = new SimpleDateFormat("dd/MM/yyy").parse(p.getTanggalLahir());
+        setPenambahanData.setTgllahir(p.getTanggalLahir());
+        registerPeserta.setTanggalLahir(tanggalLahirTypeDate);
+        registerPeserta.setAlamatRumah(p.getAlamatRumah());
+        registerPeserta.setSekolahUniversitas(p.getSekolahUniversitas());
+        registerPeserta.setJurusan(p.getJurusan());
+        registerPeserta.setTahunLulus(p.getTahunLulus());
+        registerPeserta.setNoHp(p.getNoHp());
+        registerPeserta.setUserInstagram(p.getUserInstagram());
+        registerPeserta.setAlasan(p.getAlasan());
+        registerPeserta.setKelebihanKekurangan(p.getKelebihanKekurangan());
+        registerPeserta.setKesibukan(p.getKesibukan());
+        registerPeserta.setLaptop(p.isLaptop());
+        registerPeserta.setKomitmen(p.isKomitmen());
+        registerPeserta.setSiapBekerja(p.isSiapBekerja());
+
+        //Peserta pesertabaru = pesertaRepository.save(registerPeserta);
+        Map<String, Object> dataPictures = new HashMap<>();
+        Map<String,String> pictures = new HashMap<>();
+
+        String pathfile = "/src/main/resources/templates/";
+        String id = String.valueOf(UUID.randomUUID());
+
+        int[] idx = { 0 };
+        files.forEach(file -> {
+            idx[0]++;
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            String extension = FilenameUtils.getExtension(fileName).toLowerCase();
+            String key = UUID.randomUUID() + "." + extension;
+
+            saveFile(file, registerPeserta, id,"REGISTER", idx, key, pathfile);
+            pictures.put(String.valueOf(idx[0]),idx[0] + "_" + id + "_" + "REGISTER" + "_" + key);
+
+        });
+
+        emailService.sendRegisterMail(pictures, setPenambahanData, registerPeserta, pathfile);
+
+        result.setMessage("Registrasi Berhasil");
+        result.setCode(HttpStatus.OK.value());
+        return ResponseEntity.ok(result);
+    }
+
+
+    public ResponseEntity<Result> saveFile(MultipartFile file, Peserta registerPeserta, String id, String action, int[] idx, String key, String pathfile){
+        result = new Result();
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        //FileUpload FileDB = null;
+
+        try {
+            String extension = FilenameUtils.getExtension(fileName).toLowerCase();
+           // String key = UUID.randomUUID() + "." + extension;
+
+//            FileDB = new FileUpload(registerPeserta,key, file.getContentType(),fileName, file.getBytes(),
+//                    "REGISTER");
+
+            Path currentPath = Paths.get(".");
+            Path absolutePath = currentPath.toAbsolutePath();
+            String setPath = absolutePath + pathfile;
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(setPath + idx[0] + "_"
+                    + id + "_" + action + "_" + key);
+            Files.write(path, bytes);
+//            fileUploadRepository.save(FileDB);
+        } catch (IOException e) {
+            result.setMessage("Error: Bad Request Untuk File Upload!");
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            ResponseEntity
+                    .badRequest()
+                    .body(result);
+        }
+
+        return null;
     }
 
     @Override
@@ -231,28 +612,28 @@ public class PesertaServiceImpl implements PesertaService {
             peserta.setStatusPeserta(EnumStatusPeserta.PESERTA);
 
             //set kelas
-            if (!kelasRepository.findById(kelasId).isPresent()) {
-                result.setSuccess(false);
-                result.setMessage("Error: Tidak ada kelas dengan id " + kelasId);
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            } else {
-                peserta.setKelas(kelasRepository.findById(kelasId).get());
-            }
+//            if (!kelasRepository.findById(kelasId).isPresent()) {
+//                result.setSuccess(false);
+//                result.setMessage("Error: Tidak ada kelas dengan id " + kelasId);
+//                result.setCode(HttpStatus.BAD_REQUEST.value());
+//                return ResponseEntity
+//                        .badRequest()
+//                        .body(result);
+//            } else {
+//                peserta.setKelas(kelasRepository.findById(kelasId).get());
+//            }
 
             //set batch
-            if (!batchRepository.findById(batchId).isPresent()) {
-                result.setSuccess(false);
-                result.setMessage("Error: Tidak ada batch dengan id " + batchId);
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            } else {
-                peserta.setBatch(batchRepository.findById(batchId).get());
-            }
+//            if (!batchRepository.findById(batchId).isPresent()) {
+//                result.setSuccess(false);
+//                result.setMessage("Error: Tidak ada batch dengan id " + batchId);
+//                result.setCode(HttpStatus.BAD_REQUEST.value());
+//                return ResponseEntity
+//                        .badRequest()
+//                        .body(result);
+//            } else {
+//                peserta.setBatch(batchRepository.findById(batchId).get());
+//            }
 
             //set image
             if (uploadImage != null) {
@@ -390,7 +771,7 @@ public class PesertaServiceImpl implements PesertaService {
                 result.setMessage("Error: id "+ pesertaId + " bukan calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                peserta.setKelas(kelas);
+                //peserta.setKelas(kelas);
                 pesertaRepository.save(peserta);
             }
         } catch (Exception e) {

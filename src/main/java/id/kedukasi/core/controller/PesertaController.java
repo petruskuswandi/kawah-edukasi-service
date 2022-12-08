@@ -1,29 +1,46 @@
 package id.kedukasi.core.controller;
 
+import com.google.gson.Gson;
 import id.kedukasi.core.models.Result;
+import id.kedukasi.core.request.RegisterRequest;
 import id.kedukasi.core.service.PesertaService;
 import id.kedukasi.core.utils.StringUtil;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/peserta")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+//@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class PesertaController {
+
+
+    @Autowired
+    private ServletContext servletContext;
 
     @Autowired
     PesertaService service;
@@ -33,6 +50,8 @@ public class PesertaController {
 
     @Autowired
     HttpServletRequest request;
+
+    private Result result;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -56,6 +75,28 @@ public class PesertaController {
         logger.info(uri);
         return service.getPesertaById(id, uri);
     }
+
+    @GetMapping(value = "/image-response-entity/{id}", produces = {
+            MediaType.IMAGE_JPEG_VALUE,
+            MediaType.IMAGE_PNG_VALUE,
+            MediaType.IMAGE_GIF_VALUE
+    })
+    public @ResponseBody byte[] getImageAsResponseEntity(@PathVariable("id") String id) throws IOException {
+        HttpHeaders headers = new HttpHeaders();
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream("templates/" + id );
+        byte[] media = IOUtils.toByteArray(in);
+        return media;
+    }
+
+
+
+    @RequestMapping(path = "/register", method = POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<Result> saveRegister(@RequestPart String register, @RequestPart List<MultipartFile> files) throws MessagingException, ParseException, IOException {
+//        logger.info(">>>>>>>>>>>>>>>>>>>>>>>>" + register.getNamaPeserta());
+        return service.registerPeserta(null,register, files);
+    }
+
+
 
     @PostMapping("/create")
     public ResponseEntity<?> createPeserta(

@@ -23,10 +23,7 @@ import id.kedukasi.core.utils.JwtUtils;
 import id.kedukasi.core.utils.StringUtil;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import id.kedukasi.core.utils.ValidatorUtil;
 import org.apache.commons.io.IOUtils;
@@ -93,7 +90,7 @@ public class UserServiceImpl implements UserService {
   public Result getAllUser(String uri) {
     result = new Result();
     try {
-      Map items = new HashMap();
+      Map<String, List<User>> items = new HashMap<>();
       items.put("items", userRepository.findAll());
       result.setData(items);
     } catch (Exception e) {
@@ -129,6 +126,25 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<?> createUser(SignupRequest signUpRequest) {
     result = new Result();
 
+
+
+    if (!validator.isPhoneValid(signUpRequest.getNoHp())) {
+      result.setMessage("Error: invalid phone number!");
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return ResponseEntity
+              .badRequest()
+              .body(result);
+    }
+
+    if(!validator.isEmailFormat(signUpRequest.getEmail())) {
+      result.setMessage("Error: invalid email format!");
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return ResponseEntity
+              .badRequest()
+              .body(result);
+    }
+
+
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
       result.setMessage("Error: Email is already in use!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -144,14 +160,6 @@ public class UserServiceImpl implements UserService {
           .body(result);
     }
 
-    if (!validator.isPhoneValid(signUpRequest.getNoHp())) {
-      result.setMessage("Error: invalid phone number!");
-      result.setCode(HttpStatus.BAD_REQUEST.value());
-      return ResponseEntity
-              .badRequest()
-              .body(result);
-    }
-
     Role role = roleRepository.findById(signUpRequest.getRole()).orElse(null);
     User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
         encoder.encode(signUpRequest.getPassword()),signUpRequest.getNamaLengkap(),
@@ -159,9 +167,9 @@ public class UserServiceImpl implements UserService {
 
     User userResult = userRepository.save(user);
 
-    if (userResult != null) {
-      sendActivationEmail(userResult.getId(), userResult.getTokenVerification(), userResult.getEmail());
-    }
+//    if (userResult != null) {
+//      sendActivationEmail(userResult.getId(), userResult.getTokenVerification(), userResult.getEmail());
+//    }
 
     result.setMessage("User registered successfully!");
     result.setCode(HttpStatus.OK.value());
@@ -272,7 +280,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public ResponseEntity<?> updateUser(UserRequest userRequest) {
+  public ResponseEntity<Result> updateUser(UserRequest userRequest) {
     result = new Result();
     try {
       User checkUserEmail = userRepository.findByEmail(userRequest.getEmail()).orElse(new User());

@@ -253,28 +253,28 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             peserta.setStatusPeserta(EnumStatusPeserta.CALON);
 
             //set kelas
-            if (!kelasRepository.findById(kelasId).isPresent()) {
-                result.setSuccess(false);
-                result.setMessage("Error: Tidak ada kelas dengan id " + kelasId);
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            } else {
-                peserta.setKelas(kelasRepository.findById(kelasId).get());
-            }
+//            if (!kelasRepository.findById(kelasId).isPresent()) {
+//                result.setSuccess(false);
+//                result.setMessage("Error: Tidak ada kelas dengan id " + kelasId);
+//                result.setCode(HttpStatus.BAD_REQUEST.value());
+//                return ResponseEntity
+//                        .badRequest()
+//                        .body(result);
+//            } else {
+//                peserta.setKelas(kelasRepository.findById(kelasId).get());
+//            }
 
             //set batch
-            if (!batchRepository.findById(batchId).isPresent()) {
-                result.setSuccess(false);
-                result.setMessage("Error: Tidak ada batch dengan id " + batchId);
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            } else {
-                peserta.setBatch(batchRepository.findById(batchId).get());
-            }
+//            if (!batchRepository.findById(batchId).isPresent()) {
+//                result.setSuccess(false);
+//                result.setMessage("Error: Tidak ada batch dengan id " + batchId);
+//                result.setCode(HttpStatus.BAD_REQUEST.value());
+//                return ResponseEntity
+//                        .badRequest()
+//                        .body(result);
+//            } else {
+//                peserta.setBatch(batchRepository.findById(batchId).get());
+//            }
 
             //set image
             if (uploadImage != null) {
@@ -655,7 +655,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                 result.setMessage("Error: id "+ calonPesertaId + " bukan calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                calonPeserta.setKelas(kelas);
+               // calonPeserta.setKelas(kelas);
                 pesertaRepository.save(calonPeserta);
             }
         } catch (Exception e) {
