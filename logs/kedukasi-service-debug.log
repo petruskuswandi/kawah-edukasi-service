@@ -2624,3 +2624,10 @@ Caused by: org.postgresql.util.PSQLException: ERROR: large object 41708 does not
 2022-12-08 12:31:12.223 [http-nio-8880-exec-1] INFO  i.k.c.serviceImpl.EmailServiceImpl - {}
 2022-12-08 13:05:02.054 [http-nio-8880-exec-7] INFO  i.k.c.serviceImpl.PesertaServiceImpl - files length >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>1
 2022-12-08 13:05:05.869 [http-nio-8880-exec-7] INFO  i.k.c.serviceImpl.EmailServiceImpl - {}
+2022-12-08 20:35:12.102 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 11 on LAPTOP-UDINDEV with PID 24260 (C:\Users\andri\OneDrive\Documents\barrans\kawah-edukasi\target\classes started by andri in C:\Users\andri\OneDrive\Documents\barrans\kawah-edukasi)
+2022-12-08 20:35:12.105 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-08 20:35:12.105 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-08 20:35:17.054 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-08 20:35:18.930 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 7.313 seconds (JVM running for 8.028)
+2022-12-08 20:38:11.146 [http-nio-8880-exec-5] INFO  i.k.c.serviceImpl.PesertaServiceImpl - files length >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>1
+2022-12-08 20:38:15.068 [http-nio-8880-exec-5] INFO  i.k.c.serviceImpl.EmailServiceImpl - {}
