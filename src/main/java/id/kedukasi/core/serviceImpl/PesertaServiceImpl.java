@@ -25,10 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,6 +33,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -84,17 +83,34 @@ public class PesertaServiceImpl implements PesertaService {
     @Autowired
     ProgramRepository programRepository;
 
+    @Autowired
+    EntityManager em;
+
     @Override
     @Transactional
-    public Result getAllPeserta(String uri) {
+    public Result getAllPeserta(String uri,String search,long limit,long offset) {
         result = new Result();
+        //default value search param
+        if(search == null){
+            search = "";
+        }
+
+        if(limit == -99){
+            limit = 10;
+        }
+
+        if(offset == -99){
+            offset = 0;
+        }
+        StringBuilder sb = new StringBuilder();
         try {
             Map items = new HashMap();
-            Peserta peserta = new Peserta();
-            peserta.setStatusPeserta(EnumStatusPeserta.PESERTA);
-            peserta.setBanned(false);
-            Example<Peserta> example = Example.of(peserta);
-            items.put("items", pesertaRepository.findAll(example,Sort.by(Sort.Direction.ASC,"id")));
+            List<Peserta> peserta = pesertaRepository.getAll(EnumStatusPeserta.PESERTA.toString(),false,search
+                    ,limit,offset);
+            items.put("items",peserta);
+            items.put("totalDataResult",peserta.size());
+            items.put("TotalData",pesertaRepository.findAll().size());
+
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
