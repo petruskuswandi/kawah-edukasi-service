@@ -23,6 +23,7 @@ public class SignupRequest {
   @NotBlank
   @Size(min = 6, max = 40)
   @ApiModelProperty(example = "iam123", required = true)
+  @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%#*?&])[A-Za-z\\d@$!%#*?&]{8,}$",message = "Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!")
   private String password;
 
   @NotBlank

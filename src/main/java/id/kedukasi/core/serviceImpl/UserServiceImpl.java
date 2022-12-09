@@ -39,7 +39,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.ConstraintViolation;
+import javax.xml.validation.Validator;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -136,7 +140,7 @@ public class UserServiceImpl implements UserService {
               .body(result);
     }
 
-    if(!validator.isEmailFormat(signUpRequest.getEmail())) {
+    if(!validator.isEmailValid(signUpRequest.getEmail())) {
       result.setMessage("Error: invalid email format!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
@@ -164,7 +168,6 @@ public class UserServiceImpl implements UserService {
     User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
         encoder.encode(signUpRequest.getPassword()),signUpRequest.getNamaLengkap(),
         signUpRequest.getNoHp(), StringUtil.getRandomNumberString(), role, false, false);
-
     User userResult = userRepository.save(user);
 
 //    if (userResult != null) {
@@ -179,12 +182,36 @@ public class UserServiceImpl implements UserService {
   @Override
   public ResponseEntity<?> signIn(LoginRequest loginRequest, String uri) {
     result = new Result();
+    // email validation
+    if(!validator.isEmailValid(loginRequest.getEmail())){
+      result.setMessage("Email not valid!!");
+      result.setCode(400);
+      result.setSuccess(false);
+      return ResponseEntity.badRequest().body(result);
+    }
+
     User getUser = userRepository.findByEmail(loginRequest.getEmail()).orElse(new User());
+
+    if(validator.isEmailValid(loginRequest.getEmail()) && getUser.getUsername() == null){
+      result.setSuccess(true);
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      result.setMessage("Email not registered");
+      return ResponseEntity.ok(result);
+    }
+
+    // password validation
+    if(!validator.isPasswordValid(loginRequest.getPassword())){
+      result.setMessage("Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!");
+      result.setCode(400);
+      result.setSuccess(false);
+      return ResponseEntity.badRequest().body(result);
+    }
+
     if (getUser.getUsername() != null) {
       Date dateNow = new Date();
       Date dateExpired = new Date((dateNow).getTime() + jwtExpirationMs);
 
-      if (!encoder.matches(loginRequest.getPassword(), getUser.getPassword())){
+      if ( validator.isPasswordValid(loginRequest.getPassword()) && !encoder.matches(loginRequest.getPassword(), getUser.getPassword())){
         result.setSuccess(true);
         result.setCode(HttpStatus.BAD_REQUEST.value());
         result.setMessage("Password salah");
@@ -205,11 +232,8 @@ public class UserServiceImpl implements UserService {
           userDetails.getEmail(), role, dateExpired.getTime()));
       
       userRepository.setIsLogin(true, userDetails.getId());
-    } else {
-      result.setSuccess(true);
-      result.setCode(HttpStatus.BAD_REQUEST.value());
-      result.setMessage("Email not registered");
     }
+
     return ResponseEntity.ok(result);
   }
 
