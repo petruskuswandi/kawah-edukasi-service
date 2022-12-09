@@ -229,27 +229,32 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                         .body(result);
             }
 
-            Peserta peserta = null ;
-            Long newId = null;
-            if(id== Long.valueOf(0)){
-                peserta = new Peserta(namaPeserta, tanggalLahirTypeDate, jenisKelamin, pendidikanTerakhir, noHp, email,
-                        alamatRumah, motivasi, kodeReferal, nomorKtp);
-                newId = Long.valueOf(pesertaRepository.getPesertaMaxId());
-                peserta.setId(newId);
-            }else{
-                peserta = pesertaRepository.getPesertaById(id);
-                peserta.setNamaPeserta(namaPeserta);
-                peserta.setTanggalLahir(tanggalLahirTypeDate);
-                peserta.setJenisKelamin(jenisKelamin);
-                peserta.setPendidikanTerakhir(pendidikanTerakhir);
-                peserta.setNoHp(noHp);
-                peserta.setEmail(email);
-                peserta.setAlamatRumah(alamatRumah);
-                peserta.setMotivasi(motivasi);
-                peserta.setKodeReferal(kodeReferal);
-                peserta.setNomorKtp(nomorKtp);
-            }
+//            Peserta peserta = null ;
+//            Long newId = null;
+//            if(id== Long.valueOf(0)){
+//                peserta = new Peserta(namaPeserta, tanggalLahirTypeDate, jenisKelamin, pendidikanTerakhir, noHp, email,
+//                        alamatRumah, motivasi, kodeReferal, nomorKtp);
+//                newId = Long.valueOf(pesertaRepository.getPesertaMaxId());
+//                peserta.setId(newId);
+//            }else{
+//                peserta = pesertaRepository.getPesertaById(id);
+//                peserta.setNamaPeserta(namaPeserta);
+//                peserta.setTanggalLahir(tanggalLahirTypeDate);
+//                peserta.setJenisKelamin(jenisKelamin);
+//                peserta.setPendidikanTerakhir(pendidikanTerakhir);
+//                peserta.setNoHp(noHp);
+//                peserta.setEmail(email);
+//                peserta.setAlamatRumah(alamatRumah);
+//                peserta.setMotivasi(motivasi);
+//                peserta.setKodeReferal(kodeReferal);
+//                peserta.setNomorKtp(nomorKtp);
+//            }
 
+            //register or update
+            Peserta peserta = new Peserta(namaPeserta, tanggalLahirTypeDate, jenisKelamin, pendidikanTerakhir, noHp, email,
+                    alamatRumah, motivasi, kodeReferal, nomorKtp);
+
+            peserta.setId(id);
             peserta.setStatusPeserta(EnumStatusPeserta.CALON);
 
             //set kelas
