@@ -67,6 +67,9 @@ public class EmailServiceImpl implements EmailService {
       mimeMessageHelper.setText(details.getMsgBody(), true);
       mimeMessageHelper.setSubject(details.getSubject());
       FileSystemResource logo = new FileSystemResource(new File("src/main/resources/static/logo-kawah-edukasi.png"));
+      /*
+        adding logo to html Template EmailDetails
+       */
       if(logo.exists()){
         mimeMessageHelper.addInline("logo",logo);
       }

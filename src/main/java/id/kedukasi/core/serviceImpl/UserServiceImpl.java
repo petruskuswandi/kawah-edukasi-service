@@ -424,6 +424,9 @@ public class UserServiceImpl implements UserService {
     EmailDetails emailDetails = new EmailDetails();
     emailDetails.setSubject("Forgot Password");
 
+    /*
+        Body HTML Message Email
+     */
     String body = "<!DOCTYPE html>\n" +
             "<html lang=\"en\" xmlns:th=\"http://www.w3.org/1999/xhtml\">\n" +
             "<head>\n" +

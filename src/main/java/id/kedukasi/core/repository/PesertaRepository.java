@@ -69,7 +69,7 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
 
     /*
         Feature In JPA getAll
-        Search,Limit,Offset
+        Search,Pagination
         Parameter Required: limit and offset
         Parameter Optional: search
         * if no parameter, default value limit=10,offset=0,search=""

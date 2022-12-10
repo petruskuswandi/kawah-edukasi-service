@@ -94,11 +94,11 @@ public class PesertaServiceImpl implements PesertaService {
         if(search == null){
             search = "";
         }
-
+        //null long condition
         if(limit == -99){
             limit = 10;
         }
-
+        //null long condition
         if(offset == -99){
             offset = 0;
         }
