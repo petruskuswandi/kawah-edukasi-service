@@ -1,10 +1,8 @@
 package id.kedukasi.core.service;
 
-import id.kedukasi.core.request.LoginRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import id.kedukasi.core.request.*;
 import id.kedukasi.core.models.Result;
-import id.kedukasi.core.request.SignupRequest;
-import id.kedukasi.core.request.TokenRefreshRequest;
-import id.kedukasi.core.request.UserRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +27,8 @@ public interface UserService {
   ResponseEntity<?> changePassword(long id, String password, String uri);
 
   ResponseEntity<?> forgotPassword(String email, String uri) throws IOException;
+
+  ResponseEntity<?> changePasswordForgot(ChangePasswordRequest param) throws JsonProcessingException;
 
   Result signOut(long id, String uri);
 

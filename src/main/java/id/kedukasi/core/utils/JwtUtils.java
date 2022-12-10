@@ -1,11 +1,21 @@
 package id.kedukasi.core.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import id.kedukasi.core.serviceImpl.UserDetailsImpl;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.*;
@@ -49,6 +59,12 @@ public class JwtUtils {
         .compact();
   }
 
+  public String generateTokenFromUsernameWithExpired(String username,long expiredDate) {
+    return Jwts.builder().setSubject(username).setIssuedAt(new Date())
+            .setExpiration(new Date((new Date()).getTime() + expiredDate)).signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .compact();
+  }
+
   public String getUserNameFromJwtToken(String token) {
     return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
   }
@@ -70,5 +86,33 @@ public class JwtUtils {
       logger.error("JWT claims string is empty: {}", e.getMessage());
     }
     return false;
+  }
+
+  public boolean validateJwtToken(String token) throws JsonProcessingException {
+    try{
+      Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+      return true;
+    } catch (SignatureException e) {
+      logger.error("Invalid JWT signature: {}", e.getMessage());
+    } catch (MalformedJwtException e) {
+      logger.error("Invalid JWT token: {}", e.getMessage());
+    } catch (ExpiredJwtException e) {
+      logger.error("JWT token is expired: {}", e.getMessage());
+    } catch (UnsupportedJwtException e) {
+      logger.error("JWT token is unsupported: {}", e.getMessage());
+    } catch (IllegalArgumentException e) {
+      logger.error("JWT claims string is empty: {}", e.getMessage());
+    }
+    return false;
+  }
+
+  public Map<String,Object> decode(String token) throws JsonProcessingException {
+    ObjectMapper om = new ObjectMapper();
+    String[] tokenSplit = token.split("\\.");
+    Base64.Decoder decoder = Base64.getUrlDecoder();
+    String header = new String(decoder.decode(tokenSplit[0]));
+    String payload = new String(decoder.decode(tokenSplit[1]));
+    Map<String,Object> mapPayload = om.readValue(payload, new TypeReference<Map<String, Object>>() {});
+    return mapPayload;
   }
 }

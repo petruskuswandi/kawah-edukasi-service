@@ -1,19 +1,19 @@
 package id.kedukasi.core.serviceImpl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import id.kedukasi.core.enums.EnumRole;
 import id.kedukasi.core.exception.TokenRefreshException;
 import id.kedukasi.core.models.EmailDetails;
+import id.kedukasi.core.request.*;
 import id.kedukasi.core.response.JwtResponse;
-import id.kedukasi.core.request.LoginRequest;
 import id.kedukasi.core.models.RefreshToken;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.models.Role;
 import id.kedukasi.core.models.User;
 import id.kedukasi.core.repository.RoleRepository;
 import id.kedukasi.core.repository.UserRepository;
-import id.kedukasi.core.request.SignupRequest;
-import id.kedukasi.core.request.TokenRefreshRequest;
-import id.kedukasi.core.request.UserRequest;
 import id.kedukasi.core.response.TokenRefreshResponse;
 import id.kedukasi.core.service.EmailService;
 import id.kedukasi.core.service.FilesStorageService;
@@ -22,6 +22,9 @@ import id.kedukasi.core.utils.GlobalUtil;
 import id.kedukasi.core.utils.JwtUtils;
 import id.kedukasi.core.utils.StringUtil;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import id.kedukasi.core.utils.ValidatorUtil;
@@ -30,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -75,6 +79,10 @@ public class UserServiceImpl implements UserService {
 
   @Autowired
   GlobalUtil globalUtil;
+
+  @Value("${app.expired.token.forgot-password}")
+  private long jwtExpiredTokenForgotPassword;
+
 
   @Value("${kedukasi.app.jwtExpirationMs}")
   private int jwtExpirationMs;
@@ -413,6 +421,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public ResponseEntity<?> forgotPassword(String email, String uri) throws IOException {
     result = new Result();
+
     User checkUserEmail = userRepository.findByEmail(email).orElse(new User());
     if (checkUserEmail.getUsername() == null) {
       result.setMessage("Error: Email has not been registered!");
@@ -423,6 +432,12 @@ public class UserServiceImpl implements UserService {
     }
     EmailDetails emailDetails = new EmailDetails();
     emailDetails.setSubject("Forgot Password");
+
+    Date dateNow = new Date();
+    // 10 menit
+    String tokenForgotPassword = jwtUtils.generateTokenFromUsernameWithExpired(checkUserEmail.getUsername(),jwtExpiredTokenForgotPassword);
+    long idUser = checkUserEmail.getId();
+    String password = checkUserEmail.getPassword();
 
     /*
         Body HTML Message Email
@@ -484,7 +499,7 @@ public class UserServiceImpl implements UserService {
             "          Anda :\n" +
             "        </p><br>\n" +
             "        <a \n" +
-            "          href="+urlForgotPassword+" \n" +
+            "          href="+urlForgotPassword+"?id="+idUser+"&password="+password+"&token="+tokenForgotPassword+" \n" +
             "          target=\"_blank\"\n" +
             "          style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
             "          >Ubah Password</a><br>\n" +
@@ -498,12 +513,41 @@ public class UserServiceImpl implements UserService {
             "  </div>\n" +
             "</body>\n" +
             "</html>";
-    logger.info(body);
+    //logger.info(body);
     emailDetails.setMsgBody(body);
     emailDetails.setRecipient(email);
     logger.info(">>>> send email");
     emailService.sendMailWithAttachment(emailDetails);
     return ResponseEntity.ok(new Result());
+  }
+
+  @Override
+  public ResponseEntity<?> changePasswordForgot(ChangePasswordRequest param) throws JsonProcessingException {
+    result = new Result();
+    if(!jwtUtils.validateJwtToken(param.getToken()) || param.getToken() == null){
+      result.setCode(400);
+      result.setMessage("Token Is Invalid");
+      return ResponseEntity.badRequest().body(result);
+    }
+
+    // password validation
+    if(!validator.isPasswordValid(param.getPassword())){
+      result.setMessage("Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!");
+      result.setCode(400);
+      result.setSuccess(false);
+      return ResponseEntity.badRequest().body(result);
+    }
+
+    int resultModel = userRepository.changePassword(encoder.encode(param.getPassword()), param.getId());
+    if (resultModel == 1) {
+      result.setCode(200);
+      result.setMessage("Password Succesfully Updated");
+      return ResponseEntity.ok(result);
+    } else {
+      result.setCode(200);
+      result.setMessage("Password Failed Updated");
+      return ResponseEntity.badRequest().body(result);
+    }
   }
 //
 //  private String getJwtActiveEmail() {

@@ -1,5 +1,7 @@
 package id.kedukasi.core.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import id.kedukasi.core.request.ChangePasswordRequest;
 import id.kedukasi.core.request.LoginRequest;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.request.SignupRequest;
@@ -83,6 +85,11 @@ public class AuthController {
     logger.info(uri);
 
     return service.changePassword(id, password, uri);
+  }
+
+  @PostMapping("/change_password_forgot")
+  public ResponseEntity<?> changePasswordForget(@RequestBody ChangePasswordRequest param) throws JsonProcessingException {
+    return service.changePasswordForgot(param);
   }
 
   @PostMapping("/forgot_password")
