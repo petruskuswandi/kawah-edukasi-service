@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.io.IOException;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/auth")
@@ -85,7 +87,7 @@ public class AuthController {
 
   @PostMapping("/forgot_password")
   public ResponseEntity<?> forgotPassword(
-      @RequestParam(value = "email", defaultValue = "", required = true) String email) {
+      @RequestParam(value = "email", defaultValue = "", required = true) String email) throws IOException {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
 

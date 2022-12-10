@@ -22,7 +22,6 @@ import id.kedukasi.core.utils.GlobalUtil;
 import id.kedukasi.core.utils.JwtUtils;
 import id.kedukasi.core.utils.StringUtil;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import id.kedukasi.core.utils.ValidatorUtil;
@@ -39,11 +38,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Errors;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.ConstraintViolation;
-import javax.xml.validation.Validator;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -416,7 +411,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public ResponseEntity<?> forgotPassword(String email, String uri) {
+  public ResponseEntity<?> forgotPassword(String email, String uri) throws IOException {
     result = new Result();
     User checkUserEmail = userRepository.findByEmail(email).orElse(new User());
     if (checkUserEmail.getUsername() == null) {
@@ -429,16 +424,82 @@ public class UserServiceImpl implements UserService {
     EmailDetails emailDetails = new EmailDetails();
     emailDetails.setSubject("Forgot Password");
 
-    String body = "<html>"
-        + "<body>"
-        + "Click <a href=\"" + urlForgotPassword + "\">here</a> to reset your password."
-        + "</body>"
-        + "</html>";
+    String body = "<!DOCTYPE html>\n" +
+            "<html lang=\"en\" xmlns:th=\"http://www.w3.org/1999/xhtml\">\n" +
+            "<head>\n" +
+            "  <meta charset=\"UTF-8\">\n" +
+            "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+            "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+            "  <title>Template Email - Change Password</title>\n" +
+            "  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n" +
+            "  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n" +
+            "  <link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap\" rel=\"stylesheet\">\n" +
+            "  <style>\n" +
+            "    * {\n" +
+            "      margin: 0;\n" +
+            "      padding: 0;\n" +
+            "      box-sizing: border-box;\n" +
+            "      font-family: 'Poppins', sans-serif;\n" +
+            "    }\n" +
+            "\n" +
+            "    p {\n" +
+            "      font-size: 22px;\n" +
+            "      font-weight: 400;\n" +
+            "      line-height: 36px;\n" +
+            "    }\n" +
+            "\n" +
+            "    body {\n" +
+            "      display: flex;\n" +
+            "      justify-content: center;\n" +
+            "      align-items: center;\n" +
+            "      height: 100vh;\n" +
+            "    }\n" +
+            "\n" +
+            "    body > div > div > div:nth-of-type(2) a:hover {\n" +
+            "      transform: translateY(-1px);\n" +
+            "    }\n" +
+            "  </style>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            "  <div style=\"width: 100%; max-width: 932px; height: 599px; border: 2px solid #E2E2E2; border-radius: 8px;\">\n" +
+            "    <div style=\"padding: 57px;\">\n" +
+            "      <div style=\"display: flex; justify-content: space-between; align-items: center; margin-bottom: 23px;\">\n" +
+            "        <div>\n" +
+            "          <p style=\"font-size: 24px; font-weight: 600;\">Halo "+checkUserEmail.getNamaLengkap()+",</p>\n" +
+            "          <p style=\"font-size: 20px; font-weight: 300;\">berikut adalah link untuk reset password.</p>\n" +
+            "        </div>\n" +
+            "        <div>\n" +
+            "          <img src=\"cid:logo\" alt=\"Logo Kawah Edukasi\">\n" +
+            "        </div>\n" +
+            "      </div>\n" +
+            "      <hr style=\"margin-bottom: 30px;\">\n" +
+            "      <div style=\"display: flex; flex-direction: column;\">\n" +
+            "        <p>\n" +
+            "          Permintaan untuk reset password Kawah Edukasi Anda telah dibuat.\n" +
+            "          Jika Anda tidak membuat permintaan, abaikan saja email ini. Jika\n" +
+            "          Anda memang membuat permintaan, harap segera reset password\n" +
+            "          Anda :\n" +
+            "        </p><br>\n" +
+            "        <a \n" +
+            "          href="+urlForgotPassword+" \n" +
+            "          target=\"_blank\"\n" +
+            "          style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
+            "          >Ubah Password</a><br>\n" +
+            "        <p style=\"font-weight: 500;\">Kawah Edukasi</p>\n" +
+            "        <p>Support Team</p>\n" +
+            "      </div>\n" +
+            "      <div>\n" +
+            "        <p style=\"font-weight: 500; margin-top: 25px; text-align: center;\">2022 &copy; Kawah Edukasi.</p>\n" +
+            "      </div>\n" +
+            "    </div>\n" +
+            "  </div>\n" +
+            "</body>\n" +
+            "</html>";
+    logger.info(body);
     emailDetails.setMsgBody(body);
     emailDetails.setRecipient(email);
     logger.info(">>>> send email");
     emailService.sendMailWithAttachment(emailDetails);
-
     return ResponseEntity.ok(new Result());
   }
 //
