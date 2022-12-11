@@ -1,5 +1,7 @@
 package id.kedukasi.core.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import id.kedukasi.core.request.ChangePasswordRequest;
 import id.kedukasi.core.request.LoginRequest;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.request.SignupRequest;
@@ -8,10 +10,13 @@ import id.kedukasi.core.service.UserService;
 import id.kedukasi.core.utils.StringUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import io.swagger.annotations.ApiModelProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
+
+import java.io.IOException;
 
 @CrossOrigin
 @RestController
@@ -47,7 +55,6 @@ public class AuthController {
 
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-
     return service.createUser(signUpRequest);
   }
 
@@ -80,9 +87,14 @@ public class AuthController {
     return service.changePassword(id, password, uri);
   }
 
+  @PostMapping("/change_password_forgot")
+  public ResponseEntity<?> changePasswordForget(@RequestBody ChangePasswordRequest param) throws JsonProcessingException {
+    return service.changePasswordForgot(param);
+  }
+
   @PostMapping("/forgot_password")
   public ResponseEntity<?> forgotPassword(
-      @RequestParam(value = "email", defaultValue = "", required = true) String email) {
+      @RequestParam(value = "email", defaultValue = "", required = true) String email) throws IOException {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
 

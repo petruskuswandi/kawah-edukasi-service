@@ -3,9 +3,11 @@ package id.kedukasi.core.repository;
 import id.kedukasi.core.enums.EnumStatusPeserta;
 import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.Peserta;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,4 +66,19 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
     @Transactional
     @Query("select p from Peserta p where p.id=?1")
     Peserta getPesertaById(Long id);
+
+    /*
+        Feature In JPA getAll
+        Search,Pagination
+        Parameter Required: limit and offset
+        Parameter Optional: search
+        * if no parameter, default value limit=10,offset=0,search=""
+     */
+    @Transactional
+    @Query(value = "select p.* from Peserta p where p.status_peserta = :statusPeserta and p.banned = :banned and " +
+            "(:namaPeserta is null or p.nama_peserta like %:namaPeserta%) " +
+            "order by p.id ASC limit :limit offset :offset",nativeQuery = true)
+    List<Peserta> getAll(@Param("statusPeserta") String statusPeserta,@Param("banned") boolean banned,
+                         @Param("namaPeserta") String namaPeserta, @Param("limit")long limit,
+                         @Param("offset") long offset);
 }

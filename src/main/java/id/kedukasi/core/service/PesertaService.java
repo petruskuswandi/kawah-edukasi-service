@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface PesertaService {
 
-    Result getAllPeserta(String uri);
+    Result getAllPeserta(String uri,String search,long limit,long offset);
 
     Result getAllBannedPeserta(String uri);
 

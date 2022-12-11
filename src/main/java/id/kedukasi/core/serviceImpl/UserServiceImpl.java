@@ -1,19 +1,19 @@
 package id.kedukasi.core.serviceImpl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import id.kedukasi.core.enums.EnumRole;
 import id.kedukasi.core.exception.TokenRefreshException;
 import id.kedukasi.core.models.EmailDetails;
+import id.kedukasi.core.request.*;
 import id.kedukasi.core.response.JwtResponse;
-import id.kedukasi.core.request.LoginRequest;
 import id.kedukasi.core.models.RefreshToken;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.models.Role;
 import id.kedukasi.core.models.User;
 import id.kedukasi.core.repository.RoleRepository;
 import id.kedukasi.core.repository.UserRepository;
-import id.kedukasi.core.request.SignupRequest;
-import id.kedukasi.core.request.TokenRefreshRequest;
-import id.kedukasi.core.request.UserRequest;
 import id.kedukasi.core.response.TokenRefreshResponse;
 import id.kedukasi.core.service.EmailService;
 import id.kedukasi.core.service.FilesStorageService;
@@ -22,7 +22,9 @@ import id.kedukasi.core.utils.GlobalUtil;
 import id.kedukasi.core.utils.JwtUtils;
 import id.kedukasi.core.utils.StringUtil;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import id.kedukasi.core.utils.ValidatorUtil;
@@ -31,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -76,6 +79,10 @@ public class UserServiceImpl implements UserService {
 
   @Autowired
   GlobalUtil globalUtil;
+
+  @Value("${app.expired.token.forgot-password}")
+  private long jwtExpiredTokenForgotPassword;
+
 
   @Value("${kedukasi.app.jwtExpirationMs}")
   private int jwtExpirationMs;
@@ -136,7 +143,7 @@ public class UserServiceImpl implements UserService {
               .body(result);
     }
 
-    if(!validator.isEmailFormat(signUpRequest.getEmail())) {
+    if(!validator.isEmailValid(signUpRequest.getEmail())) {
       result.setMessage("Error: invalid email format!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
@@ -164,7 +171,6 @@ public class UserServiceImpl implements UserService {
     User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
         encoder.encode(signUpRequest.getPassword()),signUpRequest.getNamaLengkap(),
         signUpRequest.getNoHp(), StringUtil.getRandomNumberString(), role, false, false);
-
     User userResult = userRepository.save(user);
 
 //    if (userResult != null) {
@@ -179,12 +185,36 @@ public class UserServiceImpl implements UserService {
   @Override
   public ResponseEntity<?> signIn(LoginRequest loginRequest, String uri) {
     result = new Result();
+    // email validation
+    if(!validator.isEmailValid(loginRequest.getEmail())){
+      result.setMessage("Email not valid!!");
+      result.setCode(400);
+      result.setSuccess(false);
+      return ResponseEntity.badRequest().body(result);
+    }
+
     User getUser = userRepository.findByEmail(loginRequest.getEmail()).orElse(new User());
+
+    if(validator.isEmailValid(loginRequest.getEmail()) && getUser.getUsername() == null){
+      result.setSuccess(true);
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      result.setMessage("Email not registered");
+      return ResponseEntity.ok(result);
+    }
+
+    // password validation
+    if(!validator.isPasswordValid(loginRequest.getPassword())){
+      result.setMessage("Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!");
+      result.setCode(400);
+      result.setSuccess(false);
+      return ResponseEntity.badRequest().body(result);
+    }
+
     if (getUser.getUsername() != null) {
       Date dateNow = new Date();
       Date dateExpired = new Date((dateNow).getTime() + jwtExpirationMs);
 
-      if (!encoder.matches(loginRequest.getPassword(), getUser.getPassword())){
+      if ( validator.isPasswordValid(loginRequest.getPassword()) && !encoder.matches(loginRequest.getPassword(), getUser.getPassword())){
         result.setSuccess(true);
         result.setCode(HttpStatus.BAD_REQUEST.value());
         result.setMessage("Password salah");
@@ -205,11 +235,8 @@ public class UserServiceImpl implements UserService {
           userDetails.getEmail(), role, dateExpired.getTime()));
       
       userRepository.setIsLogin(true, userDetails.getId());
-    } else {
-      result.setSuccess(true);
-      result.setCode(HttpStatus.BAD_REQUEST.value());
-      result.setMessage("Email not registered");
     }
+
     return ResponseEntity.ok(result);
   }
 
@@ -392,8 +419,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public ResponseEntity<?> forgotPassword(String email, String uri) {
+  public ResponseEntity<?> forgotPassword(String email, String uri) throws IOException {
     result = new Result();
+
     User checkUserEmail = userRepository.findByEmail(email).orElse(new User());
     if (checkUserEmail.getUsername() == null) {
       result.setMessage("Error: Email has not been registered!");
@@ -405,17 +433,121 @@ public class UserServiceImpl implements UserService {
     EmailDetails emailDetails = new EmailDetails();
     emailDetails.setSubject("Forgot Password");
 
-    String body = "<html>"
-        + "<body>"
-        + "Click <a href=\"" + urlForgotPassword + "\">here</a> to reset your password."
-        + "</body>"
-        + "</html>";
+    Date dateNow = new Date();
+    // 10 menit
+    String tokenForgotPassword = jwtUtils.generateTokenFromUsernameWithExpired(checkUserEmail.getUsername(),jwtExpiredTokenForgotPassword);
+    long idUser = checkUserEmail.getId();
+    String password = checkUserEmail.getPassword();
+
+    /*
+        Body HTML Message Email
+     */
+    String body = "<!DOCTYPE html>\n" +
+            "<html lang=\"en\" xmlns:th=\"http://www.w3.org/1999/xhtml\">\n" +
+            "<head>\n" +
+            "  <meta charset=\"UTF-8\">\n" +
+            "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+            "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+            "  <title>Template Email - Change Password</title>\n" +
+            "  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n" +
+            "  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n" +
+            "  <link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap\" rel=\"stylesheet\">\n" +
+            "  <style>\n" +
+            "    * {\n" +
+            "      margin: 0;\n" +
+            "      padding: 0;\n" +
+            "      box-sizing: border-box;\n" +
+            "      font-family: 'Poppins', sans-serif;\n" +
+            "    }\n" +
+            "\n" +
+            "    p {\n" +
+            "      font-size: 22px;\n" +
+            "      font-weight: 400;\n" +
+            "      line-height: 36px;\n" +
+            "    }\n" +
+            "\n" +
+            "    body {\n" +
+            "      display: flex;\n" +
+            "      justify-content: center;\n" +
+            "      align-items: center;\n" +
+            "      height: 100vh;\n" +
+            "    }\n" +
+            "\n" +
+            "    body > div > div > div:nth-of-type(2) a:hover {\n" +
+            "      transform: translateY(-1px);\n" +
+            "    }\n" +
+            "  </style>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            "  <div style=\"width: 100%; max-width: 932px; height: 599px; border: 2px solid #E2E2E2; border-radius: 8px;\">\n" +
+            "    <div style=\"padding: 57px;\">\n" +
+            "      <div style=\"display: flex; justify-content: space-between; align-items: center; margin-bottom: 23px;\">\n" +
+            "        <div>\n" +
+            "          <p style=\"font-size: 24px; font-weight: 600;\">Halo "+checkUserEmail.getNamaLengkap()+",</p>\n" +
+            "          <p style=\"font-size: 20px; font-weight: 300;\">berikut adalah link untuk reset password.</p>\n" +
+            "        </div>\n" +
+            "        <div>\n" +
+            "          <img src=\"cid:logo\" alt=\"Logo Kawah Edukasi\">\n" +
+            "        </div>\n" +
+            "      </div>\n" +
+            "      <hr style=\"margin-bottom: 30px;\">\n" +
+            "      <div style=\"display: flex; flex-direction: column;\">\n" +
+            "        <p>\n" +
+            "          Permintaan untuk reset password Kawah Edukasi Anda telah dibuat.\n" +
+            "          Jika Anda tidak membuat permintaan, abaikan saja email ini. Jika\n" +
+            "          Anda memang membuat permintaan, harap segera reset password\n" +
+            "          Anda :\n" +
+            "        </p><br>\n" +
+            "        <a \n" +
+            "          href="+urlForgotPassword+"?id="+idUser+"&password="+password+"&token="+tokenForgotPassword+" \n" +
+            "          target=\"_blank\"\n" +
+            "          style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
+            "          >Ubah Password</a><br>\n" +
+            "        <p style=\"font-weight: 500;\">Kawah Edukasi</p>\n" +
+            "        <p>Support Team</p>\n" +
+            "      </div>\n" +
+            "      <div>\n" +
+            "        <p style=\"font-weight: 500; margin-top: 25px; text-align: center;\">2022 &copy; Kawah Edukasi.</p>\n" +
+            "      </div>\n" +
+            "    </div>\n" +
+            "  </div>\n" +
+            "</body>\n" +
+            "</html>";
+    //logger.info(body);
     emailDetails.setMsgBody(body);
     emailDetails.setRecipient(email);
     logger.info(">>>> send email");
     emailService.sendMailWithAttachment(emailDetails);
-
     return ResponseEntity.ok(new Result());
+  }
+
+  @Override
+  public ResponseEntity<?> changePasswordForgot(ChangePasswordRequest param) throws JsonProcessingException {
+    result = new Result();
+    if(!jwtUtils.validateJwtToken(param.getToken()) || param.getToken() == null){
+      result.setCode(400);
+      result.setMessage("Token Is Invalid");
+      return ResponseEntity.badRequest().body(result);
+    }
+
+    // password validation
+    if(!validator.isPasswordValid(param.getPassword())){
+      result.setMessage("Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!");
+      result.setCode(400);
+      result.setSuccess(false);
+      return ResponseEntity.badRequest().body(result);
+    }
+
+    int resultModel = userRepository.changePassword(encoder.encode(param.getPassword()), param.getId());
+    if (resultModel == 1) {
+      result.setCode(200);
+      result.setMessage("Password Succesfully Updated");
+      return ResponseEntity.ok(result);
+    } else {
+      result.setCode(200);
+      result.setMessage("Password Failed Updated");
+      return ResponseEntity.badRequest().body(result);
+    }
   }
 //
 //  private String getJwtActiveEmail() {

@@ -13,15 +13,11 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -29,7 +25,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -71,6 +66,14 @@ public class EmailServiceImpl implements EmailService {
       mimeMessageHelper.setTo(details.getRecipient());
       mimeMessageHelper.setText(details.getMsgBody(), true);
       mimeMessageHelper.setSubject(details.getSubject());
+      FileSystemResource logo = new FileSystemResource(new File("src/main/resources/static/logo-kawah-edukasi.png"));
+      /*
+        adding logo to html Template EmailDetails
+       */
+      if(logo.exists()){
+        mimeMessageHelper.addInline("logo",logo);
+      }
+
       if (details.getAttachment() != null) {
         FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
         mimeMessageHelper.addAttachment(file.getFilename(), file);

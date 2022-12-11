@@ -56,10 +56,11 @@ public class PesertaController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
-    public Result getAllPeserta() {
+    public Result getAllPeserta(@RequestParam(required = false,name = "search") String search,
+                                @RequestParam(value = "limit",defaultValue = "10") long limit,@RequestParam(value = "offset",defaultValue = "0") long offset) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
-        return service.getAllPeserta(uri);
+        return service.getAllPeserta(uri,search,limit,offset);
     }
 
     @GetMapping(value = "/allBanned", produces = APPLICATION_JSON_VALUE)
