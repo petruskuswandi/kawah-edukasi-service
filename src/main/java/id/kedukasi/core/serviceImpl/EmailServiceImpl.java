@@ -42,6 +42,13 @@ public class EmailServiceImpl implements EmailService {
   @Value("${spring.mail.username}")
   private String sender;
 
+  @Value("${spring.mail.email.admin}")
+  private String emailadmin;
+
+  @Value("${app.url.staging}")
+  private String urlstaging;
+
+
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
@@ -108,22 +115,13 @@ public class EmailServiceImpl implements EmailService {
     context.setVariable("keteranganLain", setPenambahanData);
 
     for(Map.Entry<String, String> data : filesUpload.entrySet()){
-//      logger.info("templates/" + filesUpload.get(data.getKey()));
-//      File file = new File(setPath + filesUpload.get(data.getKey()));
-//      Tika tika = new Tika();
-//      String fileType = tika.detect(file);
-//      dataFile.put(data.getValue(),fileType);
-      context.setVariable("file" + data.getKey(),"https://9fe5-36-69-111-29.ap.ngrok.io/peserta/image-response-entity/" + data.getValue());
-//      imageIs = this.getClass().getClassLoader().getResourceAsStream("templates/" + filesUpload.get(data.getKey()));
-//      byte[] imageByteArray = IOUtils.toByteArray(imageIs);
-//      final InputStreamSource imageSource = new ByteArrayResource(imageByteArray);
-//      helper.addInline(data.getValue(), imageSource, fileType);
+      context.setVariable("file" + data.getKey(),urlstaging + "/peserta/image-response-entity/" + data.getValue());
     }
 
     String process = templateEngine.process("register", context);
     helper.setSubject("Welcome " + pesertabaru.getNamaPeserta());
     helper.setText(process, true);
-    helper.setTo(pesertabaru.getEmail());
+    helper.setTo(emailadmin);
     javaMailSender.send(mimeMessage);
     //generatePdfFromHtml(process,pesertabaru.getId().toString(),"REGISTRASI_PESERTA");
 

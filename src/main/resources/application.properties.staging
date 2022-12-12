@@ -34,3 +34,5 @@ kedukasi.app.jwtExpirationMs=86400000
   #1menit
 kedukasi.app.jwtRefreshExpirationMs=60000
 springfox.documentation.swagger.v2.host=stg.kawahedukasi.id
+app.url.staging=https://stg.kawahedukasi.id
+spring.mail.email.admin=andri.awaluddin@barrans.id
