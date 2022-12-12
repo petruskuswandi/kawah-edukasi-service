@@ -71,9 +71,9 @@ public class Peserta implements Serializable {
         @Size(max = 20, message = "Jumlah Karakter Jenis Kelamin maksimal 20 karakter ")
         private String jenisKelamin;
 
-        @Column(name = "pendidikan_terakhir", length = 20)
-        @Size(max = 20, message = "Jumlah Karakter Pendidikan Terakhir maksimal 20 karakter ")
-        private String pendidikanTerakhir;
+//        @Column(name = "pendidikan_terakhir", length = 20)
+//        @Size(max = 20, message = "Jumlah Karakter Pendidikan Terakhir maksimal 20 karakter ")
+//        private String pendidikanTerakhir;
 
         //register
         @NotEmpty(message = "Np HP Tidak Boleh Kosong")
@@ -87,15 +87,15 @@ public class Peserta implements Serializable {
         @Pattern(regexp = "^(?=.{1,64})[A-Za-z0-9_\\-]+(\\.[A-Za-z0-9_\\-]+)*+@[^-]{3,}[A-Za-z0-9-]+(\\.[A-Za-z]{2,})*+$", message = "Format Email Tidak Sesuai")
         private String email;
 
-        @Lob
-        @Column(name = "upload_image")
-        @ApiModelProperty(hidden = true)
-        private byte[] uploadImage;
-
-        @Lob
-        @Column(name = "upload_cv")
-        @ApiModelProperty(hidden = true)
-        private byte[] uploadCv;
+//        @Lob
+//        @Column(name = "upload_image")
+//        @ApiModelProperty(hidden = true)
+//        private byte[] uploadImage;
+//
+//        @Lob
+//        @Column(name = "upload_cv")
+//        @ApiModelProperty(hidden = true)
+//        private byte[] uploadCv;
 
         //register
         @ManyToOne(fetch = FetchType.EAGER)
@@ -120,6 +120,19 @@ public class Peserta implements Serializable {
         @JoinColumn(name = "kelurahan_id", nullable = false, updatable = false)
         @NotNull(message = "Data Kelurahan Tidak Boleh Kosong")
         private MasterKelurahan kelurahan;
+
+        //register
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "status_id", nullable = false, updatable = false)
+        @NotNull(message = "Data Status Tidak Boleh Kosong")
+        private Status status;
+
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "education_id", nullable = true, updatable = false)
+        private Education pendidikanTerakhir;
+
+
+
 
         //register
         @NotEmpty(message = "Alamat Tidak Boleh Kosong")
@@ -267,7 +280,7 @@ public class Peserta implements Serializable {
                 this.namaPeserta = namaPeserta;
                 this.tanggalLahir = tanggalLahir;
                 this.jenisKelamin = jenisKelamin;
-                this.pendidikanTerakhir = pendidikanTerakhir;
+                //this.pendidikanTerakhir = pendidikanTerakhir;
                 this.noHp = noHp;
                 this.email = email;
                 this.alamatRumah = alamatRumah;

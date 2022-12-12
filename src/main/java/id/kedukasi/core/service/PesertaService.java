@@ -1,5 +1,6 @@
 package id.kedukasi.core.service;
 
+import com.lowagie.text.DocumentException;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.request.RegisterRequest;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public interface PesertaService {
 
     Result getPesertaById(Long id, String uri);
 
-    ResponseEntity<Result> registerPeserta(RegisterRequest registerRequest ,String jsonString, List<MultipartFile> files) throws ParseException, MessagingException, IOException;
+    ResponseEntity<Result> registerPeserta(RegisterRequest registerRequest ,String jsonString, List<MultipartFile> files) throws ParseException, MessagingException, IOException, DocumentException;
 
     ResponseEntity<?> updatePeserta(Long id, Long kelasId,Long batchId, String namaPeserta, String tanggalLahir,
                                     String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
