@@ -182,10 +182,14 @@
               <td style="flex: 1;"></td>
             </tr>
           </table>
-          <div>
-            <img src="file1" th:src="${file1}" alt="file1">
-          </div>
-          
+
+          <table>
+            <tr>
+              <td><img th:src="${file1}" alt="file1" height="200" width="200" /></td>
+              <td><img th:src="${file2}" alt="file2" height="200" width="200" /></td>
+              <td><img th:src="${file3}" alt="file3" height="200" width="200" /></td>
+            </tr>
+          </table>
         </div>
         <div style="width: 50%; display: flex; flex-direction: column">
           <table>
@@ -324,7 +328,7 @@
                 font-size: 1rem;
                 margin-bottom: 1rem;
               ">
-              <td style="flex: 1;">Kelebihan & Kekurangan </td>
+              <td style="flex: 1;">Kelebihan Dan Kekurangan </td>
               <td style="flex: 1;">: <b th:text="${peserta.kelebihanKekurangan}"></b> </td>
             </tr>
             <tr style="

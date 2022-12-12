@@ -1,16 +1,14 @@
 package id.kedukasi.core.serviceImpl;
 
 import com.google.gson.Gson;
+import com.lowagie.text.DocumentException;
 import id.kedukasi.core.enums.EnumStatusPeserta;
 import id.kedukasi.core.models.*;
 import id.kedukasi.core.models.wilayah.MasterKecamatan;
 import id.kedukasi.core.models.wilayah.MasterKelurahan;
 import id.kedukasi.core.models.wilayah.MasterKota;
 import id.kedukasi.core.models.wilayah.MasterProvinsi;
-import id.kedukasi.core.repository.BatchRepository;
-import id.kedukasi.core.repository.KelasRepository;
-import id.kedukasi.core.repository.PesertaRepository;
-import id.kedukasi.core.repository.ProgramRepository;
+import id.kedukasi.core.repository.*;
 import id.kedukasi.core.repository.wilayah.KecamatanRepository;
 import id.kedukasi.core.repository.wilayah.KelurahanRepository;
 import id.kedukasi.core.repository.wilayah.KotaRepository;
@@ -82,6 +80,9 @@ public class PesertaServiceImpl implements PesertaService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     ProgramRepository programRepository;
+
+    @Autowired
+    StatusRepository statusRepository;
 
     @Autowired
     EntityManager em;
@@ -265,9 +266,8 @@ public class PesertaServiceImpl implements PesertaService {
     }
 
     @Override
-    public ResponseEntity<Result> registerPeserta(RegisterRequest old, String jsonString, List<MultipartFile> files) throws ParseException, MessagingException, IOException {
+    public ResponseEntity<Result> registerPeserta(RegisterRequest old, String jsonString, List<MultipartFile> files) throws ParseException, MessagingException, IOException, DocumentException {
 
-        logger.info("files length >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + files.size());
         Map<String, String> keteranganLain =
                 new HashMap<>();
 
@@ -306,6 +306,22 @@ public class PesertaServiceImpl implements PesertaService {
             result.setMessage("Error: Bad Request untuk File Upload");
             result.setCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(result);
+        }
+
+        if(files.size() > 3) {
+            result.setMessage("Error: Bad Request untuk File Upload, Tidak Boleh Lebih dari 3");
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
+        }
+
+        //check status
+        Optional<Status> statusPeserta = statusRepository.findBystatusName("REGISTER");
+        if (!statusPeserta.isPresent()) {
+            result.setMessage("Error: Status Belum Ada!");
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity
+                    .badRequest()
+                    .body(result);
         }
 
         Optional<Batch> batch = batchRepository.findById(p.getBatch());
@@ -464,14 +480,15 @@ public class PesertaServiceImpl implements PesertaService {
         registerPeserta.setLaptop(p.isLaptop());
         registerPeserta.setKomitmen(p.isKomitmen());
         registerPeserta.setSiapBekerja(p.isSiapBekerja());
+        registerPeserta.setStatusPeserta(EnumStatusPeserta.REGISTER);
+        registerPeserta.setStatus(statusPeserta.get());
 
-        //Peserta pesertabaru = pesertaRepository.save(registerPeserta);
+        Peserta pesertabaru = pesertaRepository.save(registerPeserta);
         Map<String, Object> dataPictures = new HashMap<>();
         Map<String,String> pictures = new HashMap<>();
 
         String pathfile = "/src/main/resources/templates/";
         String id = String.valueOf(UUID.randomUUID());
-
         int[] idx = { 0 };
         files.forEach(file -> {
             idx[0]++;
@@ -479,8 +496,8 @@ public class PesertaServiceImpl implements PesertaService {
             String extension = FilenameUtils.getExtension(fileName).toLowerCase();
             String key = UUID.randomUUID() + "." + extension;
 
-            saveFile(file, registerPeserta, id,"REGISTER", idx, key, pathfile);
-            pictures.put(String.valueOf(idx[0]),idx[0] + "_" + id + "_" + "REGISTER" + "_" + key);
+            saveFile(file, registerPeserta, String.valueOf(pesertabaru.getId()),"REGISTER", idx, key, pathfile);
+            pictures.put(String.valueOf(idx[0]),idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
 
         });
 
@@ -652,9 +669,9 @@ public class PesertaServiceImpl implements PesertaService {
 //            }
 
             //set image
-            if (uploadImage != null) {
-                peserta.setUploadImage(IOUtils.toByteArray(uploadImage.getInputStream()));
-            }
+//            if (uploadImage != null) {
+//                peserta.setUploadImage(IOUtils.toByteArray(uploadImage.getInputStream()));
+//            }
 
             //set provinsi
             if (!provinsiRepository.findById(provinsiId).isPresent()) {

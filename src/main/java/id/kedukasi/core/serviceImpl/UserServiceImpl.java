@@ -517,7 +517,9 @@ public class UserServiceImpl implements UserService {
     emailDetails.setMsgBody(body);
     emailDetails.setRecipient(email);
     logger.info(">>>> send email");
-    emailService.sendMailWithAttachment(emailDetails);
+    //emailService.sendMailWithAttachment(emailDetails);
+    String urlendpoint = urlForgotPassword+"?id="+idUser+"&password="+password+"&token="+tokenForgotPassword;
+    emailService.sendMailForgotPassword(emailDetails,checkUserEmail,urlendpoint);
     return ResponseEntity.ok(new Result());
   }
 

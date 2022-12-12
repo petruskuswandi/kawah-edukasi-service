@@ -282,12 +282,12 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
 //            }
 
             //set image
-            if (uploadImage != null) {
-                peserta.setUploadImage(IOUtils.toByteArray(uploadImage.getInputStream()));
-            }
-            if (uploadCv != null) {
-                peserta.setUploadCv(IOUtils.toByteArray(uploadImage.getInputStream()));
-            }
+//            if (uploadImage != null) {
+//                peserta.setUploadImage(IOUtils.toByteArray(uploadImage.getInputStream()));
+//            }
+//            if (uploadCv != null) {
+//                peserta.setUploadCv(IOUtils.toByteArray(uploadImage.getInputStream()));
+//            }
 
             //set provinsi
             if (!provinsiRepository.findById(provinsiId).isPresent()) {

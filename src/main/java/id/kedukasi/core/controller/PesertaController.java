@@ -1,6 +1,7 @@
 package id.kedukasi.core.controller;
 
 import com.google.gson.Gson;
+import com.lowagie.text.DocumentException;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.request.RegisterRequest;
 import id.kedukasi.core.service.PesertaService;
@@ -92,8 +93,7 @@ public class PesertaController {
 
 
     @RequestMapping(path = "/register", method = POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<Result> saveRegister(@RequestPart String register, @RequestPart List<MultipartFile> files) throws MessagingException, ParseException, IOException {
-//        logger.info(">>>>>>>>>>>>>>>>>>>>>>>>" + register.getNamaPeserta());
+    public ResponseEntity<Result> saveRegister(@RequestPart String register, @RequestPart List<MultipartFile> files) throws MessagingException, ParseException, IOException, DocumentException {
         return service.registerPeserta(null,register, files);
     }
 
@@ -167,6 +167,9 @@ public class PesertaController {
         logger.info(uri);
         return service.changeToCalonPeserta(id, uri);
     }
+
+
+
 
     @PatchMapping(value = ("/changeKelas"))
     public ResponseEntity<?> changeKelas(

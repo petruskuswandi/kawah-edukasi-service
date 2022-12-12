@@ -81,4 +81,6 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
     List<Peserta> getAll(@Param("statusPeserta") String statusPeserta,@Param("banned") boolean banned,
                          @Param("namaPeserta") String namaPeserta, @Param("limit")long limit,
                          @Param("offset") long offset);
+
+
 }
