@@ -31,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/user")
 //@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class UserController {
-
   @Autowired
   UserService service;
 

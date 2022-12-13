@@ -44,7 +44,6 @@ import java.util.*;
 
 @Service
 public class PesertaServiceImpl implements PesertaService {
-
     @Autowired
     PesertaRepository pesertaRepository;
 
@@ -282,7 +281,7 @@ public class PesertaServiceImpl implements PesertaService {
         Gson g = new Gson();
         RegisterRequest p = g.fromJson(jsonString, RegisterRequest.class);
 
-       // cek email
+        // cek email
         Peserta checkEmailPeserta = pesertaRepository.findByEmail(p.getEmail()).orElse(new Peserta());
         if (checkEmailPeserta.getEmail()!= null) {
             result.setMessage("Error: Email sudah digunakan!");
@@ -426,13 +425,13 @@ public class PesertaServiceImpl implements PesertaService {
          * 3. tidak keduanya
          */
 
-       setPenambahanData.setKesibukan("tidak Keduanya");
+        setPenambahanData.setKesibukan("tidak Keduanya");
 
-       if(p.getKesibukan() == 1){
-           setPenambahanData.setKesibukan("Kuliah/Sekolah");
-       }else if(p.getKesibukan() == 2){
-           setPenambahanData.setKesibukan("kerja");
-       }
+        if(p.getKesibukan() == 1){
+            setPenambahanData.setKesibukan("Kuliah/Sekolah");
+        }else if(p.getKesibukan() == 2){
+            setPenambahanData.setKesibukan("kerja");
+        }
 
         setPenambahanData.setLaptop("Ya");
         setPenambahanData.setKomitmen("Ya");
@@ -516,7 +515,7 @@ public class PesertaServiceImpl implements PesertaService {
 
         try {
             String extension = FilenameUtils.getExtension(fileName).toLowerCase();
-           // String key = UUID.randomUUID() + "." + extension;
+            // String key = UUID.randomUUID() + "." + extension;
 
 //            FileDB = new FileUpload(registerPeserta,key, file.getContentType(),fileName, file.getBytes(),
 //                    "REGISTER");

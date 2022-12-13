@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
-
 public interface PesertaService {
 
     Result getAllPeserta(String uri,String search,long limit,long offset);

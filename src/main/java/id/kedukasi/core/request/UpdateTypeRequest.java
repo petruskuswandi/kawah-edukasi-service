@@ -3,8 +3,6 @@ package id.kedukasi.core.request;
 import io.swagger.annotations.ApiModelProperty;
 
 public class UpdateTypeRequest {
-
-
     @ApiModelProperty(example = "1",required = true)
     private int id;
     @ApiModelProperty (name = "type_name" ,example = "Nama type document",required = true)

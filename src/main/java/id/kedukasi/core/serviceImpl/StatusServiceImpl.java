@@ -58,7 +58,7 @@ public class StatusServiceImpl implements StatusService {
                 errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter";
             }
 
-            if (errorUniqueStatusNameMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") { 
+            if (errorUniqueStatusNameMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
                 result.setSuccess(false);
                 result.setMessage("Error: "+ errorUniqueStatusNameMessage + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -79,7 +79,7 @@ public class StatusServiceImpl implements StatusService {
         return ResponseEntity.ok(result);
     }
 
-    
+
     @Override
     public ResponseEntity<Result> updateStatus(UpdateStatusRequest status) {
         result = new Result();
@@ -100,7 +100,7 @@ public class StatusServiceImpl implements StatusService {
                 errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter";
             }
 
-            if (errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") { 
+            if (errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
                 result.setSuccess(false);
                 result.setMessage("Error: " + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
                 result.setCode(HttpStatus.BAD_REQUEST.value());

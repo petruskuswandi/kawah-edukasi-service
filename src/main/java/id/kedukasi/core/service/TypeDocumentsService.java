@@ -4,7 +4,6 @@ import id.kedukasi.core.models.Result;
 import id.kedukasi.core.request.TypeDocumentsRequest;
 import id.kedukasi.core.request.UpdateTypeRequest;
 import org.springframework.http.ResponseEntity;
-
 public interface TypeDocumentsService {
     public ResponseEntity<Result> createTypeDocument (TypeDocumentsRequest type);
 

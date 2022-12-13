@@ -68,8 +68,8 @@ public class AuthController {
 
   @GetMapping("/active")
   public Result active(
-      @RequestParam(value = "id", defaultValue = "0", required = true) long id,
-      @RequestParam(value = "tokenVerification", defaultValue = "", required = true) String tokenVerification
+          @RequestParam(value = "id", defaultValue = "0", required = true) long id,
+          @RequestParam(value = "tokenVerification", defaultValue = "", required = true) String tokenVerification
   ) {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
@@ -79,8 +79,8 @@ public class AuthController {
 
   @PatchMapping("/change_password")
   public ResponseEntity<?> changePassword(
-      @RequestParam(value = "id", defaultValue = "0", required = true) long id,
-      @RequestParam(value = "password", defaultValue = "", required = true) String password) {
+          @RequestParam(value = "id", defaultValue = "0", required = true) long id,
+          @RequestParam(value = "password", defaultValue = "", required = true) String password) {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
 
@@ -94,7 +94,7 @@ public class AuthController {
 
   @PostMapping("/forgot_password")
   public ResponseEntity<?> forgotPassword(
-      @RequestParam(value = "email", defaultValue = "", required = true) String email) throws IOException {
+          @RequestParam(value = "email", defaultValue = "", required = true) String email) throws IOException {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
 

@@ -3,7 +3,6 @@ package id.kedukasi.core.request;
 import io.swagger.annotations.ApiModelProperty;
 
 public class TypeDocumentsRequest {
-
     @ApiModelProperty(example = "nama",required = true)
     private String typeName;
 

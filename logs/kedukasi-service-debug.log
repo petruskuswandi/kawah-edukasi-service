@@ -6573,3 +6573,8 @@ Caused by: org.postgresql.util.PSQLException: ERROR: null value in column "role_
 2022-12-12 09:42:03.832 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
 2022-12-12 09:42:10.081 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
 2022-12-12 09:42:12.889 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 9.782 seconds (JVM running for 10.654)
+2022-12-13 07:10:47.316 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 11 on LAPTOP-UDINDEV with PID 19480 (C:\Users\andri\OneDrive\Documents\barrans\kawah\kedukasi-service\kedukasi-service\target\classes started by andri in C:\Users\andri\OneDrive\Documents\barrans\kawah\kedukasi-service\kedukasi-service)
+2022-12-13 07:10:47.318 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-13 07:10:47.318 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-13 07:10:51.744 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-13 07:10:53.382 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 6.48 seconds (JVM running for 6.938)

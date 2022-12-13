@@ -47,13 +47,13 @@ public class UpdatePesertaController {
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Result> getAllPeserta(@RequestParam(required = false,name = "search") String search,
-                                @RequestParam(required = false,name = "status id") int status_id,
-                                @RequestParam(value = "limit",defaultValue = "10") long limit,
-                                @RequestParam(value = "offset",defaultValue = "0") long offset) {
+                                                @RequestParam(required = false,name = "status id") int status_id,
+                                                @RequestParam(value = "limit",defaultValue = "10") long limit,
+                                                @RequestParam(value = "offset",defaultValue = "0") long offset) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getAllPeserta(status_id,uri,search,limit,offset);
-       // return service.getAllPeserta(uri,search,limit,offset);
+        // return service.getAllPeserta(uri,search,limit,offset);
     }
 
 
@@ -65,7 +65,7 @@ public class UpdatePesertaController {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.changeStatusPeserta(statusId, id, uri);
-       // return service.changeToCalonPeserta(id, uri);
+        // return service.changeToCalonPeserta(id, uri);
     }
 
 

@@ -3,7 +3,8 @@ package id.kedukasi.core.request;
 import io.swagger.annotations.ApiModelProperty;
 
 public class StatusRequest {
-    
+
+
     @ApiModelProperty(example = "PESERTA/CALON PESERTA/REGISTER", required = true)
     private String statusName;
 

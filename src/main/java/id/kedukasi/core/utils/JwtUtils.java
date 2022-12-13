@@ -34,29 +34,29 @@ public class JwtUtils {
   public String generateJwtToken(Authentication authentication, Date dateNow, Date dateExpired) {
     UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
     return Jwts.builder()
-        .setSubject((userPrincipal.getUsername()))
-        .setIssuedAt(dateNow)
-        .setExpiration(dateExpired)
-        .signWith(SignatureAlgorithm.HS512, jwtSecret)
-        .compact();
+            .setSubject((userPrincipal.getUsername()))
+            .setIssuedAt(dateNow)
+            .setExpiration(dateExpired)
+            .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .compact();
   }
-  
+
   public String generateJwtActiveUser(Authentication authentication, Date dateNow, Date dateExpired) {
     UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
     return Jwts.builder()
-        .setSubject("kedukasi")
-        .setIssuedAt(dateNow)
-        .setExpiration(dateExpired)
-        .signWith(SignatureAlgorithm.HS512, jwtSecret)
-        .setHeaderParam("id", userPrincipal.getId())
-        .setHeaderParam("email", userPrincipal.getEmail())
-        .compact();
+            .setSubject("kedukasi")
+            .setIssuedAt(dateNow)
+            .setExpiration(dateExpired)
+            .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .setHeaderParam("id", userPrincipal.getId())
+            .setHeaderParam("email", userPrincipal.getEmail())
+            .compact();
   }
 
   public String generateTokenFromUsername(String username) {
     return Jwts.builder().setSubject(username).setIssuedAt(new Date())
-        .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(SignatureAlgorithm.HS512, jwtSecret)
-        .compact();
+            .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .compact();
   }
 
   public String generateTokenFromUsernameWithExpired(String username,long expiredDate) {

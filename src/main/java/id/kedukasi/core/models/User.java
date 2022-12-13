@@ -24,12 +24,13 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "users",
-    uniqueConstraints = {
-      @UniqueConstraint(columnNames = "username"),
-      @UniqueConstraint(columnNames = "email")
-    })
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")
+        })
 @DynamicUpdate
 public class User implements Serializable {
+
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,8 +69,8 @@ public class User implements Serializable {
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles",
-      joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "role_id"))
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Role role;
 
   private boolean isLogin;
@@ -99,7 +100,7 @@ public class User implements Serializable {
   }
 
   public User(String username, String email, String password,String namaLengkap, String noHp, String tokenVerification,
-      Role role, boolean isActive, boolean isLogin) {
+              Role role, boolean isActive, boolean isLogin) {
     Date date = new Date();
 
     this.username = username;
@@ -244,5 +245,5 @@ public class User implements Serializable {
   public void setProfilePicturePath(String profilePicturePath) {
     this.profilePicturePath = profilePicturePath;
   }
-  
+
 }
