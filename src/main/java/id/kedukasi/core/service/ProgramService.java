@@ -4,7 +4,6 @@ import id.kedukasi.core.models.Result;
 import id.kedukasi.core.request.ProgramRequest;
 import id.kedukasi.core.request.UpdateProgramRequest;
 import org.springframework.http.ResponseEntity;
-
 public interface ProgramService {
     //implements create program
     ResponseEntity<Result> createProgram(ProgramRequest program);

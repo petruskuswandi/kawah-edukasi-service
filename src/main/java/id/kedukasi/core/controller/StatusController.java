@@ -44,5 +44,5 @@ public class StatusController {
     public ResponseEntity<Result> getStatusById(@PathVariable("id") int id) {
         return service.getStatusById(id);
     }
-    
+
 }

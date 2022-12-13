@@ -11,10 +11,10 @@ build_app:
   stage: build_app
   image: maven:3.8.2-jdk-11
   script:
-    - cp src/main/resources/application.properties.develudin.staging src/main/resources/application.properties.develudin
+    - cp src/main/resources/application-staging.properties.develudin.staging src/main/resources/application-staging.properties.develudin
     - mvn clean package -DskipTests
     - ls src/main/resources/
-    - cat src/main/resources/application.properties.develudin
+    - cat src/main/resources/application-staging.properties.develudin
     - ls -lah target
   only:
     - staging

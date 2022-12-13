@@ -35,7 +35,6 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 @Service
 public class EmailServiceImpl implements EmailService {
-
   @Autowired
   private JavaMailSender javaMailSender;
 
@@ -123,7 +122,7 @@ public class EmailServiceImpl implements EmailService {
     helper.setText(process, true);
     helper.setTo(emailadmin);
     javaMailSender.send(mimeMessage);
-    //generatePdfFromHtml(process,pesertabaru.getId().toString(),"REGISTRASI_PESERTA");
+    generatePdfFromHtml(process,pesertabaru.getId().toString(),"REGISTRASI_PESERTA");
 
     logger.info(dataFile.toString());
     return true;

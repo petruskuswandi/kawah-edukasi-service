@@ -34,7 +34,6 @@ import java.util.*;
 
 @Service
 public class CalonPesertaServiceImpl implements CalonPesertaService {
-
     @Autowired
     PesertaRepository pesertaRepository;
 
@@ -660,7 +659,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                 result.setMessage("Error: id "+ calonPesertaId + " bukan calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-               // calonPeserta.setKelas(kelas);
+                // calonPeserta.setKelas(kelas);
                 pesertaRepository.save(calonPeserta);
             }
         } catch (Exception e) {

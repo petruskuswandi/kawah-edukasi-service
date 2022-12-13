@@ -16,6 +16,7 @@ import java.util.Date;
 @Table(name = "program")
 @DynamicUpdate
 public class Program implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

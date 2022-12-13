@@ -156,21 +156,21 @@ public class UserServiceImpl implements UserService {
       result.setMessage("Error: Email is already in use!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
-          .badRequest()
-          .body(result);
+              .badRequest()
+              .body(result);
     }
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       result.setMessage("Error: Usename is already taken!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
-          .badRequest()
-          .body(result);
+              .badRequest()
+              .body(result);
     }
 
     Role role = roleRepository.findById(signUpRequest.getRole()).orElse(null);
     User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
-        encoder.encode(signUpRequest.getPassword()),signUpRequest.getNamaLengkap(),
-        signUpRequest.getNoHp(), StringUtil.getRandomNumberString(), role, false, false);
+            encoder.encode(signUpRequest.getPassword()),signUpRequest.getNamaLengkap(),
+            signUpRequest.getNoHp(), StringUtil.getRandomNumberString(), role, false, false);
     User userResult = userRepository.save(user);
 
 //    if (userResult != null) {
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(result);
       }
       Authentication authentication = authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(getUser.getUsername(), loginRequest.getPassword()));
+              new UsernamePasswordAuthenticationToken(getUser.getUsername(), loginRequest.getPassword()));
       SecurityContextHolder.getContext().setAuthentication(authentication);
       String jwt = jwtUtils.generateJwtToken(authentication, dateNow, dateExpired);
 
@@ -232,8 +232,8 @@ public class UserServiceImpl implements UserService {
       result.setSuccess(true);
       result.setMessage("success");
       result.setData(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(),
-          userDetails.getEmail(), role, dateExpired.getTime()));
-      
+              userDetails.getEmail(), role, dateExpired.getTime()));
+
       userRepository.setIsLogin(true, userDetails.getId());
     }
 
@@ -296,14 +296,14 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<?> refreshToken(TokenRefreshRequest tokenRefreshRequest) {
     String requestRefreshToken = tokenRefreshRequest.getRefreshToken();
     return refreshTokenService.findByToken(requestRefreshToken)
-        .map(refreshTokenService::verifyExpiration)
-        .map(RefreshToken::getUser)
-        .map(user -> {
-          String token = jwtUtils.generateTokenFromUsername(user.getUsername());
-          return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
-        })
-        .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
-        "Refresh token is not in database!"));
+            .map(refreshTokenService::verifyExpiration)
+            .map(RefreshToken::getUser)
+            .map(user -> {
+              String token = jwtUtils.generateTokenFromUsername(user.getUsername());
+              return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+            })
+            .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+                    "Refresh token is not in database!"));
   }
 
   @Override
@@ -315,8 +315,8 @@ public class UserServiceImpl implements UserService {
         result.setMessage("Error: Email is already in use!");
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
-            .badRequest()
-            .body(result);
+                .badRequest()
+                .body(result);
       }
 
       User checkUserUsername = userRepository.findByUsername(userRequest.getUsername()).orElse(new User());
@@ -324,8 +324,8 @@ public class UserServiceImpl implements UserService {
         result.setMessage("Error: Username is already taken!");
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
-            .badRequest()
-            .body(result);
+                .badRequest()
+                .body(result);
       }
 
       Role role = roleRepository.findById(userRequest.getRole()).orElse(null);
@@ -333,8 +333,8 @@ public class UserServiceImpl implements UserService {
         result.setMessage("Error: Role not found!");
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
-            .badRequest()
-            .body(result);
+                .badRequest()
+                .body(result);
       }
 
       if (!validator.isPhoneValid(userRequest.getNoHp())) {
@@ -346,7 +346,7 @@ public class UserServiceImpl implements UserService {
       }
 
       User user = new User(userRequest.getUsername(), userRequest.getEmail(),
-          encoder.encode(userRequest.getPassword()),userRequest.getNamaLengkap(), userRequest.getNoHp(),
+              encoder.encode(userRequest.getPassword()),userRequest.getNamaLengkap(), userRequest.getNoHp(),
               StringUtil.getRandomNumberString(), role, userRequest.isIsActive(), true);
 
       user.setId(userRequest.getId());
@@ -390,7 +390,7 @@ public class UserServiceImpl implements UserService {
     result = new Result();
     try {
       String filename = String.valueOf("profie_picture_" + id).concat(".")
-          .concat(globalUtil.getExtensionByStringHandling(profilePicture.getOriginalFilename()).orElse(""));
+              .concat(globalUtil.getExtensionByStringHandling(profilePicture.getOriginalFilename()).orElse(""));
       String filenameResult = storageService.save(profilePicture, filename);
       userRepository.setProfilePicturePath(filenameResult, id);
       result.setMessage("succes to save file ".concat(profilePicture.getOriginalFilename()));
@@ -407,11 +407,11 @@ public class UserServiceImpl implements UserService {
 
     String url = "";
     String body = "<html>"
-        + "<body>"
-        + "Click <a href=\"http://localhost:8880/api/auth/active?id=" + id + "&tokenVerification="
-        + tokenVerification + "\">here</a> to activate your account."
-        + "</body>"
-        + "</html>";
+            + "<body>"
+            + "Click <a href=\"http://localhost:8880/api/auth/active?id=" + id + "&tokenVerification="
+            + tokenVerification + "\">here</a> to activate your account."
+            + "</body>"
+            + "</html>";
     emailDetails.setMsgBody(body);
     emailDetails.setRecipient(receiver);
     logger.info(">>>> send email");
@@ -427,8 +427,8 @@ public class UserServiceImpl implements UserService {
       result.setMessage("Error: Email has not been registered!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
-          .badRequest()
-          .body(result);
+              .badRequest()
+              .body(result);
     }
     EmailDetails emailDetails = new EmailDetails();
     emailDetails.setSubject("Forgot Password");

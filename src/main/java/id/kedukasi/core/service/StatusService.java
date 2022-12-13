@@ -5,7 +5,6 @@ import id.kedukasi.core.request.StatusRequest;
 import id.kedukasi.core.request.UpdateStatusRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 @Service
 public interface StatusService {
     //implements create status

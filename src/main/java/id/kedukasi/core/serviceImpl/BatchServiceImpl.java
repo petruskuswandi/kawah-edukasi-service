@@ -25,7 +25,6 @@ import java.util.Objects;
 
 @Service
 public class BatchServiceImpl implements BatchService {
-
     @Autowired
     KelasRepository kelasRepository;
 

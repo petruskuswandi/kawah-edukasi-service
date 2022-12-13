@@ -14,6 +14,7 @@ import id.kedukasi.core.models.Mentor;
 @Repository
 public interface MentorRepository extends JpaRepository<Mentor, Long>{
 
+
   @Transactional
   Optional<Mentor> findByKode(String kode);
 

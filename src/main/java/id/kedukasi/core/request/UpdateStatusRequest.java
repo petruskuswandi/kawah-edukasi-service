@@ -3,7 +3,6 @@ package id.kedukasi.core.request;
 import io.swagger.annotations.ApiModelProperty;
 
 public class UpdateStatusRequest {
-
     @ApiModelProperty(example = "1", required = true)
     private int id;
 

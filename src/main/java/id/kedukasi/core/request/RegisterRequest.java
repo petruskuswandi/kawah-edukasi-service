@@ -6,7 +6,6 @@ import javax.validation.constraints.*;
 
 public class RegisterRequest {
 
-
     @ApiModelProperty(example = "nama peserta", required = true)
     private String namaPeserta;
     @ApiModelProperty(example = "09/02/2000", required = true)

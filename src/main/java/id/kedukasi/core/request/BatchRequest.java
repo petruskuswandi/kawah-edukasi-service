@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 
+
 public class BatchRequest {
     private  Long id;
 
