@@ -125,7 +125,7 @@ public class PesertaServiceImpl implements PesertaService {
                     ,limit,offset);
             items.put("items",peserta);
             items.put("totalDataResult",peserta.size());
-            items.put("TotalData",pesertaRepository.findAll().size());
+            items.put("TotalData",pesertaRepository.getCountByStatus(EnumStatusPeserta.PESERTA.toString()));
 
             result.setData(items);
         } catch (Exception e) {

@@ -82,6 +82,6 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
                          @Param("offset") long offset);
 
     @Transactional
-    @Query(value = "select count(p.*) from Peserta p where p.status_peserta = 'CALON' and p.banned = false",nativeQuery = true)
-    long getCountCalon();
+    @Query(value = "select count(p.*) from Peserta p where p.status_peserta = :statusPeserta and p.banned = false",nativeQuery = true)
+    long getCountByStatus(@Param("statusPeserta") String statusPeserta);
 }

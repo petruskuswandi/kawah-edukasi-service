@@ -91,7 +91,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         }
         //null long condition
         if(limit == -99){
-            limit = pesertaRepository.getCountCalon();
+            limit = pesertaRepository.getCountByStatus(EnumStatusPeserta.CALON.toString());
         }
         //null long condition
         if(offset == -99){
@@ -102,7 +102,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             List<Peserta> getDataCalon = pesertaRepository.getAllPagination(EnumStatusPeserta.CALON.toString(),false,search,limit,offset);
             items.put("items",getDataCalon);
             items.put("totalDataResult",getDataCalon.size());
-            items.put("TotalData",pesertaRepository.getCountCalon());
+            items.put("TotalData",pesertaRepository.getCountByStatus(EnumStatusPeserta.CALON.toString()));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
