@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import id.kedukasi.core.models.User;
 import java.util.Arrays;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 public class UserDetailsImpl implements UserDetails {
 
   private static final long serialVersionUID = 1L;

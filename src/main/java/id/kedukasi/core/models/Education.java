@@ -13,7 +13,6 @@ import java.util.Date;
 @Getter
 @ToString
 public class Education {
-
     /**
      * Nabila
      * - POST

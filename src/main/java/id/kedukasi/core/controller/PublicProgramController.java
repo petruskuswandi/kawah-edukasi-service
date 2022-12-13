@@ -20,7 +20,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/publicprogram")
 public class PublicProgramController {
-
     @Autowired
     KelasService service;
 

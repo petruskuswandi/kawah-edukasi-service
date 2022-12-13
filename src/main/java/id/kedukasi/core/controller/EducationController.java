@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequestMapping("/education")
 public class EducationController {
+
     @Autowired
     private EducationService educationService;
 

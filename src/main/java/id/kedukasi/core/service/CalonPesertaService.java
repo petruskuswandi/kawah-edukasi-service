@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
-
 public interface CalonPesertaService {
     Result getAllCalonPeserta(String uri, String search);
 

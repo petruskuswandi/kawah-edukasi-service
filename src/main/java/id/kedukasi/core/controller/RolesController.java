@@ -21,7 +21,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/roles")
 public class RolesController {
-
     @Autowired
     RolesService service;
 

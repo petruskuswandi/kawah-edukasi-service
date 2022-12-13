@@ -20,7 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/TypeDocuments")
 public class TypeDocumentsController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+        private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     TypeDocumentsService typeDocumentsService;

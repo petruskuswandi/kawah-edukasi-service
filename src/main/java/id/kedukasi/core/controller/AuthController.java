@@ -33,7 +33,6 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
   @Autowired
   UserService service;
 

@@ -18,7 +18,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
-
     private Result result;
 
 //    @ExceptionHandler(Exception.class)

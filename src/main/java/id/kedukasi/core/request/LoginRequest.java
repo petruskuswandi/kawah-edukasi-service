@@ -1,7 +1,6 @@
 package id.kedukasi.core.request;
 
 import javax.validation.constraints.NotBlank;
-
 public class LoginRequest {
 
   @NotBlank
