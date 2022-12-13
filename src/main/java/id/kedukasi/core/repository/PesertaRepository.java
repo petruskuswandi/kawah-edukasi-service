@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @Repository
 public interface PesertaRepository extends JpaRepository<Peserta,Long> {
-
     @Transactional
     Optional<Peserta> findByNamaPeserta(String username);
 

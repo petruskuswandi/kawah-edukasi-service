@@ -40,7 +40,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 //@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class PesertaController {
 
-
     @Autowired
     private ServletContext servletContext;
 

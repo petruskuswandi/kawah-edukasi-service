@@ -32,7 +32,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
-
 @Service
 public class EmailServiceImpl implements EmailService {
   @Autowired

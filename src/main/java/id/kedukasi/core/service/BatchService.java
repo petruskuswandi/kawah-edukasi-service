@@ -4,7 +4,6 @@ import id.kedukasi.core.models.Result;
 import id.kedukasi.core.request.BatchRequest;
 import org.springframework.http.ResponseEntity;
 
-
 public interface BatchService {
 
     Result getAllBatch(String uri);

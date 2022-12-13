@@ -31,7 +31,6 @@ import java.util.Date;
 @DynamicUpdate
 public class Peserta implements Serializable {
 
-
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         private Long id;

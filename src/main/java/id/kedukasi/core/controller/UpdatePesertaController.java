@@ -21,7 +21,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/peserta/v2/")
 //@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class UpdatePesertaController {
-
     @Autowired
     private ServletContext servletContext;
 

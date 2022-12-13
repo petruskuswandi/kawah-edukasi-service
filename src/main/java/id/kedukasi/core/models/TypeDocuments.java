@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.util.Date;
 @Entity
 public class TypeDocuments {
-
     /**
      * riski kurniawan
      * - POST
