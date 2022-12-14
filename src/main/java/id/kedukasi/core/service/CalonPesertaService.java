@@ -6,7 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 public interface CalonPesertaService {
-    Result getAllCalonPeserta(String uri, String search);
+    //Result getAllCalonPeserta(String uri, String search);
+
+    Result getAllCalonPeserta(String uri, String search,long limit,long offset);
 
     Result getAllBannedCalonPeserta(String uri);
 
