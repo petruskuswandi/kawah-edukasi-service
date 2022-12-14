@@ -3,7 +3,6 @@ package id.kedukasi.core.repository;
 import id.kedukasi.core.enums.EnumStatusPeserta;
 import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.Peserta;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -49,10 +48,10 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
 //    @Query("update Peserta u set u.uploadImage = ?1 where u.id = ?2 ")
 //    int updateUploadImage(byte[] image, Long id);
 //
-//    @Modifying
-//    @Transactional
-//    @Query("update Peserta u set u.uploadImagePath = ?1, u.updated_time = CURRENT_TIMESTAMP where u.id = ?2")
-//    int setUploadImagePath(String uploadImagePath, Long id);
+    @Modifying
+    @Transactional
+    @Query("update Peserta u set u.uploadImagePath = ?1, u.updated_time = CURRENT_TIMESTAMP where u.id = ?2")
+    int setUploadImagePath(String uploadImagePath, Long id);
 
     @Transactional
     @Query("SELECT p FROM Peserta p WHERE p.namaPeserta LIKE %?1% AND p.statusPeserta = ?2")

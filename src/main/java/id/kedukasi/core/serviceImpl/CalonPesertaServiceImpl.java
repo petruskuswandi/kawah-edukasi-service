@@ -13,9 +13,10 @@ import id.kedukasi.core.repository.wilayah.KelurahanRepository;
 import id.kedukasi.core.repository.wilayah.KotaRepository;
 import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
 import id.kedukasi.core.service.CalonPesertaService;
+import id.kedukasi.core.service.FilesStorageService;
+import id.kedukasi.core.utils.GlobalUtil;
 import id.kedukasi.core.utils.StringUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,12 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
 
     @Autowired
     KelurahanRepository kelurahanRepository;
+
+    @Autowired
+    FilesStorageService storageService;
+
+    @Autowired
+    GlobalUtil globalUtil;
 
     @Autowired
     StringUtil stringUtil;
@@ -738,5 +745,21 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             logger.error(stringUtil.getError(e));
         }
         return result;
+    }
+
+    @Override
+    public ResponseEntity<?> setUploadImagePath(long id, MultipartFile uploadImagePath, String uri) {
+        result = new Result();
+        try {
+            String filename = String.valueOf("upload_image_" + id).concat(".")
+                    .concat(globalUtil.getExtensionByStringHandling(uploadImagePath.getOriginalFilename()).orElse(""));
+            String filenameResult = storageService.save(uploadImagePath, filename);
+            pesertaRepository.setUploadImagePath(filenameResult, id);
+            result.setMessage("succes to save file ".concat(uploadImagePath.getOriginalFilename()));
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }
