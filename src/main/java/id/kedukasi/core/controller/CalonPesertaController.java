@@ -174,7 +174,7 @@ public class CalonPesertaController {
     }
 
     @PatchMapping("/uploadImagePath")
-    public ResponseEntity<?> updateProfilePictureFolder(
+    public ResponseEntity<?> uploadImagePath(
             @RequestParam(value = "id", defaultValue = "0", required = true) long id,
             @RequestPart("uploadImagePath") MultipartFile uploadImagePath) {
 
