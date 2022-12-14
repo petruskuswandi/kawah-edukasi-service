@@ -18,9 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class KelasServiceImpl implements KelasService {
@@ -64,6 +62,22 @@ public class KelasServiceImpl implements KelasService {
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
+        return result;
+    }
+
+    @Override
+    public Result getAllBatchByKelas(long idKelas) {
+        result = new Result();
+        Optional<Kelas> kelas = kelasRepository.findById(idKelas);
+        if(!kelas.isPresent()){
+            result.setCode(404);
+            result.setMessage("Kelas tidak ada");
+            return result;
+        }
+        List<Batch> batch = kelasRepository.getAllBatch(kelas.get());
+        result.setCode(200);
+        result.setMessage("Berhasil Ambil Batch");
+        result.setData(batch);
         return result;
     }
 

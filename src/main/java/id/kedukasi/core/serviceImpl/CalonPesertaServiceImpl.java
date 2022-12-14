@@ -102,7 +102,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             List<Peserta> getDataCalon = pesertaRepository.getAllPagination(EnumStatusPeserta.CALON.toString(),false,search,limit,offset);
             items.put("items",getDataCalon);
             items.put("totalDataResult",getDataCalon.size());
-            items.put("TotalData",pesertaRepository.getCountByStatus(EnumStatusPeserta.CALON.toString()));
+            items.put("totalData",pesertaRepository.getCountByStatus(EnumStatusPeserta.CALON.toString()));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
