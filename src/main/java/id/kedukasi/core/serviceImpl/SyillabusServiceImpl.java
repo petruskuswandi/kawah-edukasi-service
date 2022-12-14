@@ -48,7 +48,7 @@ public class SyillabusServiceImpl implements SyillabusService{
             }
 
             if(syillabus.getDescription().length()>50 || syillabus.getDescription().isBlank() || syillabus.getDescription().isEmpty()) {
-                result.setMessage("Error: Deskripsi Program tidak boleh kosong dan harus kurang dari 50 karakter");
+                result.setMessage("Error: Deskripsi syillabus tidak boleh kosong dan harus kurang dari 50 karakter");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -83,7 +83,7 @@ public class SyillabusServiceImpl implements SyillabusService{
                 return ResponseEntity.badRequest().body(result);
             }
             if (syillabus.getDescription().length() > 50 || syillabus.getDescription().isBlank() || syillabus.getDescription().isEmpty()) {
-                result.setMessage("Error: Deskripsi Program tidak boleh kosong dan harus kurang dari 50 karakter");
+                result.setMessage("Error: Deskripsi syillabus tidak boleh kosong dan harus kurang dari 50 karakter");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -128,7 +128,7 @@ public class SyillabusServiceImpl implements SyillabusService{
             Optional<Syillabus> syillabus = syillabusRepository.findById(id);
             if(!syillabus.isPresent()){
                 result.setSuccess(false);
-                result.setMessage("Error : Tidak ada program dengan id " + id);
+                result.setMessage("Error : Tidak ada syillabus dengan id " + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map<String, Syillabus> items = new HashMap<>();
