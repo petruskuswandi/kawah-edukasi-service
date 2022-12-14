@@ -37,14 +37,55 @@ public class DocumentsServiceImpl implements DocumentsService {
     @Override
     public ResponseEntity<Result> createDocument(DocumentsRequest documents) {
         result = new Result();
+        try {
+            int documentsName = documentsRepository.findDocumentsname(documents.getDocumentsName().toLowerCase());
 
-        Documents newDocuments = new Documents(documents.getUrl(), documents.getDirectory(), documents.getKey(),
+            if (documentsName > 0) {
+                result.setMessage("Error: Nama Documents Telah Ada!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (documents.getUrl().isBlank() || documents.getUrl().isEmpty() || documents.getUrl().length() > 50) { 
+                result.setSuccess(false);
+                result.setMessage("Url tidak boleh kosong dan tidak boleh melebihi 50 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            } else if (documents.getDirectory().isBlank() || documents.getDirectory().isEmpty() || documents.getDirectory().length() > 50) {
+                result.setSuccess(false);
+                result.setMessage("Directory tidak boleh kosong dan tidak boleh melebihi 50 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            } else if (documents.getKey().isBlank() || documents.getKey().isEmpty()){
+                result.setSuccess(false);
+                result.setMessage("Key tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            } else if (documents.getFiletype().isBlank() || documents.getFiletype().isEmpty() || documents.getFiletype().length() > 5){
+                result.setSuccess(false);
+                result.setMessage("File Type tidak boleh kosong dan tidak boleh melebihi 5 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            } else if (documents.getDocumentsName().isBlank() || documents.getDocumentsName().isEmpty() || documents.getDocumentsName().length() > 50){
+                result.setSuccess(false);
+                result.setMessage("Nama File tidak boleh kosong dan tidak boleh melebihi 50 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            } else {
+                Documents newDocuments = new Documents(documents.getUrl(), documents.getDirectory(), documents.getKey(),
                 documents.getFiletype(), documents.getDocumentsName(), false, documents.getUserId(), documents.getRoleId());
 
-        documentsRepository.save(newDocuments);
+                documentsRepository.save(newDocuments);
 
-        result.setMessage("Berhasil membuat document baru!");
-        result.setCode(HttpStatus.OK.value());
+                result.setMessage("Berhasil membuat document baru!");
+                result.setCode(HttpStatus.OK.value());
+            }
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        
 
         return ResponseEntity.ok(result);
     }
@@ -101,6 +142,31 @@ public class DocumentsServiceImpl implements DocumentsService {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada Documents dengan id " + documents.getId());
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else if (documents.getUrl().isBlank() || documents.getUrl().isEmpty() || documents.getUrl().length() > 50) { 
+                result.setSuccess(false);
+                result.setMessage("Url tidak boleh kosong dan tidak boleh melebihi 50 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            } else if (documents.getDirectory().isBlank() || documents.getDirectory().isEmpty() || documents.getDirectory().length() > 50) {
+                result.setSuccess(false);
+                result.setMessage("Directory tidak boleh kosong dan tidak boleh melebihi 50 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            } else if (documents.getKey().isBlank() || documents.getKey().isEmpty()){
+                result.setSuccess(false);
+                result.setMessage("Key tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            } else if (documents.getFiletype().isBlank() || documents.getFiletype().isEmpty() || documents.getFiletype().length() > 5){
+                result.setSuccess(false);
+                result.setMessage("File Type tidak boleh kosong dan tidak boleh melebihi 5 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            } else if (documents.getDocumentsName().isBlank() || documents.getDocumentsName().isEmpty() || documents.getDocumentsName().length() > 50){
+                result.setSuccess(false);
+                result.setMessage("Nama File tidak boleh kosong dan tidak boleh melebihi 50 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
             } else {
                 Documents update = new Documents(documents.getId(), documents.getUrl(), documents.getDirectory(), documents.getKey(), documents.getFiletype(), documents.getDocumentsName(), documents.isDeleted(), documents.getUserId(), documents.getRoleId());
 
