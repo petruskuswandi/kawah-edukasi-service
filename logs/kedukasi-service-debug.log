@@ -6578,3 +6578,63 @@ Caused by: org.postgresql.util.PSQLException: ERROR: null value in column "role_
 2022-12-13 07:10:47.318 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
 2022-12-13 07:10:51.744 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
 2022-12-13 07:10:53.382 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 6.48 seconds (JVM running for 6.938)
+2022-12-13 21:16:50.175 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 15.0.2 on acer with PID 1872 (E:\.project kawah\project kawah edukasi\kedukasi-service\target\classes started by RAYY in E:\.project kawah\project kawah edukasi\kedukasi-service)
+2022-12-13 21:16:50.179 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-13 21:16:50.181 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-13 21:19:47.361 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 15.0.2 on acer with PID 7656 (E:\.project kawah\project kawah edukasi\kedukasi-service\target\classes started by RAYY in E:\.project kawah\project kawah edukasi\kedukasi-service)
+2022-12-13 21:19:47.361 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-13 21:19:47.361 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-13 21:21:37.538 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 15.0.2 on acer with PID 7076 (E:\.project kawah\project kawah edukasi\kedukasi-service\target\classes started by RAYY in E:\.project kawah\project kawah edukasi\kedukasi-service)
+2022-12-13 21:21:37.541 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-13 21:21:37.544 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-13 21:21:59.874 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-13 21:22:05.143 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 28.441 seconds (JVM running for 29.412)
+2022-12-13 21:25:58.761 [http-nio-8880-exec-5] INFO  i.k.c.controller.EducationController - education/create - testname,testt
+2022-12-13 21:25:58.762 [http-nio-8880-exec-5] INFO  i.k.c.s.EducationServiceImpl - save education service
+2022-12-13 21:26:10.090 [http-nio-8880-exec-3] INFO  i.k.c.controller.EducationController - education/getAll -
+2022-12-13 21:26:10.090 [http-nio-8880-exec-3] INFO  i.k.c.s.EducationServiceImpl - get all education service
+2022-12-13 23:12:45.526 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 15.0.2 on acer with PID 10712 (E:\.project kawah\project kawah edukasi\kedukasi-service\target\classes started by RAYY in E:\.project kawah\project kawah edukasi\kedukasi-service)
+2022-12-13 23:12:45.624 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-13 23:12:45.627 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-13 23:13:13.848 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-13 23:13:22.117 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 39.931 seconds (JVM running for 43.351)
+2022-12-13 23:21:49.179 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 15.0.2 on acer with PID 10712 (E:\.project kawah\project kawah edukasi\kedukasi-service\target\classes started by RAYY in E:\.project kawah\project kawah edukasi\kedukasi-service)
+2022-12-13 23:21:50.321 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-13 23:21:50.323 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-13 23:21:53.315 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-13 23:21:57.593 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 8.495 seconds (JVM running for 558.82)
+2022-12-13 23:25:07.032 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 15.0.2 on acer with PID 10712 (E:\.project kawah\project kawah edukasi\kedukasi-service\target\classes started by RAYY in E:\.project kawah\project kawah edukasi\kedukasi-service)
+2022-12-13 23:25:07.034 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-13 23:25:07.039 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-13 23:25:13.992 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-13 23:25:21.853 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 14.961 seconds (JVM running for 763.08)
+2022-12-13 23:25:22.296 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 15.0.2 on acer with PID 10712 (E:\.project kawah\project kawah edukasi\kedukasi-service\target\classes started by RAYY in E:\.project kawah\project kawah edukasi\kedukasi-service)
+2022-12-13 23:25:22.297 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-13 23:25:22.298 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-13 23:25:28.019 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-13 23:25:33.535 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 11.367 seconds (JVM running for 774.762)
+2022-12-13 23:25:34.568 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 15.0.2 on acer with PID 10712 (E:\.project kawah\project kawah edukasi\kedukasi-service\target\classes started by RAYY in E:\.project kawah\project kawah edukasi\kedukasi-service)
+2022-12-13 23:25:34.569 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-13 23:25:34.569 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-13 23:25:46.156 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-13 23:25:50.584 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 16.121 seconds (JVM running for 791.811)
+2022-12-13 23:25:50.835 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 15.0.2 on acer with PID 10712 (E:\.project kawah\project kawah edukasi\kedukasi-service\target\classes started by RAYY in E:\.project kawah\project kawah edukasi\kedukasi-service)
+2022-12-13 23:25:50.845 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-13 23:25:50.846 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-13 23:25:54.144 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-13 23:25:58.088 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 7.306 seconds (JVM running for 799.316)
+2022-12-13 23:26:23.432 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 15.0.2 on acer with PID 10712 (E:\.project kawah\project kawah edukasi\kedukasi-service\target\classes started by RAYY in E:\.project kawah\project kawah edukasi\kedukasi-service)
+2022-12-13 23:26:23.433 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-13 23:26:23.434 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-13 23:26:27.581 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-13 23:26:37.361 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 14.009 seconds (JVM running for 838.588)
+2022-12-13 23:26:37.798 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 15.0.2 on acer with PID 10712 (E:\.project kawah\project kawah edukasi\kedukasi-service\target\classes started by RAYY in E:\.project kawah\project kawah edukasi\kedukasi-service)
+2022-12-13 23:26:37.800 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-13 23:26:37.807 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-13 23:26:42.964 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-13 23:26:49.212 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 11.559 seconds (JVM running for 850.443)
+2022-12-14 09:21:43.458 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 15.0.2 on acer with PID 10368 (E:\.project kawah\project kawah edukasi\kedukasi-service\target\classes started by RAYY in E:\.project kawah\project kawah edukasi\kedukasi-service)
+2022-12-14 09:21:43.497 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-14 09:21:43.499 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-14 09:22:01.254 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-14 09:22:08.179 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 27.073 seconds (JVM running for 30.451)
