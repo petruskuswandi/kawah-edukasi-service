@@ -76,7 +76,11 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
     @Query(value = "select p.* from Peserta p where p.status_peserta = :statusPeserta and p.banned = :banned and " +
             "(:namaPeserta is null or p.nama_peserta like %:namaPeserta%) " +
             "order by p.id ASC limit :limit offset :offset",nativeQuery = true)
-    List<Peserta> getAll(@Param("statusPeserta") String statusPeserta,@Param("banned") boolean banned,
+    List<Peserta> getAllPagination(@Param("statusPeserta") String statusPeserta,@Param("banned") boolean banned,
                          @Param("namaPeserta") String namaPeserta, @Param("limit")long limit,
                          @Param("offset") long offset);
+
+    @Transactional
+    @Query(value = "select count(p.*) from Peserta p where p.status_peserta = :statusPeserta and p.banned = false",nativeQuery = true)
+    long getCountByStatus(@Param("statusPeserta") String statusPeserta);
 }

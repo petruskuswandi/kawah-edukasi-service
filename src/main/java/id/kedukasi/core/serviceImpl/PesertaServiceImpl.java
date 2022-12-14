@@ -85,6 +85,23 @@ public class PesertaServiceImpl implements PesertaService {
     @Autowired
     EntityManager em;
 
+//    @Override
+//    @Transactional
+//    public Result getAllPeserta(String uri) {
+//        result = new Result();
+//        try {
+//            Map items = new HashMap();
+//            Peserta peserta = new Peserta();
+//            peserta.setStatusPeserta(EnumStatusPeserta.PESERTA);
+//            peserta.setBanned(false);
+//            Example<Peserta> example = Example.of(peserta);
+//            items.put("items", pesertaRepository.findAll(example,Sort.by(Sort.Direction.ASC,"id")));
+//            result.setData(items);
+//        } catch (Exception e) {
+//            logger.error(stringUtil.getError(e));
+//        }
+//        return result;
+//    }
     @Override
     @Transactional
     public Result getAllPeserta(String uri,String search,long limit,long offset) {
@@ -95,7 +112,7 @@ public class PesertaServiceImpl implements PesertaService {
         }
         //null long condition
         if(limit == -99){
-            limit = 10;
+            limit = pesertaRepository.count();
         }
         //null long condition
         if(offset == -99){
@@ -104,11 +121,11 @@ public class PesertaServiceImpl implements PesertaService {
         StringBuilder sb = new StringBuilder();
         try {
             Map items = new HashMap();
-            List<Peserta> peserta = pesertaRepository.getAll(EnumStatusPeserta.PESERTA.toString(),false,search
+            List<Peserta> peserta = pesertaRepository.getAllPagination(EnumStatusPeserta.PESERTA.toString(),false,search
                     ,limit,offset);
             items.put("items",peserta);
             items.put("totalDataResult",peserta.size());
-            items.put("TotalData",pesertaRepository.findAll().size());
+            items.put("totalData",pesertaRepository.getCountByStatus(EnumStatusPeserta.PESERTA.toString()));
 
             result.setData(items);
         } catch (Exception e) {

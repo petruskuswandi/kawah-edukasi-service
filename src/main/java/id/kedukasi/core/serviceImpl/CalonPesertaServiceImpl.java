@@ -71,17 +71,45 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+//    @Override
+//    public Result getAllCalonPeserta(String uri, String search) {
+//        result = new Result();
+//        try {
+//            Map items = new HashMap();
+//            List<Peserta> getDataCalon = pesertaRepository.getCalonPeserta(search);
+//            List<Peserta> getTotal = pesertaRepository.getCalonPeserta("");
+//            logger.info("cek "+getDataCalon.get(0).getTanggalLahir());
+//            items.put("items", getDataCalon);
+//            items.put("totalItems", getDataCalon.size());
+//            items.put("totalData", getTotal);
+//            result.setData(items);
+//        } catch (Exception e) {
+//            logger.error(stringUtil.getError(e));
+//        }
+//        return result;
+//    }
+
     @Override
-    public Result getAllCalonPeserta(String uri, String search) {
+    public Result getAllCalonPeserta(String uri, String search,long limit,long offset) {
         result = new Result();
+        //default value search param
+        if(search == null){
+            search = "";
+        }
+        //null long condition
+        if(limit == -99){
+            limit = pesertaRepository.getCountByStatus(EnumStatusPeserta.CALON.toString());
+        }
+        //null long condition
+        if(offset == -99){
+            offset = 0;
+        }
         try {
             Map items = new HashMap();
-            List<Peserta> getDataCalon = pesertaRepository.getCalonPeserta(search);
-            List<Peserta> getTotal = pesertaRepository.getCalonPeserta("");
-            logger.info("cek "+getDataCalon.get(0).getTanggalLahir());
-            items.put("items", getDataCalon);
-            items.put("totalItems", getDataCalon.size());
-            items.put("totalData", getTotal);
+            List<Peserta> getDataCalon = pesertaRepository.getAllPagination(EnumStatusPeserta.CALON.toString(),false,search,limit,offset);
+            items.put("items",getDataCalon);
+            items.put("totalDataResult",getDataCalon.size());
+            items.put("totalData",pesertaRepository.getCountByStatus(EnumStatusPeserta.CALON.toString()));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));

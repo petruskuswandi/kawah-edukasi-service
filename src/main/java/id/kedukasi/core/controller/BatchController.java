@@ -19,12 +19,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @CrossOrigin
 @RestController
 @RequestMapping("/batch")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+//@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class BatchController {
 
     @Autowired
     BatchService service;
-    @Autowired
+    @Autowired  
     StringUtil stringUtil;
 
     @Autowired
@@ -60,17 +60,20 @@ public class BatchController {
 //        return service.getMentorClassByBatch(id, uri);
 //    }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<?> createBatch(@RequestBody BatchRequest batchRequest) {
         return service.updateBatch(batchRequest);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<?> updateBatch(@RequestBody BatchRequest batchRequest) {
 
         return service.updateBatch(batchRequest);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping(value = "/delete")
     public ResponseEntity<?> deleteBatch(
             @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
