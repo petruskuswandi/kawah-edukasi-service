@@ -39,11 +39,13 @@ public class CalonPesertaController {
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     public Result getAllCalonPeserta(
-            @RequestParam(value = "search") String search
+            @RequestParam(required = false,value = "search") String search,
+            @RequestParam(value = "limit",defaultValue = "-99") long limit,
+            @RequestParam(value = "offset",defaultValue = "-99") long offset
     ) {
         String uri = stringUtil.getLogParam(request);
         logger.info("tes "+uri);
-        return service.getAllCalonPeserta(uri,search);
+        return service.getAllCalonPeserta(uri,search,limit,offset);
     }
 
     @GetMapping(value = "/allBanned", produces = APPLICATION_JSON_VALUE)

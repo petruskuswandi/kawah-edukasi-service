@@ -33,11 +33,13 @@ public class SimpanPesertaController {
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     public Result getAllCalonPeserta(
-            @RequestParam(value = "search") String search
+            @RequestParam(value = "search") String search,
+            @RequestParam(value = "limit") long limit,
+            @RequestParam(value = "offset") long offset
     ) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
-        return service.getAllCalonPeserta(uri,search);
+        return service.getAllCalonPeserta(uri,search,limit,offset);
     }
     @PostMapping("/create")
     public ResponseEntity<?> createCalonPeserta(
