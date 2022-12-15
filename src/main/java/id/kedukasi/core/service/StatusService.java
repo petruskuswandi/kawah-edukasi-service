@@ -11,14 +11,14 @@ public interface StatusService {
     //implements create status
     public ResponseEntity<Result> createStatus(StatusRequest status);
 
-    //implements update status
-    ResponseEntity<Result> updateStatus(UpdateStatusRequest status);
-
     //implements get all status
     public ResponseEntity<Result> getAllStatus();
 
     //implements get status by id
-    public ResponseEntity<Result> getStatusById(int id);  
+    public ResponseEntity<Result> getStatusById(int id);
+
+    //implements update status
+    ResponseEntity<Result> updateStatus(UpdateStatusRequest status);
     
     //implements delete status by id
     ResponseEntity<Result> deleteStatusById(int id);

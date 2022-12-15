@@ -35,14 +35,20 @@ public class StatusServiceImpl implements StatusService {
     public ResponseEntity<Result> createStatus(StatusRequest status) {
         result = new Result();
         try {
-            int statusName = statusRepository.findStatusname(status.getStatus_name().toLowerCase());
-            String errorUniqueStatusNameMessage = "";
+            // int statusName = statusRepository.findStatusname(status.getStatusName().toLowerCase());
+            int statusNameFlag = statusRepository.findStatusNameFlag(status.getStatusName().toLowerCase(), status.getFlag().toLowerCase());
+            // String errorUniqueStatusNameMessage = "";
+            String errorUniqueStatusNameFlagMessage = "";
             String errorNotBlankFlagMessage = "";
             String errorNotBlankDescriptionMessage = "";
             String errorNotBlankStatusNameMessage = "";
 
-            if (statusName > 0) {
-                errorUniqueStatusNameMessage = "Nama Status Telah Ada!, ";
+            // if (statusName > 0) {
+            //     errorUniqueStatusNameMessage = "Nama Status Telah Ada!, ";
+            // }
+
+            if (statusNameFlag > 0) {
+                errorUniqueStatusNameFlagMessage = "Kombinasi Nama dan Flag pada Status sudah ada!";
             }
 
             if(status.getFlag().isBlank() || status.getFlag().isEmpty()) {
@@ -53,18 +59,18 @@ public class StatusServiceImpl implements StatusService {
                 errorNotBlankDescriptionMessage = "Deskripsi Status tidak boleh kosong, ";
             }
 
-            if(status.getStatus_name().length()>50 || status.getStatus_name().isBlank() || status.getStatus_name().isEmpty()) {
+            if(status.getStatusName().length()>50 || status.getStatusName().isBlank() || status.getStatusName().isEmpty()) {
                 errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter";
-            }
+            } 
 
-            if (errorUniqueStatusNameMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
+            if (/*errorUniqueStatusNameMessage != ""*/ errorUniqueStatusNameFlagMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
                 result.setSuccess(false);
-                result.setMessage("Error: "+ errorUniqueStatusNameMessage + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
+                result.setMessage("Error: "+ /*errorUniqueStatusNameMessage*/ errorUniqueStatusNameFlagMessage + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            Status newStatus = new Status(status.getStatus_name().toUpperCase(), status.getDescription(), status.getFlag().toUpperCase(), false);
+            Status newStatus = new Status(status.getStatusName().toUpperCase(), status.getDescription(), status.getFlag().toUpperCase(), false);
 
             statusRepository.save(newStatus);
 
@@ -83,9 +89,16 @@ public class StatusServiceImpl implements StatusService {
     public ResponseEntity<Result> updateStatus(UpdateStatusRequest status) {
         result = new Result();
         try {
+            int statusNameFlag = statusRepository.findUpdateStatusNameFlag(status.getId(), status.getStatusName().toLowerCase(), status.getFlag().toLowerCase());
+            String errorUniqueStatusNameFlagMessage = "";
             String errorNotBlankFlagMessage = "";
             String errorNotBlankDescriptionMessage = "";
             String errorNotBlankStatusNameMessage = "";
+
+            if (statusNameFlag > 0) {
+                int existingId = statusRepository.findIdStatusByNameAndFlag(status.getStatusName().toLowerCase(), status.getFlag().toLowerCase());
+                errorUniqueStatusNameFlagMessage = "Kombinasi Nama dan Flag di Status sudah ada pada id "+existingId+"!";
+            }
 
             if(status.getFlag().isBlank() || status.getFlag().isEmpty()) {
                 errorNotBlankFlagMessage = "Flag tidak boleh kosong dan harus kurang dari 30 karakter, ";
@@ -95,13 +108,13 @@ public class StatusServiceImpl implements StatusService {
                 errorNotBlankDescriptionMessage = "Deskripsi Status tidak boleh kosong, ";
             }
 
-            if(status.getStatus_name().length()>50 || status.getStatus_name().isBlank() || status.getStatus_name().isEmpty()) {
+            if(status.getStatusName().length()>50 || status.getStatusName().isBlank() || status.getStatusName().isEmpty()) {
                 errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter";
             }
 
-            if (errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
+            if (errorUniqueStatusNameFlagMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
                 result.setSuccess(false);
-                result.setMessage("Error: " + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
+                result.setMessage("Error: " + errorUniqueStatusNameFlagMessage + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -111,7 +124,7 @@ public class StatusServiceImpl implements StatusService {
                 result.setMessage("Error: Tidak ada Status dengan id " +status.getId());
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                Status update = new Status(status.getId(),status.getStatus_name(), status.getDescription(), status.getFlag(), status.getisDeleted());
+                Status update = new Status(status.getId(),status.getStatusName().toUpperCase(), status.getDescription(), status.getFlag().toUpperCase(), status.getIsDeleted());
 
                 statusRepository.save(update);
 
