@@ -12,7 +12,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -96,6 +95,10 @@ public class Peserta implements Serializable {
 //        @Column(name = "upload_cv")
 //        @ApiModelProperty(hidden = true)
 //        private byte[] uploadCv;
+
+        @Column(name = "uploadImagePath", updatable = false)
+        @ApiModelProperty(hidden = true)
+        private String uploadImagePath;
 
         //register
         @ManyToOne(fetch = FetchType.EAGER)
