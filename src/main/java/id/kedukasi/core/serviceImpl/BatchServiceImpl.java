@@ -18,9 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class BatchServiceImpl implements BatchService {
@@ -89,6 +87,24 @@ public class BatchServiceImpl implements BatchService {
         }
         return result;
     }
+
+    @Override
+    public Result getAllClassByBatch(long batchId) {
+        result = new Result();
+        Optional<Batch> batch = batchRepository.findById(batchId);
+        if(!batch.isPresent()){
+            result.setCode(404);
+            result.setMessage("Batch Tidak Ada");
+            return result;
+        }
+        List<Long> kelas_id = batchRepository.getAllClassByBatch(batchId);
+        List<Kelas> kelas = kelasRepository.findAllById(kelas_id);
+        result.setCode(200);
+        result.setMessage("Berhasil Ambil Kelas");
+        result.setData(kelas);
+        return result;
+    }
+
     @Override
     public ResponseEntity<?> updateBatch(BatchRequest batchRequest) {
         result = new Result();

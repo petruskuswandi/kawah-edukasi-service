@@ -9,8 +9,12 @@ public interface BatchService {
     Result getAllBatch(String uri);
 
     Result getBatchById(Long id, String uri);
-Result getAllBatchRunning(String uri);
+    Result getAllBatchRunning(String uri);
+
+    Result getAllClassByBatch(long batchId);
+
     ResponseEntity<?> updateBatch(BatchRequest batchRequest);
 
     ResponseEntity<?> deleteBatch(boolean banned, Long id, String uri);
+
 }

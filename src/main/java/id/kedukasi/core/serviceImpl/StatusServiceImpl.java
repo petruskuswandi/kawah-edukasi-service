@@ -35,7 +35,7 @@ public class StatusServiceImpl implements StatusService {
     public ResponseEntity<Result> createStatus(StatusRequest status) {
         result = new Result();
         try {
-            int statusName = statusRepository.findStatusname(status.getStatusName().toLowerCase());
+            int statusName = statusRepository.findStatusname(status.getStatus_name().toLowerCase());
             String errorUniqueStatusNameMessage = "";
             String errorNotBlankFlagMessage = "";
             String errorNotBlankDescriptionMessage = "";
@@ -53,7 +53,7 @@ public class StatusServiceImpl implements StatusService {
                 errorNotBlankDescriptionMessage = "Deskripsi Status tidak boleh kosong, ";
             }
 
-            if(status.getStatusName().length()>50 || status.getStatusName().isBlank() || status.getStatusName().isEmpty()) {
+            if(status.getStatus_name().length()>50 || status.getStatus_name().isBlank() || status.getStatus_name().isEmpty()) {
                 errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter";
             }
 
@@ -64,7 +64,7 @@ public class StatusServiceImpl implements StatusService {
                 return ResponseEntity.badRequest().body(result);
             }
 
-            Status newStatus = new Status(status.getStatusName().toUpperCase(), status.getDescription(), status.getFlag().toUpperCase(), false);
+            Status newStatus = new Status(status.getStatus_name().toUpperCase(), status.getDescription(), status.getFlag().toUpperCase(), false);
 
             statusRepository.save(newStatus);
 
@@ -95,7 +95,7 @@ public class StatusServiceImpl implements StatusService {
                 errorNotBlankDescriptionMessage = "Deskripsi Status tidak boleh kosong, ";
             }
 
-            if(status.getStatusName().length()>50 || status.getStatusName().isBlank() || status.getStatusName().isEmpty()) {
+            if(status.getStatus_name().length()>50 || status.getStatus_name().isBlank() || status.getStatus_name().isEmpty()) {
                 errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter";
             }
 
@@ -111,7 +111,7 @@ public class StatusServiceImpl implements StatusService {
                 result.setMessage("Error: Tidak ada Status dengan id " +status.getId());
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                Status update = new Status(status.getId(),status.getStatusName(), status.getDescription(), status.getFlag(), false);
+                Status update = new Status(status.getId(),status.getStatus_name(), status.getDescription(), status.getFlag(), false);
 
                 statusRepository.save(update);
 

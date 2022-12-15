@@ -29,8 +29,8 @@ public class Documents implements Serializable{
     private int id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "type_doc_id", nullable = false, updatable = false)
-    @NotNull(message = "Data Batch Tidak Boleh Kosong")
+    @JoinColumn(name = "type_doc_id", nullable = false)
+    @NotNull(message = "Data TypeDocuments Tidak Boleh Kosong")
     private TypeDocuments typedoc;
 
     @Column(name="url", nullable = false, length = 50)
@@ -196,5 +196,13 @@ public class Documents implements Serializable{
 
     public void setUpdated_at(Date updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public TypeDocuments getTypedoc() {
+        return typedoc;
+    }
+
+    public void setTypedoc(TypeDocuments typedoc) {
+        this.typedoc = typedoc;
     }
 }

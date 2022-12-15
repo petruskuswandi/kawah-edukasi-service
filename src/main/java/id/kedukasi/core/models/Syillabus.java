@@ -4,12 +4,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import java.util.Date;
 
@@ -36,6 +32,11 @@ public class Syillabus {
 
     @Column(name="description", nullable = false, length = 500)
     private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "attachments_id", nullable = false)
+    @NotNull(message = "Data Attachments Tidak Boleh Kosong")
+    private Attachments attachments;
 
     @Column(name="isDeleted")
     private boolean isDeleted;
@@ -122,10 +123,12 @@ public class Syillabus {
         this.updated_at = updated_at;
     }
 
-    
+    public Attachments getAttachments() {
+        return attachments;
+    }
 
-    
-    
-
+    public void setAttachments(Attachments attachments) {
+        this.attachments = attachments;
+    }
 }
 

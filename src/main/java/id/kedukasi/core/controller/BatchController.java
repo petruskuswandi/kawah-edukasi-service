@@ -46,6 +46,13 @@ public class BatchController {
         return service.getBatchById(id, uri);
     }
 
+    @GetMapping(value = "/class/{id}",produces = APPLICATION_JSON_VALUE)
+    public Result getClassByBatch(@PathVariable("id") long id){
+        String uri = stringUtil.getLogParam(request);
+        logger.info(uri);
+        return service.getAllClassByBatch(id);
+    }
+
 //    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
 //    public Result getClassBybatch(@PathVariable("id") Long id) {
 //        String uri = stringUtil.getLogParam(request);
