@@ -35,14 +35,28 @@ public class StatusServiceImpl implements StatusService {
     public ResponseEntity<Result> createStatus(StatusRequest status) {
         result = new Result();
         try {
-            int statusName = statusRepository.findStatusname(status.getStatus_name().toLowerCase());
-            String errorUniqueStatusNameMessage = "";
+            String errorUniqueStatusNameAndFlagMessage = "";
             String errorNotBlankFlagMessage = "";
             String errorNotBlankDescriptionMessage = "";
             String errorNotBlankStatusNameMessage = "";
 
-            if (statusName > 0) {
-                errorUniqueStatusNameMessage = "Nama Status Telah Ada!, ";
+            int statusLength = statusRepository.findAll().size();
+            int statusInitialId = statusRepository.findAll().get(0).getId();
+            int statusLastId = statusRepository.findAll().get(statusLength-1).getId();
+            if (statusLength > 0) {
+                String statusName;
+                String flag;
+
+                for(int _id = statusInitialId; _id < statusLastId+1; _id++){
+                    if(statusRepository.findById(_id).isPresent()){
+                        statusName = statusRepository.findById(_id).get().getStatusName();
+                        flag = statusRepository.findById(_id).get().getFlag();
+                        if(statusName.equals(status.getStatus_name()) && flag.equals(status.getFlag()) ){
+                            errorUniqueStatusNameAndFlagMessage = "Sudah Ada Nama Status dan Flag yang Sama! pada Id = " + _id;
+                            break;
+                        }
+                    }
+                } 
             }
 
             if(status.getFlag().isBlank() || status.getFlag().isEmpty()) {
@@ -57,9 +71,9 @@ public class StatusServiceImpl implements StatusService {
                 errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter";
             }
 
-            if (errorUniqueStatusNameMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
+            if (errorUniqueStatusNameAndFlagMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
                 result.setSuccess(false);
-                result.setMessage("Error: "+ errorUniqueStatusNameMessage + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
+                result.setMessage("Error: "+ errorUniqueStatusNameAndFlagMessage + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
