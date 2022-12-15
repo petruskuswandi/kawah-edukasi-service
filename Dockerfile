@@ -12,10 +12,15 @@ ENV DATABASE_PASSWORD=Password09!
 ENV DATABASE_HOST=postgres
 ENV DATABASE_NAME=kawah_db
 ENV DATABASE_PORT=5432
+# path folder upload file
+ENV UPLOAD_PATH_FILE=./uploads/
 
 VOLUME /tmp
-ADD config ./
+ADD config ./config
 RUN mkdir -p ./uploads
+# add file from folder to folder deploy
+ADD ./src/main/resources/static/upload/documents ./uploads
+ADD ./src/main/resources/templates ./uploads
 
 COPY target/kedukasi-service-1.0-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]

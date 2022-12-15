@@ -498,7 +498,7 @@ public class UserServiceImpl implements UserService {
             "          Anda :\n" +
             "        </p><br>\n" +
             "        <a \n" +
-            "          href="+urlForgotPassword+"?id="+idUser+"&password="+password+"&token="+tokenForgotPassword+" \n" +
+            "          href="+urlForgotPassword+idUser+"?token="+tokenForgotPassword+" \n" +
             "          target=\"_blank\"\n" +
             "          style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
             "          >Ubah Password</a><br>\n" +
