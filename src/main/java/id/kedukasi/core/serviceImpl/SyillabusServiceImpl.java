@@ -47,8 +47,8 @@ public class SyillabusServiceImpl implements SyillabusService{
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(syillabus.getDescription().length()>50 || syillabus.getDescription().isBlank() || syillabus.getDescription().isEmpty()) {
-                result.setMessage("Error: Deskripsi syillabus tidak boleh kosong dan harus kurang dari 50 karakter");
+            if(syillabus.getDescription().isBlank() || syillabus.getDescription().isEmpty()) {
+                result.setMessage("Error: Deskripsi syillabus tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -82,8 +82,8 @@ public class SyillabusServiceImpl implements SyillabusService{
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
-            if (syillabus.getDescription().length() > 50 || syillabus.getDescription().isBlank() || syillabus.getDescription().isEmpty()) {
-                result.setMessage("Error: Deskripsi syillabus tidak boleh kosong dan harus kurang dari 50 karakter");
+            if (syillabus.getDescription().isBlank() || syillabus.getDescription().isEmpty()) {
+                result.setMessage("Error: Deskripsi syillabus tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
