@@ -8,7 +8,7 @@ public class UpdateTypeRequest {
     private String type_Name;
     @ApiModelProperty (example = "deskripsi",required = true)
     private String description;
-    @ApiModelProperty (example = "false",required = true)
+    @ApiModelProperty (example = "true",required = true)
     private boolean isDeleted;
 
     public UpdateTypeRequest() {
