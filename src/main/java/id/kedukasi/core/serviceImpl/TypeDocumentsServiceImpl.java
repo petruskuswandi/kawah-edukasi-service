@@ -50,8 +50,8 @@ public  class TypeDocumentsServiceImpl implements TypeDocumentsService {
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if (type.getDescription().length() > 100 || type.getDescription().isBlank() || type.getDescription().isEmpty()) {
-                result.setMessage("Error: Deskripsi Type Document tidak boleh kosong dan harus kurang dari 100 karakter");
+            if (type.getDescription().isBlank() || type.getDescription().isEmpty()) {
+                result.setMessage("Error: Deskripsi Type Document tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -90,7 +90,7 @@ public  class TypeDocumentsServiceImpl implements TypeDocumentsService {
             Optional<TypeDocuments> type = typeDocumentsRepository.findById(id);
             if (!type.isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Tidak ada type dengan id " + id);
+                result.setMessage("Tidak ada type document dengan id " + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map<String, TypeDocuments> items = new HashMap<>();
@@ -119,13 +119,13 @@ public  class TypeDocumentsServiceImpl implements TypeDocumentsService {
             }
 
             if  (type.getDescription().isBlank() || type.getDescription().isEmpty()) {
-                result.setMessage("Error: Deskripsi Program tidak boleh kosong ");
+                result.setMessage("Error: Deskripsi type document tidak boleh kosong ");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
             if (type.getType_Name().length() > 10 || type.getType_Name().isBlank() || type.getType_Name().isEmpty()) {
-                result.setMessage("Error: Nama Program tidak boleh kosong dan harus kurang dari 10 karakter");
+                result.setMessage("Error: Nama type document tidak boleh kosong dan harus kurang dari 10 karakter");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
