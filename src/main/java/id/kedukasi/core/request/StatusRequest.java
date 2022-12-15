@@ -13,7 +13,7 @@ public class StatusRequest {
     @ApiModelProperty(example = "MENTOR/PESERTA", required = true)
     private String flag;
 
-    @ApiModelProperty(example = "false", required = true)
+    @ApiModelProperty(example = "true", required = true)
     private boolean isDeleted;
 
     public StatusRequest() {
@@ -26,12 +26,12 @@ public class StatusRequest {
         this.isDeleted = isDeleted;
     }
 
-    public String getStatusName() {
+    public String getStatus_name() {
         return statusName;
     }
 
-    public void setStatusName(String statusName) {
-        this.statusName = statusName;
+    public void setStatus_name(String status_name) {
+        this.statusName = status_name;
     }
 
     public String getDescription() {
@@ -50,11 +50,11 @@ public class StatusRequest {
         this.flag = flag;
     }
 
-    public boolean getIsDeleted() {
+    public boolean getisDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(boolean isDeleted) {
+    public void setisDeleted(boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 
