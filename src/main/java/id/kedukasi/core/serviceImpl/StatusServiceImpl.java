@@ -35,34 +35,15 @@ public class StatusServiceImpl implements StatusService {
     public ResponseEntity<Result> createStatus(StatusRequest status) {
         result = new Result();
         try {
-            int statusNameFlag = statusRepository.findStatusNameFlag(status.getStatus_name().toLowerCase(), status.getFlag().toLowerCase());
-            String errorUniqueStatusNameAndFlagMessage = "";
+            int statusName = statusRepository.findStatusname(status.getStatus_name().toLowerCase());
+            String errorUniqueStatusNameMessage = "";
             String errorNotBlankFlagMessage = "";
             String errorNotBlankDescriptionMessage = "";
             String errorNotBlankStatusNameMessage = "";
 
-            if (statusNameFlag > 0) {
-                errorUniqueStatusNameAndFlagMessage = "Kombinasi Nama dan Flag pada Status sudah ada!";
+            if (statusName > 0) {
+                errorUniqueStatusNameMessage = "Nama Status Telah Ada!, ";
             }
-
-            // int statusLength = statusRepository.findAll().size();
-            // int statusInitialId = statusRepository.findAll().get(0).getId();
-            // int statusLastId = statusRepository.findAll().get(statusLength-1).getId();
-            // if (statusLength > 0) {
-            //     String statusName;
-            //     String flag;
-
-            //     for(int _id = statusInitialId; _id < statusLastId+1; _id++){
-            //         if(statusRepository.findById(_id).isPresent()){
-            //             statusName = statusRepository.findById(_id).get().getStatusName();
-            //             flag = statusRepository.findById(_id).get().getFlag();
-            //             if(statusName.equals(status.getStatus_name()) && flag.equals(status.getFlag()) ){
-            //                 errorUniqueStatusNameAndFlagMessage = "Sudah Ada Nama Status dan Flag yang Sama! pada Id = " + _id;
-            //                 break;
-            //             }
-            //         }
-            //     } 
-            // }
 
             if(status.getFlag().isBlank() || status.getFlag().isEmpty()) {
                 errorNotBlankFlagMessage = "Flag tidak boleh kosong dan harus kurang dari 30 karakter, ";
@@ -76,9 +57,9 @@ public class StatusServiceImpl implements StatusService {
                 errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter";
             }
 
-            if (errorUniqueStatusNameAndFlagMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
+            if (errorUniqueStatusNameMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
                 result.setSuccess(false);
-                result.setMessage("Error: "+ errorUniqueStatusNameAndFlagMessage + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
+                result.setMessage("Error: "+ errorUniqueStatusNameMessage + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -102,38 +83,9 @@ public class StatusServiceImpl implements StatusService {
     public ResponseEntity<Result> updateStatus(UpdateStatusRequest status) {
         result = new Result();
         try {
-            int statusNameFlag = statusRepository.findUpdateStatusNameFlag(status.getId(), status.getStatus_name().toLowerCase(), status.getFlag().toLowerCase());
-            int existingId = statusRepository.findIdStatusByNameAndFlag(status.getStatus_name().toLowerCase(), status.getFlag().toLowerCase());
-            String errorUniqueStatusNameAndFlagMessage = "";
             String errorNotBlankFlagMessage = "";
             String errorNotBlankDescriptionMessage = "";
             String errorNotBlankStatusNameMessage = "";
-
-            if (statusNameFlag > 0 && status.getId() != existingId) {      
-                errorUniqueStatusNameAndFlagMessage = "Kombinasi Nama dan Flag di Status sudah ada pada id "+existingId+"!";
-            }
-
-            // int statusLength = statusRepository.findAll().size();
-            // int statusInitialId = statusRepository.findAll().get(0).getId();
-            // int statusLastId = statusRepository.findAll().get(statusLength-1).getId();
-            // int putId = status.getId();
-            // if (statusLength > 0) {
-            //     String statusName;
-            //     String flag;
-
-            //     for(int _id = statusInitialId; _id < statusLastId+1; _id++){
-            //         if(statusRepository.findById(_id).isPresent()){
-            //             statusName = statusRepository.findById(_id).get().getStatusName();
-            //             flag = statusRepository.findById(_id).get().getFlag();
-            //             if(statusName.equals(status.getStatus_name()) && flag.equals(status.getFlag()) ){
-            //                 if(putId != _id){
-            //                     errorUniqueStatusNameAndFlagMessage = "Sudah Ada Nama Status dan Flag yang Sama! pada Id = " + _id;
-            //                     break;
-            //                 }
-            //             }
-            //         }
-            //     } 
-            // }
 
             if(status.getFlag().isBlank() || status.getFlag().isEmpty()) {
                 errorNotBlankFlagMessage = "Flag tidak boleh kosong dan harus kurang dari 30 karakter, ";
@@ -147,9 +99,9 @@ public class StatusServiceImpl implements StatusService {
                 errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter";
             }
 
-            if (errorUniqueStatusNameAndFlagMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
+            if (errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
                 result.setSuccess(false);
-                result.setMessage("Error: " + errorUniqueStatusNameAndFlagMessage + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
+                result.setMessage("Error: " + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -159,7 +111,7 @@ public class StatusServiceImpl implements StatusService {
                 result.setMessage("Error: Tidak ada Status dengan id " +status.getId());
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                Status update = new Status(status.getId(),status.getStatus_name(), status.getDescription(), status.getFlag(), status.getisDeleted());
+                Status update = new Status(status.getId(),status.getStatus_name(), status.getDescription(), status.getFlag(), false);
 
                 statusRepository.save(update);
 
