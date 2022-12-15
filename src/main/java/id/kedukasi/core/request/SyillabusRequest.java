@@ -11,6 +11,9 @@ public class SyillabusRequest {
     @ApiModelProperty(example = "deskripsi", required = true)
     private String description;
 
+    @ApiModelProperty(example = "1", required = true)
+    private Long attachment;
+
     public SyillabusRequest() {
     }
 
@@ -35,6 +38,11 @@ public class SyillabusRequest {
         this.description = description;
     }
 
-   
-    
+    public Long getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Long attachment) {
+        this.attachment = attachment;
+    }
 }

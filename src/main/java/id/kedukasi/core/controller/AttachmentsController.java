@@ -20,7 +20,7 @@ public class AttachmentsController {
     @Autowired
     AttachmentsService service;
 
-    @GetMapping(value = "{/id}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Result> getAttachmentsById(@PathVariable("id") Long id) {
         return service.getAttachmentsById(id);
     }

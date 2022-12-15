@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import id.kedukasi.core.models.Attachments;
+import id.kedukasi.core.models.TypeDocuments;
+import id.kedukasi.core.repository.AttachmentsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,10 @@ public class SyillabusServiceImpl implements SyillabusService{
 
     @Autowired
     SyillabusRepository syillabusRepository;
+
+    @Autowired
+    AttachmentsRepository attachmentsRepository;
+
     @Override
     public ResponseEntity<Result> createSyllabus(SyillabusRequest syillabus) {
         result = new Result();
@@ -59,6 +66,10 @@ public class SyillabusServiceImpl implements SyillabusService{
             }
 
             Syillabus newSyillabus = new Syillabus(syillabus.getSyillabusName(), syillabus.getDescription(),false);
+
+            //set typeDocument
+            Attachments attachments = attachmentsRepository.findById(syillabus.getAttachment()).get();
+            newSyillabus.setAttachments(attachments);
 
             syillabusRepository.save(newSyillabus);
 
@@ -93,7 +104,11 @@ public class SyillabusServiceImpl implements SyillabusService{
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Syillabus update = new Syillabus(syillabus.getId(),syillabus.getSyllabusName(), syillabus.getDescription(),syillabus.isSoftDelete());
-                
+
+                //set typeDocument
+                Attachments attachments = attachmentsRepository.findById(syillabus.getAttachment()).get();
+                update.setAttachments(attachments);
+
                 syillabusRepository.save(update);
 
                 result.setMessage("Berhasil update Syillabus!");
