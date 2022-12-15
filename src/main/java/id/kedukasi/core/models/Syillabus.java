@@ -34,7 +34,7 @@ public class Syillabus {
     @Column(name="syllabus_name", nullable = false, length = 50)
     private String syillabusName;
 
-    @Column(name="description", nullable = false, columnDefinition = "text")
+    @Column(name="description", nullable = false, length = 500)
     private String description;
 
     @Column(name="isDeleted")
