@@ -1,8 +1,11 @@
 package id.kedukasi.core.serviceImpl;
 
 import id.kedukasi.core.models.Documents;
+import id.kedukasi.core.models.Kelas;
 import id.kedukasi.core.models.Result;
+import id.kedukasi.core.models.TypeDocuments;
 import id.kedukasi.core.repository.DocumentsRepository;
+import id.kedukasi.core.repository.TypeDocumentsRepository;
 import id.kedukasi.core.request.DocumentsRequest;
 import id.kedukasi.core.request.UpdateDocumentsRequest;
 import id.kedukasi.core.service.DocumentsService;
@@ -34,6 +37,9 @@ public class DocumentsServiceImpl implements DocumentsService {
 
     @Autowired
     DocumentsRepository documentsRepository;
+
+    @Autowired
+    TypeDocumentsRepository typeDocumentsRepository;
     @Override
     public ResponseEntity<Result> createDocument(DocumentsRequest documents) {
         result = new Result();
@@ -76,6 +82,10 @@ public class DocumentsServiceImpl implements DocumentsService {
             } else {
                 Documents newDocuments = new Documents(documents.getUrl(), documents.getDirectory(), documents.getKey(),
                 documents.getFiletype(), documents.getDocumentsName(), false, documents.getUserId(), documents.getRoleId());
+
+                //set typeDocument
+                TypeDocuments typeDocuments = typeDocumentsRepository.findById(documents.getTypeDoc()).get();
+                newDocuments.setTypedoc(typeDocuments);
 
                 documentsRepository.save(newDocuments);
 
@@ -170,6 +180,11 @@ public class DocumentsServiceImpl implements DocumentsService {
             } else {
                 Documents update = new Documents(documents.getId(), documents.getUrl(), documents.getDirectory(), documents.getKey(), documents.getFiletype(), documents.getDocumentsName(), documents.isDeleted(), documents.getUserId(), documents.getRoleId());
 
+                //set typeDocument
+                TypeDocuments typeDocuments = typeDocumentsRepository.findById(documents.getTypeDoc()).get();
+                update.setTypedoc(typeDocuments);
+
+                update.setId(documents.getId());
                 documentsRepository.save(update);
 
                 result.setMessage("Berhasil update documents!");

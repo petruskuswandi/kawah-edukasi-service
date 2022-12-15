@@ -25,6 +25,9 @@ public class DocumentsRequest {
     @ApiModelProperty(example = "1", required = true)
     private int roleId;
 
+    @ApiModelProperty(example = "1", required = true)
+    private int typeDoc;
+
     public DocumentsRequest() {
 
     }
@@ -93,5 +96,13 @@ public class DocumentsRequest {
 
     public void setRoleId(int roleId) {
         this.roleId = roleId;
+    }
+
+    public int getTypeDoc() {
+        return typeDoc;
+    }
+
+    public void setTypeDoc(int typeDoc) {
+        this.typeDoc = typeDoc;
     }
 }
