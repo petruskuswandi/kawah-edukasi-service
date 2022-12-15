@@ -1,0 +1,44 @@
+server.port=8880
+logging.config=./config/logback.xml
+swagger.enabled=true
+
+
+# spring.datasource.url=jdbc:postgresql://${DATABASE_HOST:postgres}:${DATABASE_PORT:5432}/${DATABASE_NAME:kawah_db}
+# spring.datasource.username=${DATABASE_USER:postgres}
+# spring.datasource.password=${DATABASE_PASSWORD:Password09!}
+spring.datasource.url=jdbc:postgresql://localhost:5432/kawahedukasi
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+
+app.upload-file-path=./uploads/
+app.url.active-user=
+app.url.forgot-password=https://stg.kawahedukasi.id/forgot/
+app.expired.token.forgot-password=3600000
+app.url.staging=https://stg.kawahedukasi.id
+
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=kedukasi2022@gmail.com
+spring.mail.password=faivbilqqaekqnpd
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+spring.servlet.multipart.enabled=true
+server.tomcat.max-http-post-size=10MB
+server.tomcat.max-swallow-size=10MB
+
+spring.jpa.hibernate.ddl-auto=update
+kedukasi.app.jwtSecret=kedukasi2022
+#24 jam
+kedukasi.app.jwtExpirationMs=86400000
+#1menit
+kedukasi.app.jwtRefreshExpirationMs=60000
+# springfox.documentation.swagger.v2.host=stg.kawahedukasi.id
+springfox.documentation.swagger.v2.host=localhost:8880
+spring.mail.email.admin=andri.awaluddin@barrans.id
+

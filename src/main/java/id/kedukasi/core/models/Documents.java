@@ -5,6 +5,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -26,6 +27,11 @@ public class Documents implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "type_doc_id", nullable = false, updatable = false)
+    @NotNull(message = "Data Batch Tidak Boleh Kosong")
+    private TypeDocuments typedoc;
 
     @Column(name="url", nullable = false, length = 50)
     private String url;
