@@ -11,9 +11,6 @@ app.url.forgot-password=https://stg.kawahedukasi.id/forgot
 app.expired.token.forgot-password=3600000
 app.url.staging=https://stg.kawahedukasi.id
 
-#spring.datasource.url=jdbc:postgresql://${DATABASE_HOST:postgres}:${DATABASE_PORT:5432}/${DATABASE_NAME:kawah_db}
-#spring.datasource.username=${DATABASE_USER:postgres}
-#spring.datasource.password=${DATABASE_PASSWORD:Password09!}
 
 spring.datasource.url=jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:kawah_db}
 spring.datasource.username=${DATABASE_USER:adminudin}
@@ -31,13 +28,6 @@ spring.mail.protocol=smtp
 spring.mail.properties.mail.smtp.auth=yes
 spring.mail.properties.mail.smtp.starttls.enable=no
 spring.mail.email.admin=andri.awaluddin@barrans.id
-
-#spring.mail.host=smtp.gmail.com
-#spring.mail.port=587
-#spring.mail.username=kedukasi2022@gmail.com
-#spring.mail.password=faivbilqqaekqnpd
-#spring.mail.properties.mail.smtp.auth=true
-#spring.mail.properties.mail.smtp.starttls.enable=true
 
 ### Using upload file
 spring.servlet.multipart.max-file-size=10MB
