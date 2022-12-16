@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 
 
 @CrossOrigin
@@ -24,14 +25,14 @@ public class EducationController {
 
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Result> createEducation(@RequestBody SaveEducationRequest request) {
+    public ResponseEntity<Result> createEducation(@Valid @RequestBody SaveEducationRequest request) {
         log.info("education/create - {},{}", request.getName(),request.getDescription());
 
         return educationService.saveEducation(request);
     }
 
     @PutMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Result> updateEducation(@RequestBody UpdateEducationRequest request, @PathVariable Integer id) {
+    public ResponseEntity<Result> updateEducation(@Valid @RequestBody UpdateEducationRequest request, @PathVariable Integer id) {
         log.info("education/update - id : {}", id);
 
         return educationService.updateEducation(request, id);
