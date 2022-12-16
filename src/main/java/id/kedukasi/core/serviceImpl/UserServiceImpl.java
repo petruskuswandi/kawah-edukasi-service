@@ -534,12 +534,12 @@ public class UserServiceImpl implements UserService {
     Map<String,Object> tokenDecode = jwtUtils.decode(param.getToken());
 
     // password validation
-    if(!validator.isPasswordValid(param.getPassword())){
-      result.setMessage("Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!");
-      result.setCode(400);
-      result.setSuccess(false);
-      return ResponseEntity.badRequest().body(result);
-    }
+//    if(!validator.isPasswordValid(param.getPassword())){
+//      result.setMessage("Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!");
+//      result.setCode(400);
+//      result.setSuccess(false);
+//      return ResponseEntity.badRequest().body(result);
+//    }
 
     long userId = Long.parseLong(tokenDecode.get("userId").toString());
     int resultModel = userRepository.changePassword(encoder.encode(param.getPassword()),userId);
