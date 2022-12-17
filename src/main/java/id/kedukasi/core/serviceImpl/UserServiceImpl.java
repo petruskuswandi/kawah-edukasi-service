@@ -434,7 +434,7 @@ public class UserServiceImpl implements UserService {
 
     Date dateNow = new Date();
     // 10 menit
-    String tokenForgotPassword = jwtUtils.generateTokenFromUsernameWithExpired(checkUserEmail.getUsername(),jwtExpiredTokenForgotPassword);
+    String tokenForgotPassword = jwtUtils.generateTokenForgotPassword(checkUserEmail.getUsername(),jwtExpiredTokenForgotPassword);
     long idUser = checkUserEmail.getId();
     String password = checkUserEmail.getPassword();
 
@@ -498,7 +498,7 @@ public class UserServiceImpl implements UserService {
             "          Anda :\n" +
             "        </p><br>\n" +
             "        <a \n" +
-            "          href="+urlForgotPassword+idUser+"?token="+tokenForgotPassword+" \n" +
+            "          href="+urlForgotPassword+tokenForgotPassword+" \n" +
             "          target=\"_blank\"\n" +
             "          style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
             "          >Ubah Password</a><br>\n" +
@@ -517,7 +517,7 @@ public class UserServiceImpl implements UserService {
     emailDetails.setRecipient(email);
     logger.info(">>>> send email");
     //emailService.sendMailWithAttachment(emailDetails);
-    String urlendpoint = urlForgotPassword+"?id="+idUser+"&password="+password+"&token="+tokenForgotPassword;
+    String urlendpoint = urlForgotPassword+tokenForgotPassword;
     emailService.sendMailForgotPassword(emailDetails,checkUserEmail,urlendpoint);
     return ResponseEntity.ok(new Result());
   }
@@ -531,15 +531,18 @@ public class UserServiceImpl implements UserService {
       return ResponseEntity.badRequest().body(result);
     }
 
-    // password validation
-    if(!validator.isPasswordValid(param.getPassword())){
-      result.setMessage("Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!");
-      result.setCode(400);
-      result.setSuccess(false);
-      return ResponseEntity.badRequest().body(result);
-    }
+    Map<String,Object> tokenDecode = jwtUtils.decode(param.getToken());
 
-    int resultModel = userRepository.changePassword(encoder.encode(param.getPassword()), param.getId());
+    // password validation
+//    if(!validator.isPasswordValid(param.getPassword())){
+//      result.setMessage("Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!");
+//      result.setCode(400);
+//      result.setSuccess(false);
+//      return ResponseEntity.badRequest().body(result);
+//    }
+
+    long userId = Long.parseLong(tokenDecode.get("userId").toString());
+    int resultModel = userRepository.changePassword(encoder.encode(param.getPassword()),userId);
     if (resultModel == 1) {
       result.setCode(200);
       result.setMessage("Password Succesfully Updated");
