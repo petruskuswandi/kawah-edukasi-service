@@ -67,9 +67,16 @@ public class SyillabusServiceImpl implements SyillabusService{
 
             Syillabus newSyillabus = new Syillabus(syillabus.getSyillabusName(), syillabus.getDescription(),false);
 
-            //set typeDocument
-            Attachments attachments = attachmentsRepository.findById(syillabus.getAttachment()).get();
-            newSyillabus.setAttachments(attachments);
+            //set Attachments
+            Optional <Attachments> attachments = attachmentsRepository.findById(syillabus.getAttachment());
+            if (!attachments.isPresent()) {
+                result.setSuccess(false);
+                result.setMessage("Error: Attachments tidak ditemukan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            }else {
+                Attachments attachments1 = attachmentsRepository.findById(syillabus.getAttachment()).get();
+                newSyillabus.setAttachments(attachments1);
+            }
 
             syillabusRepository.save(newSyillabus);
 
@@ -105,9 +112,16 @@ public class SyillabusServiceImpl implements SyillabusService{
             } else {
                 Syillabus update = new Syillabus(syillabus.getId(),syillabus.getSyllabusName(), syillabus.getDescription(),syillabus.isSoftDelete());
 
-                //set typeDocument
-                Attachments attachments = attachmentsRepository.findById(syillabus.getAttachment()).get();
-                update.setAttachments(attachments);
+                //set Attachments
+                Optional <Attachments> attachments = attachmentsRepository.findById(syillabus.getAttachment());
+                if (!attachments.isPresent()) {
+                    result.setSuccess(false);
+                    result.setMessage("Error: Attachments tidak ditemukan");
+                    result.setCode(HttpStatus.BAD_REQUEST.value());
+                }else {
+                    Attachments attachments1 = attachmentsRepository.findById(syillabus.getAttachment()).get();
+                    update.setAttachments(attachments1);
+                }
 
                 syillabusRepository.save(update);
 
