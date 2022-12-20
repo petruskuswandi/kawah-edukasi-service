@@ -84,8 +84,15 @@ public class DocumentsServiceImpl implements DocumentsService {
                 documents.getFiletype(), documents.getDocumentsName(), false, documents.getUserId(), documents.getRoleId());
 
                 //set typeDocument
-                TypeDocuments typeDocuments = typeDocumentsRepository.findById(documents.getTypeDoc()).get();
-                newDocuments.setTypedoc(typeDocuments);
+                Optional <TypeDocuments> typeDocuments = typeDocumentsRepository.findById(documents.getTypeDoc());
+                if (!typeDocuments.isPresent()) {
+                    result.setSuccess(false);
+                    result.setMessage("Error: Type Document tidak ditemukan");
+                    result.setCode(HttpStatus.BAD_REQUEST.value());
+                }else {
+                    TypeDocuments typeDocuments1 = typeDocumentsRepository.findById(documents.getTypeDoc()).get();
+                    newDocuments.setTypedoc(typeDocuments1);
+                }
 
                 documentsRepository.save(newDocuments);
 
