@@ -23,6 +23,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Transactional
   Boolean existsByEmail(String email);
 
+  /* Query untuk cek apakah terdapat noHp yang sama pada user lain */
+  @Transactional
+  @Query("select count(*) from User u where u.noHp = ?1")
+  Integer existsByNoHp(String noHp);
+
   @Transactional
   User findById(long id);
 

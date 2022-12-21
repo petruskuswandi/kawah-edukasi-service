@@ -26,7 +26,9 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username"),
-                @UniqueConstraint(columnNames = "email")
+                @UniqueConstraint(columnNames = "email"),
+                /* Menambahkan unique constraint pada column noHp */
+                @UniqueConstraint(columnNames = "noHp")
         })
 @DynamicUpdate
 public class User implements Serializable {
@@ -67,9 +69,10 @@ public class User implements Serializable {
   private String noHp;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinTable(name = "user_roles",
-          joinColumns = @JoinColumn(name = "user_id"),
-          inverseJoinColumns = @JoinColumn(name = "role_id"))
+  /* Diubah jadi komen supaya tidak membuat table baru */
+  // @JoinTable(name = "user_roles",
+  //         joinColumns = @JoinColumn(name = "user_id"),
+  //         inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Role role;
 
   private boolean isLogin;
