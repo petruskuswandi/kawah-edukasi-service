@@ -336,6 +336,16 @@ public class UserServiceImpl implements UserService {
                 .body(result);
       }
 
+      /* Validasi ketika noHp sudah digunakan oleh user lain */
+      Integer checkUserNoHp = userRepository.existsByNoHp(userRequest.getNoHp());
+      if (checkUserNoHp != null && checkUserNoHp > 0) {
+        result.setMessage("Error: Phone number is already taken!");
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity
+                .badRequest()
+                .body(result);
+      }
+
       if (!validator.isPhoneValid(userRequest.getNoHp())) {
         result.setMessage("Error: invalid phone number!");
         result.setCode(HttpStatus.BAD_REQUEST.value());
