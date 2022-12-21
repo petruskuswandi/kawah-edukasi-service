@@ -23,6 +23,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class KelasController {
 
     @Autowired
+
     KelasService service;
 
     @Autowired
@@ -61,20 +62,20 @@ public class KelasController {
         return service.getAllBatchByKelas(id);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<?> createClass(@Valid @RequestBody KelasRequest kelasRequest) {
         return service.updateClass(kelasRequest);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<?> updateClass(@Valid @RequestBody KelasRequest kelasRequest) {
 
         return service.updateClass(kelasRequest);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping(value = "/delete")
     public ResponseEntity<?> deleteClass(
             @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
