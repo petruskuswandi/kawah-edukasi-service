@@ -21,7 +21,14 @@ public class Status {
      * - DELETE
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator( 
+        name = "statusSequence", 
+        sequenceName = "status_id_seq", 
+        allocationSize = 1, //Kenaikan nilai sebesar 1
+        initialValue = 1) //Nilai awal sebesar 1
+    @GeneratedValue( //Id status akan memiliki nilai sendiri yang tidak terpaut dengan nilai id entitas lain
+        strategy = GenerationType.SEQUENCE, 
+        generator = "statusSequence")
     private int id;
 
     /**
@@ -41,8 +48,11 @@ public class Status {
      * - MENTOR
      * - PESERTA
      */
-    @Column(name="flag", nullable = false)
+    @Column(name="flag", nullable = false) 
     private String flag;
+
+    @Column(name="sub_flag", nullable = false) 
+    private String subFlag;
 
     @Column(name="isDeleted")
     private boolean isDeleted;
@@ -62,31 +72,33 @@ public class Status {
     public Status() {
     }
 
-    public Status(int id, String statusName, String description, String flag, boolean isDeleted, Date created_at, Date updated_at) {
+    public Status(int id, String statusName, String description, String flag, String subFlag, boolean isDeleted, Date created_at, Date updated_at) {
         this.id = id;
         this.statusName = statusName;
         this.description = description;
         this.flag = flag;
+        this.subFlag = subFlag;
         this.isDeleted = isDeleted;
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
 
-    public Status(int id, String statusName, String description, String flag, boolean isDeleted) {
+    public Status(int id, String statusName, String description, String flag, String subFlag, boolean isDeleted) {
         this.id = id;
         this.statusName = statusName;
         this.description = description;
         this.flag = flag;
+        this.subFlag = subFlag;
         this.isDeleted = isDeleted;
     }
 
-    public Status(String statusName, String description, String flag, boolean isDeleted) {
+    public Status(String statusName, String description, String flag, String subFlag, boolean isDeleted) {
         this.statusName = statusName;
         this.description = description;
         this.flag = flag;
+        this.subFlag = subFlag;
         this.isDeleted = isDeleted;
     }
-
 
     public int getId() {
         return id;
@@ -118,6 +130,14 @@ public class Status {
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public String getSubFlag() {
+        return subFlag;
+    }
+
+    public void setSubFlag(String subFlag) {
+        this.subFlag = subFlag;
     }
 
     public boolean isDeleted() {

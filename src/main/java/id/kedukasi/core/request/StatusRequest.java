@@ -13,16 +13,20 @@ public class StatusRequest {
     @ApiModelProperty(example = "PESERTA", required = true)
     private String flag;
 
+    @ApiModelProperty(example = "Suspended", required = true)
+    private String subFlag;
+
     @ApiModelProperty(example = "false", required = true)
     private boolean isDeleted;
 
     public StatusRequest() {
     }
 
-    public StatusRequest(String status_name, String description, String flag, boolean isDeleted) {
+    public StatusRequest(String status_name, String description, String flag, String subFlag, boolean isDeleted) {
         this.statusName = status_name;
         this.description = description;
         this.flag = flag;
+        this.subFlag = subFlag;
         this.isDeleted = isDeleted;
     }
 
@@ -48,6 +52,14 @@ public class StatusRequest {
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public String getSubFlag() {
+        return subFlag;
+    }
+
+    public void setSubFlag(String subFlag) {
+        this.subFlag = subFlag;
     }
 
     public boolean getisDeleted() {

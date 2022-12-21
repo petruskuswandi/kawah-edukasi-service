@@ -6937,3 +6937,44 @@ Caused by: org.postgresql.util.PSQLException: ERROR: null value in column "role_
 2022-12-14 11:43:03.657 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
 2022-12-14 11:43:06.711 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
 2022-12-14 11:43:11.490 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 8.079 seconds (JVM running for 6532.436)
+2022-12-20 10:12:57.176 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15 on LAPTOP-MINPL652 with PID 4504 (C:\Users\Lenovo\Music\kedukasi-service\target\classes started by Lenovo in C:\Users\Lenovo\Music\kedukasi-service)
+2022-12-20 10:12:57.186 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-20 10:12:57.193 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-20 10:14:27.141 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15 on LAPTOP-MINPL652 with PID 16764 (C:\Users\Lenovo\Music\kedukasi-service\target\classes started by Lenovo in C:\Users\Lenovo\Music\kedukasi-service)
+2022-12-20 10:14:27.145 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-20 10:14:27.149 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-20 10:14:39.153 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-20 10:14:45.145 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 18.973 seconds (JVM running for 20.83)
+2022-12-20 10:15:38.110 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15 on LAPTOP-MINPL652 with PID 16764 (C:\Users\Lenovo\Music\kedukasi-service\target\classes started by Lenovo in C:\Users\Lenovo\Music\kedukasi-service)
+2022-12-20 10:15:38.114 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-20 10:15:38.117 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-20 10:18:04.440 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15 on LAPTOP-MINPL652 with PID 5916 (C:\Users\Lenovo\Music\kedukasi-service\target\classes started by Lenovo in C:\Users\Lenovo\Music\kedukasi-service)
+2022-12-20 10:18:04.466 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-20 10:18:04.480 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-20 10:18:21.767 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-20 10:18:26.120 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 23.086 seconds (JVM running for 24.891)
+2022-12-20 10:19:39.119 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15 on LAPTOP-MINPL652 with PID 5916 (C:\Users\Lenovo\Music\kedukasi-service\target\classes started by Lenovo in C:\Users\Lenovo\Music\kedukasi-service)
+2022-12-20 10:19:39.133 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-20 10:19:39.149 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-20 10:19:44.964 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-20 10:19:47.470 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 8.495 seconds (JVM running for 106.24)
+2022-12-20 10:19:49.382 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15 on LAPTOP-MINPL652 with PID 5916 (C:\Users\Lenovo\Music\kedukasi-service\target\classes started by Lenovo in C:\Users\Lenovo\Music\kedukasi-service)
+2022-12-20 10:19:49.383 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-20 10:19:49.393 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-20 10:19:54.525 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-20 10:19:58.070 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 8.862 seconds (JVM running for 116.84)
+2022-12-20 10:26:02.393 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15 on LAPTOP-MINPL652 with PID 5916 (C:\Users\Lenovo\Music\kedukasi-service\target\classes started by Lenovo in C:\Users\Lenovo\Music\kedukasi-service)
+2022-12-20 10:26:02.407 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-20 10:26:02.415 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-20 10:26:06.571 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-20 10:26:08.729 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 6.492 seconds (JVM running for 487.5)
+2022-12-20 10:31:42.700 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15 on LAPTOP-MINPL652 with PID 5916 (C:\Users\Lenovo\Music\kedukasi-service\target\classes started by Lenovo in C:\Users\Lenovo\Music\kedukasi-service)
+2022-12-20 10:31:42.701 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-20 10:31:42.702 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-20 10:31:46.077 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-20 10:31:47.887 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 5.267 seconds (JVM running for 826.657)
+2022-12-20 10:34:11.348 [restartedMain] INFO  id.kedukasi.core.Application - Starting Application using Java 11.0.15 on LAPTOP-MINPL652 with PID 5916 (C:\Users\Lenovo\Music\kedukasi-service\target\classes started by Lenovo in C:\Users\Lenovo\Music\kedukasi-service)
+2022-12-20 10:34:11.349 [restartedMain] DEBUG id.kedukasi.core.Application - Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-12-20 10:34:11.350 [restartedMain] INFO  id.kedukasi.core.Application - No active profile set, falling back to 1 default profile: "default"
+2022-12-20 10:34:14.917 [restartedMain] DEBUG i.k.core.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-20 10:34:17.421 [restartedMain] INFO  id.kedukasi.core.Application - Started Application in 6.139 seconds (JVM running for 976.191)
