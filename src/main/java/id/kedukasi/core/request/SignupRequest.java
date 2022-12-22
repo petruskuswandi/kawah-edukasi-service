@@ -7,10 +7,10 @@ import javax.validation.constraints.*;
 
 public class SignupRequest {
 
-  @NotBlank
-  @Size(min = 3, max = 20)
-  @ApiModelProperty(example = "iam123", required = true)
-  private String username;
+  // @NotBlank
+  // @Size(min = 3, max = 20)
+  // @ApiModelProperty(example = "iam123", required = true)
+  // private String username;
 
   @NotBlank
   @Size(max = 50)
@@ -21,10 +21,10 @@ public class SignupRequest {
   @ApiModelProperty(example = "3", required = true)
   private Integer role;
 
-  @NotBlank
-  @Size(min = 6, max = 40)
-  @ApiModelProperty(example = "iam123", required = true)
-  @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%#*?&])[A-Za-z\\d@$!%#*?&]{8,}$",message = "Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!")
+  // @NotBlank
+  // @Size(min = 6, max = 40)
+  // @ApiModelProperty(example = "iam123", required = true)
+  // @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%#*?&])[A-Za-z\\d@$!%#*?&]{8,}$",message = "Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!")
   private String password;
 
   @NotBlank
@@ -37,13 +37,13 @@ public class SignupRequest {
   @ApiModelProperty(example = "08xxxx", required = true)
   private String noHp;
 
-  public String getUsername() {
-    return username;
-  }
+  // public String getUsername() {
+  //   return username;
+  // }
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+  // public void setUsername(String username) {
+  //   this.username = username;
+  // }
 
   public String getEmail() {
     return email;
@@ -53,13 +53,13 @@ public class SignupRequest {
     this.email = email;
   }
 
-  public String getPassword() {
-    return password;
-  }
+  // public String getPassword() {
+  //   return password;
+  // }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+  // public void setPassword(String password) {
+  //   this.password = password;
+  // }
 
   public String getNamaLengkap() {
     return namaLengkap;

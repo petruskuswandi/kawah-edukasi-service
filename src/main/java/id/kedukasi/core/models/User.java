@@ -25,7 +25,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
+                // @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email"),
                 /* Menambahkan unique constraint pada column noHp */
                 @UniqueConstraint(columnNames = "noHp")
@@ -37,7 +37,7 @@ public class User implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotBlank
+  // @NotBlank
   @Size(max = 20)
   private String username;
 
@@ -55,7 +55,7 @@ public class User implements Serializable {
   @ApiModelProperty(hidden = true)
   private String profilePicturePath;
 
-  @NotBlank
+  // @NotBlank
   @Size(max = 120)
   private String password;
 
@@ -69,10 +69,7 @@ public class User implements Serializable {
   private String noHp;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  /* Diubah jadi komen supaya tidak membuat table baru */
-  // @JoinTable(name = "user_roles",
-  //         joinColumns = @JoinColumn(name = "user_id"),
-  //         inverseJoinColumns = @JoinColumn(name = "role_id"))
+  @JoinColumn(name = "role_id")
   private Role role;
 
   private boolean isLogin;
@@ -99,6 +96,26 @@ public class User implements Serializable {
   private Date banned_time;
 
   public User() {
+  }
+
+  /**
+   * Constructor untuk menerima input ketika create User
+   */
+  public User(String email, String password, String namaLengkap, String noHp, Role role, String tokenVerification) {
+    Date date = new Date();
+
+    this.email = email;
+    this.password = password;
+    this.namaLengkap = namaLengkap;
+    this.noHp = noHp;
+    this.role = role;
+    this.tokenVerification = tokenVerification;
+    this.isActive = false;
+    this.isLogin = false;
+    this.created_time = date;
+    this.updated_time = date;
+    this.banned = false;
+    this.banned_time = date;
   }
 
   public User(String username, String email, String password,String namaLengkap, String noHp, String tokenVerification,

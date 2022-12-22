@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class UserRequest implements Serializable {
@@ -27,6 +28,7 @@ public class UserRequest implements Serializable {
   @NotBlank
   @Size(min = 6, max = 40)
   @ApiModelProperty(example = "iam123", required = true)
+  @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%#*?&])[A-Za-z\\d@$!%#*?&]{8,}$",message = "Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!")
   private String password;
 
   @Size(max = 50)

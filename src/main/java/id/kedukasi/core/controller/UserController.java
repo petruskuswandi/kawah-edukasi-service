@@ -1,6 +1,7 @@
 package id.kedukasi.core.controller;
 
 import id.kedukasi.core.models.Result;
+import id.kedukasi.core.request.SignupRequest;
 import id.kedukasi.core.request.UserRequest;
 import id.kedukasi.core.service.UserService;
 import id.kedukasi.core.utils.StringUtil;
@@ -48,6 +49,13 @@ public class UserController {  @Autowired
     return service.getAllUser(uri);
   }
 
+  @GetMapping(value = "page/{page}", produces = APPLICATION_JSON_VALUE)
+  public Result getUserData(@PathVariable("page") int page) {
+    String uri = stringUtil.getLogParam(request);
+    logger.info(uri);
+    return service.getUserData(page, uri);
+  }
+
   @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
   public Result getUserByid(@PathVariable("id") long id) {
     String uri = stringUtil.getLogParam(request);
@@ -56,8 +64,8 @@ public class UserController {  @Autowired
   }
 
   @PostMapping("/create")
-  public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest) {
-    return service.updateUser(userRequest);
+  public ResponseEntity<?> createUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    return service.createUser(signUpRequest);
   }
 
   @PutMapping("/update")
