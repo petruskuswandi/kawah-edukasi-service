@@ -77,15 +77,17 @@ public class AuthController {
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(
           @Valid 
+          @RequestParam(value = "user activation", defaultValue = "Aktif", required = true) String userActivation,
           @RequestBody SignupRequest signUpRequest) {//Password pada Signup Request di generate auto pada UserServiceImpl dan ikut disend pada email
     service.createUser(signUpRequest); //Format Isian untuk memberikan id, token, email, dan password disamakan isiannya dengan Forgot Password di UserServiceImpl
 
     Long id = userRepository.findByEmail(signUpRequest.getEmail()).get().getId();
     String tokenVerification = userRepository.findByEmail(signUpRequest.getEmail()).get().getTokenVerification();
     String statusAktif = "Aktif";
+    statusAktif = userActivation;
 
     Result result = new Result();
-    if(statusAktif.equals("Aktif")){
+    if(statusAktif.toUpperCase().equals("AKTIF")){
       String uri = stringUtil.getLogParam(request);
       logger.info(uri);
 
@@ -103,8 +105,7 @@ public class AuthController {
 
   @PostMapping("/signout")
   public Result logout(
-          @RequestParam(value = "id", defaultValue = "0", required = true) 
-          long id) {
+          @RequestParam(value = "id", defaultValue = "0", required = true) long id) {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
 
@@ -114,8 +115,7 @@ public class AuthController {
   @GetMapping("/active")
   public Result active(
           @RequestParam(value = "id", defaultValue = "0", required = true) long id,
-          @RequestParam(value = "tokenVerification", defaultValue = "", required = true) 
-          String tokenVerification) {
+          @RequestParam(value = "tokenVerification", defaultValue = "", required = true) String tokenVerification) {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
 
@@ -151,8 +151,7 @@ public class AuthController {
 
   @PostMapping("/forgot_password")
   public ResponseEntity<?> forgotPassword(
-          @RequestParam(value = "email", defaultValue = "", required = true) 
-          String email) throws IOException {
+          @RequestParam(value = "email", defaultValue = "", required = true) String email) throws IOException {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
 
