@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Entity
 @Table(name = "mentors",
         uniqueConstraints = {
@@ -32,7 +33,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Mentor implements Serializable {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

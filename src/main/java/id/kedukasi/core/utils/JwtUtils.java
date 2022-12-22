@@ -3,6 +3,8 @@ package id.kedukasi.core.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import id.kedukasi.core.models.User;
+import id.kedukasi.core.repository.UserRepository;
 import id.kedukasi.core.serviceImpl.UserDetailsImpl;
 
 import java.text.DateFormat;
@@ -10,10 +12,12 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,7 +25,6 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.*;
 
 import javax.servlet.http.HttpServletRequest;
-
 @Component
 public class JwtUtils {
 
@@ -31,36 +34,44 @@ public class JwtUtils {
   @Value("${kedukasi.app.jwtExpirationMs}")
   private int jwtExpirationMs;
 
+  @Autowired
+  UserRepository userRepository;
+
   public String generateJwtToken(Authentication authentication, Date dateNow, Date dateExpired) {
     UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
     return Jwts.builder()
-        .setSubject((userPrincipal.getUsername()))
-        .setIssuedAt(dateNow)
-        .setExpiration(dateExpired)
-        .signWith(SignatureAlgorithm.HS512, jwtSecret)
-        .compact();
+            .setSubject((userPrincipal.getUsername()))
+            .setIssuedAt(dateNow)
+            .setExpiration(dateExpired)
+            .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .compact();
   }
-  
+
   public String generateJwtActiveUser(Authentication authentication, Date dateNow, Date dateExpired) {
     UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
     return Jwts.builder()
-        .setSubject("kedukasi")
-        .setIssuedAt(dateNow)
-        .setExpiration(dateExpired)
-        .signWith(SignatureAlgorithm.HS512, jwtSecret)
-        .setHeaderParam("id", userPrincipal.getId())
-        .setHeaderParam("email", userPrincipal.getEmail())
-        .compact();
+            .setSubject("kedukasi")
+            .setIssuedAt(dateNow)
+            .setExpiration(dateExpired)
+            .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .setHeaderParam("id", userPrincipal.getId())
+            .setHeaderParam("email", userPrincipal.getEmail())
+            .compact();
   }
 
   public String generateTokenFromUsername(String username) {
     return Jwts.builder().setSubject(username).setIssuedAt(new Date())
-        .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(SignatureAlgorithm.HS512, jwtSecret)
-        .compact();
+            .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .compact();
   }
 
-  public String generateTokenFromUsernameWithExpired(String username,long expiredDate) {
-    return Jwts.builder().setSubject(username).setIssuedAt(new Date())
+  public String generateTokenForgotPassword(String username,long expiredDate) {
+    User user = userRepository.findByUsername(username).get();
+    Map<String,Object> claims = new HashMap<>();
+    claims.put("userId",user.getId());
+    return Jwts.builder()
+            .setClaims(claims)
+            .setIssuedAt(new Date())
             .setExpiration(new Date((new Date()).getTime() + expiredDate)).signWith(SignatureAlgorithm.HS512, jwtSecret)
             .compact();
   }

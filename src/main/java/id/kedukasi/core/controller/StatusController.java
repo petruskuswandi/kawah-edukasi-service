@@ -16,7 +16,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/status")
 public class StatusController {
-
     @Autowired
     StatusService service;
 
@@ -44,5 +43,5 @@ public class StatusController {
     public ResponseEntity<Result> getStatusById(@PathVariable("id") int id) {
         return service.getStatusById(id);
     }
-    
+
 }

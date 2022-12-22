@@ -3,7 +3,6 @@ package id.kedukasi.core.repository;
 import id.kedukasi.core.enums.EnumStatusPeserta;
 import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.Peserta;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +15,6 @@ import java.util.Optional;
 
 @Repository
 public interface PesertaRepository extends JpaRepository<Peserta,Long> {
-
     @Transactional
     Optional<Peserta> findByNamaPeserta(String username);
 
@@ -50,10 +48,10 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
 //    @Query("update Peserta u set u.uploadImage = ?1 where u.id = ?2 ")
 //    int updateUploadImage(byte[] image, Long id);
 //
-//    @Modifying
-//    @Transactional
-//    @Query("update Peserta u set u.uploadImagePath = ?1, u.updated_time = CURRENT_TIMESTAMP where u.id = ?2")
-//    int setUploadImagePath(String uploadImagePath, Long id);
+    @Modifying
+    @Transactional
+    @Query("update Peserta u set u.uploadImagePath = ?1, u.updated_time = CURRENT_TIMESTAMP where u.id = ?2")
+    int setUploadImagePath(String uploadImagePath, Long id);
 
     @Transactional
     @Query("SELECT p FROM Peserta p WHERE p.namaPeserta LIKE %?1% AND p.statusPeserta = ?2")
@@ -78,9 +76,11 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
     @Query(value = "select p.* from Peserta p where p.status_peserta = :statusPeserta and p.banned = :banned and " +
             "(:namaPeserta is null or p.nama_peserta like %:namaPeserta%) " +
             "order by p.id ASC limit :limit offset :offset",nativeQuery = true)
-    List<Peserta> getAll(@Param("statusPeserta") String statusPeserta,@Param("banned") boolean banned,
+    List<Peserta> getAllPagination(@Param("statusPeserta") String statusPeserta,@Param("banned") boolean banned,
                          @Param("namaPeserta") String namaPeserta, @Param("limit")long limit,
                          @Param("offset") long offset);
 
-
+    @Transactional
+    @Query(value = "select count(p.*) from Peserta p where p.status_peserta = :statusPeserta and p.banned = false",nativeQuery = true)
+    long getCountByStatus(@Param("statusPeserta") String statusPeserta);
 }

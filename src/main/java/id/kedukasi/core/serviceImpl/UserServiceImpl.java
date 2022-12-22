@@ -43,7 +43,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -156,21 +155,21 @@ public class UserServiceImpl implements UserService {
       result.setMessage("Error: Email is already in use!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
-          .badRequest()
-          .body(result);
+              .badRequest()
+              .body(result);
     }
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       result.setMessage("Error: Usename is already taken!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
-          .badRequest()
-          .body(result);
+              .badRequest()
+              .body(result);
     }
 
     Role role = roleRepository.findById(signUpRequest.getRole()).orElse(null);
     User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
-        encoder.encode(signUpRequest.getPassword()),signUpRequest.getNamaLengkap(),
-        signUpRequest.getNoHp(), StringUtil.getRandomNumberString(), role, false, false);
+            encoder.encode(signUpRequest.getPassword()),signUpRequest.getNamaLengkap(),
+            signUpRequest.getNoHp(), StringUtil.getRandomNumberString(), role, false, false);
     User userResult = userRepository.save(user);
 
 //    if (userResult != null) {
@@ -221,7 +220,7 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(result);
       }
       Authentication authentication = authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(getUser.getUsername(), loginRequest.getPassword()));
+              new UsernamePasswordAuthenticationToken(getUser.getUsername(), loginRequest.getPassword()));
       SecurityContextHolder.getContext().setAuthentication(authentication);
       String jwt = jwtUtils.generateJwtToken(authentication, dateNow, dateExpired);
 
@@ -232,8 +231,8 @@ public class UserServiceImpl implements UserService {
       result.setSuccess(true);
       result.setMessage("success");
       result.setData(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(),
-          userDetails.getEmail(), role, dateExpired.getTime()));
-      
+              userDetails.getEmail(), role, dateExpired.getTime()));
+
       userRepository.setIsLogin(true, userDetails.getId());
     }
 
@@ -296,14 +295,14 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<?> refreshToken(TokenRefreshRequest tokenRefreshRequest) {
     String requestRefreshToken = tokenRefreshRequest.getRefreshToken();
     return refreshTokenService.findByToken(requestRefreshToken)
-        .map(refreshTokenService::verifyExpiration)
-        .map(RefreshToken::getUser)
-        .map(user -> {
-          String token = jwtUtils.generateTokenFromUsername(user.getUsername());
-          return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
-        })
-        .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
-        "Refresh token is not in database!"));
+            .map(refreshTokenService::verifyExpiration)
+            .map(RefreshToken::getUser)
+            .map(user -> {
+              String token = jwtUtils.generateTokenFromUsername(user.getUsername());
+              return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+            })
+            .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+                    "Refresh token is not in database!"));
   }
 
   @Override
@@ -315,8 +314,8 @@ public class UserServiceImpl implements UserService {
         result.setMessage("Error: Email is already in use!");
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
-            .badRequest()
-            .body(result);
+                .badRequest()
+                .body(result);
       }
 
       User checkUserUsername = userRepository.findByUsername(userRequest.getUsername()).orElse(new User());
@@ -324,8 +323,8 @@ public class UserServiceImpl implements UserService {
         result.setMessage("Error: Username is already taken!");
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
-            .badRequest()
-            .body(result);
+                .badRequest()
+                .body(result);
       }
 
       Role role = roleRepository.findById(userRequest.getRole()).orElse(null);
@@ -333,8 +332,18 @@ public class UserServiceImpl implements UserService {
         result.setMessage("Error: Role not found!");
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
-            .badRequest()
-            .body(result);
+                .badRequest()
+                .body(result);
+      }
+
+      /* Validasi ketika noHp sudah digunakan oleh user lain */
+      Integer checkUserNoHp = userRepository.existsByNoHp(userRequest.getNoHp());
+      if (checkUserNoHp != null && checkUserNoHp > 0) {
+        result.setMessage("Error: Phone number is already taken!");
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity
+                .badRequest()
+                .body(result);
       }
 
       if (!validator.isPhoneValid(userRequest.getNoHp())) {
@@ -346,7 +355,7 @@ public class UserServiceImpl implements UserService {
       }
 
       User user = new User(userRequest.getUsername(), userRequest.getEmail(),
-          encoder.encode(userRequest.getPassword()),userRequest.getNamaLengkap(), userRequest.getNoHp(),
+              encoder.encode(userRequest.getPassword()),userRequest.getNamaLengkap(), userRequest.getNoHp(),
               StringUtil.getRandomNumberString(), role, userRequest.isIsActive(), true);
 
       user.setId(userRequest.getId());
@@ -390,7 +399,7 @@ public class UserServiceImpl implements UserService {
     result = new Result();
     try {
       String filename = String.valueOf("profie_picture_" + id).concat(".")
-          .concat(globalUtil.getExtensionByStringHandling(profilePicture.getOriginalFilename()).orElse(""));
+              .concat(globalUtil.getExtensionByStringHandling(profilePicture.getOriginalFilename()).orElse(""));
       String filenameResult = storageService.save(profilePicture, filename);
       userRepository.setProfilePicturePath(filenameResult, id);
       result.setMessage("succes to save file ".concat(profilePicture.getOriginalFilename()));
@@ -407,11 +416,11 @@ public class UserServiceImpl implements UserService {
 
     String url = "";
     String body = "<html>"
-        + "<body>"
-        + "Click <a href=\"http://localhost:8880/api/auth/active?id=" + id + "&tokenVerification="
-        + tokenVerification + "\">here</a> to activate your account."
-        + "</body>"
-        + "</html>";
+            + "<body>"
+            + "Click <a href=\"http://localhost:8880/api/auth/active?id=" + id + "&tokenVerification="
+            + tokenVerification + "\">here</a> to activate your account."
+            + "</body>"
+            + "</html>";
     emailDetails.setMsgBody(body);
     emailDetails.setRecipient(receiver);
     logger.info(">>>> send email");
@@ -427,15 +436,15 @@ public class UserServiceImpl implements UserService {
       result.setMessage("Error: Email has not been registered!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
-          .badRequest()
-          .body(result);
+              .badRequest()
+              .body(result);
     }
     EmailDetails emailDetails = new EmailDetails();
     emailDetails.setSubject("Forgot Password");
 
     Date dateNow = new Date();
     // 10 menit
-    String tokenForgotPassword = jwtUtils.generateTokenFromUsernameWithExpired(checkUserEmail.getUsername(),jwtExpiredTokenForgotPassword);
+    String tokenForgotPassword = jwtUtils.generateTokenForgotPassword(checkUserEmail.getUsername(),jwtExpiredTokenForgotPassword);
     long idUser = checkUserEmail.getId();
     String password = checkUserEmail.getPassword();
 
@@ -499,7 +508,7 @@ public class UserServiceImpl implements UserService {
             "          Anda :\n" +
             "        </p><br>\n" +
             "        <a \n" +
-            "          href="+urlForgotPassword+"?id="+idUser+"&password="+password+"&token="+tokenForgotPassword+" \n" +
+            "          href="+urlForgotPassword+tokenForgotPassword+" \n" +
             "          target=\"_blank\"\n" +
             "          style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
             "          >Ubah Password</a><br>\n" +
@@ -518,7 +527,7 @@ public class UserServiceImpl implements UserService {
     emailDetails.setRecipient(email);
     logger.info(">>>> send email");
     //emailService.sendMailWithAttachment(emailDetails);
-    String urlendpoint = urlForgotPassword+"?id="+idUser+"&password="+password+"&token="+tokenForgotPassword;
+    String urlendpoint = urlForgotPassword+tokenForgotPassword;
     emailService.sendMailForgotPassword(emailDetails,checkUserEmail,urlendpoint);
     return ResponseEntity.ok(new Result());
   }
@@ -532,15 +541,18 @@ public class UserServiceImpl implements UserService {
       return ResponseEntity.badRequest().body(result);
     }
 
-    // password validation
-    if(!validator.isPasswordValid(param.getPassword())){
-      result.setMessage("Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!");
-      result.setCode(400);
-      result.setSuccess(false);
-      return ResponseEntity.badRequest().body(result);
-    }
+    Map<String,Object> tokenDecode = jwtUtils.decode(param.getToken());
 
-    int resultModel = userRepository.changePassword(encoder.encode(param.getPassword()), param.getId());
+    // password validation
+//    if(!validator.isPasswordValid(param.getPassword())){
+//      result.setMessage("Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!");
+//      result.setCode(400);
+//      result.setSuccess(false);
+//      return ResponseEntity.badRequest().body(result);
+//    }
+
+    long userId = Long.parseLong(tokenDecode.get("userId").toString());
+    int resultModel = userRepository.changePassword(encoder.encode(param.getPassword()),userId);
     if (resultModel == 1) {
       result.setCode(200);
       result.setMessage("Password Succesfully Updated");

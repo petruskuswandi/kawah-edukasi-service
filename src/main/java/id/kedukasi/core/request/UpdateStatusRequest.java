@@ -1,32 +1,34 @@
 package id.kedukasi.core.request;
 
 import io.swagger.annotations.ApiModelProperty;
-
 public class UpdateStatusRequest {
-
     @ApiModelProperty(example = "1", required = true)
     private int id;
 
-    @ApiModelProperty(example = "PESERTA/CALON PESERTA/REGISTER", required = true)
+    @ApiModelProperty(example = "REGISTER", required = true)
     private String statusName;
 
     @ApiModelProperty(example = "deskripsi", required = true)
     private String description;
 
-    @ApiModelProperty(example = "MENTOR/PESERTA", required = true)
+    @ApiModelProperty(example = "PESERTA", required = true)
     private String flag;
 
-    @ApiModelProperty(example = "true", required = true)
+    @ApiModelProperty(example = "Suspended", required = true)
+    private String subFlag;
+
+    @ApiModelProperty(example = "false", required = true)
     private boolean isDeleted;
 
     public UpdateStatusRequest() {
     }
 
-    public UpdateStatusRequest(int id, String status_name, String description, String flag, boolean isDeleted) {
+    public UpdateStatusRequest(int id, String status_name, String description, String flag, String subFlag, boolean isDeleted) {
         this.id = id;
         this.statusName = status_name;
         this.description = description;
         this.flag = flag;
+        this.subFlag = subFlag;
         this.isDeleted = isDeleted;
     }
 
@@ -38,11 +40,11 @@ public class UpdateStatusRequest {
         this.id = id;
     }
 
-    public String getStatus_name() {
+    public String getStatusName() {
         return statusName;
     }
 
-    public void setStatus_name(String status_name) {
+    public void setStatusName(String status_name) {
         this.statusName = status_name;
     }
 
@@ -60,6 +62,14 @@ public class UpdateStatusRequest {
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public String getSubFlag() {
+        return subFlag;
+    }
+
+    public void setSubFlag(String subFlag) {
+        this.subFlag = subFlag;
     }
 
     public boolean getisDeleted() {

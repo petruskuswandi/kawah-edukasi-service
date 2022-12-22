@@ -4,6 +4,7 @@ package id.kedukasi.core.request;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.*;
 
+
 public class SignupRequest {
 
   @NotBlank

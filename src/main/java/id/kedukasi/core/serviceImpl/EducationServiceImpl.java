@@ -17,11 +17,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 @Service
 @Slf4j
 public class EducationServiceImpl implements EducationService {
-
     @Autowired
     EducationRepository repository;
 
@@ -31,6 +29,14 @@ public class EducationServiceImpl implements EducationService {
     public ResponseEntity<Result> saveEducation(SaveEducationRequest req) {
         log.info("save education service");
         result = new Result();
+        log.info("Ini payload = "+req.getName());
+        log.info("Ini payload = "+req.getDescription());
+//        if (req.getName()==null||req.getDescription()==null){
+//            result.setCode(HttpStatus.BAD_REQUEST.value());
+//            result.setMessage("name atau description null");
+//            result.setSuccess(false);
+//            return ResponseEntity.ok(result);
+//        }
         Pattern p = Pattern.compile("[a-zA-Z0-9 ]+");
         Matcher m = p.matcher(req.getName());
         Matcher m2 = p.matcher(req.getDescription());
@@ -51,6 +57,13 @@ public class EducationServiceImpl implements EducationService {
         }
 
         try {
+            Education byName = repository.findByName(req.getName());
+            if (byName!=null){
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setMessage("name sudah ada");
+                result.setSuccess(false);
+                return ResponseEntity.ok(result);
+            }
             Education education = new Education();
             education.setName(req.getName());
             education.setDescription(req.getDescription());

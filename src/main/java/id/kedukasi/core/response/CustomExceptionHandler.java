@@ -16,10 +16,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.validation.ConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;
-
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
-
     private Result result;
 
 //    @ExceptionHandler(Exception.class)

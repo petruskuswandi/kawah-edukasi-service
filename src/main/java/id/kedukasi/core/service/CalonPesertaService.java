@@ -4,10 +4,10 @@ import id.kedukasi.core.models.Result;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-
 public interface CalonPesertaService {
-    Result getAllCalonPeserta(String uri, String search);
+    //Result getAllCalonPeserta(String uri, String search);
+
+    Result getAllCalonPeserta(String uri, String search,long limit,long offset);
 
     Result getAllBannedCalonPeserta(String uri);
 
@@ -31,4 +31,6 @@ public interface CalonPesertaService {
     Result searchCalonPeserta(String keyword);
 
     Result sortAndPaging(Integer page, Integer size, Boolean ascending);
+
+    ResponseEntity<?> setUploadImagePath(long id, MultipartFile uploadImagePath, String uri);
 }

@@ -2,9 +2,7 @@ package id.kedukasi.core.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 public class UpdateProgramRequest {
-
     @NotNull
     private Long id;
 

@@ -32,10 +32,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
-
 @Service
 public class EmailServiceImpl implements EmailService {
-
   @Autowired
   private JavaMailSender javaMailSender;
 
@@ -48,6 +46,8 @@ public class EmailServiceImpl implements EmailService {
   @Value("${app.url.staging}")
   private String urlstaging;
 
+  @Value("${app.upload-file-path}")
+  private String templatePath;
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -80,7 +80,7 @@ public class EmailServiceImpl implements EmailService {
       mimeMessageHelper.setTo(details.getRecipient());
       mimeMessageHelper.setText(details.getMsgBody(), true);
       mimeMessageHelper.setSubject(details.getSubject());
-      FileSystemResource logo = new FileSystemResource(new File("src/main/resources/static/logo-kawah-edukasi.png"));
+      FileSystemResource logo = new FileSystemResource(new File(templatePath+"logo-kawah-edukasi.png"));
       /*
         adding logo to html Template EmailDetails
        */
@@ -123,7 +123,7 @@ public class EmailServiceImpl implements EmailService {
     helper.setText(process, true);
     helper.setTo(emailadmin);
     javaMailSender.send(mimeMessage);
-    //generatePdfFromHtml(process,pesertabaru.getId().toString(),"REGISTRASI_PESERTA");
+    generatePdfFromHtml(process,pesertabaru.getId().toString(),"REGISTRASI_PESERTA");
 
     logger.info(dataFile.toString());
     return true;

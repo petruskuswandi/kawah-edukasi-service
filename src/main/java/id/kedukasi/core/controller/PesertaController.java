@@ -33,12 +33,12 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+
 @CrossOrigin
 @RestController
 @RequestMapping("/peserta")
-//@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class PesertaController {
-
 
     @Autowired
     private ServletContext servletContext;
@@ -58,7 +58,8 @@ public class PesertaController {
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     public Result getAllPeserta(@RequestParam(required = false,name = "search") String search,
-                                @RequestParam(value = "limit",defaultValue = "10") long limit,@RequestParam(value = "offset",defaultValue = "0") long offset) {
+                                @RequestParam(value = "limit",defaultValue = "-99") long limit,
+                                @RequestParam(value = "offset",defaultValue = "-99") long offset) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getAllPeserta(uri,search,limit,offset);

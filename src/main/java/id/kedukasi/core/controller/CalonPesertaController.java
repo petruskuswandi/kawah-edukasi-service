@@ -6,15 +6,13 @@ import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-
-import java.util.Date;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -24,6 +22,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/calonPeserta")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class CalonPesertaController {
+
 
     @Autowired
     CalonPesertaService service;
@@ -38,11 +37,13 @@ public class CalonPesertaController {
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     public Result getAllCalonPeserta(
-            @RequestParam(value = "search") String search
+            @RequestParam(required = false,value = "search") String search,
+            @RequestParam(value = "limit",defaultValue = "-99") long limit,
+            @RequestParam(value = "offset",defaultValue = "-99") long offset
     ) {
         String uri = stringUtil.getLogParam(request);
         logger.info("tes "+uri);
-        return service.getAllCalonPeserta(uri,search);
+        return service.getAllCalonPeserta(uri,search,limit,offset);
     }
 
     @GetMapping(value = "/allBanned", produces = APPLICATION_JSON_VALUE)
@@ -170,5 +171,15 @@ public class CalonPesertaController {
             @RequestParam(value = "ascending", defaultValue = "true", required = true) Boolean ascending
     ) {
         return service.sortAndPaging(page, size, ascending);
+    }
+
+    @PatchMapping("/uploadImagePath")
+    public ResponseEntity<?> uploadImagePath(
+            @RequestParam(value = "id", defaultValue = "0", required = true) long id,
+            @RequestPart("uploadImagePath") MultipartFile uploadImagePath) {
+
+        String uri = stringUtil.getLogParam(request);
+        logger.info(uri);
+        return service.setUploadImagePath(id, uploadImagePath, uri);
     }
 }

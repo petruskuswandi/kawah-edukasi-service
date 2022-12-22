@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
 public interface UpdatePesertaRepository extends JpaRepository<Peserta,Long>  {
 
     //get by id

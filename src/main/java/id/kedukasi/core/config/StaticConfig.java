@@ -6,7 +6,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class StaticConfig implements WebMvcConfigurer {
-
     /*
         Static Resource Handler
      */
@@ -15,3 +14,4 @@ public class StaticConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
     }
 }
+

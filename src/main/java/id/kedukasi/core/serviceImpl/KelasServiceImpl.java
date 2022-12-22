@@ -3,6 +3,7 @@ package id.kedukasi.core.serviceImpl;
 import id.kedukasi.core.models.Batch;
 import id.kedukasi.core.models.Kelas;
 import id.kedukasi.core.models.Result;
+import id.kedukasi.core.models.Syillabus;
 import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.request.KelasRequest;
 import id.kedukasi.core.service.KelasService;
@@ -18,9 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class KelasServiceImpl implements KelasService {
@@ -65,6 +64,33 @@ public class KelasServiceImpl implements KelasService {
             logger.error(stringUtil.getError(e));
         }
         return result;
+    }
+
+    @Override
+    public Result getAllBatchByKelas(long idKelas) {
+        result = new Result();
+        try {
+            Map<String, List<Kelas>> items = new HashMap<>();
+            Kelas kelas = new Kelas();
+            Example<Kelas> example = Example.of(kelas);
+            items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC,"id")));
+            result.setData(items);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        return ResponseEntity.ok(result).getBody();
+
+//        Optional<Kelas> kelas = kelasRepository.findById(idKelas);
+//        if(!kelas.isPresent()){
+//            result.setCode(404);
+//            result.setMessage("Kelas tidak ada");
+//            return result;
+//        }
+//        List<Batch> batch = kelasRepository.getAllBatch(kelas.get());
+//        result.setCode(200);
+//        result.setMessage("Berhasil Ambil Batch");
+//        result.setData(batch);
+//        return result;
     }
 
     @Override

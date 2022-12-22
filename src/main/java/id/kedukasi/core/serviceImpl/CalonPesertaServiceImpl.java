@@ -13,9 +13,10 @@ import id.kedukasi.core.repository.wilayah.KelurahanRepository;
 import id.kedukasi.core.repository.wilayah.KotaRepository;
 import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
 import id.kedukasi.core.service.CalonPesertaService;
+import id.kedukasi.core.service.FilesStorageService;
+import id.kedukasi.core.utils.GlobalUtil;
 import id.kedukasi.core.utils.StringUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 @Service
 public class CalonPesertaServiceImpl implements CalonPesertaService {
-
     @Autowired
     PesertaRepository pesertaRepository;
 
@@ -57,6 +56,12 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
     KelurahanRepository kelurahanRepository;
 
     @Autowired
+    FilesStorageService storageService;
+
+    @Autowired
+    GlobalUtil globalUtil;
+
+    @Autowired
     StringUtil stringUtil;
 
     @Autowired
@@ -66,17 +71,45 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+//    @Override
+//    public Result getAllCalonPeserta(String uri, String search) {
+//        result = new Result();
+//        try {
+//            Map items = new HashMap();
+//            List<Peserta> getDataCalon = pesertaRepository.getCalonPeserta(search);
+//            List<Peserta> getTotal = pesertaRepository.getCalonPeserta("");
+//            logger.info("cek "+getDataCalon.get(0).getTanggalLahir());
+//            items.put("items", getDataCalon);
+//            items.put("totalItems", getDataCalon.size());
+//            items.put("totalData", getTotal);
+//            result.setData(items);
+//        } catch (Exception e) {
+//            logger.error(stringUtil.getError(e));
+//        }
+//        return result;
+//    }
+
     @Override
-    public Result getAllCalonPeserta(String uri, String search) {
+    public Result getAllCalonPeserta(String uri, String search,long limit,long offset) {
         result = new Result();
+        //default value search param
+        if(search == null){
+            search = "";
+        }
+        //null long condition
+        if(limit == -99){
+            limit = pesertaRepository.getCountByStatus(EnumStatusPeserta.CALON.toString());
+        }
+        //null long condition
+        if(offset == -99){
+            offset = 0;
+        }
         try {
             Map items = new HashMap();
-            List<Peserta> getDataCalon = pesertaRepository.getCalonPeserta(search);
-            List<Peserta> getTotal = pesertaRepository.getCalonPeserta("");
-            logger.info("cek "+getDataCalon.get(0).getTanggalLahir());
-            items.put("items", getDataCalon);
-            items.put("totalItems", getDataCalon.size());
-            items.put("totalData", getTotal);
+            List<Peserta> getDataCalon = pesertaRepository.getAllPagination(EnumStatusPeserta.CALON.toString(),false,search,limit,offset);
+            items.put("items",getDataCalon);
+            items.put("totalDataResult",getDataCalon.size());
+            items.put("totalData",pesertaRepository.getCountByStatus(EnumStatusPeserta.CALON.toString()));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -660,7 +693,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                 result.setMessage("Error: id "+ calonPesertaId + " bukan calon peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-               // calonPeserta.setKelas(kelas);
+                // calonPeserta.setKelas(kelas);
                 pesertaRepository.save(calonPeserta);
             }
         } catch (Exception e) {
@@ -740,5 +773,21 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             logger.error(stringUtil.getError(e));
         }
         return result;
+    }
+
+    @Override
+    public ResponseEntity<?> setUploadImagePath(long id, MultipartFile uploadImagePath, String uri) {
+        result = new Result();
+        try {
+            String filename = String.valueOf("upload_image_" + id).concat(".")
+                    .concat(globalUtil.getExtensionByStringHandling(uploadImagePath.getOriginalFilename()).orElse(""));
+            String filenameResult = storageService.save(uploadImagePath, filename);
+            pesertaRepository.setUploadImagePath(filenameResult, id);
+            result.setMessage("succes to save file ".concat(uploadImagePath.getOriginalFilename()));
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

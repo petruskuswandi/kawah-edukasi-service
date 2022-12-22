@@ -41,10 +41,8 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 @Service
 public class PesertaServiceImpl implements PesertaService {
-
     @Autowired
     PesertaRepository pesertaRepository;
 
@@ -87,6 +85,23 @@ public class PesertaServiceImpl implements PesertaService {
     @Autowired
     EntityManager em;
 
+//    @Override
+//    @Transactional
+//    public Result getAllPeserta(String uri) {
+//        result = new Result();
+//        try {
+//            Map items = new HashMap();
+//            Peserta peserta = new Peserta();
+//            peserta.setStatusPeserta(EnumStatusPeserta.PESERTA);
+//            peserta.setBanned(false);
+//            Example<Peserta> example = Example.of(peserta);
+//            items.put("items", pesertaRepository.findAll(example,Sort.by(Sort.Direction.ASC,"id")));
+//            result.setData(items);
+//        } catch (Exception e) {
+//            logger.error(stringUtil.getError(e));
+//        }
+//        return result;
+//    }
     @Override
     @Transactional
     public Result getAllPeserta(String uri,String search,long limit,long offset) {
@@ -97,7 +112,7 @@ public class PesertaServiceImpl implements PesertaService {
         }
         //null long condition
         if(limit == -99){
-            limit = 10;
+            limit = pesertaRepository.count();
         }
         //null long condition
         if(offset == -99){
@@ -106,11 +121,11 @@ public class PesertaServiceImpl implements PesertaService {
         StringBuilder sb = new StringBuilder();
         try {
             Map items = new HashMap();
-            List<Peserta> peserta = pesertaRepository.getAll(EnumStatusPeserta.PESERTA.toString(),false,search
+            List<Peserta> peserta = pesertaRepository.getAllPagination(EnumStatusPeserta.PESERTA.toString(),false,search
                     ,limit,offset);
             items.put("items",peserta);
             items.put("totalDataResult",peserta.size());
-            items.put("TotalData",pesertaRepository.findAll().size());
+            items.put("totalData",pesertaRepository.getCountByStatus(EnumStatusPeserta.PESERTA.toString()));
 
             result.setData(items);
         } catch (Exception e) {
@@ -282,7 +297,7 @@ public class PesertaServiceImpl implements PesertaService {
         Gson g = new Gson();
         RegisterRequest p = g.fromJson(jsonString, RegisterRequest.class);
 
-       // cek email
+        // cek email
         Peserta checkEmailPeserta = pesertaRepository.findByEmail(p.getEmail()).orElse(new Peserta());
         if (checkEmailPeserta.getEmail()!= null) {
             result.setMessage("Error: Email sudah digunakan!");
@@ -426,13 +441,13 @@ public class PesertaServiceImpl implements PesertaService {
          * 3. tidak keduanya
          */
 
-       setPenambahanData.setKesibukan("tidak Keduanya");
+        setPenambahanData.setKesibukan("tidak Keduanya");
 
-       if(p.getKesibukan() == 1){
-           setPenambahanData.setKesibukan("Kuliah/Sekolah");
-       }else if(p.getKesibukan() == 2){
-           setPenambahanData.setKesibukan("kerja");
-       }
+        if(p.getKesibukan() == 1){
+            setPenambahanData.setKesibukan("Kuliah/Sekolah");
+        }else if(p.getKesibukan() == 2){
+            setPenambahanData.setKesibukan("kerja");
+        }
 
         setPenambahanData.setLaptop("Ya");
         setPenambahanData.setKomitmen("Ya");
@@ -516,7 +531,7 @@ public class PesertaServiceImpl implements PesertaService {
 
         try {
             String extension = FilenameUtils.getExtension(fileName).toLowerCase();
-           // String key = UUID.randomUUID() + "." + extension;
+            // String key = UUID.randomUUID() + "." + extension;
 
 //            FileDB = new FileUpload(registerPeserta,key, file.getContentType(),fileName, file.getBytes(),
 //                    "REGISTER");

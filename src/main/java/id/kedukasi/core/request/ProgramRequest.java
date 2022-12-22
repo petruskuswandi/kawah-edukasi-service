@@ -6,8 +6,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class ProgramRequest {
 
+public class ProgramRequest {
     @NotEmpty
     @NotNull
     @NotBlank

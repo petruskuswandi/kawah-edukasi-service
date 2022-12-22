@@ -1,17 +1,14 @@
 package id.kedukasi.core.request;
 
 import io.swagger.annotations.ApiModelProperty;
-
 public class UpdateTypeRequest {
-
-
     @ApiModelProperty(example = "1",required = true)
     private int id;
     @ApiModelProperty (name = "type_name" ,example = "Nama type document",required = true)
     private String type_Name;
     @ApiModelProperty (example = "deskripsi",required = true)
     private String description;
-    @ApiModelProperty (example = "false",required = true)
+    @ApiModelProperty (example = "true",required = true)
     private boolean isDeleted;
 
     public UpdateTypeRequest() {

@@ -9,8 +9,12 @@ public interface KelasService {
 
     Result getAllBannedKelas(String uri);
 
+    Result getAllBatchByKelas(long idKelas);
+
     Result getClassById(Long id, String uri);
-Result getProgramRunning(String uri);
+
+    Result getProgramRunning(String uri);
+
     ResponseEntity<?> updateClass(KelasRequest kelasRequest);
 
     ResponseEntity<?> deleteClass(boolean banned, Long id, String uri);
