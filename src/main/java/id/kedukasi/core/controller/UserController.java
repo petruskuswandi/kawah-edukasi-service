@@ -49,6 +49,13 @@ public class UserController {  @Autowired
     return service.getAllUser(uri);
   }
 
+  @GetMapping(value = "page/{page}", produces = APPLICATION_JSON_VALUE)
+  public Result getUserData(@PathVariable("page") int page) {
+    String uri = stringUtil.getLogParam(request);
+    logger.info(uri);
+    return service.getUserData(page, uri);
+  }
+
   @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
   public Result getUserByid(@PathVariable("id") long id) {
     String uri = stringUtil.getLogParam(request);

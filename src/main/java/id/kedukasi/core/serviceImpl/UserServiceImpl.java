@@ -107,6 +107,19 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public Result getUserData(int page, String uri) {
+    result = new Result();
+    try {
+      Map<String, List<User>> items = new HashMap<>();
+      items.put("items", userRepository.findUserData(page));
+      result.setData(items);
+    } catch (Exception e) {
+      logger.error(stringUtil.getError(e));
+    }
+    return result;
+  }
+
+  @Override
   public Result getUserById(long id, String uri) {
     result = new Result();
     try {

@@ -37,7 +37,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Integer existsByNoHp(String noHp, Long id);
 
   @Transactional
-  @Query(value = "SELECT u FROM User u ORDER BY u.namaLengkap LIMIT 2 OFFSET 2*(?1-1)", nativeQuery = true)
+  @Query(value = "SELECT * FROM users ORDER BY nama_lengkap LIMIT 2 OFFSET 2*(?1 - 1)", nativeQuery = true)
   List<User> findUserData(int page);
 
   @Transactional
