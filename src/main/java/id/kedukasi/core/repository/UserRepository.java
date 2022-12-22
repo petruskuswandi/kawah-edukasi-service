@@ -1,6 +1,8 @@
 package id.kedukasi.core.repository;
 
 import id.kedukasi.core.models.User;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,9 +26,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Boolean existsByEmail(String email);
 
   /* Query untuk cek apakah terdapat noHp yang sama pada user lain */
+  /* For create */
   @Transactional
   @Query("select count(*) from User u where u.noHp = ?1")
   Integer existsByNoHp(String noHp);
+
+  /* For update */
+  @Transactional
+  @Query("select count(*) from User u where u.noHp = ?1 and u.id != ?2")
+  Integer existsByNoHp(String noHp, Long id);
+
+  @Transactional
+  @Query(value = "SELECT u FROM User u ORDER BY u.namaLengkap LIMIT 2 OFFSET 2*(?1-1)", nativeQuery = true)
+  List<User> findUserData(int page);
 
   @Transactional
   User findById(long id);

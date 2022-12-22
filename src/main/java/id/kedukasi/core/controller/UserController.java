@@ -1,6 +1,7 @@
 package id.kedukasi.core.controller;
 
 import id.kedukasi.core.models.Result;
+import id.kedukasi.core.request.SignupRequest;
 import id.kedukasi.core.request.UserRequest;
 import id.kedukasi.core.service.UserService;
 import id.kedukasi.core.utils.StringUtil;
@@ -56,8 +57,8 @@ public class UserController {  @Autowired
   }
 
   @PostMapping("/create")
-  public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest) {
-    return service.updateUser(userRequest);
+  public ResponseEntity<?> createUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    return service.createUser(signUpRequest);
   }
 
   @PutMapping("/update")

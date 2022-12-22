@@ -132,8 +132,6 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<?> createUser(SignupRequest signUpRequest) {
     result = new Result();
 
-
-
     if (!validator.isPhoneValid(signUpRequest.getNoHp())) {
       result.setMessage("Error: invalid phone number!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -150,6 +148,14 @@ public class UserServiceImpl implements UserService {
               .body(result);
     }
 
+    Integer checkUserNoHp = userRepository.existsByNoHp(signUpRequest.getNoHp());
+      if (checkUserNoHp != null && checkUserNoHp > 0) {
+        result.setMessage("Error: Phone number is already taken!");
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity
+                .badRequest()
+                .body(result);
+    }
 
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
       result.setMessage("Error: Email is already in use!");
@@ -158,23 +164,28 @@ public class UserServiceImpl implements UserService {
               .badRequest()
               .body(result);
     }
-    if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-      result.setMessage("Error: Usename is already taken!");
-      result.setCode(HttpStatus.BAD_REQUEST.value());
-      return ResponseEntity
-              .badRequest()
-              .body(result);
-    }
+    
+    // if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+    //   result.setMessage("Error: Usename is already taken!");
+    //   result.setCode(HttpStatus.BAD_REQUEST.value());
+    //   return ResponseEntity
+    //           .badRequest()
+    //           .body(result);
+    // }
 
     Role role = roleRepository.findById(signUpRequest.getRole()).orElse(null);
-    User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
-            encoder.encode(signUpRequest.getPassword()),signUpRequest.getNamaLengkap(),
-            signUpRequest.getNoHp(), StringUtil.getRandomNumberString(), role, false, false);
+    String password = StringUtil.alphaNumericString();
+    // User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
+    //         encoder.encode(signUpRequest.getPassword()),signUpRequest.getNamaLengkap(),
+    //         signUpRequest.getNoHp(), StringUtil.getRandomNumberString(), role, false, false);
+
+    User user = new User(signUpRequest.getEmail(), encoder.encode(password), signUpRequest.getNamaLengkap(),
+                         signUpRequest.getNoHp(), role, StringUtil.getRandomNumberString());
     User userResult = userRepository.save(user);
 
-//    if (userResult != null) {
-//      sendActivationEmail(userResult.getId(), userResult.getTokenVerification(), userResult.getEmail());
-//    }
+   if (userResult != null && userResult.isIsActive() == false) {
+     sendActivationEmail(userResult.getId(), userResult.getTokenVerification(), password, userResult.getEmail());
+   }
 
     result.setMessage("User registered successfully!");
     result.setCode(HttpStatus.OK.value());
@@ -337,7 +348,7 @@ public class UserServiceImpl implements UserService {
       }
 
       /* Validasi ketika noHp sudah digunakan oleh user lain */
-      Integer checkUserNoHp = userRepository.existsByNoHp(userRequest.getNoHp());
+      Integer checkUserNoHp = userRepository.existsByNoHp(userRequest.getNoHp(), userRequest.getId());
       if (checkUserNoHp != null && checkUserNoHp > 0) {
         result.setMessage("Error: Phone number is already taken!");
         result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -361,7 +372,7 @@ public class UserServiceImpl implements UserService {
       user.setId(userRequest.getId());
       userRepository.save(user);
 
-      result.setMessage(userRequest.getId() == 0 ? "User registered successfully!" : "User updated successfully!");
+      result.setMessage(/*userRequest.getId() == 0 ? "User registered successfully!" :*/ "User updated successfully!");
       result.setCode(HttpStatus.OK.value());
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
@@ -410,17 +421,82 @@ public class UserServiceImpl implements UserService {
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
-  private void sendActivationEmail(long id, String tokenVerification, String receiver) {
+  private void sendActivationEmail(long id, String tokenVerification, String password, String receiver) {
     EmailDetails emailDetails = new EmailDetails();
     emailDetails.setSubject("Activate User");
+    String namaUser = userRepository.findById(id).getNamaLengkap();
+    // String password = userRepository.findById(id).getPassword();
+    String email = userRepository.findById(id).getEmail();
+    Boolean isActive = userRepository.findByEmail(email).get().isIsActive();
 
     String url = "";
-    String body = "<html>"
-            + "<body>"
-            + "Click <a href=\"http://localhost:8880/api/auth/active?id=" + id + "&tokenVerification="
-            + tokenVerification + "\">here</a> to activate your account."
-            + "</body>"
-            + "</html>";
+    String body = 
+    "<!DOCTYPE html>\n" +
+    "<html lang=\"en\" xmlns:th=\"http://www.w3.org/1999/xhtml\">\n" +
+    "<head>\n" +
+    "  <meta charset=\"UTF-8\">\n" +
+    "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+    "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+    "  <title>Template Email - Sign Up</title>\n" +
+    "  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n" +
+    "  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n" +
+    "  <link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap\" rel=\"stylesheet\">\n" +
+    "  <style>\n" +
+    "    * {\n" +
+    "      margin: 0;\n" +
+    "      padding: 0;\n" +
+    "      box-sizing: border-box;\n" +
+    "      font-family: 'Poppins', sans-serif;\n" +
+    "    }\n" +
+    "\n" +
+    "    p {\n" +
+    "      font-size: 22px;\n" +
+    "      font-weight: 400;\n" +
+    "      line-height: 36px;\n" +
+    "    }\n" +
+    "\n" +
+    "    body {\n" +
+    "      display: flex;\n" +
+    "      justify-content: center;\n" +
+    "      align-items: center;\n" +
+    "      height: 100vh;\n" +
+    "    }\n" +
+    "\n" +
+    "    body > div > div > div:nth-of-type(2) a:hover {\n" +
+    "      transform: translateY(-1px);\n" +
+    "    }\n" +
+    "  </style>\n" +
+    "</head>\n" +
+    "<body>\n" +
+    "  <div style=\"width: 100%; max-width: 932px; height: 599px; border: 2px solid #E2E2E2; border-radius: 8px;\">\n" +
+    "    <div style=\"padding: 57px; align-items: center; justify-content: space-between; text-align: center;\">\n" +
+    "      <img src=\"cid:logo\" alt=\"Logo Kawah Edukasi\">\n" +
+    "      <p style=\"font-size: 24px; font-weight: 600;\">Halo "+namaUser+",</p>\n" +
+    "      <p style=\"font-size: 20px; font-weight: 300;\">Selamat anda telah berhasil Sign Up.</p>\n" +
+    "      <hr style=\"margin-bottom: 10px; margin-top: 10px;\">\n" +
+    "        <div>\n" +
+    "          <p style=\"font-size: 20px; font-weight: 300;\">Akun Kawah Edukasi Anda telah dibuat.</p>\n" +
+    "          <p style=\"font-size: 20px; font-weight: 300;\">Berikut Identitas Akun Anda </p>\n" +
+    "          <p style=\"font-size: 20px; font-weight: 300;\">Id: "+id+",</p>\n" +
+    "          <p style=\"font-size: 20px; font-weight: 300;\">Token Verifikasi: "+tokenVerification+", dan </p>\n" +
+    "          <p style=\"font-size: 20px; font-weight: 300;\">Password: "+password+" </p>\n" +
+    "          <hr style=\"margin-bottom: 10px; margin-top: 10px;\">\n" +
+    "        <a \n" +
+    "          href=\"http://localhost:8880/api/auth/active?id=" + id + "&tokenVerification=" + tokenVerification + "&password="  + password +"\" \n" +
+    "          target=\"_blank\"\n" +
+    "          style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
+    "          >Aktivasi Akun</a><br>\n" +
+    "          <hr style=\"margin-bottom: 10px; margin-top: 10px;\">\n" +
+    "        <p style=\"font-weight: 500;\">Kawah Edukasi</p>\n" +
+    "        <p>Support Team</p>\n" +
+    "      </div>\n" +
+    "      <div>\n" +
+    "        <p style=\"font-weight: 500; margin-top: 25px; text-align: center;\">2022 &copy; Kawah Edukasi.</p>\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "</body>\n" +
+    "</html>";
     emailDetails.setMsgBody(body);
     emailDetails.setRecipient(receiver);
     logger.info(">>>> send email");

@@ -70,6 +70,18 @@ public class StringUtil {
     int number = rnd.nextInt(999999);
 
     return String.format("%06d", number);
-}
+  }
+
+  public static String alphaNumericString() {
+    int len = 8;
+    String AB = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    Random rnd = new Random();
+
+    StringBuilder sb = new StringBuilder(len);
+    for (int i = 0; i < len; i++) {
+        sb.append(AB.charAt(rnd.nextInt(AB.length())));
+    }
+    return sb.toString();
+  }
 
 }
