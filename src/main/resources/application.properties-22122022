@@ -1,15 +1,17 @@
 server.port=8880
-logging.config=./logback.xml
+logging.config=./config/logback.xml
 swagger.enabled=true
+
 
 spring.datasource.url=jdbc:postgresql://${DATABASE_HOST:postgres}:${DATABASE_PORT:5432}/${DATABASE_NAME:kawah_db}
 spring.datasource.username=${DATABASE_USER:postgres}
 spring.datasource.password=${DATABASE_PASSWORD:Password09!}
+app.expired.token.forgot-password=3600000
+app.url.staging=https://stg.kawahedukasi.id
 
 app.upload-file-path=./uploads/
 app.url.active-user=
-app.url.forgot-password=https://stg.kawahedukasi.id/forgot
-app.expired.token.forgot-password=3600000
+app.url.forgot-password=https://stg.kawahedukasi.id/forgot/
 
 spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
@@ -29,10 +31,9 @@ server.tomcat.max-swallow-size=10MB
 
 spring.jpa.hibernate.ddl-auto=update
 kedukasi.app.jwtSecret=kedukasi2022
-  #24 jam
+#24 jam
 kedukasi.app.jwtExpirationMs=86400000
-  #1menit
+#1menit
 kedukasi.app.jwtRefreshExpirationMs=60000
-springfox.documentation.swagger.v2.host=stg.kawahedukasi.id
-app.url.staging=https://stg.kawahedukasi.id
 spring.mail.email.admin=andri.awaluddin@barrans.id
+springfox.documentation.swagger.v2.host=stg.kawahedukasi.id
