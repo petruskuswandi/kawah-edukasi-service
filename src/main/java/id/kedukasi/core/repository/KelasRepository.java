@@ -23,6 +23,7 @@ public interface KelasRepository extends JpaRepository<Kelas,Long> {
     @Query("update Kelas u set u.banned = ?1, u.banned_time = CURRENT_TIMESTAMP where u.id = ?2")
     int deleteKelas(boolean banned, Long id);
 
+
     @Transactional
     @Query("select b from Batch b where b.classname = :idKelas")
     List<Batch> getAllBatch(@Param("idKelas") Kelas idKelas);

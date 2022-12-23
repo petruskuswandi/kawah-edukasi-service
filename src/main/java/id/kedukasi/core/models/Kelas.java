@@ -11,12 +11,12 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name = "classes",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "classname"),
-        })
+@Table(name = "classes")
+//        uniqueConstraints = {
+//                @UniqueConstraint(columnNames = "classname"),
+//        })
 @DynamicUpdate
-public class Kelas implements Serializable {
+public class Kelas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

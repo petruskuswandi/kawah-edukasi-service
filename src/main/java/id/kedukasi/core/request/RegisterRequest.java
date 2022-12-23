@@ -24,9 +24,6 @@ public class RegisterRequest {
     private Long kelurahan;
 
     @ApiModelProperty(example = "1", required = true)
-    private Long programName;
-
-    @ApiModelProperty(example = "1", required = true)
     private Long batch;
     @ApiModelProperty(example = "udindev@gmail.com", required = true)
     private String email;
@@ -243,14 +240,6 @@ public class RegisterRequest {
 
     public void setSiapBekerja(boolean siapBekerja) {
         this.siapBekerja = siapBekerja;
-    }
-
-    public Long getProgramName() {
-        return programName;
-    }
-
-    public void setProgramName(Long programName) {
-        this.programName = programName;
     }
 
     public String getEmail() {

@@ -3,7 +3,7 @@ package id.kedukasi.core.request;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
-public class KelasRequest implements Serializable {
+public class KelasRequest {
 
     private Long id;
 
