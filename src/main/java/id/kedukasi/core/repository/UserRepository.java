@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,8 +38,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Integer existsByNoHp(String noHp, Long id);
 
   @Transactional
-  @Query(value = "SELECT * FROM users ORDER BY nama_lengkap LIMIT 2 OFFSET 2*(?1 - 1)", nativeQuery = true)
-  List<User> findUserData(int page);
+  @Query(
+    value = "SELECT * FROM users "+
+            "WHERE (:namaLengkap IS NULL OR nama_lengkap LIKE %:namaLengkap%) "+
+            "ORDER BY id LIMIT :limit OFFSET :limit * (:page - 1)", 
+    nativeQuery = true
+  )
+  List<User> findUserData(@Param("namaLengkap") String search, 
+                          @Param("limit") int limit, 
+                          @Param("page") int page);
 
   @Transactional
   User findById(long id);

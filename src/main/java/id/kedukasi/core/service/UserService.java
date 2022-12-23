@@ -34,7 +34,7 @@ public interface UserService {
 
   Result getAllUser(String uri);
 
-  Result getUserData(int page, String uri);
+  Result getUserData(String uri, String search, Integer limit, Integer page);
 
   Result getUserById(long id, String uri);
 }
