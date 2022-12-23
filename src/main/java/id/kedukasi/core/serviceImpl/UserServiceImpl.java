@@ -89,6 +89,9 @@ public class UserServiceImpl implements UserService {
   @Value("${app.url.forgot-password}")
   private String urlForgotPassword;
 
+  @Value("${app.url.active-user}")
+  private String urlActivation;
+
   private Result result;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -107,11 +110,34 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Result getUserData(int page, String uri) {
+  public Result getUserData(String uri, String search, Integer limit, Integer page) {
     result = new Result();
+
+    int jumlahPage = (int) Math.ceil(userRepository.count() / (double) limit);
+
+    // if (limit == null || limit.intValue() < 5) {
+    //   limit = 5;
+    // }
+
+    // if (limit == null || limit.intValue() < 1) {
+    //   limit = 1;
+    // }
+    
+    // limit 0 or negative integer
+    if (limit < 1) { limit = 1; }
+    // page greater then jumlah page
+    if (page > jumlahPage) { page = jumlahPage; }
+    // page 0 or negative integer
+    if (page < 1) { page = 1; }
+    // search in null condition
+    if (search == null) { search = ""; }
+
     try {
-      Map<String, List<User>> items = new HashMap<>();
-      items.put("items", userRepository.findUserData(page));
+      Map items = new HashMap();
+      List<User> user = userRepository.findUserData(search, limit.intValue(), page.intValue());
+      items.put("items", user);
+      items.put("totalDataResult", user.size());
+      items.put("totalData", userRepository.count());
       result.setData(items);
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
@@ -188,12 +214,13 @@ public class UserServiceImpl implements UserService {
 
     Role role = roleRepository.findById(signUpRequest.getRole()).orElse(null);
     String password = StringUtil.alphaNumericString();
+    String username = signUpRequest.getEmail().split("@")[0];
     // User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
     //         encoder.encode(signUpRequest.getPassword()),signUpRequest.getNamaLengkap(),
     //         signUpRequest.getNoHp(), StringUtil.getRandomNumberString(), role, false, false);
 
-    User user = new User(signUpRequest.getEmail(), encoder.encode(password), signUpRequest.getNamaLengkap(),
-                         signUpRequest.getNoHp(), role, StringUtil.getRandomNumberString());
+    User user = new User(username, signUpRequest.getEmail(), encoder.encode(password), signUpRequest.getNamaLengkap(),
+                         signUpRequest.getNoHp(), role, StringUtil.getRandomNumberString(), signUpRequest.getIsActive());
     User userResult = userRepository.save(user);
 
    if (userResult != null && userResult.isIsActive() == false) {
@@ -284,10 +311,10 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Result active(long id, String tokenVerification, String uri) {
+  public Result active(String tokenVerification, String uri) {
     result = new Result();
     try {
-      int status = userRepository.setIsActive(true, id, tokenVerification);
+      int status = userRepository.setIsActive(true, tokenVerification);
       if (status == 1) {
         result.setMessage("user is actived");
       } else {
@@ -490,12 +517,11 @@ public class UserServiceImpl implements UserService {
     "        <div>\n" +
     "          <p style=\"font-size: 20px; font-weight: 300;\">Akun Kawah Edukasi Anda telah dibuat.</p>\n" +
     "          <p style=\"font-size: 20px; font-weight: 300;\">Berikut Identitas Akun Anda </p>\n" +
-    "          <p style=\"font-size: 20px; font-weight: 300;\">Id: "+id+",</p>\n" +
     "          <p style=\"font-size: 20px; font-weight: 300;\">Token Verifikasi: "+tokenVerification+", dan </p>\n" +
     "          <p style=\"font-size: 20px; font-weight: 300;\">Password: "+password+" </p>\n" +
     "          <hr style=\"margin-bottom: 10px; margin-top: 10px;\">\n" +
     "        <a \n" +
-    "          href=\"http://localhost:8880/api/auth/active?id=" + id + "&tokenVerification=" + tokenVerification + "&password="  + password +"\" \n" +
+    "          href=" + urlActivation + "token=" + tokenVerification + "\n" +
     "          target=\"_blank\"\n" +
     "          style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
     "          >Aktivasi Akun</a><br>\n" +

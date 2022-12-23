@@ -74,7 +74,7 @@ public class StringUtil {
 
   public static String alphaNumericString() {
     int len = 8;
-    String AB = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    String AB = "@$!%#*?&0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     Random rnd = new Random();
 
     StringBuilder sb = new StringBuilder(len);
