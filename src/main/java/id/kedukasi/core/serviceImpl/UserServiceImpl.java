@@ -311,10 +311,10 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Result active(String tokenVerification, String uri) {
+  public Result active(long id, String tokenVerification, String uri) {
     result = new Result();
     try {
-      int status = userRepository.setIsActive(true, tokenVerification);
+      int status = userRepository.setIsActive(true, id, tokenVerification);
       if (status == 1) {
         result.setMessage("user is actived");
       } else {
@@ -521,7 +521,7 @@ public class UserServiceImpl implements UserService {
     "          <p style=\"font-size: 20px; font-weight: 300;\">Password: "+password+" </p>\n" +
     "          <hr style=\"margin-bottom: 10px; margin-top: 10px;\">\n" +
     "        <a \n" +
-    "          href=" + urlActivation + "token=" + tokenVerification + "\n" +
+    "          href=" + urlActivation + "id=" + id + "&token=" + tokenVerification + "\n" +
     "          target=\"_blank\"\n" +
     "          style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
     "          >Aktivasi Akun</a><br>\n" +

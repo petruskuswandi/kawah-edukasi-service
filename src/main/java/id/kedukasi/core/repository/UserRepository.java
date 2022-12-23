@@ -58,8 +58,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   @Modifying
   @Transactional
-  @Query("update User u set u.isActive = ?1 where u.tokenVerification = ?2")
-  int setIsActive(boolean isAcvtive, String tokenVerification);
+  @Query("update User u set u.isActive = ?1 where u.id = ?2 and u.tokenVerification = ?3")
+  int setIsActive(boolean isAcvtive, Long id, String tokenVerification);
 
   @Modifying
   @Transactional

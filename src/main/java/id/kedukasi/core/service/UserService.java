@@ -30,7 +30,7 @@ public interface UserService {
 
   Result signOut(long id, String uri);
 
-  Result active(String tokenVerification, String uri);
+  Result active(long id, String tokenVerification, String uri);
 
   Result getAllUser(String uri);
 

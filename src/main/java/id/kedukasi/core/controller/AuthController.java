@@ -67,13 +67,13 @@ public class AuthController {
 
   @GetMapping("/active")
   public Result active(
-          /*@RequestParam(value = "id", defaultValue = "0", required = true) long id,*/
+          @RequestParam(value = "id", defaultValue = "0", required = true) long id,
           @RequestParam(value = "tokenVerification", defaultValue = "", required = true) String tokenVerification
   ) {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
 
-    return service.active(/*id,*/ tokenVerification, uri);
+    return service.active(id, tokenVerification, uri);
   }
 
   @PatchMapping("/change_password")
