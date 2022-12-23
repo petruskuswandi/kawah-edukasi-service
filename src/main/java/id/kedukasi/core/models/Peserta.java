@@ -38,17 +38,6 @@ public class Peserta implements Serializable {
         @JoinColumn(name = "batch_id", nullable = false, updatable = false)
         @NotNull(message = "Data Batch Tidak Boleh Kosong")
         private Batch batch;
-//        @ManyToOne(fetch = FetchType.EAGER)
-//        @JoinTable(name = "peserta_kelas",
-//                joinColumns = @JoinColumn(name = "peserta_id"),
-//                inverseJoinColumns = @JoinColumn(name = "kelas_id"))
-//        private Kelas kelas;
-//
-//        @ManyToOne(fetch = FetchType.EAGER)
-//        @JoinTable(name = "peserta_batch",
-//                joinColumns = @JoinColumn(name = "peserta_id"),
-//                inverseJoinColumns = @JoinColumn(name = "batch_id"))
-//        private Batch batch;
 
         //register
         @NotEmpty(message = "Nama Tidak Boleh Kosong")
@@ -70,9 +59,9 @@ public class Peserta implements Serializable {
         @Size(max = 20, message = "Jumlah Karakter Jenis Kelamin maksimal 20 karakter ")
         private String jenisKelamin;
 
-//        @Column(name = "pendidikan_terakhir", length = 20)
-//        @Size(max = 20, message = "Jumlah Karakter Pendidikan Terakhir maksimal 20 karakter ")
-//        private String pendidikanTerakhir;
+        @Column(name = "pendidikan_terakhir", length = 20)
+        @Size(max = 20, message = "Jumlah Karakter Pendidikan Terakhir maksimal 20 karakter ")
+        private String pendidikanTerakhir;
 
         //register
         @NotEmpty(message = "Np HP Tidak Boleh Kosong")
@@ -86,15 +75,6 @@ public class Peserta implements Serializable {
         @Pattern(regexp = "^(?=.{1,64})[A-Za-z0-9_\\-]+(\\.[A-Za-z0-9_\\-]+)*+@[^-]{3,}[A-Za-z0-9-]+(\\.[A-Za-z]{2,})*+$", message = "Format Email Tidak Sesuai")
         private String email;
 
-//        @Lob
-//        @Column(name = "upload_image")
-//        @ApiModelProperty(hidden = true)
-//        private byte[] uploadImage;
-//
-//        @Lob
-//        @Column(name = "upload_cv")
-//        @ApiModelProperty(hidden = true)
-//        private byte[] uploadCv;
 
         @Column(name = "uploadImagePath", updatable = false)
         @ApiModelProperty(hidden = true)
@@ -126,13 +106,13 @@ public class Peserta implements Serializable {
 
         //register
         @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "status_id", nullable = false, updatable = false)
+        @JoinColumn(name = "status_id", nullable = true, updatable = false)
         @NotNull(message = "Data Status Tidak Boleh Kosong")
         private Status status;
 
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "education_id", nullable = true, updatable = false)
-        private Education pendidikanTerakhir;
+        private Education tingkat_pendidikan;
 
 
 
@@ -174,11 +154,6 @@ public class Peserta implements Serializable {
         @Column(name = "updated_time")
         @Temporal(TemporalType.TIMESTAMP)
         private Date updated_time;
-
-        @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "program_id", nullable = false, updatable = false)
-        @NotNull(message = "Data Program Tidak Boleh Kosong")
-        private Program program;
 
         /**
          *  status tag twitbbon
@@ -283,7 +258,7 @@ public class Peserta implements Serializable {
                 this.namaPeserta = namaPeserta;
                 this.tanggalLahir = tanggalLahir;
                 this.jenisKelamin = jenisKelamin;
-                //this.pendidikanTerakhir = pendidikanTerakhir;
+                this.pendidikanTerakhir = pendidikanTerakhir;
                 this.noHp = noHp;
                 this.email = email;
                 this.alamatRumah = alamatRumah;
