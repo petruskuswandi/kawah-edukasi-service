@@ -1,5 +1,6 @@
 package id.kedukasi.core.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
@@ -23,7 +24,7 @@ import java.util.Date;
 public class Batch implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotBlank
@@ -34,34 +35,23 @@ public class Batch implements Serializable {
     @Size(max = 100)
     private String description;
 
-
-    // class dan mentor
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "batch_class",
-            joinColumns = @JoinColumn(name = "batch_id"),
-            inverseJoinColumns = @JoinColumn(name = "class_id"))
-    private Kelas classname;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "batch_mentor",
-            joinColumns = @JoinColumn(name = "batch_id"),
-            inverseJoinColumns = @JoinColumn(name = "mentor_id"))
-    private Mentor mentorname;
-
     @Column(name = "banned")
     private boolean banned;
 
     @Column(name = "banned_time")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date banned_time;
 
     // menambahkan stadate & Endedate
     @Column(name = "started_time")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startedtime;
 
     @Column(name = "ended_time")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endedtime;
 
     @Column(name = "created_by", updatable = false)
@@ -69,10 +59,12 @@ public class Batch implements Serializable {
 
     @Column(name = "created_time", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date created_time;
 
     @Column(name = "updated_time")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updated_time;
 
     public Batch() {

@@ -24,7 +24,7 @@ public interface KelasRepository extends JpaRepository<Kelas,Long> {
     int deleteKelas(boolean banned, Long id);
 
 
-    @Transactional
-    @Query("select b from Batch b where b.classname = :idKelas")
-    List<Batch> getAllBatch(@Param("idKelas") Kelas idKelas);
+//    @Transactional
+//    @Query("select b from Batch b where b.classname = :idKelas")
+//    List<Batch> getAllBatch(@Param("idKelas") Kelas idKelas);
 }
