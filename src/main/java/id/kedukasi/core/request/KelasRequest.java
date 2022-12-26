@@ -1,8 +1,14 @@
 package id.kedukasi.core.request;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 
+@Getter
+@Setter
+@Data
 
 public class KelasRequest {
 
@@ -15,24 +21,5 @@ public class KelasRequest {
     public KelasRequest() {
     }
 
-    public KelasRequest(String className, String description) {
-        this.className = className;
-        this.description = description;
-    }
 
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

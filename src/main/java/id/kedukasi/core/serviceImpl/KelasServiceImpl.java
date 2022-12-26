@@ -179,8 +179,8 @@ public class KelasServiceImpl implements KelasService {
                 return ResponseEntity.badRequest().body(result);
             }
 
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getClassName(), auth.getName());
+            User Id = new User();
+            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), Id.getId());
 
             kelasbaru.setId(Request.getId());
             kelasRepository.save(kelasbaru);
@@ -219,8 +219,9 @@ public class KelasServiceImpl implements KelasService {
             }
 
 
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), auth.getName());
+//            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User Id = new User();
+            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), Id.getId());
 
             kelasRepository.save(kelasbaru);
 
