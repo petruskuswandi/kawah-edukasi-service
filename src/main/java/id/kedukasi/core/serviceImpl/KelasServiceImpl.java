@@ -1,11 +1,9 @@
 package id.kedukasi.core.serviceImpl;
 
-import id.kedukasi.core.models.Batch;
-import id.kedukasi.core.models.Kelas;
-import id.kedukasi.core.models.Result;
-import id.kedukasi.core.models.Syillabus;
+import id.kedukasi.core.models.*;
 import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.request.KelasRequest;
+import id.kedukasi.core.request.UpdateKelasRequest;
 import id.kedukasi.core.service.KelasService;
 import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
@@ -35,20 +33,42 @@ public class KelasServiceImpl implements KelasService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public Result getAllClass(String uri) {
+    public Result getAllClass(String uri, String search, int limit, int page) {
         result = new Result();
+        int jumlahpage = (int) Math.ceil(kelasRepository.count() /(double) limit);
+
+        if (limit < 1) {
+            limit = 1;
+        }
+
+        if (page > jumlahpage) {
+            page = jumlahpage;
+        }
+
+        if (page < 1 ) {
+            page= 1;
+        }
+
+        if (search == null) {
+            search = "";
+        }
         try {
             Map items = new HashMap();
-            Kelas kelas = new Kelas();
-            kelas.setBanned(false);
-            Example<Kelas> example = Example.of(kelas);
-            items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC,"id")));
+            List<Kelas> kelas = kelasRepository.findKelasData(search,limit,page);
+            items.put("items", kelas);
+            items.put("totalDataResult", kelas.size());
+            items.put("totalData", kelasRepository.count());
+
+            if (kelas.size() == 0) {
+                result.setMessage("Maaf Data Kelas yang Anda cari tidak tersedia");
+            }
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
         return result;
     }
+
 
     @Override
     public Result getAllBannedKelas(String uri) {
@@ -58,7 +78,7 @@ public class KelasServiceImpl implements KelasService {
             Kelas kelas = new Kelas();
             kelas.setBanned(true);
             Example<Kelas> example = Example.of(kelas);
-            items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC,"id")));
+            items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -66,19 +86,19 @@ public class KelasServiceImpl implements KelasService {
         return result;
     }
 
-    @Override
-    public Result getAllBatchByKelas(long idKelas) {
-        result = new Result();
-        try {
-            Map<String, List<Kelas>> items = new HashMap<>();
-            Kelas kelas = new Kelas();
-            Example<Kelas> example = Example.of(kelas);
-            items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC,"id")));
-            result.setData(items);
-        } catch (Exception e) {
-            logger.error(stringUtil.getError(e));
-        }
-        return ResponseEntity.ok(result).getBody();
+//    @Override
+//    public Result getAllBatchByKelas(long idKelas) {
+//        result = new Result();
+//        try {
+//            Map<String, List<Kelas>> items = new HashMap<>();
+//            Kelas kelas = new Kelas();
+//            Example<Kelas> example = Example.of(kelas);
+//            items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC,"id")));
+//            result.setData(items);
+//        } catch (Exception e) {
+//            logger.error(stringUtil.getError(e));
+//        }
+//        return ResponseEntity.ok(result).getBody();
 
 //        Optional<Kelas> kelas = kelasRepository.findById(idKelas);
 //        if(!kelas.isPresent()){
@@ -91,7 +111,7 @@ public class KelasServiceImpl implements KelasService {
 //        result.setMessage("Berhasil Ambil Batch");
 //        result.setData(batch);
 //        return result;
-    }
+//    }
 
     @Override
     public Result getClassById(Long id, String uri) {
@@ -112,6 +132,7 @@ public class KelasServiceImpl implements KelasService {
         }
         return result;
     }
+
     public Result getProgramRunning(String uri) {
         result = new Result();
         try {
@@ -120,45 +141,90 @@ public class KelasServiceImpl implements KelasService {
             Kelas kelas = new Kelas();
             kelas.setBanned(false);
             Example<Kelas> example = Example.of(kelas);
-            items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC,"id")));
+            items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
         return result;
     }
+
     @Override
-    public ResponseEntity<?> updateClass(KelasRequest kelasRequest) {
+    public ResponseEntity<Result> updateClass(UpdateKelasRequest Request) {
         result = new Result();
         try {
-            Kelas checkClassname = kelasRepository.findByClassname(kelasRequest.getClassname()).orElse(new Kelas());
-            if (checkClassname.getClassname()!= null && !Objects.equals(kelasRequest.getId(), checkClassname.getId())) {
+            Kelas checkClassname = kelasRepository.findByClassname(Request.getClassName()).orElse(new Kelas());
+            if (checkClassname.getClassname()!= null && !Objects.equals(Request.getId(), checkClassname.getId())) {
                 result.setMessage("Error: Nama kelas sudah digunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             }
-            if(kelasRequest.getClassname().length()<3
-                    || kelasRequest.getClassname().length()>20
-                    || kelasRequest.getClassname().isBlank()) {
+            if (!kelasRepository.findById(Request.getId()).isPresent()) {
+                result.setSuccess(false);
+                result.setMessage("Error: Tidak ada kelas dengan id " + Request.getId());
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            }
+            if(Request.getClassName().length()<3
+                    || Request.getClassName().length()>20
+                    || Request.getClassName().isBlank()) {
                 result.setMessage("Error: Nama kelas tidak boleh kosong dan harus terdiri dari 3-20 karakter");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
-            if(kelasRequest.getDescription().length()>50 || kelasRequest.getDescription().isBlank()) {
+            if(Request.getDescription().length()>50 || Request.getDescription().isBlank()) {
                 result.setMessage("Error: Deskripsi kelas tidak boleh kosong dan harus kurang dari 50 karakter");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            Kelas kelasbaru = new Kelas(kelasRequest.getClassname(), kelasRequest.getDescription(), auth.getName());
+            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getClassName(), auth.getName());
 
-            kelasbaru.setId(kelasRequest.getId());
+            kelasbaru.setId(Request.getId());
             kelasRepository.save(kelasbaru);
 
-            result.setMessage(kelasRequest.getId() == 0 ? "Berhasil membuat kelas baru!" : "Berhasil memperbarui kelas!");
+            result.setMessage(Request.getId() == 0 ? "Berhasil membuat kelas baru!" : "Berhasil memperbarui kelas!");
+            result.setCode(HttpStatus.OK.value());
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+
+        return ResponseEntity.ok(result);
+    }
+        @Override
+    public ResponseEntity<Result> createClass(KelasRequest Request) {
+        result = new Result();
+        try {
+            Kelas checkClassname = kelasRepository.findByClassname(Request.getClassName()).orElse(new Kelas());
+            if (checkClassname.getClassname()!= null) {
+                result.setMessage("Error: Nama kelas sudah digunakan!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            if(Request.getClassName().length()<3
+                    || Request.getClassName().length()>20
+                    || Request.getClassName().isBlank()) {
+                result.setMessage("Error: Nama kelas tidak boleh kosong dan harus terdiri dari 3-20 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
+            if(Request.getDescription().length()>50 || Request.getDescription().isBlank()) {
+                result.setMessage("Error: Deskripsi kelas tidak boleh kosong dan harus kurang dari 50 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
+
+
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), auth.getName());
+
+            kelasRepository.save(kelasbaru);
+
+            result.setMessage("Berhasil membuat kelas baru!");
             result.setCode(HttpStatus.OK.value());
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));

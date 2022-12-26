@@ -2,13 +2,13 @@ package id.kedukasi.core.controller;
 
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.request.KelasRequest;
+import id.kedukasi.core.request.UpdateKelasRequest;
 import id.kedukasi.core.service.KelasService;
 import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,10 +35,12 @@ public class KelasController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
-    public Result getAll() {
+    public Result getAll(@RequestParam(required = false,name = "search") String search,
+                         @RequestParam(value = "limit",defaultValue = "-99") Integer limit,
+                         @RequestParam(value = "offset",defaultValue = "-99") Integer page) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
-        return service.getAllClass(uri);
+        return service.getAllClass(uri,search,limit,page);
     }
 
     @GetMapping(value = "/allBanned", produces = APPLICATION_JSON_VALUE)
@@ -55,23 +57,22 @@ public class KelasController {
         return service.getClassById(id, uri);
     }
 
-    @GetMapping(value = "/batch/{id}",produces = APPLICATION_JSON_VALUE)
-    public Result getBatchByKelasId(@PathVariable("id") long id){
-        String uri = stringUtil.getLogParam(request);
-        logger.info(uri);
-        return service.getAllBatchByKelas(id);
-    }
+//    @GetMapping(value = "/batch/{id}",produces = APPLICATION_JSON_VALUE)
+//    public Result getBatchByKelasId(@PathVariable("id") long id){
+//        String uri = stringUtil.getLogParam(request);
+//        logger.info(uri);
+//        return service.getAllBatchByKelas(id);
+//    }
 
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<?> createClass(@Valid @RequestBody KelasRequest kelasRequest) {
-        return service.updateClass(kelasRequest);
+    public ResponseEntity<?> createClass(@Valid @RequestBody KelasRequest Request) {
+        return service.createClass(Request);
     }
 
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update")
-    public ResponseEntity<?> updateClass(@Valid @RequestBody KelasRequest kelasRequest) {
-
+    public ResponseEntity<Result> updateClass(@Valid @RequestBody UpdateKelasRequest kelasRequest) {
         return service.updateClass(kelasRequest);
     }
 

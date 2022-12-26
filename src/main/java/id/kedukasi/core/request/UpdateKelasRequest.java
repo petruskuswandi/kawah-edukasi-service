@@ -3,8 +3,10 @@ package id.kedukasi.core.request;
 import io.swagger.annotations.ApiModelProperty;
 
 
+public class UpdateKelasRequest {
 
-public class KelasRequest {
+    @ApiModelProperty(example = "1", required = true)
+    private Long id;
 
     @ApiModelProperty(example = "nama_kelas", required = true)
     private String className;
@@ -12,12 +14,21 @@ public class KelasRequest {
     @ApiModelProperty(example = "deskripsi", required = true)
     private String description;
 
-    public KelasRequest() {
+    public UpdateKelasRequest() {
     }
 
-    public KelasRequest(String className, String description) {
+    public UpdateKelasRequest(String className, String description) {
+        this.id = id;
         this.className = className;
         this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getClassName() {
