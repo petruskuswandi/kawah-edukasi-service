@@ -82,6 +82,12 @@ public class PesertaServiceImpl implements PesertaService {
     StatusRepository statusRepository;
 
     @Autowired
+    DocumentsRepository documentsRepository;
+
+    @Autowired
+    TypeDocumentsRepository typeDocumentsRepository;
+
+    @Autowired
     EntityManager em;
 
 //    @Override
@@ -500,12 +506,35 @@ public class PesertaServiceImpl implements PesertaService {
             String extension = FilenameUtils.getExtension(fileName).toLowerCase();
             String key = UUID.randomUUID() + "." + extension;
 
-            saveFile(file, registerPeserta, String.valueOf(pesertabaru.getId()),"REGISTER", idx, key, pathfile);
-            pictures.put(String.valueOf(idx[0]),idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
+            Documents documents = new Documents();
+            documents.setDocumentsName(fileName);
+            documents.setDirectory(pathfile);
+            documents.setFiletype(extension);
+            Optional<TypeDocuments> document = typeDocumentsRepository.findBytypeName(extension.toLowerCase());
+            documents.setTypedoc(document.get());
+            documents.setKey(key);
+            documents.setUserId(Math.toIntExact(pesertabaru.getId()));
+//            documents.setStatus
+//                    documents.subFlag
+//            documents.setUrl("-");
+//            documents.setRoleId(0);
+//            documents.setUserId(0);
+            documentsRepository.save(documents);
+
+
+            logger.info(extension);
+            logger.info(fileName);
+            logger.info(key);
+
+
+            //main code
+          //  saveFile(file, registerPeserta, String.valueOf(pesertabaru.getId()),"REGISTER", idx, key, pathfile);
+            //pictures.put(String.valueOf(idx[0]),idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
 
         });
 
-        emailService.sendRegisterMail(pictures, setPenambahanData, registerPeserta, pathfile);
+        //main code
+        //emailService.sendRegisterMail(pictures, setPenambahanData, registerPeserta, pathfile);
 
         result.setMessage("Registrasi Berhasil");
         result.setCode(HttpStatus.OK.value());
@@ -532,6 +561,7 @@ public class PesertaServiceImpl implements PesertaService {
             Path path = Paths.get(setPath + idx[0] + "_"
                     + id + "_" + action + "_" + key);
             Files.write(path, bytes);
+
 //            fileUploadRepository.save(FileDB);
         } catch (IOException e) {
             result.setMessage("Error: Bad Request Untuk File Upload!");
