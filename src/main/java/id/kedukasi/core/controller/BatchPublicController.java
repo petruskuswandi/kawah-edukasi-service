@@ -30,12 +30,12 @@ public class BatchPublicController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
-    public Result getAll() {
-        String uri = stringUtil.getLogParam(request);
-        logger.info(uri);
-        return service.getAllBatch(uri);
-    }
+//    @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
+//    public Result getAll() {
+//        String uri = stringUtil.getLogParam(request);
+//        logger.info(uri);
+//        return service.getAllBatch(uri);
+//    }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     public Result getBatchByid(@PathVariable("id") Long id) {
