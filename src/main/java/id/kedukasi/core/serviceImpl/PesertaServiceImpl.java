@@ -17,7 +17,6 @@ import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
 import id.kedukasi.core.request.RegisterRequest;
 import id.kedukasi.core.service.EmailService;
 import id.kedukasi.core.service.PesertaService;
-import id.kedukasi.core.utils.FileUploadUtil;
 import id.kedukasi.core.utils.StringUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
 
