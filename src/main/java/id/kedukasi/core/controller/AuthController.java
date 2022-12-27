@@ -59,12 +59,23 @@ public class AuthController {
           @RequestBody LoginRequest loginRequest) {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
+        
+    Result result = new Result();
     
+    Boolean isVerified = userRepository.findByEmail(loginRequest.getEmail()).get().isVerified();
+
+    if(isVerified.equals(false)){
+      result.setMessage("Akun Belum Ter-Verifikasi, Silahkan Verifikasi Akun Terlebih Dahulu Melalui Tautan yang Dikirim Melalui Email untuk Dapat Sign In!");
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return ResponseEntity
+              .badRequest()
+              .body(result);
+    }
+
     Boolean isActive = userRepository.findByEmail(loginRequest.getEmail()).get().isIsActive();
 
-    Result result = new Result();
     if(isActive.equals(false)){
-      result.setMessage("Akun Belum Aktif, Silahkan Aktivasi Akun Terlebih Dahulu untuk Dapat Sign In!");
+      result.setMessage("Akun Belum Aktif, Silahkan Hubungi Admin untuk Aktivasi Akun Terlebih Dahulu agar Dapat Sign In!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
               .badRequest()
@@ -81,7 +92,6 @@ public class AuthController {
           @RequestBody SignupRequest signUpRequest) {//Password pada Signup Request di generate auto pada UserServiceImpl dan ikut disend pada email
     service.createUser(signUpRequest); //Format Isian untuk memberikan id, token, email, dan password disamakan isiannya dengan Forgot Password di UserServiceImpl
 
-    Long id = userRepository.findByEmail(signUpRequest.getEmail()).get().getId();
     String tokenVerification = userRepository.findByEmail(signUpRequest.getEmail()).get().getTokenVerification();
     String statusAktif = "Aktif";
     statusAktif = userActivation;
@@ -93,12 +103,12 @@ public class AuthController {
 
       service.active(tokenVerification, uri);
 
-      result.setMessage("User telah berhasil terdaftar dan akun sudah teraktivasi!");
+      result.setMessage("User telah berhasil terdaftar dan akun sudah teraktivasi serta terverifikasi!");
       result.setCode(HttpStatus.OK.value());
       return ResponseEntity.ok(result);  
-    }
+    }    
 
-    result.setMessage("User telah berhasil terdaftar, tetapi akun belum teraktivasi!");
+    result.setMessage("User telah berhasil terdaftar, tetapi akun belum teraktivasi dan terverifikasi!");
     result.setCode(HttpStatus.OK.value());
     return ResponseEntity.ok(result);
   }
@@ -114,7 +124,6 @@ public class AuthController {
 
   @GetMapping("/active")
   public Result active(
-          @RequestParam(value = "id", defaultValue = "0", required = true) long id,
           @RequestParam(value = "tokenVerification", defaultValue = "", required = true) String tokenVerification) {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
@@ -135,6 +144,13 @@ public class AuthController {
     Result result = new Result();
     if(!encoder.matches(oldPassword, password)){
       result.setMessage("Password Lama yang Dimasukkan Tidak Sesuai");
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return ResponseEntity
+              .badRequest()
+              .body(result);
+    }
+    if(encoder.matches(newPassword, password)){
+      result.setMessage("Password Baru Tidak Boleh Sama dengan Password Lama");
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
               .badRequest()
