@@ -62,7 +62,7 @@ public class AuthController {
         
     Result result = new Result();
     
-    Boolean isVerified = userRepository.findByEmail(loginRequest.getEmail()).get().isIsVerified();
+    Boolean isVerified = userRepository.findByEmail(loginRequest.getEmail()).get().isVerified();
 
     if(isVerified.equals(false)){
       result.setMessage("Akun Belum Ter-Verifikasi, Silahkan Verifikasi Akun Terlebih Dahulu Melalui Tautan yang Dikirim Melalui Email untuk Dapat Sign In!");
@@ -102,7 +102,6 @@ public class AuthController {
       logger.info(uri);
 
       service.active(tokenVerification, uri);
-      userRepository.setIsVerified(true, tokenVerification);
 
       result.setMessage("User telah berhasil terdaftar dan akun sudah teraktivasi serta terverifikasi!");
       result.setCode(HttpStatus.OK.value());
