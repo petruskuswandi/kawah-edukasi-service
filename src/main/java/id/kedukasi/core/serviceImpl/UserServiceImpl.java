@@ -86,6 +86,9 @@ public class UserServiceImpl implements UserService {
   @Value("${kedukasi.app.jwtExpirationMs}")
   private int jwtExpirationMs;
 
+  @Value("${app.url.base}")
+  private String urlBase;
+
   @Value("${app.url.forgot-password}")
   private String urlForgotPassword;
 
@@ -114,14 +117,6 @@ public class UserServiceImpl implements UserService {
     result = new Result();
 
     int jumlahPage = (int) Math.ceil(userRepository.count() / (double) limit);
-
-    // if (limit == null || limit.intValue() < 5) {
-    //   limit = 5;
-    // }
-
-    // if (limit == null || limit.intValue() < 1) {
-    //   limit = 1;
-    // }
     
     // limit 0 or negative integer
     if (limit < 1) { limit = 1; }
@@ -135,8 +130,16 @@ public class UserServiceImpl implements UserService {
     try {
       Map items = new HashMap();
       List<User> user = userRepository.findUserData(search, limit.intValue(), page.intValue());
-      items.put("items", user);
-      items.put("totalDataResult", user.size());
+      List<SubUser> subUser = new ArrayList<>();
+      for (int i = 0; i < user.size(); i++) {
+        User dataUser = user.get(i);
+        SubUser su = new SubUser(dataUser.getId(), dataUser.getNamaLengkap(),
+                     dataUser.getEmail(), dataUser.getNoHp(), dataUser.getRole(),
+                     dataUser.isIsActive());
+        subUser.add(su);
+      }
+      items.put("items", subUser);
+      items.put("totalDataResult", subUser.size());
       items.put("totalData", userRepository.count());
       result.setData(items);
     } catch (Exception e) {
@@ -196,36 +199,32 @@ public class UserServiceImpl implements UserService {
                 .body(result);
     }
 
-    if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+    Integer checkUserEmail = userRepository.existsByEmail(signUpRequest.getEmail());
+    if (checkUserEmail != null && checkUserEmail > 0) {
       result.setMessage("Error: Email is already in use!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
               .badRequest()
               .body(result);
     }
-    
-    // if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-    //   result.setMessage("Error: Usename is already taken!");
-    //   result.setCode(HttpStatus.BAD_REQUEST.value());
-    //   return ResponseEntity
-    //           .badRequest()
-    //           .body(result);
-    // }
 
     Role role = roleRepository.findById(signUpRequest.getRole()).orElse(null);
     String password = StringUtil.alphaNumericString();
     String username = signUpRequest.getEmail().split("@")[0];
-    // User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
-    //         encoder.encode(signUpRequest.getPassword()),signUpRequest.getNamaLengkap(),
-    //         signUpRequest.getNoHp(), StringUtil.getRandomNumberString(), role, false, false);
+    String token =  StringUtil.getRandomNumberString();
+    
+    // Lakukan perulangan jika ternyata token sudah digunakan
+    while (userRepository.existsByToken(token) > 0) {
+      token = StringUtil.getRandomNumberString();
+    }
 
     User user = new User(username, signUpRequest.getEmail(), encoder.encode(password), signUpRequest.getNamaLengkap(),
-                         signUpRequest.getNoHp(), role, StringUtil.getRandomNumberString(), signUpRequest.getIsActive());
+                         signUpRequest.getNoHp(), role, signUpRequest.getIsActive(), token);
     User userResult = userRepository.save(user);
 
-   if (userResult != null && userResult.isIsActive() == false) {
-     sendActivationEmail(userResult.getId(), userResult.getTokenVerification(), password, userResult.getEmail());
-   }
+    if (userResult != null) {
+      sendActivationEmail(userResult.getEmail(), password, userResult.getTokenVerification());
+    }
 
     result.setMessage("User registered successfully!");
     result.setCode(HttpStatus.OK.value());
@@ -311,10 +310,22 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Result active(long id, String tokenVerification, String uri) {
+  public Result active(String tokenVerification, String uri) {
     result = new Result();
     try {
-      int status = userRepository.setIsActive(true, id, tokenVerification);
+      // variable set bisa dijadikan parameter pada method
+      // jika dijadikan parameter, maka method ini bisa digunakan
+      // untuk aktifkan atau non-aktifkan akun
+      boolean set = true;
+      boolean cek = userRepository.isUserVerified(tokenVerification);
+
+      int status = userRepository.setIsActive(true, tokenVerification);
+
+      // // cek apakah token sudah diverifikasi atau belum
+      if (set && cek == false) {
+        userRepository.setIsVerified(true, tokenVerification);
+      }
+
       if (status == 1) {
         result.setMessage("user is actived");
       } else {
@@ -360,8 +371,24 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<Result> updateUser(UserRequest userRequest) {
     result = new Result();
     try {
+      if (!validator.isPhoneValid(userRequest.getNoHp())) {
+        result.setMessage("Error: invalid phone number!");
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity
+                .badRequest()
+                .body(result);
+      }
+
+      if(!validator.isEmailValid(userRequest.getEmail())) {
+        result.setMessage("Error: invalid email format!");
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity
+                .badRequest()
+                .body(result);
+      }
+
       User checkUserEmail = userRepository.findByEmail(userRequest.getEmail()).orElse(new User());
-      if (checkUserEmail.getEmail()!= null && !Objects.equals(userRequest.getId(), checkUserEmail.getId())) {
+      if (checkUserEmail.getEmail()!= null && checkUserEmail.isBanned() == false && !Objects.equals(userRequest.getId(), checkUserEmail.getId())) {
         result.setMessage("Error: Email is already in use!");
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
@@ -370,7 +397,7 @@ public class UserServiceImpl implements UserService {
       }
 
       User checkUserUsername = userRepository.findByUsername(userRequest.getUsername()).orElse(new User());
-      if (checkUserUsername.getUsername() != null && !Objects.equals(userRequest.getId(), checkUserUsername.getId())) {
+      if (checkUserUsername.getUsername() != null && checkUserUsername.isBanned() == false && !Objects.equals(userRequest.getId(), checkUserUsername.getId())) {
         result.setMessage("Error: Username is already taken!");
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
@@ -397,14 +424,6 @@ public class UserServiceImpl implements UserService {
                 .body(result);
       }
 
-      if (!validator.isPhoneValid(userRequest.getNoHp())) {
-        result.setMessage("Error: invalid phone number!");
-        result.setCode(HttpStatus.BAD_REQUEST.value());
-        return ResponseEntity
-                .badRequest()
-                .body(result);
-      }
-
       User user = new User(userRequest.getUsername(), userRequest.getEmail(),
               encoder.encode(userRequest.getPassword()),userRequest.getNamaLengkap(), userRequest.getNoHp(),
               StringUtil.getRandomNumberString(), role, userRequest.isIsActive(), true);
@@ -412,7 +431,7 @@ public class UserServiceImpl implements UserService {
       user.setId(userRequest.getId());
       userRepository.save(user);
 
-      result.setMessage(/*userRequest.getId() == 0 ? "User registered successfully!" :*/ "User updated successfully!");
+      result.setMessage("User updated successfully!");
       result.setCode(HttpStatus.OK.value());
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
@@ -461,15 +480,30 @@ public class UserServiceImpl implements UserService {
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
-  private void sendActivationEmail(long id, String tokenVerification, String password, String receiver) {
+  private void sendActivationEmail(String receiver, String password, String tokenVerification) {
     EmailDetails emailDetails = new EmailDetails();
     emailDetails.setSubject("Activate User");
-    String namaUser = userRepository.findById(id).getNamaLengkap();
-    // String password = userRepository.findById(id).getPassword();
-    String email = userRepository.findById(id).getEmail();
-    Boolean isActive = userRepository.findByEmail(email).get().isIsActive();
+    String namaUser = userRepository.findByEmail(receiver).get().getNamaLengkap();
+    Boolean isActive = userRepository.findByEmail(receiver).get().isVerified();
 
     String url = "";
+
+    String buttonLink = "";
+    if (isActive) {
+      buttonLink = 
+      "        <p style=\"font-size: 20px; font-weight: 300;\">Silahkan anda login dengan menekan tombol dibawah ini.</p>\n" +
+      "        <a href=\"" + urlBase + "login\"" + " target=\"_blank\"\n" +
+      "        style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
+      "        >Login</a><br>\n";
+    } else {
+      buttonLink =
+      "        <p style=\"font-size: 20px; font-weight: 300;\">Silahkan anda verifikasi terlebih dahulu dengan menekan tombol dibawah ini.</p>\n" +
+      // "        <a href=\"" + urlBase + urlActivation + "?tokenVerification=" + tokenVerification + "\" target=\"_blank\"\n" +
+      "        <a href=\"" + "http://localhost:8880/api/auth/active/?tokenVerification=" + tokenVerification + "\" target=\"_blank\"\n" +
+      "        style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
+      "        >Aktivasi Akun</a><br>\n";
+    }
+
     String body = 
     "<!DOCTYPE html>\n" +
     "<html lang=\"en\" xmlns:th=\"http://www.w3.org/1999/xhtml\">\n" +
@@ -510,22 +544,17 @@ public class UserServiceImpl implements UserService {
     "<body>\n" +
     "  <div style=\"width: 100%; max-width: 932px; height: 599px; border: 2px solid #E2E2E2; border-radius: 8px;\">\n" +
     "    <div style=\"padding: 57px; align-items: center; justify-content: space-between; text-align: center;\">\n" +
-    "      <img src=\"cid:logo\" alt=\"Logo Kawah Edukasi\">\n" +
+    "      <img src=\"\" alt=\"Logo Kawah Edukasi\">\n" +
     "      <p style=\"font-size: 24px; font-weight: 600;\">Halo "+namaUser+",</p>\n" +
-    "      <p style=\"font-size: 20px; font-weight: 300;\">Selamat anda telah berhasil Sign Up.</p>\n" +
+    "      <p style=\"font-size: 20px; font-weight: 300;\">Selamat akun Kawah Edukasi anda berhasil dibuat.</p>\n" +
     "      <hr style=\"margin-bottom: 10px; margin-top: 10px;\">\n" +
-    "        <div>\n" +
-    "          <p style=\"font-size: 20px; font-weight: 300;\">Akun Kawah Edukasi Anda telah dibuat.</p>\n" +
-    "          <p style=\"font-size: 20px; font-weight: 300;\">Berikut Identitas Akun Anda </p>\n" +
-    "          <p style=\"font-size: 20px; font-weight: 300;\">Token Verifikasi: "+tokenVerification+", dan </p>\n" +
-    "          <p style=\"font-size: 20px; font-weight: 300;\">Password: "+password+" </p>\n" +
-    "          <hr style=\"margin-bottom: 10px; margin-top: 10px;\">\n" +
-    "        <a \n" +
-    "          href=" + urlActivation + "id=" + id + "&token=" + tokenVerification + "\n" +
-    "          target=\"_blank\"\n" +
-    "          style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
-    "          >Aktivasi Akun</a><br>\n" +
-    "          <hr style=\"margin-bottom: 10px; margin-top: 10px;\">\n" +
+    "      <div>\n" +
+    "        <p style=\"font-size: 20px; font-weight: 300;\">Berikut detail akun anda:</p>\n" +
+    "        <p style=\"font-size: 20px; font-weight: 300;\">Email: "+receiver+"</p>\n" +
+    "        <p style=\"font-size: 20px; font-weight: 300;\">Password: "+password+" </p>\n" +
+    "        <hr style=\"margin-bottom: 10px; margin-top: 10px;\">\n" +
+             buttonLink +
+    "        <hr style=\"margin-bottom: 10px; margin-top: 10px;\">\n" +
     "        <p style=\"font-weight: 500;\">Kawah Edukasi</p>\n" +
     "        <p>Support Team</p>\n" +
     "      </div>\n" +
@@ -691,4 +720,49 @@ public class UserServiceImpl implements UserService {
 //        .sign(algorithm);
 //  }
 
+}
+
+class SubUser {
+  private Long id;
+  private String namaLengkap;
+  private String email;
+  private String noHp;
+  private Role role;
+  private boolean status;
+
+  public SubUser() {}
+
+  public SubUser(Long id, String namaLengkap, String email, String noHp, Role role, boolean status) {
+    this.id = id;
+    this.namaLengkap = namaLengkap;
+    this.email = email;
+    this.noHp = noHp;
+    this.role = role;
+    this.status = status;
+  }
+
+  public Long getId() {
+      return id;
+  }
+
+  public String getNamaLengkap() {
+      return namaLengkap;
+  }
+
+  public String getEmail() {
+      return email;
+  }
+  
+  public String getNoHp() {
+      return noHp;
+  }
+
+  public Role getRole() {
+      return role;
+  }
+
+  public boolean isStatus() {
+      return status;
+  }
+  
 }

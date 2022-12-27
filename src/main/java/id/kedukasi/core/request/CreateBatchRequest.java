@@ -6,12 +6,9 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
-
 @Getter
 @Setter
-public class BatchRequest {
-    private  Long id;
-
+public class CreateBatchRequest {
     @NotBlank
     private String batchname;
 
@@ -25,5 +22,4 @@ public class BatchRequest {
     @NotBlank
     @ApiModelProperty(example = "2000-12-12", required = true)
     private Date endedtime;
-
 }
