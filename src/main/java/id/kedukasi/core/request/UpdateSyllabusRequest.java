@@ -16,6 +16,10 @@ public class UpdateSyllabusRequest {
     @ApiModelProperty(example = "true", required = true)
     private boolean softDelete;
 
+    @ApiModelProperty(example = "1", required = true)
+    private Long attachment;
+
+
     public UpdateSyllabusRequest() {
     }
 
@@ -58,7 +62,11 @@ public class UpdateSyllabusRequest {
         this.softDelete = softDelete;
     }
 
-  
-   
-   
+    public Long getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Long attachment) {
+        this.attachment = attachment;
+    }
 }
