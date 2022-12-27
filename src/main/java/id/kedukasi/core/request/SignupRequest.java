@@ -4,10 +4,12 @@ package id.kedukasi.core.request;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 public class SignupRequest {
 
-  @NotBlank
+  // @NotBlank
   @Size(min = 3, max = 20)
   @ApiModelProperty(example = "iam123", required = true)
   private String username;
@@ -21,7 +23,7 @@ public class SignupRequest {
   @ApiModelProperty(example = "3", required = true)
   private Integer role;
 
-  @NotBlank
+  // @NotBlank
   @Size(min = 6, max = 40)
   @ApiModelProperty(example = "iam123", required = true)
   @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%#*?&])[A-Za-z\\d@$!%#*?&]{8,}$",message = "Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!")
@@ -37,10 +39,14 @@ public class SignupRequest {
   @ApiModelProperty(example = "08xxxx", required = true)
   private String noHp;
 
+  @ApiModelProperty(example = "false", required = true)
+  private boolean isActive;
+
   public String getUsername() {
     return username;
   }
 
+  @JsonIgnore
   public void setUsername(String username) {
     this.username = username;
   }
@@ -57,6 +63,7 @@ public class SignupRequest {
     return password;
   }
 
+  @JsonIgnore
   public void setPassword(String password) {
     this.password = password;
   }
@@ -83,6 +90,14 @@ public class SignupRequest {
 
   public void setRole(Integer role) {
     this.role = role;
+  }
+
+  public boolean getIsActive() {
+      return isActive;
+  }
+
+  public void setIsActive(boolean isActive) {
+      this.isActive = isActive;
   }
   
 }

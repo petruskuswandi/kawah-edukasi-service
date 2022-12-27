@@ -1,6 +1,5 @@
 package id.kedukasi.core.serviceImpl;
 
-
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.models.Status;
 import id.kedukasi.core.repository.StatusRepository;
@@ -35,14 +34,43 @@ public class StatusServiceImpl implements StatusService {
     public ResponseEntity<Result> createStatus(StatusRequest status) {
         result = new Result();
         try {
-            int statusNameFlag = statusRepository.findStatusNameFlag(status.getStatus_name().toLowerCase(), status.getFlag().toLowerCase());
-            String errorUniqueStatusNameAndFlagMessage = "";
+            int statusNameFlag = 0;
+            Boolean inputNullSubFlag = true;
+            Boolean inputNullFlag = true;
+            Boolean inputNullDescription = true;
+            Boolean inputNullStatusName = true;
+            String errorUniqueStatusNameAndFlagAndSubFlagMessage = "";
+            String errorNotBlankSubFlagMessage = "";
             String errorNotBlankFlagMessage = "";
             String errorNotBlankDescriptionMessage = "";
             String errorNotBlankStatusNameMessage = "";
+            String errorNotNullStatusNameMessage = "";
+            String errorNotNullDescriptionMessage = "";
+            String errorNotNullFlagMessage = "";
+            String errorNotNullSubFlagMessage = "";
+
+            if(status.getSubFlag() != null && status.getFlag() != null && status.getStatusName() != null){
+                statusNameFlag = statusRepository.findStatusNameFlagSubFlag(status.getStatusName().toLowerCase(), status.getFlag().toLowerCase(), status.getSubFlag().toLowerCase());
+            }
+
+            if(status.getSubFlag() != null){
+                inputNullSubFlag = false;
+            }
+
+            if(status.getFlag() != null){
+                inputNullFlag = false;
+            }
+
+            if(status.getDescription() != null){
+                inputNullDescription = false;
+            }
+
+            if(status.getStatusName() != null){
+                inputNullStatusName = false;
+            }
 
             if (statusNameFlag > 0) {
-                errorUniqueStatusNameAndFlagMessage = "Kombinasi Nama dan Flag pada Status sudah ada!";
+                errorUniqueStatusNameAndFlagAndSubFlagMessage = "Kombinasi Nama Status, Flag, dan Sub Flag pada Status sudah ada!";
             }
 
             // int statusLength = statusRepository.findAll().size();
@@ -56,7 +84,7 @@ public class StatusServiceImpl implements StatusService {
             //         if(statusRepository.findById(_id).isPresent()){
             //             statusName = statusRepository.findById(_id).get().getStatusName();
             //             flag = statusRepository.findById(_id).get().getFlag();
-            //             if(statusName.equals(status.getStatus_name()) && flag.equals(status.getFlag()) ){
+            //             if(statusName.equals(status.getStatusName()) && flag.equals(status.getFlag()) ){
             //                 errorUniqueStatusNameAndFlagMessage = "Sudah Ada Nama Status dan Flag yang Sama! pada Id = " + _id;
             //                 break;
             //             }
@@ -64,26 +92,54 @@ public class StatusServiceImpl implements StatusService {
             //     } 
             // }
 
-            if(status.getFlag().isBlank() || status.getFlag().isEmpty()) {
-                errorNotBlankFlagMessage = "Flag tidak boleh kosong dan harus kurang dari 30 karakter, ";
+            if(inputNullSubFlag != true){
+                if(status.getSubFlag().isBlank() || status.getSubFlag().isEmpty()) {
+                    errorNotBlankFlagMessage = "Sub Flag tidak boleh kosong dan harus kurang dari 30 karakter, ";
+                }
             }
 
-            if(status.getDescription().isBlank()  || status.getDescription().isEmpty()) {
-                errorNotBlankDescriptionMessage = "Deskripsi Status tidak boleh kosong, ";
+            if(inputNullFlag != true){
+                if(status.getFlag().isBlank() || status.getFlag().isEmpty()) {
+                    errorNotBlankFlagMessage = "Flag tidak boleh kosong dan harus kurang dari 30 karakter, ";
+                }
             }
 
-            if(status.getStatus_name().length()>50 || status.getStatus_name().isBlank() || status.getStatus_name().isEmpty()) {
-                errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter";
+            if(inputNullDescription != true){
+                if(status.getDescription().isBlank()  || status.getDescription().isEmpty()) {
+                    errorNotBlankDescriptionMessage = "Deskripsi Status tidak boleh kosong, ";
+                }
+            }
+    
+            if(inputNullStatusName != true){
+                if(status.getStatusName().length()>50 || status.getStatusName().isBlank() || status.getStatusName().isEmpty()) {
+                    errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter, ";
+                }
             }
 
-            if (errorUniqueStatusNameAndFlagMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
+            if(status.getSubFlag() == null){
+                errorNotNullSubFlagMessage = "Sub Flag tidak boleh null, ";
+            }
+
+            if(status.getFlag() == null){
+                errorNotNullFlagMessage = "Flag tidak boleh null, ";
+            }
+
+            if(status.getDescription() == null){
+                errorNotNullDescriptionMessage = "Deskripsi Status tidak boleh null, ";
+            }
+
+            if(status.getStatusName() == null){
+                errorNotNullStatusNameMessage = "Nama Status tidak boleh null, ";
+            }
+
+            if (errorUniqueStatusNameAndFlagAndSubFlagMessage != "" || errorNotBlankSubFlagMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != ""  || errorNotNullSubFlagMessage != "" || errorNotNullFlagMessage != ""  || errorNotNullDescriptionMessage != ""  || errorNotNullStatusNameMessage != "") {
                 result.setSuccess(false);
-                result.setMessage("Error: "+ errorUniqueStatusNameAndFlagMessage + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
+                result.setMessage("Error: "+ errorUniqueStatusNameAndFlagAndSubFlagMessage+ errorNotBlankSubFlagMessage  + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage + errorNotNullSubFlagMessage + errorNotNullFlagMessage + errorNotNullDescriptionMessage + errorNotNullStatusNameMessage);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            Status newStatus = new Status(status.getStatus_name().toUpperCase(), status.getDescription(), status.getFlag().toUpperCase(), false);
+            Status newStatus = new Status(status.getStatusName().toUpperCase(), status.getDescription(), status.getFlag().toUpperCase(), status.getSubFlag().toUpperCase(),false);
 
             statusRepository.save(newStatus);
 
@@ -97,59 +153,135 @@ public class StatusServiceImpl implements StatusService {
         return ResponseEntity.ok(result);
     }
 
-
     @Override
     public ResponseEntity<Result> updateStatus(UpdateStatusRequest status) {
         result = new Result();
         try {
-            int statusNameFlag = statusRepository.findUpdateStatusNameFlag(status.getId(), status.getStatus_name().toLowerCase(), status.getFlag().toLowerCase());
-            int existingId = statusRepository.findIdStatusByNameAndFlag(status.getStatus_name().toLowerCase(), status.getFlag().toLowerCase());
-            String errorUniqueStatusNameAndFlagMessage = "";
+            // int statusNameFlag = 0;
+            Boolean inputNullSubFlag = true;
+            Boolean inputNullFlag = true;
+            Boolean inputNullDescription = true;
+            Boolean inputNullStatusName = true;
+            // int existingId = 0;
+            String errorUniqueStatusNameAndFlagAndSubFlagMessage = "";
+            String errorNotBlankSubFlagMessage = "";
             String errorNotBlankFlagMessage = "";
             String errorNotBlankDescriptionMessage = "";
             String errorNotBlankStatusNameMessage = "";
+            String errorNotNullStatusNameMessage = "";
+            String errorNotNullDescriptionMessage = "";
+            String errorNotNullFlagMessage = "";
+            String errorNotNullSubFlagMessage = "";
 
-            if (statusNameFlag > 0 && status.getId() != existingId) {      
-                errorUniqueStatusNameAndFlagMessage = "Kombinasi Nama dan Flag di Status sudah ada pada id "+existingId+"!";
-            }
-
-            // int statusLength = statusRepository.findAll().size();
-            // int statusInitialId = statusRepository.findAll().get(0).getId();
-            // int statusLastId = statusRepository.findAll().get(statusLength-1).getId();
-            // int putId = status.getId();
-            // if (statusLength > 0) {
-            //     String statusName;
-            //     String flag;
-
-            //     for(int _id = statusInitialId; _id < statusLastId+1; _id++){
-            //         if(statusRepository.findById(_id).isPresent()){
-            //             statusName = statusRepository.findById(_id).get().getStatusName();
-            //             flag = statusRepository.findById(_id).get().getFlag();
-            //             if(statusName.equals(status.getStatus_name()) && flag.equals(status.getFlag()) ){
-            //                 if(putId != _id){
-            //                     errorUniqueStatusNameAndFlagMessage = "Sudah Ada Nama Status dan Flag yang Sama! pada Id = " + _id;
-            //                     break;
-            //                 }
-            //             }
-            //         }
-            //     } 
+            // if(status.getSubFlag() != null && status.getFlag() != null && status.getStatusName() != null){
+            //     statusNameFlag = statusRepository.findStatusNameFlagSubFlag(status.getStatusName().toLowerCase(), status.getFlag().toLowerCase(), status.getSubFlag().toLowerCase());
+            //     existingId = statusRepository.findIdStatusByNameAndFlagAndSubFlag(status.getStatusName().toLowerCase(), status.getFlag().toLowerCase());
             // }
 
-            if(status.getFlag().isBlank() || status.getFlag().isEmpty()) {
-                errorNotBlankFlagMessage = "Flag tidak boleh kosong dan harus kurang dari 30 karakter, ";
+            if(status.getSubFlag() != null){
+                inputNullSubFlag = false;
             }
 
-            if(status.getDescription().isBlank()  || status.getDescription().isEmpty()) {
-                errorNotBlankDescriptionMessage = "Deskripsi Status tidak boleh kosong, ";
+            if(status.getFlag() != null){
+                inputNullFlag = false;
             }
 
-            if(status.getStatus_name().length()>50 || status.getStatus_name().isBlank() || status.getStatus_name().isEmpty()) {
-                errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter";
+            if(status.getDescription() != null){
+                inputNullDescription = false;
             }
 
-            if (errorUniqueStatusNameAndFlagMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != "") {
+            if(status.getStatusName() != null){
+                inputNullStatusName = false;
+            }
+
+            // if (statusNameFlag > 0 && status.getId() != existingId) {      
+            //     errorUniqueStatusNameAndFlagMessage = "Kombinasi Nama dan Flag di Status sudah ada pada id "+existingId+"!";
+            // }
+
+            int statusLength = statusRepository.findAll().size();
+            int statusInitialId = statusRepository.findAll().get(0).getId();
+            int statusLastId = statusRepository.findAll().get(statusLength-1).getId();
+            int putId = status.getId();
+            String putSubFlag;
+            String putFlag;
+            String putDescription;
+            String putStatusName;
+
+            if(status.getSubFlag() == null){
+                putSubFlag = statusRepository.findById(putId).get().getSubFlag().toUpperCase();
+                // errorNotNullFlagMessage = "Sub Flag tidak boleh null, ";
+            } else {
+                putSubFlag = status.getSubFlag().toUpperCase();
+            }
+
+            if(status.getFlag() == null){
+                putFlag = statusRepository.findById(putId).get().getFlag().toUpperCase();
+                // errorNotNullFlagMessage = "Flag tidak boleh null, ";
+            } else {
+                putFlag = status.getFlag().toUpperCase();
+            }
+
+            if(status.getDescription() == null){
+                putDescription = statusRepository.findById(putId).get().getDescription().toUpperCase();
+                // errorNotNullDescriptionMessage = "Deskripsi Status tidak boleh null, ";
+            } else {
+                putDescription = status.getDescription().toUpperCase();
+            }
+
+            if(status.getStatusName() == null){
+                putStatusName = statusRepository.findById(putId).get().getStatusName().toUpperCase();
+                //errorNotNullStatusNameMessage = "Nama Status tidak boleh null, ";
+            } else {
+                putStatusName = status.getStatusName().toUpperCase();
+            }
+
+            if (statusLength > 0) {
+                String statusName;
+                String flag;
+                String subFlag;
+
+                for(int _id = statusInitialId; _id < statusLastId+2; _id++){
+                    if(statusRepository.findById(_id).isPresent()){
+                        statusName = statusRepository.findById(_id).get().getStatusName().toUpperCase();
+                        flag = statusRepository.findById(_id).get().getFlag().toUpperCase();
+                        subFlag = statusRepository.findById(_id).get().getSubFlag().toUpperCase();
+                        if(statusName.equals(putStatusName) && flag.equals(putFlag) && subFlag.equals(putSubFlag) ){
+                            if(putId != _id){
+                                errorUniqueStatusNameAndFlagAndSubFlagMessage = "Sudah Ada Kombinasi Nama Status, Flag dan Sub Flag yang Sama! pada Id = " + _id;
+                                break;
+                            }
+                        }
+                    }
+                } 
+            }
+
+            if(inputNullSubFlag != true){
+                if(status.getSubFlag().isBlank() || status.getSubFlag().isEmpty()) {
+                    errorNotBlankSubFlagMessage = "Sub Flag tidak boleh kosong dan harus kurang dari 30 karakter, ";
+                }
+            }
+
+            if(inputNullFlag != true){
+                if(status.getFlag().isBlank() || status.getFlag().isEmpty()) {
+                    errorNotBlankFlagMessage = "Flag tidak boleh kosong dan harus kurang dari 30 karakter, ";
+                }
+            }
+
+            if(inputNullDescription != true){
+                if(status.getDescription().isBlank()  || status.getDescription().isEmpty()) {
+                    errorNotBlankDescriptionMessage = "Deskripsi Status tidak boleh kosong, ";
+                }
+            }
+    
+            if(inputNullStatusName != true){
+                if(status.getStatusName().length()>50 || status.getStatusName().isBlank() || status.getStatusName().isEmpty()) {
+                    errorNotBlankStatusNameMessage = "Nama Status tidak boleh kosong dan harus kurang dari 50 karakter, ";
+                }
+            }
+
+            if (errorUniqueStatusNameAndFlagAndSubFlagMessage != "" || errorNotBlankSubFlagMessage != "" || errorNotBlankFlagMessage != "" || errorNotBlankDescriptionMessage != "" || errorNotBlankStatusNameMessage != ""  || errorNotNullSubFlagMessage != "" || errorNotNullFlagMessage != ""  || errorNotNullDescriptionMessage != ""  || errorNotNullStatusNameMessage != "") {
                 result.setSuccess(false);
-                result.setMessage("Error: " + errorUniqueStatusNameAndFlagMessage + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage);
+                result.setMessage("Error: "+ errorUniqueStatusNameAndFlagAndSubFlagMessage+ errorNotBlankSubFlagMessage  + errorNotBlankFlagMessage + errorNotBlankDescriptionMessage + errorNotBlankStatusNameMessage + errorNotNullSubFlagMessage + errorNotNullFlagMessage + errorNotNullDescriptionMessage + errorNotNullStatusNameMessage);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -159,7 +291,7 @@ public class StatusServiceImpl implements StatusService {
                 result.setMessage("Error: Tidak ada Status dengan id " +status.getId());
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                Status update = new Status(status.getId(),status.getStatus_name(), status.getDescription(), status.getFlag(), status.getisDeleted());
+                Status update = new Status(putId,putStatusName, putDescription, putFlag, putSubFlag, status.getisDeleted());
 
                 statusRepository.save(update);
 
@@ -173,7 +305,6 @@ public class StatusServiceImpl implements StatusService {
 
         return ResponseEntity.ok(result);
     }
-
 
     @Override
     public ResponseEntity<Result> getAllStatus() {
@@ -230,3 +361,5 @@ public class StatusServiceImpl implements StatusService {
         return ResponseEntity.ok(result);
     }
 }
+
+

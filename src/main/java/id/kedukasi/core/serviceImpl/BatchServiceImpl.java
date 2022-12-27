@@ -1,12 +1,10 @@
 package id.kedukasi.core.serviceImpl;
 
 
-import id.kedukasi.core.enums.EnumStatusPeserta;
 import id.kedukasi.core.models.*;
 import id.kedukasi.core.repository.BatchRepository;
-import id.kedukasi.core.repository.KelasRepository;
-import id.kedukasi.core.repository.MentorRepository;
 import id.kedukasi.core.request.BatchRequest;
+import id.kedukasi.core.request.CreateBatchRequest;
 import id.kedukasi.core.service.BatchService;
 import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
@@ -18,18 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class BatchServiceImpl implements BatchService {
-    @Autowired
-    KelasRepository kelasRepository;
-
-    @Autowired
-    MentorRepository mentorRepository;
-
     @Autowired
     BatchRepository batchRepository;
 
@@ -42,16 +32,40 @@ public class BatchServiceImpl implements BatchService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public Result getAllBatch(String uri){
+    public Result getBatchData(String uri, String search, Integer limit, Integer page) {
         result = new Result();
-        try{
-            Map items = new HashMap();
-            items.put("items", batchRepository.findAll());
-            result.setData(items);
-        }catch (Exception e){
-            logger.error(stringUtil.getError(e));
+
+        int jumlahpage = (int) Math.ceil(batchRepository.count() /(double) limit);
+
+        if (limit < 1) {
+            limit = 1;
         }
 
+        if (page > jumlahpage) {
+            page = jumlahpage;
+        }
+
+        if (page < 1 ) {
+            page = 1;
+        }
+
+        if (search == null) {
+            search = "";
+        }
+        try {
+            Map items = new HashMap();
+            List<Batch> batch = batchRepository.findBatchData(search, limit, page.intValue());
+            items.put("items", batch);
+            items.put("totalDataResult", batch.size());
+            items.put("totalData", batchRepository.count());
+
+            if (batch.size() == 0) {
+                result.setMessage("Maaf Data Batch yang Anda cari tidak tersedia");
+            }
+            result.setData(items);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
         return result;
     }
 
@@ -89,6 +103,58 @@ public class BatchServiceImpl implements BatchService {
         }
         return result;
     }
+
+//    @Override
+//    public Result getAllClassByBatch(long batchId) {
+//        result = new Result();
+//        Optional<Batch> batch = batchRepository.findById(batchId);
+//        if(!batch.isPresent()){
+//            result.setCode(404);
+//            result.setMessage("Batch Tidak Ada");
+//            return result;
+//        }
+////        List<Long> kelas_id = batchRepository.getAllClassByBatch(batchId);
+////        List<Kelas> kelas = kelasRepository.findAllById(kelas_id);
+//        result.setCode(200);
+//        result.setMessage("Berhasil Ambil Kelas");
+//        result.setData(kelas);
+//        return result;
+//    }
+
+    @Override
+    public ResponseEntity<?> createBatch(CreateBatchRequest createBatchRequest) {
+        result = new Result();
+        try {
+            // cek Batch name sudah di gunakan apa tidak
+            Batch checkBatchname = batchRepository.findByBatchname(createBatchRequest.getBatchname()).orElse(new Batch());
+            if (checkBatchname.getBatchname()!= null) {
+                result.setMessage("Error: Batch telah di gunakan!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            // cek Stardate tidak boleh lebih besar dari end date
+            if(createBatchRequest.getStartedtime().after(createBatchRequest.getEndedtime())){
+                result.setMessage("Error : Start date tidak boleh lebih besar dari end date ");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            Batch batchbaru = new Batch(createBatchRequest.getBatchname(), createBatchRequest.getDescription(),
+                    createBatchRequest.getStartedtime(),createBatchRequest.getEndedtime());
+            batchRepository.save(batchbaru);
+
+            result.setMessage("Batch registered successfully!");
+            result.setCode(HttpStatus.OK.value());
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        return ResponseEntity.ok(result);
+    }
+
+
     @Override
     public ResponseEntity<?> updateBatch(BatchRequest batchRequest) {
         result = new Result();
@@ -114,12 +180,6 @@ public class BatchServiceImpl implements BatchService {
             Batch batchbaru = new Batch(batchRequest.getBatchname(), batchRequest.getDescription(),
                     batchRequest.getStartedtime(),batchRequest.getEndedtime());
 
-            Kelas kelas = kelasRepository.findById(batchRequest.getClassname()).get();
-            batchbaru.setClassname(kelas);
-
-            Mentor mentor = mentorRepository.findById(batchRequest.getMentorname()).get();
-            batchbaru.setMentorname(mentor);
-
             batchbaru.setId(batchRequest.getId());
             batchRepository.save(batchbaru);
 
@@ -137,14 +197,10 @@ public class BatchServiceImpl implements BatchService {
         result = new Result();
         try {
             batchRepository.deleteBatch(banned, id);
+            result.setMessage(banned == true ? "Batch success delete!" : "Batch success backup!");
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
         return ResponseEntity.ok(result);
     }
-
-
-
-
-
 }
