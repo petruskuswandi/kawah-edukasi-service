@@ -506,20 +506,20 @@ public class PesertaServiceImpl implements PesertaService {
             String extension = FilenameUtils.getExtension(fileName).toLowerCase();
             String key = UUID.randomUUID() + "." + extension;
 
-            Documents documents = new Documents();
-            documents.setDocumentsName(fileName);
-            documents.setDirectory(pathfile);
-            documents.setFiletype(extension);
-            Optional<TypeDocuments> document = typeDocumentsRepository.findBytypeName(extension.toLowerCase());
-            documents.setTypedoc(document.get());
-            documents.setKey(key);
-            documents.setUserId(Math.toIntExact(pesertabaru.getId()));
+//            Documents documents = new Documents();
+//            documents.setDocumentsName(fileName);
+//            documents.setDirectory(pathfile);
+//            documents.setFiletype(extension);
+//            Optional<TypeDocuments> document = typeDocumentsRepository.findBytypeName(extension.toLowerCase());
+//            documents.setTypedoc(document.get());
+//            documents.setKey(key);
+//            documents.setUserId(Math.toIntExact(pesertabaru.getId()));
 //            documents.setStatus
 //                    documents.subFlag
 //            documents.setUrl("-");
 //            documents.setRoleId(0);
 //            documents.setUserId(0);
-            documentsRepository.save(documents);
+            //documentsRepository.save(documents);
 
 
             logger.info(extension);
@@ -528,13 +528,13 @@ public class PesertaServiceImpl implements PesertaService {
 
 
             //main code
-          //  saveFile(file, registerPeserta, String.valueOf(pesertabaru.getId()),"REGISTER", idx, key, pathfile);
-            //pictures.put(String.valueOf(idx[0]),idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
+            saveFile(file, registerPeserta, String.valueOf(pesertabaru.getId()),"REGISTER", idx, key, pathfile);
+            pictures.put(String.valueOf(idx[0]),idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
 
         });
 
         //main code
-        //emailService.sendRegisterMail(pictures, setPenambahanData, registerPeserta, pathfile);
+        emailService.sendRegisterMail(pictures, setPenambahanData, registerPeserta, pathfile);
 
         result.setMessage("Registrasi Berhasil");
         result.setCode(HttpStatus.OK.value());
