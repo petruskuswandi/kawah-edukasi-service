@@ -316,15 +316,15 @@ public class UserServiceImpl implements UserService {
       // variable set bisa dijadikan parameter pada method
       // jika dijadikan parameter, maka method ini bisa digunakan
       // untuk aktifkan atau non-aktifkan akun
-      // boolean set = true;
-      // boolean cek = userRepository.isUserVerified(tokenVerification);
+      boolean set = true;
+      boolean cek = userRepository.isUserVerified(tokenVerification);
 
-      // int status = userRepository.setIsActive(true, tokenVerification);
+      int status = userRepository.setIsActive(true, tokenVerification);
 
       // // cek apakah token sudah diverifikasi atau belum
-      // if (set && cek == false) {
-        int status = userRepository.setIsVerified(true, tokenVerification);
-      // }
+      if (set && cek == false) {
+        userRepository.setIsVerified(true, tokenVerification);
+      }
 
       if (status == 1) {
         result.setMessage("user is actived");

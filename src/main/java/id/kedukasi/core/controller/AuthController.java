@@ -91,7 +91,7 @@ public class AuthController {
       String uri = stringUtil.getLogParam(request);
       logger.info(uri);
 
-      service.active(id, tokenVerification, uri);
+      service.active(tokenVerification, uri);
 
       result.setMessage("User telah berhasil terdaftar dan akun sudah teraktivasi!");
       result.setCode(HttpStatus.OK.value());
@@ -119,7 +119,7 @@ public class AuthController {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
 
-    return service.active(id, tokenVerification, uri);
+    return service.active(tokenVerification, uri);
   }
 
   @PatchMapping("/change_password")
