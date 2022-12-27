@@ -1,6 +1,5 @@
 package id.kedukasi.core.repository;
 
-import id.kedukasi.core.models.Batch;
 import id.kedukasi.core.models.Kelas;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,10 +17,23 @@ public interface KelasRepository extends JpaRepository<Kelas,Long> {
     @Transactional
     Optional<Kelas> findByClassname(String username);
 
+
     @Modifying
     @Transactional
     @Query("update Kelas u set u.banned = ?1, u.banned_time = CURRENT_TIMESTAMP where u.id = ?2")
     int deleteKelas(boolean banned, Long id);
+
+    @Transactional
+    @Query(
+            value = "SELECT * FROM classes WHERE "+
+                    "(:classname IS NULL OR classname LIKE %:classname%) "+
+                    "ORDER BY id LIMIT :limit OFFSET :limit * (:page - 1)",
+            nativeQuery = true
+    )
+    List<Kelas> findKelasData(@Param("classname") String search,
+                             @Param("limit") int limit,
+                              @Param("page") int page);
+
 
 
 //    @Transactional

@@ -1,6 +1,10 @@
 package id.kedukasi.core.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -10,6 +14,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+@Setter
+@Getter
+@Data
 @Entity
 @Table(name = "classes")
 //        uniqueConstraints = {
@@ -35,92 +42,26 @@ public class Kelas {
 
     @Column(name = "banned_time")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date banned_time;
 
     @Column(name = "created_time", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date created_time;
 
-    @Column(name = "created_by", updatable = false)
-    private String created_by;
+    @Column(name = "created_by_id", updatable = false)
+    private String created_id;
 
     @Column(name = "updated_time")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date updated_time;
 
     public Kelas() {
     }
 
-    public Kelas(String classname, String description, String created_by) {
-        Date date = new Date();
-        this.classname = classname;
-        this.description = description;
-        this.created_by = created_by;
-        this.created_time = date;
-        this.updated_time = date;
-    }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getClassname() {
-        return classname;
-    }
-
-    public void setClassname(String classname) {
-        this.classname = classname;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getCreated_time() {
-        return created_time;
-    }
-
-    public void setCreated_time(Date created_time) {
-        this.created_time = created_time;
-    }
-
-    public Date getUpdated_time() {
-        return updated_time;
-    }
-
-    public void setUpdated_time(Date updated_time) {
-        this.updated_time = updated_time;
-    }
-
-    public boolean isBanned() {
-        return banned;
-    }
-
-    public void setBanned(boolean banned) {
-        this.banned = banned;
-    }
-
-    public Date getBanned_time() {
-        return banned_time;
-    }
-
-    public void setBanned_time(Date banned_time) {
-        this.banned_time = banned_time;
-    }
-
-    public String getCreated_by() {
-        return created_by;
-    }
-
-    public void setCreated_by(String created_by) {
-        this.created_by = created_by;
+    public Kelas(String className, String description, Long nameId) {
     }
 }

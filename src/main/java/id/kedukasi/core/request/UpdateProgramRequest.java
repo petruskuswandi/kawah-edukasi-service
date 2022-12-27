@@ -1,7 +1,15 @@
 package id.kedukasi.core.request;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+@Setter
+@Getter
+@Data
 public class UpdateProgramRequest {
     @NotNull
     private Long id;
@@ -24,35 +32,5 @@ public class UpdateProgramRequest {
         this.soft_delete = soft_delete;
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getProgram_name() {
-        return program_name;
-    }
-
-    public void setProgram_name(String program_name) {
-        this.program_name = program_name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isSoft_delete() {
-        return soft_delete;
-    }
-
-    public void setSoft_delete(boolean soft_delete) {
-        this.soft_delete = soft_delete;
-    }
 }
