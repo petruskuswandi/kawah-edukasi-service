@@ -35,7 +35,7 @@ public class PublicProgramController {
     public Result getAll() {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
-        return service.getAllClass(uri);
+        return service.getProgramRunning(uri);
     }
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     public Result getClassByid(@PathVariable("id") Long id) {
