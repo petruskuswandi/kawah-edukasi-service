@@ -52,7 +52,7 @@ import java.util.*;
 @Service
 public class PesertaServiceImpl implements PesertaService {
     // @Value("${app.upload-file-path}")
-    // private String pathImage; 
+    // private String pathImage;
 
     @Autowired
     PesertaRepository pesertaRepository;
@@ -96,9 +96,15 @@ public class PesertaServiceImpl implements PesertaService {
     StatusRepository statusRepository;
 
     @Autowired
+    DocumentsRepository documentsRepository;
+
+    @Autowired
+    TypeDocumentsRepository typeDocumentsRepository;
+
+    @Autowired
     EntityManager em;
 
-  
+
 
     // @Override
     // @Transactional
@@ -527,6 +533,7 @@ public class PesertaServiceImpl implements PesertaService {
 
         });
 
+        //main code
         emailService.sendRegisterMail(pictures, setPenambahanData, registerPeserta, pathfile);
 
         result.setMessage("Registrasi Berhasil");
@@ -556,6 +563,8 @@ public class PesertaServiceImpl implements PesertaService {
                     + id + "_" + action + "_" + key);
             Files.write(path, bytes);
             // fileUploadRepository.save(FileDB);
+
+//            fileUploadRepository.save(FileDB);
         } catch (IOException e) {
             result.setMessage("Error: Bad Request Untuk File Upload!");
             result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -698,13 +707,13 @@ public class PesertaServiceImpl implements PesertaService {
             } else {
                 peserta.setBatch(batchRepository.findById(batchId).get());
             }
-     
+
 
             // set image
             if (uploadImage != null) {
                 // peserta.setUploadImagePath(IOUtils.toByteArray(uploadImage.getInputStream()));
                 String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
-                peserta.setUploadImageName(nameImage); 
+                peserta.setUploadImageName(nameImage);
 
                 // String fileName = String.format(pathImage + "/" + nameImage);
 
@@ -715,18 +724,18 @@ public class PesertaServiceImpl implements PesertaService {
                 // out.close();
 
 
-                              
+
             //     Peserta savedUser = pesertaRepository.save(peserta);
             //     String uploadDir = "user-photos/" + savedUser.getId();
             //     // FileUploadUtil(uploadDir, fileName, uploadImage);
             //    FileUploadUtil(uploadDir,fileName,uploadImage);
-                
+
             }
             // set cv
             if (uploadCv != null) {
                 // peserta.setUploadImagePath(IOUtils.toByteArray(uploadImage.getInputStream()));
                 String nameImage = StringUtils.cleanPath(uploadCv.getOriginalFilename());
-                peserta.setUploadCv(nameImage);     
+                peserta.setUploadCv(nameImage);
 
             }
             if (!educationRepository.findById(Integer.valueOf(pendidikanTerakhir)).isPresent()) {
@@ -809,7 +818,7 @@ public class PesertaServiceImpl implements PesertaService {
             } else {
                 peserta.setKelurahan(kelurahanRepository.findById(kelurahanId).get());
             }
-           
+
 
             pesertaRepository.save(peserta);
 
