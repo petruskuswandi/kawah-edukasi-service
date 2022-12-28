@@ -326,7 +326,7 @@ public class StatusServiceImpl implements StatusService {
         if (subFlag == null) { subFlag = ""; }
         try {
             Map<String, List<Status>> items = new HashMap<>();
-            items.put("items", statusRepository.getStatus(flag, subFlag, limit, page));
+            items.put("items", statusRepository.getStatus(flag.toLowerCase(), subFlag.toLowerCase(), limit, page));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
