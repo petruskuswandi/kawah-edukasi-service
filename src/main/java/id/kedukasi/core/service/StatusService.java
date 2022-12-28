@@ -14,6 +14,9 @@ public interface StatusService {
     //implements get all status
     public ResponseEntity<Result> getAllStatus();
 
+    //implements get status by flag and sub-flag
+    ResponseEntity<Result> getStatus(String flag, String subFlag, Integer limit, Integer page);
+
     //implements get status by id
     public ResponseEntity<Result> getStatusById(int id);
 
