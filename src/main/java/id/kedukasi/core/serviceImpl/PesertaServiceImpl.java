@@ -737,7 +737,7 @@ public class PesertaServiceImpl implements PesertaService {
                         .badRequest()
                         .body(result);
             } else {
-                peserta.setPendidikanTerakhir(educationRepository.findById(Integer.valueOf(pendidikanTerakhir)).get());
+                peserta.setTingkat_pendidikan(educationRepository.findById(Integer.valueOf(pendidikanTerakhir)).get());
             }
             //set status
             // if (!statusRepository.findById(status){
