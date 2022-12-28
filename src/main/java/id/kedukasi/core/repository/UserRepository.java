@@ -1,10 +1,13 @@
 package id.kedukasi.core.repository;
 
 import id.kedukasi.core.models.User;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +24,39 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Boolean existsByUsername(String username);
 
   @Transactional
-  Boolean existsByEmail(String email);
+  @Query("select count(*) from User u where u.email = ?1 and u.banned != true")
+  Integer existsByEmail(String email);
+
+  /* Query untuk cek apakah terdapat noHp yang sama pada user lain */
+  /* For create */
+  @Transactional
+  @Query("select count(*) from User u where u.noHp = ?1 and u.banned != true")
+  Integer existsByNoHp(String noHp);
+
+  /* For update */
+  @Transactional
+  @Query("select count(*) from User u where u.noHp = ?1 and u.id != ?2 and u.banned != true")
+  Integer existsByNoHp(String noHp, Long id);
+
+  /* Query untuk cek apakah token sudah ada pada user lain */
+  @Transactional
+  @Query("select count(*) from User u where u.tokenVerification = ?1 and u.banned != true")
+  Integer existsByToken(String token);
+
+  @Transactional
+  @Query("select u.isVerified from User u where u.tokenVerification = ?1 and u.banned != true")
+  boolean isUserVerified(String token);
+
+  @Transactional
+  @Query(
+    value = "SELECT * FROM users WHERE banned = false AND "+
+            "(:namaLengkap IS NULL OR nama_lengkap LIKE %:namaLengkap%) "+
+            "ORDER BY id LIMIT :limit OFFSET :limit * (:page - 1)", 
+    nativeQuery = true
+  )
+  List<User> findUserData(@Param("namaLengkap") String search, 
+                          @Param("limit") int limit, 
+                          @Param("page") int page);
 
   @Transactional
   User findById(long id);
@@ -33,8 +68,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   @Modifying
   @Transactional
-  @Query("update User u set u.isActive = ?1 where u.id = ?2 and u.tokenVerification = ?3")
-  int setIsActive(boolean isAcvtive, Long id, String tokenVerification);
+  @Query("update User u set u.isActive = ?1 where u.tokenVerification = ?2")
+  int setIsActive(boolean isAcvtive, String tokenVerification);
+
+  @Modifying
+  @Transactional
+  @Query("update User u set u.isVerified = ?1 where u.tokenVerification = ?2")
+  int setIsVerified(boolean isVerified, String tokenVerification);
 
   @Modifying
   @Transactional

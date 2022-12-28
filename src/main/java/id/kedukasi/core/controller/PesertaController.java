@@ -66,6 +66,7 @@ public class PesertaController {
     }
 
     @GetMapping(value = "/allBanned", produces = APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Result getAllBannedPeserta() {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
@@ -73,6 +74,7 @@ public class PesertaController {
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Result getPesertaByid(@PathVariable("id") Long id) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
@@ -98,6 +100,7 @@ public class PesertaController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createPeserta(
             @RequestParam(value = "Id Kelas", defaultValue = "0") Long kelasId,
             @RequestParam(value = "Id Batch", defaultValue = "0") Long batchId,
@@ -130,6 +133,7 @@ public class PesertaController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updatePeserta(
             @RequestParam(value = "Id") Long id,
             @RequestParam(value = "Id Batch") Long batchId,
@@ -163,6 +167,7 @@ public class PesertaController {
     }
 
     @PatchMapping(value = "/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deletePeserta(
             @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
             @RequestParam(value = "banned", defaultValue = "true") boolean banned) {
@@ -172,6 +177,7 @@ public class PesertaController {
     }
 
     @PatchMapping(value = "/changeToCalonPeserta")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> changeToCalonPeserta(
             @RequestParam(value = "id", defaultValue = "0", required = true) Long id) {
         String uri = stringUtil.getLogParam(request);
@@ -180,6 +186,7 @@ public class PesertaController {
     }
 
     @PatchMapping(value = ("/changeKelas"))
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> changeKelas(
             @RequestParam(value = "pesertaId", defaultValue = "0", required = true) Long pesertaId,
             @RequestParam(value = "kelasId", defaultValue = "0", required = true) Long kelasId) {
@@ -195,6 +202,7 @@ public class PesertaController {
     }
 
     @GetMapping("/sortAndPaging")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Result sortAndPaging(
             @RequestParam(value = "page", defaultValue = "0", required = true) Integer page,
             @RequestParam(value = "size", defaultValue = "1", required = true) Integer size,

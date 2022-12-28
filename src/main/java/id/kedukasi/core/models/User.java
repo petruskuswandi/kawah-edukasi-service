@@ -22,12 +22,16 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
-@Table(name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
-                @UniqueConstraint(columnNames = "email")
-        })
+@Table(name = "users"//,
+        // uniqueConstraints = {
+        //         @UniqueConstraint(columnNames = "username"),
+        //         @UniqueConstraint(columnNames = "email"),
+        //         /* Menambahkan unique constraint pada column noHp */
+        //         @UniqueConstraint(columnNames = "noHp")
+        /*}*/)
 @DynamicUpdate
 public class User implements Serializable {
 
@@ -67,13 +71,12 @@ public class User implements Serializable {
   private String noHp;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinTable(name = "user_roles",
-          joinColumns = @JoinColumn(name = "user_id"),
-          inverseJoinColumns = @JoinColumn(name = "role_id"))
+  @JoinColumn(name = "role_id")
   private Role role;
 
   private boolean isLogin;
   private boolean isActive;
+  private boolean isVerified;
 
   @Size(max = 6)
   @ApiModelProperty(hidden = true)
@@ -82,10 +85,12 @@ public class User implements Serializable {
 
   @Column(name = "created_time", updatable = false)
   @Temporal(TemporalType.TIMESTAMP)
+  @JsonFormat(pattern = "yyyy/MM/dd, HH:mm:ss", timezone = "Asia/Jakarta")
   private Date created_time;
 
   @Column(name = "updated_time")
   @Temporal(TemporalType.TIMESTAMP)
+  @JsonFormat(pattern = "yyyy/MM/dd, HH:mm:ss", timezone = "Asia/Jakarta")
   private Date updated_time;
 
   @Column(name = "banned", updatable = false)
@@ -93,9 +98,32 @@ public class User implements Serializable {
 
   @Column(name = "banned_time", updatable = false)
   @Temporal(TemporalType.TIMESTAMP)
+  @JsonFormat(pattern = "yyyy/MM/dd, HH:mm:ss", timezone = "Asia/Jakarta")
   private Date banned_time;
 
   public User() {
+  }
+
+  /**
+   * Constructor untuk menerima input ketika create User
+   */
+  public User(String username, String email, String password, String namaLengkap, String noHp, Role role, boolean isActive, String tokenVerification) {
+    Date date = new Date();
+
+    this.username = username;
+    this.email = email;
+    this.password = password;
+    this.namaLengkap = namaLengkap;
+    this.noHp = noHp;
+    this.role = role;
+    this.isLogin = false;
+    this.isActive = isActive;
+    this.isVerified = isActive;
+    this.tokenVerification = tokenVerification;
+    this.created_time = date;
+    this.updated_time = date;
+    this.banned = false;
+    this.banned_time = null;
   }
 
   public User(String username, String email, String password,String namaLengkap, String noHp, String tokenVerification,
@@ -187,6 +215,14 @@ public class User implements Serializable {
 
   public void setIsActive(boolean isActive) {
     this.isActive = isActive;
+  }
+
+  public boolean isVerified() {
+      return isVerified;
+  }
+
+  public void setVerified(boolean isVerified) {
+      this.isVerified = isVerified;
   }
 
   public String getTokenVerification() {

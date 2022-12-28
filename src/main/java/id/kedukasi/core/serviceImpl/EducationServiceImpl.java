@@ -57,6 +57,13 @@ public class EducationServiceImpl implements EducationService {
         }
 
         try {
+            Education byName = repository.findByName(req.getName());
+            if (byName!=null){
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setMessage("name sudah ada");
+                result.setSuccess(false);
+                return ResponseEntity.ok(result);
+            }
             Education education = new Education();
             education.setName(req.getName());
             education.setDescription(req.getDescription());

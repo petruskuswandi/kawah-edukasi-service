@@ -90,8 +90,7 @@ public class PesertaServiceImpl implements PesertaService {
     private Result result;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    ProgramRepository programRepository;
+
 
     @Autowired
     StatusRepository statusRepository;
@@ -343,8 +342,8 @@ public class PesertaServiceImpl implements PesertaService {
             return ResponseEntity.badRequest().body(result);
         }
 
-        if (files.size() > 3) {
-            result.setMessage("Error: Bad Request untuk File Upload, Tidak Boleh Lebih dari 3");
+        if (files.size() != 3) {
+            result.setMessage("Error: Bad Request untuk File Upload, Tidak Boleh Lebih dari 3 dan kurang dari 3");
             result.setCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(result);
         }
@@ -362,7 +361,7 @@ public class PesertaServiceImpl implements PesertaService {
         Optional<Batch> batch = batchRepository.findById(p.getBatch());
         if (!batch.isPresent()) {
             result.setSuccess(false);
-            result.setMessage("Error: Tidak ada program dengan id " + p.getProgramName());
+            result.setMessage("Error: Tidak ada program dengan id " + p.getBatch());
             result.setCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(result);
         } else {
@@ -370,22 +369,12 @@ public class PesertaServiceImpl implements PesertaService {
             setPenambahanData.setNamaBatch(batch.get().getBatchname());
         }
 
-        Optional<Program> program = programRepository.findById(p.getProgramName());
-        if (!program.isPresent()) {
-            result.setSuccess(false);
-            result.setMessage("Error: Tidak ada program dengan id " + p.getProgramName());
-            result.setCode(HttpStatus.BAD_REQUEST.value());
-            return ResponseEntity.badRequest().body(result);
-        } else {
-            registerPeserta.setProgram(program.get());
-            setPenambahanData.setNamaProgram(program.get().getProgramName());
-        }
 
         Optional<MasterProvinsi> provinsi = provinsiRepository.findById(p.getProvinsi());
         // set provinsi
         if (!provinsi.isPresent()) {
             result.setSuccess(false);
-            result.setMessage("Error: Tidak ada provinsi dengan id " + p.getProgramName());
+            result.setMessage("Error: Tidak ada provinsi dengan id " + p.getProvinsi());
             result.setCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity
                     .badRequest()

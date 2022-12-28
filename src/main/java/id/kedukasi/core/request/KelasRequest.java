@@ -1,30 +1,31 @@
 package id.kedukasi.core.request;
 
-import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
+import io.swagger.annotations.ApiModelProperty;
 
-public class KelasRequest implements Serializable {
 
-    private Long id;
 
-    private String classname ;
+public class KelasRequest {
 
+    @ApiModelProperty(example = "nama_kelas", required = true)
+    private String className;
+
+    @ApiModelProperty(example = "deskripsi", required = true)
     private String description;
 
-    public Long getId() {
-        return id;
+    public KelasRequest() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public KelasRequest(String className, String description) {
+        this.className = className;
+        this.description = description;
     }
 
-    public String getClassname() {
-        return classname;
+    public String getClassName() {
+        return className;
     }
 
-    public void setClassname(String classname) {
-        this.classname = classname;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public String getDescription() {
