@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class UserRequest implements Serializable {
 
   private Long id;
@@ -69,6 +71,7 @@ public class UserRequest implements Serializable {
     return password;
   }
 
+  @JsonIgnore
   public void setPassword(String password) {
     this.password = password;
   }
