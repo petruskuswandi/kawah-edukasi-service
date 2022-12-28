@@ -1,5 +1,6 @@
 package id.kedukasi.core.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -35,10 +36,12 @@ public class Kelas {
 
     @Column(name = "banned_time")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date banned_time;
 
     @Column(name = "created_time", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date created_time;
 
     @Column(name = "created_by", updatable = false)
@@ -46,6 +49,7 @@ public class Kelas {
 
     @Column(name = "updated_time")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date updated_time;
 
     public Kelas() {
@@ -58,6 +62,13 @@ public class Kelas {
         this.created_by = created_by;
         this.created_time = date;
         this.updated_time = date;
+    }
+
+    public Kelas(Long id, String className, String description) {
+
+        this.id = id;
+        this.classname = className;
+        this.description = description;
     }
 
     public Long getId() {
