@@ -179,8 +179,8 @@ public class KelasServiceImpl implements KelasService {
                 return ResponseEntity.badRequest().body(result);
             }
 
-            User Id = new User();
-            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), Id.getId());
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getClassName(), auth.getName());
 
             kelasbaru.setId(Request.getId());
             kelasRepository.save(kelasbaru);
@@ -193,7 +193,7 @@ public class KelasServiceImpl implements KelasService {
 
         return ResponseEntity.ok(result);
     }
-        @Override
+    @Override
     public ResponseEntity<Result> createClass(KelasRequest Request) {
         result = new Result();
         try {
@@ -219,9 +219,8 @@ public class KelasServiceImpl implements KelasService {
             }
 
 
-//            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User Id = new User();
-            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), Id.getId());
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), auth.getName());
 
             kelasRepository.save(kelasbaru);
 
