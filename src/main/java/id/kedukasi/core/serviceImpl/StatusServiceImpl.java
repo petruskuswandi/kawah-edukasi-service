@@ -139,7 +139,7 @@ public class StatusServiceImpl implements StatusService {
                 return ResponseEntity.badRequest().body(result);
             }
 
-            Status newStatus = new Status(status.getStatusName().toUpperCase(), status.getDescription(), status.getFlag().toUpperCase(), status.getSubFlag().toUpperCase(),false);
+            Status newStatus = new Status(status.getStatusName(), status.getDescription(), status.getFlag(), status.getSubFlag(),false);
 
             statusRepository.save(newStatus);
 
@@ -208,31 +208,31 @@ public class StatusServiceImpl implements StatusService {
             String putStatusName;
 
             if(status.getSubFlag() == null){
-                putSubFlag = statusRepository.findById(putId).get().getSubFlag().toUpperCase();
+                putSubFlag = statusRepository.findById(putId).get().getSubFlag();
                 // errorNotNullFlagMessage = "Sub Flag tidak boleh null, ";
             } else {
-                putSubFlag = status.getSubFlag().toUpperCase();
+                putSubFlag = status.getSubFlag();
             }
 
             if(status.getFlag() == null){
-                putFlag = statusRepository.findById(putId).get().getFlag().toUpperCase();
+                putFlag = statusRepository.findById(putId).get().getFlag();
                 // errorNotNullFlagMessage = "Flag tidak boleh null, ";
             } else {
-                putFlag = status.getFlag().toUpperCase();
+                putFlag = status.getFlag();
             }
 
             if(status.getDescription() == null){
-                putDescription = statusRepository.findById(putId).get().getDescription().toUpperCase();
+                putDescription = statusRepository.findById(putId).get().getDescription();
                 // errorNotNullDescriptionMessage = "Deskripsi Status tidak boleh null, ";
             } else {
-                putDescription = status.getDescription().toUpperCase();
+                putDescription = status.getDescription();
             }
 
             if(status.getStatusName() == null){
-                putStatusName = statusRepository.findById(putId).get().getStatusName().toUpperCase();
+                putStatusName = statusRepository.findById(putId).get().getStatusName();
                 //errorNotNullStatusNameMessage = "Nama Status tidak boleh null, ";
             } else {
-                putStatusName = status.getStatusName().toUpperCase();
+                putStatusName = status.getStatusName();
             }
 
             if (statusLength > 0) {
@@ -242,10 +242,10 @@ public class StatusServiceImpl implements StatusService {
 
                 for(int _id = statusInitialId; _id < statusLastId+2; _id++){
                     if(statusRepository.findById(_id).isPresent()){
-                        statusName = statusRepository.findById(_id).get().getStatusName().toUpperCase();
-                        flag = statusRepository.findById(_id).get().getFlag().toUpperCase();
-                        subFlag = statusRepository.findById(_id).get().getSubFlag().toUpperCase();
-                        if(statusName.equals(putStatusName) && flag.equals(putFlag) && subFlag.equals(putSubFlag) ){
+                        statusName = statusRepository.findById(_id).get().getStatusName().toLowerCase();
+                        flag = statusRepository.findById(_id).get().getFlag().toLowerCase();
+                        subFlag = statusRepository.findById(_id).get().getSubFlag().toLowerCase();
+                        if(statusName.equals(putStatusName.toLowerCase()) && flag.equals(putFlag.toLowerCase()) && subFlag.equals(putSubFlag.toLowerCase()) ){
                             if(putId != _id){
                                 errorUniqueStatusNameAndFlagAndSubFlagMessage = "Sudah Ada Kombinasi Nama Status, Flag dan Sub Flag yang Sama! pada Id = " + _id;
                                 break;
@@ -312,6 +312,21 @@ public class StatusServiceImpl implements StatusService {
         try {
             Map<String, List<Status>> items = new HashMap<>();
             items.put("items", statusRepository.findAll(Sort.by(Sort.Direction.ASC,"id")));
+            result.setData(items);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @Override
+    public ResponseEntity<Result> getStatus(String flag, String subFlag, Integer limit, Integer page) {
+        result = new Result();
+        if (flag == null) { flag = ""; }
+        if (subFlag == null) { subFlag = ""; }
+        try {
+            Map<String, List<Status>> items = new HashMap<>();
+            items.put("items", statusRepository.getStatus(flag, subFlag, limit, page));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));

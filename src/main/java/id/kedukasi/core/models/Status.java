@@ -4,6 +4,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -59,10 +61,12 @@ public class Status {
 
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy/MM/dd, HH:mm:ss", timezone = "Asia/Jakarta")
     private Date created_at;
 
     @Column(name = "updated_at")
     @UpdateTimestamp
+    @JsonFormat(pattern = "yyyy/MM/dd, HH:mm:ss", timezone = "Asia/Jakarta")
     private Date updated_at;
 
 //    @ManyToOne(fetch = FetchType.EAGER)

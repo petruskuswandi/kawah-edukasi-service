@@ -4,13 +4,13 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class StatusRequest {
 
-    @ApiModelProperty(example = "REGISTER", required = true)
+    @ApiModelProperty(example = "Register", required = true)
     private String statusName;
 
     @ApiModelProperty(example = "deskripsi", required = true)
     private String description;
 
-    @ApiModelProperty(example = "PESERTA", required = true)
+    @ApiModelProperty(example = "Peserta", required = true)
     private String flag;
 
     @ApiModelProperty(example = "Suspended", required = true)
