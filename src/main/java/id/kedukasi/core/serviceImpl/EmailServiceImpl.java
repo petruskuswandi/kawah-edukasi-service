@@ -80,7 +80,7 @@ public class EmailServiceImpl implements EmailService {
       mimeMessageHelper.setTo(details.getRecipient());
       mimeMessageHelper.setText(details.getMsgBody(), true);
       mimeMessageHelper.setSubject(details.getSubject());
-      FileSystemResource logo = new FileSystemResource(new File(templatePath+"logo-kawah-edukasi.png"));
+      FileSystemResource logo = new FileSystemResource(new File("src/main/resources/templates/logo-kawah-edukasi.png"));
       /*
         adding logo to html Template EmailDetails
        */
