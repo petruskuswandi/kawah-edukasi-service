@@ -711,7 +711,7 @@ public class PesertaServiceImpl implements PesertaService {
                             .badRequest()
                             .body(result);
                 }
-                String customNameImage = "profile_" + nomorKtp + "_" + namaPeserta + image[image.length-1];
+                String customNameImage = "profile_" + nomorKtp + "_" + namaPeserta + "." + image[image.length-1];
                 //save column upload image path
                 peserta.setUploadImagePath(pathUpload + "/upload/image/" + customNameImage);
                 //save to folder
