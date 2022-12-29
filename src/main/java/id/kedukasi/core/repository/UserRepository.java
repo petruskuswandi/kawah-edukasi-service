@@ -21,7 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByEmail(String email);
 
   @Transactional
-  Boolean existsByUsername(String username);
+  @Query("select count(*) from User u where u.username = ?1 and u.banned != true")
+  Integer existsByUsername(String username);
 
   @Transactional
   @Query("select count(*) from User u where u.email = ?1 and u.banned != true")

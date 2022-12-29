@@ -13,7 +13,6 @@ public class UserRequest implements Serializable {
 
   private Long id;
 
-  @NotBlank
   @Size(min = 3, max = 20)
   @ApiModelProperty(example = "iam123", required = true)
   private String username;
@@ -54,6 +53,7 @@ public class UserRequest implements Serializable {
     return username;
   }
 
+  @JsonIgnore
   public void setUsername(String username) {
     this.username = username;
   }

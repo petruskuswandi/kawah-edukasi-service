@@ -212,6 +212,15 @@ public class UserServiceImpl implements UserService {
     String password = StringUtil.alphaNumericString();
     String username = signUpRequest.getEmail().split("@")[0];
     String token =  StringUtil.getRandomNumberString();
+
+    // Variable tampungan username
+    String tempUsername = username;
+    // Lakukan perulangan jika username sudah ada
+    while (userRepository.existsByUsername(username) > 0) {
+      Random rnd = new Random();
+      String newUsername = tempUsername + rnd.nextInt(100);
+      username = newUsername;
+    }
     
     // Lakukan perulangan jika ternyata token sudah digunakan
     while (userRepository.existsByToken(token) > 0) {
