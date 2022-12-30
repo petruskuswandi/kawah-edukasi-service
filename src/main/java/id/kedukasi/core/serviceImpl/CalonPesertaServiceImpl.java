@@ -389,14 +389,14 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                  String fileName = String.format(folderPath + "/" + namaImage);
                  peserta.setUploadImagePath(fileName);
                 // save file to folder
-                 String filePath = folderPath +"/Img"+ File.separator + namaImage;
+                 String filePath = folderPath +"/image"+ File.separator + namaImage;
                  OutputStream out = new FileOutputStream(filePath);
                  out.write(uploadImage.getBytes());
                  out.close();
 
              }
 
-               // set cv .docx
+               // set cv 
             if (uploadCv != null) {
                 String nameFile = StringUtils.cleanPath(uploadCv.getOriginalFilename());
 
@@ -412,9 +412,9 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             String customNameCV = nomorKtp + "_" + namaPeserta + "." + name[name.length-1];
             peserta.setUploadCv(customNameCV);
 
-            peserta.setUploadCvPath(folderPath +"/CV" );
+            peserta.setUploadCvPath(folderPath +"/documents" );
 
-            String filePath = folderPath +"/CV"+ File.separator + customNameCV;
+            String filePath = folderPath +"/documents"+ File.separator + customNameCV;
             OutputStream out = new FileOutputStream(filePath);
             out.write(uploadCv.getBytes());
             out.close();  
