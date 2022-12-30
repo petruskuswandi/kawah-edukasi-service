@@ -17,6 +17,7 @@ import id.kedukasi.core.request.RegisterRequest;
 import id.kedukasi.core.service.EmailService;
 import id.kedukasi.core.service.PesertaService;
 import id.kedukasi.core.utils.StringUtil;
+import id.kedukasi.core.utils.UploadUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
 
 import org.apache.commons.io.FilenameUtils;
@@ -696,14 +697,14 @@ public class PesertaServiceImpl implements PesertaService {
                 peserta.setBatch(batchRepository.findById(batchId).get());
             }
 
-
             // set image
             if (uploadImage != null) {
                 // peserta.setUploadImagePath(IOUtils.toByteArray(uploadImage.getInputStream()));
                 String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
                 peserta.setUploadImageName(nameImage);
                 String[] image = nameImage.split("\\.");
-                if (!image[image.length-1].equalsIgnoreCase("jpg")&&!image[image.length-1].equalsIgnoreCase("png")) {
+                String format = image[image.length-1];
+                if (!format.equalsIgnoreCase("jpg")&&!format.equalsIgnoreCase("png")) {
                     result.setSuccess(false);
                     result.setMessage("Error: File Image harus format jpg atau png");
                     result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -711,35 +712,13 @@ public class PesertaServiceImpl implements PesertaService {
                             .badRequest()
                             .body(result);
                 }
-                String customNameImage = "profile_" + nomorKtp + "_" + namaPeserta + "." + image[image.length-1];
-                //save column upload image path
-                peserta.setUploadImagePath(pathUpload + "/upload/image/" + customNameImage);
-                //save to folder
-                String filePath = pathUpload + "/upload/image" + File.separator + customNameImage;
-                OutputStream out = new FileOutputStream(filePath);
-                out.write(uploadImage.getBytes());
-                out.close();
-
-                // String fileName = String.format(pathImage + "/" + nameImage);
-
-                // //save to folder
-                // String filePath = pathImage + File.separator + nameImage;
-                // OutputStream out = new FileOutputStream(filePath);
-                // out.write(uploadImage.getBytes());
-                // out.close();
-
-
-
-                //     Peserta savedUser = pesertaRepository.save(peserta);
-                //     String uploadDir = "user-photos/" + savedUser.getId();
-                //     // FileUploadUtil(uploadDir, fileName, uploadImage);
-                //    FileUploadUtil(uploadDir,fileName,uploadImage);
+                //save Image
+                UploadUtil.saveImage(pathUpload, namaPeserta, uploadImage, nomorKtp, peserta, format);
 
             }
             // set cv
             if (uploadCv != null) {
-                // peserta.setUploadImagePath(IOUtils.toByteArray(uploadImage.getInputStream()));
-                //save column upload cv
+                //get original name
                 String nameCV = StringUtils.cleanPath(uploadCv.getOriginalFilename());
                 //proses validasi file pdf
                 String[] name = nameCV.split("\\.");
@@ -751,16 +730,8 @@ public class PesertaServiceImpl implements PesertaService {
                             .badRequest()
                             .body(result);
                 }
-                String customNameCV = nomorKtp + "_" + namaPeserta + ".pdf";
-                peserta.setUploadCv(customNameCV);
-                //save column upload cv path
-                peserta.setUploadCvPath(pathUpload + "/upload/documents/" + customNameCV);
-                //save to folder
-                String filePath = pathUpload + "/upload/documents" + File.separator + customNameCV;
-                OutputStream out = new FileOutputStream(filePath);
-                out.write(uploadCv.getBytes());
-                out.close();
-
+                //save CV
+                UploadUtil.saveCV(pathUpload, namaPeserta, nomorKtp, uploadCv, peserta);
             }
             if (!educationRepository.findById(Integer.valueOf(pendidikanTerakhir)).isPresent()) {
                 result.setSuccess(false);
