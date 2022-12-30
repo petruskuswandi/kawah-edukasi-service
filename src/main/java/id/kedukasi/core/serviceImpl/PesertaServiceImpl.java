@@ -3,7 +3,6 @@ package id.kedukasi.core.serviceImpl;
 import com.google.gson.Gson;
 import com.lowagie.text.DocumentException;
 import id.kedukasi.core.enums.EnumStatusPeserta;
-import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.*;
 import id.kedukasi.core.models.wilayah.MasterKecamatan;
 import id.kedukasi.core.models.wilayah.MasterKelurahan;
@@ -18,10 +17,10 @@ import id.kedukasi.core.request.RegisterRequest;
 import id.kedukasi.core.service.EmailService;
 import id.kedukasi.core.service.PesertaService;
 import id.kedukasi.core.utils.StringUtil;
+import id.kedukasi.core.utils.UploadUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import java.io.File;
@@ -51,8 +49,8 @@ import java.util.*;
 
 @Service
 public class PesertaServiceImpl implements PesertaService {
-    // @Value("${app.upload-file-path}")
-    // private String pathImage; 
+    @Value("${app.upload-file-path}")
+    private String pathUpload;
 
     @Autowired
     PesertaRepository pesertaRepository;
@@ -98,7 +96,7 @@ public class PesertaServiceImpl implements PesertaService {
     @Autowired
     EntityManager em;
 
-  
+
 
     // @Override
     // @Transactional
@@ -513,7 +511,7 @@ public class PesertaServiceImpl implements PesertaService {
         Map<String, Object> dataPictures = new HashMap<>();
         Map<String, String> pictures = new HashMap<>();
 
-        String pathfile = "/src/main/resources/templates/";
+        String pathfile = "/src/main/resources/static/upload.documents/";
         String id = String.valueOf(UUID.randomUUID());
         int[] idx = { 0 };
         files.forEach(file -> {
@@ -535,7 +533,7 @@ public class PesertaServiceImpl implements PesertaService {
     }
 
     public ResponseEntity<Result> saveFile(MultipartFile file, Peserta registerPeserta, String id, String action,
-            int[] idx, String key, String pathfile) {
+                                           int[] idx, String key, String pathfile) {
         result = new Result();
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         // FileUpload FileDB = null;
@@ -569,11 +567,11 @@ public class PesertaServiceImpl implements PesertaService {
 
     @Override
     public ResponseEntity<?> updatePeserta(Long id, Long kelasId, Long batchId, String namaPeserta, String tanggalLahir,
-            String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
-            MultipartFile uploadImage, Long provinsiId, Long kotaId, Long kecamatanId,
-            Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal, String nomorKtp,
-            MultipartFile uploadCv, Integer kesibukan, Integer scoreTetsAwal, Integer scoreTestAkhir,
-            Integer status, String namaProject, String jurusan) {
+                                           String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
+                                           MultipartFile uploadImage, Long provinsiId, Long kotaId, Long kecamatanId,
+                                           Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal, String nomorKtp,
+                                           MultipartFile uploadCv, Integer kesibukan, Integer scoreTetsAwal, Integer scoreTestAkhir,
+                                           Integer status, String namaProject, String jurusan) {
 
         result = new Result();
 
@@ -698,36 +696,42 @@ public class PesertaServiceImpl implements PesertaService {
             } else {
                 peserta.setBatch(batchRepository.findById(batchId).get());
             }
-     
 
             // set image
             if (uploadImage != null) {
                 // peserta.setUploadImagePath(IOUtils.toByteArray(uploadImage.getInputStream()));
                 String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
-                peserta.setUploadImageName(nameImage); 
+                peserta.setUploadImageName(nameImage);
+                String[] image = nameImage.split("\\.");
+                String format = image[image.length-1];
+                if (!format.equalsIgnoreCase("jpg")&&!format.equalsIgnoreCase("png")) {
+                    result.setSuccess(false);
+                    result.setMessage("Error: File Image harus format jpg atau png");
+                    result.setCode(HttpStatus.BAD_REQUEST.value());
+                    return ResponseEntity
+                            .badRequest()
+                            .body(result);
+                }
+                //save Image
+                UploadUtil.saveImage(pathUpload, namaPeserta, uploadImage, nomorKtp, peserta, format);
 
-                // String fileName = String.format(pathImage + "/" + nameImage);
-
-                // //save to folder
-                // String filePath = pathImage + File.separator + nameImage;
-                // OutputStream out = new FileOutputStream(filePath);
-                // out.write(uploadImage.getBytes());
-                // out.close();
-
-
-                              
-            //     Peserta savedUser = pesertaRepository.save(peserta);
-            //     String uploadDir = "user-photos/" + savedUser.getId();
-            //     // FileUploadUtil(uploadDir, fileName, uploadImage);
-            //    FileUploadUtil(uploadDir,fileName,uploadImage);
-                
             }
             // set cv
             if (uploadCv != null) {
-                // peserta.setUploadImagePath(IOUtils.toByteArray(uploadImage.getInputStream()));
-                String nameImage = StringUtils.cleanPath(uploadCv.getOriginalFilename());
-                peserta.setUploadCv(nameImage);     
-
+                //get original name
+                String nameCV = StringUtils.cleanPath(uploadCv.getOriginalFilename());
+                //proses validasi file pdf
+                String[] name = nameCV.split("\\.");
+                if (!name[name.length-1].equals("pdf")){
+                    result.setSuccess(false);
+                    result.setMessage("Error: File CV harus format pdf");
+                    result.setCode(HttpStatus.BAD_REQUEST.value());
+                    return ResponseEntity
+                            .badRequest()
+                            .body(result);
+                }
+                //save CV
+                UploadUtil.saveCV(pathUpload, namaPeserta, nomorKtp, uploadCv, peserta);
             }
             if (!educationRepository.findById(Integer.valueOf(pendidikanTerakhir)).isPresent()) {
                 result.setSuccess(false);
@@ -809,7 +813,7 @@ public class PesertaServiceImpl implements PesertaService {
             } else {
                 peserta.setKelurahan(kelurahanRepository.findById(kelurahanId).get());
             }
-           
+
 
             pesertaRepository.save(peserta);
 

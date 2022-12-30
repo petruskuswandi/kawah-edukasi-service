@@ -13,7 +13,6 @@ public class UserRequest implements Serializable {
 
   private Long id;
 
-  @NotBlank
   @Size(min = 3, max = 20)
   @ApiModelProperty(example = "iam123", required = true)
   private String username;
@@ -27,7 +26,6 @@ public class UserRequest implements Serializable {
   @ApiModelProperty(example = "3", required = true)
   private Integer role;
 
-  @NotBlank
   @Size(min = 6, max = 40)
   @ApiModelProperty(example = "iam123", required = true)
   @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%#*?&])[A-Za-z\\d@$!%#*?&]{8,}$",message = "Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!")
@@ -55,6 +53,7 @@ public class UserRequest implements Serializable {
     return username;
   }
 
+  @JsonIgnore
   public void setUsername(String username) {
     this.username = username;
   }

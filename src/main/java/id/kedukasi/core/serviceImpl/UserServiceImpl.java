@@ -174,6 +174,14 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<?> createUser(SignupRequest signUpRequest) {
     result = new Result();
 
+    if(!validator.isEmailValid(signUpRequest.getEmail())) {
+      result.setMessage("Error: invalid email format!");
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return ResponseEntity
+              .badRequest()
+              .body(result);
+    }
+
     if (!validator.isPhoneValid(signUpRequest.getNoHp())) {
       result.setMessage("Error: invalid phone number!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -182,8 +190,9 @@ public class UserServiceImpl implements UserService {
               .body(result);
     }
 
-    if(!validator.isEmailValid(signUpRequest.getEmail())) {
-      result.setMessage("Error: invalid email format!");
+    Integer checkUserEmail = userRepository.existsByEmail(signUpRequest.getEmail());
+    if (checkUserEmail != null && checkUserEmail > 0) {
+      result.setMessage("Error: Email is already in use!");
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity
               .badRequest()
@@ -199,19 +208,19 @@ public class UserServiceImpl implements UserService {
                 .body(result);
     }
 
-    Integer checkUserEmail = userRepository.existsByEmail(signUpRequest.getEmail());
-    if (checkUserEmail != null && checkUserEmail > 0) {
-      result.setMessage("Error: Email is already in use!");
-      result.setCode(HttpStatus.BAD_REQUEST.value());
-      return ResponseEntity
-              .badRequest()
-              .body(result);
-    }
-
     Role role = roleRepository.findById(signUpRequest.getRole()).orElse(null);
     String password = StringUtil.alphaNumericString();
     String username = signUpRequest.getEmail().split("@")[0];
     String token =  StringUtil.getRandomNumberString();
+
+    // Variable tampungan username
+    String tempUsername = username;
+    // Lakukan perulangan jika username sudah ada
+    while (userRepository.existsByUsername(username) > 0) {
+      Random rnd = new Random();
+      String newUsername = tempUsername + rnd.nextInt(100);
+      username = newUsername;
+    }
     
     // Lakukan perulangan jika ternyata token sudah digunakan
     while (userRepository.existsByToken(token) > 0) {
@@ -492,16 +501,18 @@ public class UserServiceImpl implements UserService {
     if (isActive) {
       buttonLink = 
       "        <p style=\"font-size: 20px; font-weight: 300;\">Silahkan anda login dengan menekan tombol dibawah ini.</p>\n" +
+      "        <br>" +
       "        <a href=\"" + urlBase + "login\"" + " target=\"_blank\"\n" +
       "        style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
-      "        >Login</a><br>\n";
+      "        >Login</a><br><br>\n";
     } else {
       buttonLink =
       "        <p style=\"font-size: 20px; font-weight: 300;\">Silahkan anda verifikasi terlebih dahulu dengan menekan tombol dibawah ini.</p>\n" +
-      // "        <a href=\"" + urlBase + urlActivation + "?tokenVerification=" + tokenVerification + "\" target=\"_blank\"\n" +
-      "        <a href=\"" + "http://localhost:8880/api/auth/active/?tokenVerification=" + tokenVerification + "\" target=\"_blank\"\n" +
+      "        <br>" +
+      "        <a href=\"" + urlBase + urlActivation + "?tokenVerification=" + tokenVerification + "\" target=\"_blank\"\n" +
+      // "        <a href=\"" + "http://localhost:8880/api/auth/active/?tokenVerification=" + tokenVerification + "\" target=\"_blank\"\n" +
       "        style=\"align-self: center; width: 399px; height: 55px; margin: 35px 0; padding: 10px; color: white; text-align: center; text-decoration: none; font-size: 24px; font-weight: 600; background-color: #0D9CA8; cursor: pointer; border: none; border-radius: 8px;\"\n" +
-      "        >Aktivasi Akun</a><br>\n";
+      "        >Aktivasi Akun</a><br><br>\n";
     }
 
     String body = 
@@ -544,7 +555,7 @@ public class UserServiceImpl implements UserService {
     "<body>\n" +
     "  <div style=\"width: 100%; max-width: 932px; height: 599px; border: 2px solid #E2E2E2; border-radius: 8px;\">\n" +
     "    <div style=\"padding: 57px; align-items: center; justify-content: space-between; text-align: center;\">\n" +
-    "      <img src=\"\" alt=\"Logo Kawah Edukasi\">\n" +
+    "      <img src=\"cid:logo\" alt=\"Logo Kawah Edukasi\">\n" +
     "      <p style=\"font-size: 24px; font-weight: 600;\">Halo "+namaUser+",</p>\n" +
     "      <p style=\"font-size: 20px; font-weight: 300;\">Selamat akun Kawah Edukasi anda berhasil dibuat.</p>\n" +
     "      <hr style=\"margin-bottom: 10px; margin-top: 10px;\">\n" +

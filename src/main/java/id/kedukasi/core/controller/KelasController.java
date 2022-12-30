@@ -36,8 +36,8 @@ public class KelasController {
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     public Result getAll(@RequestParam(required = false,name = "search") String search,
-                         @RequestParam(value = "limit",defaultValue = "-99") Integer limit,
-                         @RequestParam(value = "offset",defaultValue = "-99") Integer page) {
+                         @RequestParam(value = "limit",defaultValue = "10") Integer limit,
+                         @RequestParam(value = "offset",defaultValue = "1") Integer page) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getAllClass(uri,search,limit,page);
