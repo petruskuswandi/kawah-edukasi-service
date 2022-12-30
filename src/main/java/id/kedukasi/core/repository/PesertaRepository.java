@@ -28,6 +28,9 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
     @Transactional
     Optional<Peserta> findByNoHp(String noHp);
 
+    @Transactional
+    Optional<Peserta> findByNomorKtp(String nomorKtp);
+
     @Modifying
     @Transactional
     @Query("update Peserta u set u.banned = ?1, u.banned_time = CURRENT_TIMESTAMP where u.id = ?2")

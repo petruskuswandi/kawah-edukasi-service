@@ -34,7 +34,7 @@ import id.kedukasi.core.utils.StringUtil;
 @CrossOrigin
 @RestController
 @RequestMapping("/mentor")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+// @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class MentorController {
 
   @Autowired
