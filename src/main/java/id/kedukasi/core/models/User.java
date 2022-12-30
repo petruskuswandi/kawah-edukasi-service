@@ -23,6 +23,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users"//,
@@ -169,6 +170,7 @@ public class User implements Serializable {
     this.email = email;
   }
 
+  @JsonIgnore
   public String getPassword() {
     return password;
   }
