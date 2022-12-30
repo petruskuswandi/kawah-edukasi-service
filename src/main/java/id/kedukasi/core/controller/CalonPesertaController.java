@@ -20,7 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @CrossOrigin
 @RestController
 @RequestMapping("/calonPeserta")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+// @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class CalonPesertaController {
 
 
@@ -79,11 +79,17 @@ public class CalonPesertaController {
             @RequestParam(value = "Kelurahan", defaultValue = "0") Long kelurahan,
             @RequestParam(value = "Alamat Rumah") String alamatRumah,
             @RequestParam(value = "Motivasi") String motivasi,
-            @RequestParam(value = "Kode Referal",required = false) String kodeReferal
+            @RequestParam(value = "Kode Referal",required = false) String kodeReferal,
+
+                     //tambahan
+            @RequestParam(value = "jurusan") String jurusan,
+            @RequestParam(value = "status Id", required = false) Integer status,
+            @RequestParam(value = "kesibukan", required = false) Integer kesibukan,
+            @RequestParam(value = "komitmen") String komitmen
     ) {
         Long id = 0L;
         return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
-                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv);
+                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv,jurusan,status,kesibukan,komitmen);
     }
 
     @PutMapping("/update")
@@ -106,10 +112,16 @@ public class CalonPesertaController {
             @RequestParam(value = "Kelurahan", defaultValue = "0") Long kelurahan,
             @RequestParam(value = "Alamat Rumah") String alamatRumah,
             @RequestParam(value = "Motivasi") String motivasi,
-            @RequestParam(value = "Kode Referal",required = false) String kodeReferal
+            @RequestParam(value = "Kode Referal",required = false) String kodeReferal,
+
+             //tambahan
+             @RequestParam(value = "jurusan") String jurusan,
+             @RequestParam(value = "status Id", required = false) Integer status,
+             @RequestParam(value = "kesibukan", required = false) Integer kesibukan,
+             @RequestParam(value = "komitmen") String komitmen
     ) {
         return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
-                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv);
+                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv,jurusan,status,kesibukan,komitmen);
     }
 
     @PatchMapping(value = "/delete")

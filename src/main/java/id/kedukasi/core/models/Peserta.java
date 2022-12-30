@@ -1,5 +1,6 @@
 package id.kedukasi.core.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import id.kedukasi.core.enums.EnumStatusPeserta;
 import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.wilayah.MasterKecamatan;
@@ -35,6 +36,8 @@ public class Peserta implements Serializable {
         @GeneratedValue(strategy = GenerationType.AUTO)
         private Long id;
 
+        @JsonIgnoreProperties({"description", "banned","banned_time",
+                "startedtime","endedtime","created_by","created_time","updated_time"})
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "batch_id", updatable = false)
         // @NotNull(message = "Data Batch Tidak Boleh Kosong")
@@ -99,7 +102,6 @@ public class Peserta implements Serializable {
 
         @Column(name = "uploadImagePath", updatable = false)
         @ApiModelProperty(hidden = true)
-
         private String uploadImagePath;
 
         @Column(name = "upload_img_name", updatable = false)
@@ -107,35 +109,41 @@ public class Peserta implements Serializable {
         private String uploadImageName;
 
         // register
+        @JsonIgnoreProperties({"alt_name","latitude","longitude"})
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "provinsi_id", nullable = false, updatable = false)
         @NotNull(message = "Data Provinsi Tidak Boleh Kosong")
         private MasterProvinsi provinsi;
 
         // register
+        @JsonIgnoreProperties({"alt_name","latitude","longitude"})
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "kota_id", nullable = false, updatable = false)
         @NotNull(message = "Data Kota Tidak Boleh Kosong")
         private MasterKota kota;
 
         // register
+        @JsonIgnoreProperties({"alt_name","latitude","longitude"})
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "kecamatan_id", nullable = false, updatable = false)
         @NotNull(message = "Data Kecamatan Tidak Boleh Kosong")
         private MasterKecamatan kecamatan;
 
         // register
+        @JsonIgnoreProperties({"alt_name","latitude","longitude"})
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "kelurahan_id", nullable = false, updatable = false)
         @NotNull(message = "Data Kelurahan Tidak Boleh Kosong")
         private MasterKelurahan kelurahan;
 
         // register
+        @JsonIgnoreProperties({"created_at","updated_at","deleted","description"})
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "status_id", nullable = false, updatable = false)
         @NotNull(message = "Data Status Tidak Boleh Kosong")
         private Status status;
 
+        @JsonIgnoreProperties({"description","created_time","updated_time","created_at","updated_at","deleted"})
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "education_id", nullable = true, updatable = false)
         private Education tingkat_pendidikan;
@@ -278,6 +286,7 @@ public class Peserta implements Serializable {
         private boolean siapBekerja;
 
         // peserta
+        @JsonIgnoreProperties({"description", "banned","banned_time", "created_by","created_time","updated_time"})
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "class_id", nullable = true, updatable = false)
         private Kelas kelas;

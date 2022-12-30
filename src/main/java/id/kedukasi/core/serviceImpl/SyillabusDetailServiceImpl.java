@@ -55,6 +55,7 @@ public class SyillabusDetailServiceImpl implements SyillabusDetailService{
 
             // set syillabus
             Optional<Syillabus> syillabus = syillabusRepository.findById(syillabusDetail.getSyillabus());
+            // Optional<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabus());
             if (!syillabus.isPresent()){
                 result.setSuccess(false);
                 result.setMessage("Error : Syillabus tidak ditemukan");
