@@ -12,12 +12,10 @@ public class KelasRequest {
     @ApiModelProperty(example = "deskripsi", required = true)
     private String description;
 
-    public KelasRequest() {
-    }
+    @ApiModelProperty(example = "1", required = true)
+    private Integer created_by;
 
-    public KelasRequest(String className, String description) {
-        this.className = className;
-        this.description = description;
+    public KelasRequest() {
     }
 
     public String getClassName() {
@@ -34,5 +32,13 @@ public class KelasRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getCreated_by() {
+        return created_by;
+    }
+
+    public void setCreated_by(Integer created_by) {
+        this.created_by = created_by;
     }
 }
