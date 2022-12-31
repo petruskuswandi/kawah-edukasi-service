@@ -49,10 +49,12 @@ public class MentorController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
-  public Result getAll() {
+  public Result getMentorData(@RequestParam(required = false, name = "search") String search,
+                             @RequestParam(value = "limit", defaultValue = "10") Integer limit,
+                             @RequestParam(value = "offset", defaultValue = "1") Integer page) {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
-    return service.getAllMentor(uri);
+    return service.getMentorData(uri, search, limit, page);
   }
 
   @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
@@ -65,7 +67,6 @@ public class MentorController {
   @PostMapping("/create")
   public ResponseEntity<?> createMentor(
           @RequestParam(value = "Nama Mentor") String nama_mentor,
-          @RequestParam(value = "Kode Mentor") String kode,
           @RequestPart(value = "Upload Image", required = false) MultipartFile foto,
           @RequestParam(value = "No Ktp") String no_ktp,
           @RequestParam(value = "No Telepon") String no_telepon,
@@ -83,7 +84,7 @@ public class MentorController {
           @RequestParam(value = "Kelurahan") Long kelurahan )
   {
     Long id = 0L;
-    return service.updateMentor(id, nama_mentor, kode, foto, no_ktp, no_telepon, status,
+    return service.updateMentor(id, nama_mentor, foto, no_ktp, no_telepon, status,
             class_name, pendidikan_univ, pendidikan_jurusan, tgl_start,
             tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan);
   }
@@ -91,7 +92,6 @@ public class MentorController {
   @PutMapping("/update")
   public ResponseEntity<?> updateMentor(@RequestParam(value = "Id",defaultValue = "0") Long id,
                                         @RequestParam(value = "Nama Mentor") String nama_mentor,
-                                        @RequestParam(value = "Kode Mentor") String kode,
                                         @RequestPart(value = "Upload Image", required = false) MultipartFile foto,
                                         @RequestParam(value = "No Ktp") String no_ktp,
                                         @RequestParam(value = "No Telepon") String no_telepon,
@@ -107,7 +107,7 @@ public class MentorController {
                                         @RequestParam(value = "Kota",defaultValue = "0") Long kota,
                                         @RequestParam(value = "Kecamatan",defaultValue = "0") Long kecamatan,
                                         @RequestParam(value = "Kelurahan",defaultValue = "0") Long kelurahan ) {
-    return service.updateMentor(id, nama_mentor, kode, foto, no_ktp, no_telepon, status,
+    return service.updateMentor(id, nama_mentor, foto, no_ktp, no_telepon, status,
             class_name, pendidikan_univ, pendidikan_jurusan, tgl_start,
             tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan);
   }
@@ -123,23 +123,4 @@ public class MentorController {
     return service.deleteMentor(banned, id, uri);
   }
 
-  // @PatchMapping(value = "/updateFotoBlob", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  // public ResponseEntity<?> updateFoto(
-  //     @RequestParam(value = "id", defaultValue = "0", required = true) long id,
-  //     @RequestPart("foto") MultipartFile foto) {
-
-  //   String uri = stringUtil.getLogParam(request);
-  //   logger.info(uri);
-  //   return service.updateFotoBlob(id, foto, uri);
-  // }
-
-  // @PatchMapping(value = "/updateCvBlob", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  // public ResponseEntity<?> updateCv(
-  //     @RequestParam(value = "id", defaultValue = "0", required = true) long id,
-  //     @RequestPart("cv") MultipartFile cv) {
-
-  //   String uri = stringUtil.getLogParam(request);
-  //   logger.info(uri);
-  //   return service.updateCvBlob(id, cv, uri);
-  // }
 }
