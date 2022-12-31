@@ -53,7 +53,7 @@ public class DocumentsServiceImpl implements DocumentsService {
             //Set status
             Optional<Status> status = statusRepository.findById(documents.getStatus());
             Documents newDocuments = new Documents();
-            if (!(status.isPresent())) {
+            if (status.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Status dengan id " + documents.getStatus() + " tidak ditemukan");
                 return ResponseEntity.badRequest().body(result);
@@ -63,7 +63,7 @@ public class DocumentsServiceImpl implements DocumentsService {
 
             //Set user
             Optional<User> user = Optional.ofNullable(userRepository.findById(documents.getUser()));
-            if (!(user.isPresent())) {
+            if (user.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("User dengan id " + documents.getUser() + " tidak ditemukan");
                 return ResponseEntity.badRequest().body(result);
@@ -113,7 +113,7 @@ public class DocumentsServiceImpl implements DocumentsService {
         result = new Result();
         try {
             Optional<User> user = userRepository.findById(id);
-            if (!(user.isPresent())) {
+            if (user.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("User dengan id " + id + " tidak ditemukan");
                 return ResponseEntity.badRequest().body(result);
@@ -139,14 +139,14 @@ public class DocumentsServiceImpl implements DocumentsService {
         result = new Result();
         try {
             Optional<Documents> documentsOld = documentsRepository.findById(updateDocuments.getId());
-            if (!(documentsOld.isPresent())) {
+            if (documentsOld.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Document dengan id " + updateDocuments.getId() + " tidak ditemukan");
                 return ResponseEntity.badRequest().body(result);
             }
             //Set status
             Optional<Status> status = statusRepository.findById(updateDocuments.getStatus());
-            if (!(status.isPresent())) {
+            if (status.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Status dengan id " + updateDocuments.getStatus() + " tidak ditemukan");
                 return ResponseEntity.badRequest().body(result);
@@ -156,7 +156,7 @@ public class DocumentsServiceImpl implements DocumentsService {
 
             //Set user
             Optional<User> user = Optional.ofNullable(userRepository.findById(updateDocuments.getUser()));
-            if (!(user.isPresent())) {
+            if (user.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("User dengan id " + updateDocuments.getUser() + " tidak ditemukan");
                 return ResponseEntity.badRequest().body(result);
