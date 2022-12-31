@@ -6,6 +6,7 @@ import id.kedukasi.core.request.UpdateDocumentsRequest;
 import org.springframework.http.ResponseEntity;
 
 public interface DocumentsService {
+    ResponseEntity<Result> getDocumentByUserId(Long id);
     // implements update documents
     ResponseEntity<Result> updateDocuments(UpdateDocumentsRequest documents);
 
@@ -14,9 +15,6 @@ public interface DocumentsService {
 
     // implements create documents
     ResponseEntity<Result> createDocument(DocumentsRequest documents);
-
-    // implements get all documents
-    ResponseEntity<Result> getAllDocuments();
 
     // implements get documents by id
     ResponseEntity<Result> getDocumentById(Integer id);
