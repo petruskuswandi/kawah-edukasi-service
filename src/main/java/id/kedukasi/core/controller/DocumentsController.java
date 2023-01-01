@@ -37,11 +37,6 @@ public class DocumentsController {
         return service.createDocument(document);
     }
 
-    @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Result> getAllDocuments() {
-        return service.getAllDocuments();
-    }
-
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Result> getDocumentById(@PathVariable("id") Integer id) {
         return service.getDocumentById(id);
@@ -50,6 +45,11 @@ public class DocumentsController {
     @PutMapping("/update")
     public ResponseEntity<Result> updateDocuments(@Valid @RequestBody UpdateDocumentsRequest documents) {
         return service.updateDocuments(documents);
+    }
+
+    @GetMapping(value = "/user/{id}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Result> getDocumentsByUserId(@PathVariable("id") Long id) {
+        return service.getDocumentByUserId(id);
     }
 
     @DeleteMapping(value = "/delete/{id}", produces = APPLICATION_JSON_VALUE)
