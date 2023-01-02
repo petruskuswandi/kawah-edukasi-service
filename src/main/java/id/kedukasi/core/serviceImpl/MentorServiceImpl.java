@@ -2,11 +2,13 @@ package id.kedukasi.core.serviceImpl;
 
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
+import id.kedukasi.core.models.*;
+import id.kedukasi.core.models.wilayah.MasterProvinsi;
+import id.kedukasi.core.repository.UserRepository;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import id.kedukasi.core.models.Mentor;
-import id.kedukasi.core.models.Result;
 import id.kedukasi.core.models.wilayah.MasterKecamatan;
 import id.kedukasi.core.models.wilayah.MasterKelurahan;
 import id.kedukasi.core.models.wilayah.MasterKota;
@@ -35,6 +35,9 @@ public class MentorServiceImpl implements MentorService{
 
     @Autowired
     MentorRepository mentorRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     KelasRepository kelasRepository;
@@ -60,48 +63,54 @@ public class MentorServiceImpl implements MentorService{
     private Result result;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private String generatekode(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMyyyy");
+        LocalDateTime now = LocalDateTime.now();
+        int year = now.getYear();
+        int jumlahdata = mentorRepository.jumlahmentor(year);
+        String generateKode = ("M"+dtf.format(now)+ String.format("%03d", jumlahdata+1));
+        return generateKode;
+    }
+
 
     @Override
-    public ResponseEntity<?> updateMentor(Long id ,String nama_mentor, String kode, MultipartFile foto, String no_ktp,
-                                          String no_telepon, String status, Long classID, String pendidikan_univ,
-                                          String pendidikan_jurusan, Date tgl_start, Date tgl_stop,  String alamat_rumah,
-                                          MultipartFile cv, Long provinsiId, Long kotaId, Long kecamatanId, Long kelurahanId) {
+    public ResponseEntity<?> updateMentor(Long id , String namamentor, MultipartFile foto, String noktp,
+                                          String no_telepon, String status, Kelas classID, String pendidikan_univ,
+                                          String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah,
+                                          MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, User userID) {
         result = new Result();
         try {
-            Mentor checkKodeMentor = mentorRepository.findByKode(kode).orElse(new Mentor());
-            if (checkKodeMentor.getKode() != null && !Objects.equals(id, checkKodeMentor.getId())) {
-                result.setMessage("Error: Kode mentor harus uniq!");
+            Mentor checkNamaMentor = mentorRepository.findByNamamentor(namamentor).orElse(new Mentor());
+//            Mentor checkKtpMentor = mentorRepository.findByNoktp(noktp).orElse(new Mentor());
+            if (checkNamaMentor.getNamamentor() != null && !Objects.equals(id, checkNamaMentor)) {
+                result.setMessage("Error: Nama Mentor tidak boleh sama!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             }
 
-            if(nama_mentor.isBlank()) {
+//            if (checkKtpMentor.getNoktp() != null && !Objects.equals(id, checkKtpMentor)) {
+//                result.setMessage("Error: KTP Mentor tidak boleh sama!");
+//                result.setCode(HttpStatus.BAD_REQUEST.value());
+//                return ResponseEntity
+//                        .badRequest()
+//                        .body(result);
+//            }
+
+            if(namamentor.isBlank()) {
                 result.setMessage("Error: Nama tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(kode.isBlank()) {
-                result.setMessage("Error: Kode tidak boleh kosong");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity.badRequest().body(result);
-            }
-
-            if(no_ktp.length() < 16 || no_ktp.isBlank()) {
+            if(noktp.length() < 16 || noktp.isBlank()) {
                 result.setMessage("Error: No KTP tidak boleh kosong dan harus kurang dari 16 character");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(no_telepon.length() < 12 || no_telepon.isBlank()) {
-                result.setMessage("Error: No Telepon tidak boleh kosong dan harus kurang dari 12 characters");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity.badRequest().body(result);
-            }
-
-            if(no_telepon.length() < 12 || no_telepon.isBlank()) {
+            if(no_telepon.length() < 10 && no_telepon.length() >= 13 || no_telepon.isBlank()) {
                 result.setMessage("Error: No Telepon tidak boleh kosong dan harus kurang dari 12 characters");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
@@ -132,13 +141,14 @@ public class MentorServiceImpl implements MentorService{
             }
 
 
-            Mentor mentor = new Mentor(nama_mentor, kode, no_ktp, no_telepon, status, pendidikan_univ,
+            Mentor mentor = new Mentor(namamentor, noktp, no_telepon, status, pendidikan_univ,
                     pendidikan_jurusan, tgl_start, tgl_stop, alamat_rumah);
 
             mentor.setId(id);
+            mentor.setKode(generatekode());
 
             //set kelas
-            if (!kelasRepository.findById(classID).isPresent()) {
+            if (!kelasRepository.findById(classID.getId()).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Kelas tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -147,6 +157,18 @@ public class MentorServiceImpl implements MentorService{
                         .body(result);
             } else {
                 mentor.setClass_name(classID);
+            }
+
+            //Set created_by Many to one User
+            if (!userRepository.findById(userID.getId()).isPresent()) {
+                result.setSuccess(false);
+                result.setMessage("User tidak ditemukan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            } else {
+                mentor.setCreated_by(userID);
             }
 
             //set foto
@@ -160,7 +182,7 @@ public class MentorServiceImpl implements MentorService{
             }
 
             //set provinsi
-            if (!provinsiRepository.findById(provinsiId).isPresent()) {
+            if (!provinsiRepository.findById(provinsiId.getId()).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Provinsi tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -172,7 +194,7 @@ public class MentorServiceImpl implements MentorService{
             }
 
             //set kota
-            MasterKota kota = kotaRepository.findById(kotaId).get();
+            MasterKota kota = kotaRepository.findById(kotaId.getId()).get();
             if (kota == null) {
                 result.setSuccess(false);
                 result.setMessage("Kota tidak ditemukan");
@@ -182,7 +204,7 @@ public class MentorServiceImpl implements MentorService{
             }
 
             //set kecamatan
-            MasterKecamatan kecamatan = kecamatanRepository.findById(kecamatanId).get();
+            MasterKecamatan kecamatan = kecamatanRepository.findById(kecamatanId.getId()).get();
             if (kecamatan == null) {
                 result.setSuccess(false);
                 result.setMessage("Kecamatan tidak ditemukan");
@@ -192,7 +214,7 @@ public class MentorServiceImpl implements MentorService{
             }
 
             //set kelurahan
-            MasterKelurahan kelurahan = kelurahanRepository.findById(kelurahanId).get();
+            MasterKelurahan kelurahan = kelurahanRepository.findById(kelurahanId.getId()).get();
             if (kelurahan == null) {
                 result.setSuccess(false);
                 result.setMessage("Kelurahan tidak ditemukan");
@@ -210,6 +232,7 @@ public class MentorServiceImpl implements MentorService{
 
             result.setMessage(id == 0 ? "Mentor registered successfully!" : "Mentor updated successfully!");
             result.setCode(HttpStatus.OK.value());
+
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
@@ -226,21 +249,8 @@ public class MentorServiceImpl implements MentorService{
             logger.error(stringUtil.getError(e));
         }
 
+        result.setMessage("Sukses Menghapus Mentor");
         return ResponseEntity.ok(result);
-    }
-
-    @Override
-    public Result getAllMentor(String uri) {
-        result = new Result();
-        try {
-            Map items = new HashMap();
-            items.put("items", mentorRepository.findAll());
-            result.setData(items);
-        } catch (Exception e) {
-            logger.error(stringUtil.getError(e));
-        }
-
-        return result;
     }
 
     @Override
@@ -262,6 +272,45 @@ public class MentorServiceImpl implements MentorService{
             logger.error(stringUtil.getError(e));
         }
 
+        return result;
+    }
+
+    @Override
+    public Result getMentorData(String uri, String search, Integer limit, Integer page) {
+        result = new Result();
+
+        int jumlahpage = (int) Math.ceil(mentorRepository.count() /(double) limit);
+
+        if (limit < 1) {
+            limit = 1;
+        }
+
+        if (page > jumlahpage) {
+            page = jumlahpage;
+        }
+
+        if (page < 1 ) {
+            page = 1;
+        }
+
+        if (search == null) {
+            search = "";
+        }
+        try {
+            Map items = new HashMap();
+            List<Mentor> batch = mentorRepository.findMentorData(search, limit, page.intValue());
+            items.put("items", batch);
+            items.put("totalDataResult", batch.size());
+            items.put("totalData", mentorRepository.count());
+
+            if (batch.size() == 0) {
+                result.setMessage("Maaf Data Mentor yang Anda cari tidak tersedia");
+            }
+            result.setData(items);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+        }
+        result.setMessage("Berhasil Menemukan Mentor Data");
         return result;
     }
 

@@ -14,6 +14,9 @@ public class UpdateKelasRequest {
     @ApiModelProperty(example = "deskripsi", required = true)
     private String description;
 
+    @ApiModelProperty(example = "1", required = true)
+    private Long created_by;
+
     public UpdateKelasRequest() {
     }
 
@@ -21,6 +24,7 @@ public class UpdateKelasRequest {
         this.id = id;
         this.className = className;
         this.description = description;
+        this.created_by = created_by;
     }
 
     public Long getId() {
@@ -45,5 +49,13 @@ public class UpdateKelasRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getCreated_by() {
+        return created_by;
+    }
+
+    public void setCreated_by(Long created_by) {
+        this.created_by = created_by;
     }
 }

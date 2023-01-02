@@ -2,6 +2,7 @@ package id.kedukasi.core.serviceImpl;
 
 import id.kedukasi.core.models.*;
 import id.kedukasi.core.repository.KelasRepository;
+import id.kedukasi.core.repository.UserRepository;
 import id.kedukasi.core.request.KelasRequest;
 import id.kedukasi.core.request.UpdateKelasRequest;
 import id.kedukasi.core.service.KelasService;
@@ -31,6 +32,9 @@ public class KelasServiceImpl implements KelasService {
     private Result result;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public Result getAllClass(String uri, String search, int limit, int page) {
@@ -178,11 +182,20 @@ public class KelasServiceImpl implements KelasService {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
+            Optional<User> user = userRepository.findById(Request.getCreated_by());
+            if (!user.isPresent()){
+                result.setSuccess(false);
+                result.setMessage("Error: id User tidak ditemukan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                User user_id = userRepository.findById(Request.getCreated_by()).get();
+                Request.setCreated_by(user_id.getId());
+            }
 
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getClassName(), auth.getName());
-
-            kelasbaru.setId(Request.getId());
+//                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), auth.getName());
+            Kelas kelasbaru = new Kelas(Request.getId(), Request.getClassName(), Request.getDescription());
+            kelasbaru.setCreated_by(user.get());
             kelasRepository.save(kelasbaru);
 
             result.setMessage(Request.getId() == 0 ? "Berhasil membuat kelas baru!" : "Berhasil memperbarui kelas!");
@@ -217,11 +230,20 @@ public class KelasServiceImpl implements KelasService {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
+            Optional<User> user = Optional.ofNullable(userRepository.findById(Request.getCreated_by()));
+            if (!user.isPresent()){
+                result.setSuccess(false);
+                result.setMessage("Error: id User tidak ditemukan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                User user_id = userRepository.findById(Request.getCreated_by());
+                Request.setCreated_by(Math.toIntExact(user_id.getId()));
+            }
 
-
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), auth.getName());
-
+//                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), auth.getName());
+            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription());
+            kelasbaru.setCreated_by(user.get());
             kelasRepository.save(kelasbaru);
 
             result.setMessage("Berhasil membuat kelas baru!");
@@ -229,7 +251,6 @@ public class KelasServiceImpl implements KelasService {
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return ResponseEntity.ok(result);
     }
 
