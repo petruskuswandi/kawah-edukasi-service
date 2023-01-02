@@ -11,7 +11,8 @@ public class StaticConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/upload/**").addResourceLocations("file:///" + System.getProperty("user.dir") + "/src/main/upload/");
+        //registry.addResourceHandler("/templates/**").addResourceLocations("classpath:/templates/");
     }
 }
 

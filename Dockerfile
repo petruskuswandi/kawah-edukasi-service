@@ -21,6 +21,7 @@ RUN mkdir -p ./uploads
 # add file from folder to folder deploy
 ADD ./src/main/resources/static/upload/documents ./uploads
 ADD ./src/main/resources/templates ./uploads
+ADD ./src/main/upload ./uploads
 
 COPY target/kedukasi-service-1.0-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]
