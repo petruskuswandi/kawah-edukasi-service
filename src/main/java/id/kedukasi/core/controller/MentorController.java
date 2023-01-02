@@ -3,6 +3,12 @@ package id.kedukasi.core.controller;
 import javax.servlet.http.HttpServletRequest;
 // import javax.validation.Valid;
 
+import id.kedukasi.core.models.Kelas;
+import id.kedukasi.core.models.User;
+import id.kedukasi.core.models.wilayah.MasterKecamatan;
+import id.kedukasi.core.models.wilayah.MasterKelurahan;
+import id.kedukasi.core.models.wilayah.MasterKota;
+import id.kedukasi.core.models.wilayah.MasterProvinsi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,23 +76,24 @@ public class MentorController {
           @RequestPart(value = "Upload Image", required = false) MultipartFile foto,
           @RequestParam(value = "No Ktp") String no_ktp,
           @RequestParam(value = "No Telepon") String no_telepon,
-          @RequestParam(value = "Status") String status,
-          @RequestParam(value = "Class Name") Long class_name,
+          @RequestParam(value = "Status", defaultValue = "Apply") String status,
+          @RequestParam(value = "Class Name by Class Id") Kelas class_name,
           @RequestParam(value = "Pendidikan Univ") String pendidikan_univ,
           @RequestParam(value = "Pendidikan Jurusan") String pendidikan_jurusan,
-          @RequestParam(value = "Tanggal Start") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_start,
-          @RequestParam(value = "Tanggal Stop") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
+          @RequestParam(value = "Tanggal Start", defaultValue = "2022-05-17") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_start,
+          @RequestParam(value = "Tanggal Stop", defaultValue = "2022-08-17") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
           @RequestParam(value = "Alamat Rumah") String alamat_rumah,
           @RequestPart(value = "Upload Cv", required = false) MultipartFile cv,
-          @RequestParam(value = "Provinsi") Long provinsi,
-          @RequestParam(value = "Kota") Long kota,
-          @RequestParam(value = "Kecamatan") Long kecamatan,
-          @RequestParam(value = "Kelurahan") Long kelurahan )
+          @RequestParam(value = "Provinsi") MasterProvinsi provinsi,
+          @RequestParam(value = "Kota") MasterKota kota,
+          @RequestParam(value = "Kecamatan") MasterKecamatan kecamatan,
+          @RequestParam(value = "Kelurahan") MasterKelurahan kelurahan,
+          @RequestParam(value = "Created by User Id") User created_by)
   {
     Long id = 0L;
     return service.updateMentor(id, nama_mentor, foto, no_ktp, no_telepon, status,
             class_name, pendidikan_univ, pendidikan_jurusan, tgl_start,
-            tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan);
+            tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan, created_by);
   }
 
   @PutMapping("/update")
@@ -95,21 +102,22 @@ public class MentorController {
                                         @RequestPart(value = "Upload Image", required = false) MultipartFile foto,
                                         @RequestParam(value = "No Ktp") String no_ktp,
                                         @RequestParam(value = "No Telepon") String no_telepon,
-                                        @RequestParam(value = "Status") String status,
-                                        @RequestParam(value = "Class Name") Long class_name,
+                                        @RequestParam(value = "Status", defaultValue = "Apply") String status,
+                                        @RequestParam(value = "Class Name by Class Id") Kelas class_name,
                                         @RequestParam(value = "Pendidikan Univ") String pendidikan_univ,
                                         @RequestParam(value = "Pendidikan Jurusan") String pendidikan_jurusan,
-                                        @RequestParam(value = "Tanggal Start") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_start,
-                                        @RequestParam(value = "Tanggal Stop") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
+                                        @RequestParam(value = "Tanggal Start", defaultValue = "2022-05-17") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_start,
+                                        @RequestParam(value = "Tanggal Stop", defaultValue = "2022-08-17") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
                                         @RequestParam(value = "Alamat Rumah") String alamat_rumah,
                                         @RequestPart(value = "Upload Cv", required = false) MultipartFile cv,
-                                        @RequestParam(value = "Provinsi",defaultValue = "0") Long provinsi,
-                                        @RequestParam(value = "Kota",defaultValue = "0") Long kota,
-                                        @RequestParam(value = "Kecamatan",defaultValue = "0") Long kecamatan,
-                                        @RequestParam(value = "Kelurahan",defaultValue = "0") Long kelurahan ) {
+                                        @RequestParam(value = "Provinsi",defaultValue = "0") MasterProvinsi provinsi,
+                                        @RequestParam(value = "Kota",defaultValue = "0") MasterKota kota,
+                                        @RequestParam(value = "Kecamatan",defaultValue = "0") MasterKecamatan kecamatan,
+                                        @RequestParam(value = "Kelurahan",defaultValue = "0") MasterKelurahan kelurahan,
+                                        @RequestParam(value = "Created By User ID", defaultValue = "0") User created_by) {
     return service.updateMentor(id, nama_mentor, foto, no_ktp, no_telepon, status,
             class_name, pendidikan_univ, pendidikan_jurusan, tgl_start,
-            tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan);
+            tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan, created_by);
   }
 
   @PatchMapping(value = "/delete")

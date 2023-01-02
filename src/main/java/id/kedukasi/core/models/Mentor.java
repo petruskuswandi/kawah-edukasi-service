@@ -3,19 +3,17 @@ package id.kedukasi.core.models;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import id.kedukasi.core.models.wilayah.MasterKecamatan;
+import id.kedukasi.core.models.wilayah.MasterKelurahan;
+import id.kedukasi.core.models.wilayah.MasterKota;
+import id.kedukasi.core.models.wilayah.MasterProvinsi;
 import org.hibernate.annotations.DynamicUpdate;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -24,7 +22,10 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "mentors")
+@Table(name = "mentors", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "namamentor")
+//        @UniqueConstraint(columnNames = "kode")
+})
 @DynamicUpdate
 @Getter
 @Setter
@@ -60,8 +61,10 @@ public class Mentor implements Serializable {
 
   private String status;
 
-
-  private Long class_name;
+  @JsonIgnoreProperties({"description", "banned", "banned_time", "banned_time", "created_by", "created_time", "updated_time"})
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "class_name")
+  private Kelas class_name;
 
 
   private String pendidikan_univ;
@@ -70,26 +73,38 @@ public class Mentor implements Serializable {
   private String pendidikan_jurusan;
 
   @Column(name = "tgl_start")
-  @Temporal(TemporalType.TIMESTAMP)
+  @Temporal(TemporalType.DATE)
   private Date tgl_start;
 
   @Column(name = "tgl_stop")
-  @Temporal(TemporalType.TIMESTAMP)
+  @Temporal(TemporalType.DATE)
   private Date tgl_stop;
 
 
   private String alamat_rumah;
 
 
-  private Long provinsi;
+  @ManyToOne
+  @JsonIgnoreProperties({"alt_name", "latitude", "longitude"})
+  @JoinColumn(name = "provinsi")
+  private MasterProvinsi provinsi;
 
 
-  private Long kota;
+  @ManyToOne
+  @JsonIgnoreProperties({"alt_name", "latitude", "longitude"})
+  @JoinColumn(name = "kota")
+  private MasterKota kota;
 
 
-  private Long kecamatan;
+  @ManyToOne
+  @JsonIgnoreProperties({"alt_name", "latitude", "longitude"})
+  @JoinColumn(name = "kecamatan")
+  private MasterKecamatan kecamatan;
 
-  private Long kelurahan;
+  @ManyToOne
+  @JsonIgnoreProperties({"alt_name", "latitude", "longitude"})
+  @JoinColumn(name = "kelurahan")
+  private MasterKelurahan kelurahan;
 
   @Column(name = "banned", updatable = false)
   private boolean banned;
@@ -100,12 +115,17 @@ public class Mentor implements Serializable {
 
   @Column(name = "created_time", updatable = false)
   @Temporal(TemporalType.TIMESTAMP)
+  @JsonFormat(pattern = "yyyy-MM-dd, HH:mm:ss", timezone = "Asia/Jakarta")
   private Date created_time;
 
-  private long created_by;
+  @JsonIgnoreProperties({"profilePicture","profilePicturePath","email","password","namaLengkap","noHp","role","isLogin","isActive","tokenVerification","created_time","updated_time","banned","banned_time","verified"})
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "created_by")
+  private User created_by;
 
   @Column(name = "updated_time")
   @Temporal(TemporalType.TIMESTAMP)
+  @JsonFormat(pattern = "yyyy-MM-dd, HH:mm:ss", timezone = "Asia/Jakarta")
   private Date updated_time;
 
   public Mentor() {
@@ -127,7 +147,6 @@ public class Mentor implements Serializable {
     this.alamat_rumah = alamat_rumah;
     this.banned = false;
     this.banned_time = date;
-    this.created_by = 1;
     this.created_time = date;
     this.updated_time = date;
   }

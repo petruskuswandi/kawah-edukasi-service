@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,6 +41,7 @@ public class MentorRequest implements Serializable {
   @NotBlank
   @Size(min = 2,max = 15)
   @ApiModelProperty(example = "Back-End", required = true)
+  @ManyToOne
   private String class_name;
 
 

@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import id.kedukasi.core.models.Batch;
+import id.kedukasi.core.models.*;
+import id.kedukasi.core.models.wilayah.MasterProvinsi;
+import id.kedukasi.core.repository.UserRepository;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import id.kedukasi.core.models.Mentor;
-import id.kedukasi.core.models.Result;
 import id.kedukasi.core.models.wilayah.MasterKecamatan;
 import id.kedukasi.core.models.wilayah.MasterKelurahan;
 import id.kedukasi.core.models.wilayah.MasterKota;
@@ -35,6 +35,9 @@ public class MentorServiceImpl implements MentorService{
 
     @Autowired
     MentorRepository mentorRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     KelasRepository kelasRepository;
@@ -71,14 +74,14 @@ public class MentorServiceImpl implements MentorService{
 
 
     @Override
-    public ResponseEntity<?> updateMentor(Long id ,String namamentor, MultipartFile foto, String noktp,
-                                          String no_telepon, String status, Long classID, String pendidikan_univ,
-                                          String pendidikan_jurusan, Date tgl_start, Date tgl_stop,  String alamat_rumah,
-                                          MultipartFile cv, Long provinsiId, Long kotaId, Long kecamatanId, Long kelurahanId) {
+    public ResponseEntity<?> updateMentor(Long id , String namamentor, MultipartFile foto, String noktp,
+                                          String no_telepon, String status, Kelas classID, String pendidikan_univ,
+                                          String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah,
+                                          MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, User userID) {
         result = new Result();
         try {
             Mentor checkNamaMentor = mentorRepository.findByNamamentor(namamentor).orElse(new Mentor());
-            Mentor checkKtpMentor = mentorRepository.findByNoktp(noktp).orElse(new Mentor());
+//            Mentor checkKtpMentor = mentorRepository.findByNoktp(noktp).orElse(new Mentor());
             if (checkNamaMentor.getNamamentor() != null && !Objects.equals(id, checkNamaMentor)) {
                 result.setMessage("Error: Nama Mentor tidak boleh sama!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -87,13 +90,13 @@ public class MentorServiceImpl implements MentorService{
                         .body(result);
             }
 
-            if (checkKtpMentor.getNoktp() != null && !Objects.equals(id, checkKtpMentor)) {
-                result.setMessage("Error: KTP Mentor tidak boleh sama!");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            }
+//            if (checkKtpMentor.getNoktp() != null && !Objects.equals(id, checkKtpMentor)) {
+//                result.setMessage("Error: KTP Mentor tidak boleh sama!");
+//                result.setCode(HttpStatus.BAD_REQUEST.value());
+//                return ResponseEntity
+//                        .badRequest()
+//                        .body(result);
+//            }
 
             if(namamentor.isBlank()) {
                 result.setMessage("Error: Nama tidak boleh kosong");
@@ -145,7 +148,7 @@ public class MentorServiceImpl implements MentorService{
             mentor.setKode(generatekode());
 
             //set kelas
-            if (!kelasRepository.findById(classID).isPresent()) {
+            if (!kelasRepository.findById(classID.getId()).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Kelas tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -154,6 +157,18 @@ public class MentorServiceImpl implements MentorService{
                         .body(result);
             } else {
                 mentor.setClass_name(classID);
+            }
+
+            //Set created_by Many to one User
+            if (!userRepository.findById(userID.getId()).isPresent()) {
+                result.setSuccess(false);
+                result.setMessage("User tidak ditemukan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            } else {
+                mentor.setCreated_by(userID);
             }
 
             //set foto
@@ -167,7 +182,7 @@ public class MentorServiceImpl implements MentorService{
             }
 
             //set provinsi
-            if (!provinsiRepository.findById(provinsiId).isPresent()) {
+            if (!provinsiRepository.findById(provinsiId.getId()).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Provinsi tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -179,7 +194,7 @@ public class MentorServiceImpl implements MentorService{
             }
 
             //set kota
-            MasterKota kota = kotaRepository.findById(kotaId).get();
+            MasterKota kota = kotaRepository.findById(kotaId.getId()).get();
             if (kota == null) {
                 result.setSuccess(false);
                 result.setMessage("Kota tidak ditemukan");
@@ -189,7 +204,7 @@ public class MentorServiceImpl implements MentorService{
             }
 
             //set kecamatan
-            MasterKecamatan kecamatan = kecamatanRepository.findById(kecamatanId).get();
+            MasterKecamatan kecamatan = kecamatanRepository.findById(kecamatanId.getId()).get();
             if (kecamatan == null) {
                 result.setSuccess(false);
                 result.setMessage("Kecamatan tidak ditemukan");
@@ -199,7 +214,7 @@ public class MentorServiceImpl implements MentorService{
             }
 
             //set kelurahan
-            MasterKelurahan kelurahan = kelurahanRepository.findById(kelurahanId).get();
+            MasterKelurahan kelurahan = kelurahanRepository.findById(kelurahanId.getId()).get();
             if (kelurahan == null) {
                 result.setSuccess(false);
                 result.setMessage("Kelurahan tidak ditemukan");
