@@ -5,23 +5,22 @@ import id.kedukasi.core.repository.BatchDetailRepository;
 import id.kedukasi.core.repository.BatchRepository;
 import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.MentorRepository;
-import id.kedukasi.core.request.BatchDetailRequest;
-import id.kedukasi.core.request.UpdateBatchDetailRequest;
+import id.kedukasi.core.request.BatchListOAS;
+import id.kedukasi.core.request.batchDetail.BatchDetailRequest;
+import id.kedukasi.core.request.batchDetail.ByIdBatchDetail;
+import id.kedukasi.core.request.batchDetail.NewBatchDetailRequest;
+import id.kedukasi.core.request.batchDetail.UpdateBatchDetailRequest;
 import id.kedukasi.core.service.BatchDetailService;
 import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class BatchDetailServiceImpl implements BatchDetailService {
@@ -59,34 +58,38 @@ public class BatchDetailServiceImpl implements BatchDetailService {
 
                 BatchDetail Batchdetail = new BatchDetail(batchDetail.getId(), batchDetail.isDeleted());
 
+                SetPenambahanData setPenambahanData = new SetPenambahanData();
+
                 // set batch
-                Batch batch = batchRepository.findById(batchDetail.getBatch()).get();
-                if (!batchRepository.findById(batch.getId()).isPresent()) {
+                Optional<Batch> batch = batchRepository.findById(batchDetail.getBatch());
+                if (!batch.isPresent()) {
                     result.setSuccess(false);
-                    result.setMessage("Batch tidak ditemukan");
+                    result.setMessage("Error: Batch tidak ditemukan");
                     result.setCode(HttpStatus.BAD_REQUEST.value());
                 }else {
-                    Batchdetail.setBatch(batch);
+                    Batchdetail.setBatch(batch.get());
+                    setPenambahanData.setNamaBatch(batch.get().getBatchname());
                 }
 
-                // set class
-                Kelas kelas = kelasRepository.findById(batchDetail.getKelas()).get();
-                if (!kelasRepository.findById(kelas.getId()).isPresent()){
+                Optional<Kelas> kelas = kelasRepository.findById(batchDetail.getBatch());
+                if (!kelas.isPresent()) {
                     result.setSuccess(false);
-                    result.setMessage("Error: Tidak ada Kelas dengan id " + kelas.getId());
+                    result.setMessage("Error: Class tidak ditemukan");
                     result.setCode(HttpStatus.BAD_REQUEST.value());
-                } else {
-                    Batchdetail.setKelas(kelas);
+                }else {
+                    Batchdetail.setKelas(kelas.get());
+                    setPenambahanData.setNamaClass(kelas.get().getClassname());
                 }
 
                 // set mentor
-                Mentor mentor = mentorRepository.findById(batchDetail.getMentor()).get();
-                if (!mentorRepository.findById(mentor.getId()).isPresent()) {
+                Optional<Mentor> mentor = mentorRepository.findById(batchDetail.getMentor());
+                if (!mentor.isPresent()) {
                     result.setSuccess(false);
-                    result.setMessage("Mentor tidak ditemukan");
+                    result.setMessage("Error: Mentor tidak ditemukan");
                     result.setCode(HttpStatus.BAD_REQUEST.value());
                 }else {
-                    Batchdetail.setMentor(mentor);
+                    Batchdetail.setMentor(mentor.get());
+                    setPenambahanData.setNamaMentor(mentor.get().getNamamentor());
                 }
 
                 batchDetailRepository.save(Batchdetail);
@@ -126,44 +129,57 @@ public class BatchDetailServiceImpl implements BatchDetailService {
     public ResponseEntity<Result> createBatchDetail(BatchDetailRequest batchDetail) {
         result = new Result();
         try {
-            BatchDetail Batchdetail = new BatchDetail();
+            //set class
+            List<NewBatchDetailRequest> classMentorList = batchDetail.getList();
 
-            // set batch
-           Optional<Batch> batch = batchRepository.findById(batchDetail.getBatch());
-            if (!batch.isPresent()) {
-                result.setSuccess(false);
-                result.setMessage("Error: Batch tidak ditemukan");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-            }else {
-                Batch batch1 = batchRepository.findById(batchDetail.getBatch()).get();
-                Batchdetail.setBatch(batch1);
+            List<NewBatchDetailRequest> list = new ArrayList<>();
+
+            for(int i = 0; i < classMentorList.size(); i++) {
+                BatchDetail Batchdetail = new BatchDetail();
+
+                SetPenambahanData setPenambahanData = new SetPenambahanData();
+
+                // set batch
+                Optional<Batch> batch = batchRepository.findById(batchDetail.getBatch());
+                if (!batch.isPresent()) {
+                    result.setSuccess(false);
+                    result.setMessage("Error: Batch tidak ditemukan");
+                    result.setCode(HttpStatus.BAD_REQUEST.value());
+                }else {
+                    Batchdetail.setBatch(batch.get());
+                    setPenambahanData.setNamaBatch(batch.get().getBatchname());
+                }
+
+                NewBatchDetailRequest classMentor = classMentorList.get(i);
+
+                // set class
+                Optional<Kelas> kelas = kelasRepository.findById(classMentor.getKelas());
+                if (!kelas.isPresent()) {
+                    result.setSuccess(false);
+                    result.setMessage("Error: Kelas tidak ditemukan");
+                    result.setCode(HttpStatus.BAD_REQUEST.value());
+                } else {
+                    Batchdetail.setKelas(kelas.get());
+                    setPenambahanData.setNamaClass(kelas.get().getClassname());
+                }
+
+                // set mentor
+                Optional<Mentor> mentor = mentorRepository.findById(classMentor.getMentor());
+                if (!mentor.isPresent()) {
+                    result.setSuccess(false);
+                    result.setMessage("Error: Mentor tidak ditemukan");
+                    result.setCode(HttpStatus.BAD_REQUEST.value());
+                } else {
+                    Batchdetail.setMentor(mentor.get());
+                    setPenambahanData.setNamaMentor(mentor.get().getNamamentor());
+                }
+
+                // save
+                batchDetailRepository.save(Batchdetail);
+                list.add(classMentor);
             }
 
-            // set class
-            Optional<Kelas> kelas = kelasRepository.findById(batchDetail.getKelas());
-            if (!kelas.isPresent()) {
-                result.setSuccess(false);
-                result.setMessage("Error: Class tidak ditemukan");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-            }else {
-                Kelas kelas1 = kelasRepository.findById(batchDetail.getKelas()).get();
-                Batchdetail.setKelas(kelas1);
-            }
-
-            // set mentor
-            Optional<Mentor> mentor = mentorRepository.findById(batchDetail.getMentor());
-            if (!mentor.isPresent()) {
-                result.setSuccess(false);
-                result.setMessage("Error: Mentor tidak ditemukan");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-            }else {
-                Mentor mentor1 = mentorRepository.findById(batchDetail.getMentor()).get();
-                Batchdetail.setMentor(mentor1);
-            }
-
-            batchDetailRepository.save(Batchdetail);
-
-            result.setMessage("Berhasil membuat Batch Detail baru!");
+            result.setMessage("Berhasil membuat Batch Detail!");
             result.setCode(HttpStatus.OK.value());
         }catch (Exception e){
             logger.error(stringUtil.getError(e));
@@ -172,37 +188,70 @@ public class BatchDetailServiceImpl implements BatchDetailService {
     }
 
     @Override
-    public ResponseEntity<Result> getAllBatchDetail() {
+    public Result getDetailByIdBatch(Long batchId) {
         result = new Result();
         try {
-            Map<String, List<BatchDetail>> items = new HashMap<>();
-            BatchDetail batchDetail = new BatchDetail();
-            Example<BatchDetail> example = Example.of(batchDetail);
-            items.put("items", batchDetailRepository.findAll(example, Sort.by(Sort.Direction.ASC,"id")));
-            result.setData(items);
-        } catch (Exception e) {
+            BatchDetail ob = new BatchDetail();
+            Optional<Batch> batch = batchRepository.findById(batchId);
+            ob.setBatch(batch.get());
+            Example<BatchDetail> example = Example.of(ob);
+            List<BatchDetail> batchDetail = batchDetailRepository.findAll(example);
+
+                ByIdBatchDetail response = new ByIdBatchDetail();
+
+                response.batch_id = batch.get().getId();
+                response.batchname = batch.get().getBatchname();
+                response.description = batch.get().getDescription();
+                response.startedtime = batch.get().getStartedtime();
+                response.endedtime = batch.get().getEndedtime();
+                response.created_by = batch.get().getCreated_by();
+
+                List<BatchListOAS> list = new ArrayList<>();
+
+                for (BatchDetail batchDetailExist : batchDetail) {
+                    BatchListOAS request = new BatchListOAS();
+                    request.class_id = batchDetailExist.getKelas().getId();
+                    request.classname = batchDetailExist.getKelas().getClassname();
+                    request.mentor_id = batchDetailExist.getMentor().getId();
+                    request.nama_mentor = batchDetailExist.getMentor().getNamamentor();
+                    list.add(request);
+                }
+                response.list = list;
+
+                result.setData(response);
+        }catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-        return ResponseEntity.ok(result);
+            return result;
     }
 
-    @Override
-    public ResponseEntity<Result> getBatchDetailId(Long id) {
-        result = new Result();
-        try {
-            Optional<BatchDetail> batchDetail = batchDetailRepository.findById(id);
-            if(!batchDetail.isPresent()){
-                result.setSuccess(false);
-                result.setMessage("Error : Tidak ada Batch Detail dengan id " + id);
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else {
-                Map<String, BatchDetail> items = new HashMap<>();
-                items.put("items", batchDetail.get());
-                result.setData(items);
-            }
-        } catch (Exception e) {
-            logger.error(stringUtil.getError(e));
+    public class SetPenambahanData{
+        private String namaBatch;
+        private String namaClass;
+        private String namaMentor;
+
+        public String getNamaBatch() {
+            return namaBatch;
         }
-        return ResponseEntity.ok(result);
+
+        public void setNamaBatch(String namaBatch) {
+            this.namaBatch = namaBatch;
+        }
+
+        public String getNamaClass() {
+            return namaClass;
+        }
+
+        public void setNamaClass(String namaClass) {
+            this.namaClass = namaClass;
+        }
+
+        public String getNamaMentor() {
+            return namaMentor;
+        }
+
+        public void setNamaMentor(String namaMentor) {
+            this.namaMentor = namaMentor;
+        }
     }
 }
