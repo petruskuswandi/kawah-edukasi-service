@@ -40,6 +40,10 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
   int jumlahmentor(@Param("year") int year);
 
   @Transactional
+  @Query(value = "SELECT kode FROM mentors WHERE id = :id", nativeQuery = true)
+  String ambilkode(@Param("id") Long id);
+
+  @Transactional
   @Query(
           value = "SELECT * FROM mentors WHERE banned = false AND"+
                   "(:namamentor IS NULL OR namamentor LIKE %:namamentor%) "+
@@ -52,7 +56,4 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
 
   @Transactional
   Optional<Mentor> findByNamamentor(String namamentor);
-
-  @Transactional
-  Optional<Mentor> findByNoktp(String noktp);
 }
