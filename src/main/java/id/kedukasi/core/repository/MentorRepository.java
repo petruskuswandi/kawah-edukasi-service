@@ -39,8 +39,8 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
   int jumlahmentor(@Param("year") int year);
 
   @Transactional
-  @Query(value = "SELECT count(*) FROM mentors WHERE banned = false AND kode = :kode", nativeQuery = true)
-  int cekkode(@Param("kode") String kode);
+  @Query(value = "SELECT count(*) FROM mentors WHERE banned = false AND kode = :generateKode", nativeQuery = true)
+  int cekkode(@Param("generateKode") String generateKode);
 
   @Transactional
   @Query(value = "SELECT kode FROM mentors WHERE id = :id", nativeQuery = true)
