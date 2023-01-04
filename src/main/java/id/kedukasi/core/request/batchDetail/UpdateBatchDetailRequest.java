@@ -1,4 +1,4 @@
-package id.kedukasi.core.request;
+package id.kedukasi.core.request.batchDetail;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
