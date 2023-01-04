@@ -67,16 +67,21 @@ public class Mentor implements Serializable {
   private Kelas class_name;
 
 
-  private String pendidikan_univ;
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JsonIgnoreProperties({"description", "created_at", "updated_at", "deleted"})
+  @JoinColumn(name = "pendidikan_univ")
+  private Education pendidikan_univ;
 
 
   private String pendidikan_jurusan;
 
   @Column(name = "tgl_start")
+  @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Jakarta")
   @Temporal(TemporalType.DATE)
   private Date tgl_start;
 
   @Column(name = "tgl_stop")
+  @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Jakarta")
   @Temporal(TemporalType.DATE)
   private Date tgl_stop;
 
@@ -91,18 +96,18 @@ public class Mentor implements Serializable {
 
 
   @ManyToOne
-  @JsonIgnoreProperties({"alt_name", "latitude", "longitude"})
+  @JsonIgnoreProperties({"alt_name", "latitude", "longitude", "provinsi_id", "province_id"})
   @JoinColumn(name = "kota")
   private MasterKota kota;
 
 
   @ManyToOne
-  @JsonIgnoreProperties({"alt_name", "latitude", "longitude"})
+  @JsonIgnoreProperties({"alt_name", "latitude", "longitude", "kota_id"})
   @JoinColumn(name = "kecamatan")
   private MasterKecamatan kecamatan;
 
   @ManyToOne
-  @JsonIgnoreProperties({"alt_name", "latitude", "longitude"})
+  @JsonIgnoreProperties({"alt_name", "latitude", "longitude", "kota_id", "kecamatan_id"})
   @JoinColumn(name = "kelurahan")
   private MasterKelurahan kelurahan;
 
@@ -111,6 +116,7 @@ public class Mentor implements Serializable {
 
   @Column(name = "banned_time", updatable = false)
   @Temporal(TemporalType.TIMESTAMP)
+  @JsonFormat(pattern = "yyyy-MM-dd,  HH:mm:ss", timezone = "Asia/Jakarta")
   private Date banned_time;
 
   @Column(name = "created_time", updatable = false)
@@ -131,8 +137,7 @@ public class Mentor implements Serializable {
   public Mentor() {
   }
 
-  public Mentor(String namamentor, String noktp,
-                String no_telepon, String status, String pendidikan_univ,
+  public Mentor(String namamentor, String noktp, String no_telepon, String status,
                 String pendidikan_jurusan, Date tgl_start, Date tgl_stop,  String alamat_rumah) {
     Date date = new Date();
 
@@ -140,7 +145,6 @@ public class Mentor implements Serializable {
     this.noktp = noktp;
     this.no_telepon = no_telepon;
     this.status = status;
-    this.pendidikan_univ = pendidikan_univ;
     this.pendidikan_jurusan = pendidikan_jurusan;
     this.tgl_start = tgl_start;
     this.tgl_stop = tgl_stop;
