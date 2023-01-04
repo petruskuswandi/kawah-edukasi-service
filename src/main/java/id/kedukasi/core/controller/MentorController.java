@@ -78,8 +78,8 @@ public class MentorController {
           @RequestParam(value = "No Ktp") String no_ktp,
           @RequestParam(value = "No Telepon") String no_telepon,
           @RequestParam(value = "Status", defaultValue = "Apply") String status,
-          @RequestParam(value = "Class Name by Class Id") Kelas class_name,
-          @RequestParam(value = "Pendidikan Terakhir by Education Id") Education pendidikan_univ,
+          @RequestParam(value = "Class Name by Class Id") Kelas class_id,
+          @RequestParam(value = "Pendidikan Terakhir by Education Id") Education pendidikan_terakhir,
           @RequestParam(value = "Pendidikan Jurusan", required = false) String pendidikan_jurusan,
           @RequestParam(value = "Tanggal Start", defaultValue = "2022-05-17") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_start,
           @RequestParam(value = "Tanggal Stop", defaultValue = "2022-08-17") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
@@ -93,7 +93,7 @@ public class MentorController {
   {
     Long id = 0L;
     return service.createMentor(id, nama_mentor, foto, no_ktp, no_telepon, status,
-            class_name, pendidikan_univ, pendidikan_jurusan, tgl_start,
+            class_id, pendidikan_terakhir, pendidikan_jurusan, tgl_start,
             tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan, created_by);
   }
 
@@ -104,8 +104,8 @@ public class MentorController {
                                         @RequestParam(value = "No Ktp") String no_ktp,
                                         @RequestParam(value = "No Telepon") String no_telepon,
                                         @RequestParam(value = "Status", defaultValue = "Apply") String status,
-                                        @RequestParam(value = "Class Name by Class Id") Kelas class_name,
-                                        @RequestParam(value = "Pendidikan Terakhir by Education Id") Education pendidikan_univ,
+                                        @RequestParam(value = "Class Name by Class Id") Kelas class_id,
+                                        @RequestParam(value = "Pendidikan Terakhir by Education Id") Education pendidikan_terakhir,
                                         @RequestParam(value = "Pendidikan Jurusan", required = false) String pendidikan_jurusan,
                                         @RequestParam(value = "Tanggal Start", defaultValue = "2022-05-17") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_start,
                                         @RequestParam(value = "Tanggal Stop", defaultValue = "2022-08-17") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
@@ -117,7 +117,7 @@ public class MentorController {
                                         @RequestParam(value = "Kelurahan",defaultValue = "0") MasterKelurahan kelurahan,
                                         @RequestParam(value = "Created By User ID", defaultValue = "0") User created_by) {
     return service.updateMentor(id, nama_mentor, foto, no_ktp, no_telepon, status,
-            class_name, pendidikan_univ, pendidikan_jurusan, tgl_start,
+            class_id, pendidikan_terakhir, pendidikan_jurusan, tgl_start,
             tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan, created_by);
   }
 

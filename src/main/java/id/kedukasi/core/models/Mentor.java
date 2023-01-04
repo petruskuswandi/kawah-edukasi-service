@@ -63,14 +63,14 @@ public class Mentor implements Serializable {
 
   @JsonIgnoreProperties({"description", "banned", "banned_time", "banned_time", "created_by", "created_time", "updated_time"})
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "class_name")
-  private Kelas class_name;
+  @JoinColumn(name = "class_id")
+  private Kelas class_id;
 
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JsonIgnoreProperties({"description", "created_at", "updated_at", "deleted"})
-  @JoinColumn(name = "pendidikan_univ")
-  private Education pendidikan_univ;
+  @JoinColumn(name = "pendidikan_terakhir")
+  private Education pendidikan_terakhir;
 
 
   private String pendidikan_jurusan;

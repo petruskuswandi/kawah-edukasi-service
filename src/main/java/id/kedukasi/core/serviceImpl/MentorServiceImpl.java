@@ -72,9 +72,15 @@ public class MentorServiceImpl implements MentorService{
         LocalDateTime now = LocalDateTime.now();
         int year = now.getYear();
         int jumlahdata = mentorRepository.jumlahmentor(year);
-        String generateKode = ("M"+dtf.format(now)+ String.format("%03d", jumlahdata+1));
+        String kode = ("M"+dtf.format(now) + String.format("%03d", 1));
+        int jumlahkode = mentorRepository.cekkode(kode);
+        String generateKode;
+        if (jumlahkode == 0){
+            generateKode  = ("M"+dtf.format(now) + String.format("%03d", 1));
+        } else {
+            generateKode  = ("M"+dtf.format(now) + String.format("%03d", jumlahdata+1));
+        }
         return generateKode;
-
     }
 
     @Override
@@ -146,7 +152,7 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setClass_name(classID);
+                mentor.setClass_id(classID);
             }
             if (!educationRepository.findById(educationID.getId()).isPresent()){
                 result.setSuccess(false);
@@ -156,7 +162,7 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setPendidikan_univ(educationID);
+                mentor.setPendidikan_terakhir(educationID);
             }
 
             //Set created_by Many to one User
@@ -269,7 +275,7 @@ public class MentorServiceImpl implements MentorService{
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(no_telepon.length() < 10 && no_telepon.length() >= 13 || no_telepon.isBlank()) {
+            if(no_telepon.length() < 10 && no_telepon.length() > 13 || no_telepon.isBlank()) {
                 result.setMessage("Error: No Telepon tidak boleh kosong dan harus kurang dari 12 characters");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
@@ -309,7 +315,7 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setClass_name(classID);
+                mentor.setClass_id(classID);
             }
 
             if (!educationRepository.findById(educationID.getId()).isPresent()){
@@ -320,7 +326,7 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setPendidikan_univ(educationID);
+                mentor.setPendidikan_terakhir(educationID);
             }
 
             //Set created_by Many to one User
