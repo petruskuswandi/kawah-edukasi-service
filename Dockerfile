@@ -20,6 +20,7 @@ ADD config ./config
 RUN mkdir -p ./uploads
 # add file from folder to folder deploy
 ADD ./src/main/resources/static/upload/documents ./uploads
+ADD ./src/main/resources/static/upload/image ./uploads
 ADD ./src/main/resources/templates ./uploads
 ADD ./src/main/upload ./uploads
 

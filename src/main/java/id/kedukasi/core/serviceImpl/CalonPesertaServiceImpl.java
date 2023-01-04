@@ -822,7 +822,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         result = new Result();
         try {
             Peserta calonPeserta = pesertaRepository.findById(calonPesertaId).get();
-            Kelas kelas = kelasRepository.findById(kelasId).get();
+            //Kelas kelas = kelasRepository.findById(kelasId).get();
             if (!pesertaRepository.findById(calonPesertaId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada calon peserta dengan id " + calonPesertaId);

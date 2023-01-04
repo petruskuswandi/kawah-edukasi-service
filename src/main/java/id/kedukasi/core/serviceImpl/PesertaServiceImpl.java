@@ -876,7 +876,7 @@ public class PesertaServiceImpl implements PesertaService {
         result = new Result();
         try {
             Peserta peserta = pesertaRepository.findById(pesertaId).get();
-            Kelas kelas = kelasRepository.findById(kelasId).get();
+           // Kelas kelas = kelasRepository.findById(kelasId).get();
             if (!pesertaRepository.findById(pesertaId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada peserta dengan id " + pesertaId);
