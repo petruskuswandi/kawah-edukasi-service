@@ -12,7 +12,7 @@ import java.util.Date;
 @Setter
 @Getter
 @ToString
-public class Education {
+public class Educations {
     /**
      * Nabila
      * - POST
@@ -22,7 +22,10 @@ public class Education {
      * - DELETE
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "educationsSequence",
+            sequenceName = "educations_sequence",
+            allocationSize = 1, initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "educationsSequence")
     private int id;
 
     /**

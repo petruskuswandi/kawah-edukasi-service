@@ -146,7 +146,7 @@ public class Peserta implements Serializable {
         @JsonIgnoreProperties({"description","created_time","updated_time","created_at","updated_at","deleted"})
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "education_id", nullable = true, updatable = false)
-        private Education tingkat_pendidikan;
+        private Educations tingkat_pendidikan;
 
         // register
         @NotEmpty(message = "Alamat Tidak Boleh Kosong")

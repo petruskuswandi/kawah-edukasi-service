@@ -27,11 +27,11 @@ public interface PesertaService {
     ResponseEntity<?> updatePeserta(Long id, Long kelasId,Long batchId, String namaPeserta, String tanggalLahir,
                                     String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
                                     MultipartFile uploadImage, Long provinsi, Long kota, Long kecamatan,
-                                    Long kelurahan, String alamatRumah, String motivasi, String kodeReferal, String nomorKtp,MultipartFile uploadCv,Integer kesibukan,Integer scoreTetsAwal,Integer scoreTestAkhir,Integer status,String namaProject,String jurusan);
+                                    Long kelurahan, String alamatRumah, String motivasi, String kodeReferal, String nomorKtp,MultipartFile uploadCv,Integer kesibukan, Integer scoreTetsAwal,Integer scoreTestAkhir,Integer status,String namaProject,String jurusan);
 
     ResponseEntity<?> deletePeserta(boolean banned, Long id, String uri);
 
-    ResponseEntity<?> changeToCalonPeserta(Long id, String uri);
+    ResponseEntity<?> changeToCalonPeserta(Long id, String uri, Integer statusId);
 
     ResponseEntity<?> changeKelas(Long pesertaId, Long kelasId, String uri);
 
