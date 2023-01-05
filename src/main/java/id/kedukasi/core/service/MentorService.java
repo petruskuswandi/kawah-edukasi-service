@@ -17,12 +17,12 @@ import id.kedukasi.core.models.Result;
 public interface MentorService {
 
     ResponseEntity<?> updateMentor(Long id, String namamentor, MultipartFile foto, String noktp,
-                                   String no_telepon, String status, Kelas class_name, Education pendidikan_univ,
+                                   String no_telepon, String status, Kelas class_id, Education pendidikan_terakhir,
                                    String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah, MultipartFile cv, MasterProvinsi provinsi, MasterKota kota,
                                    MasterKecamatan kecamatan, MasterKelurahan kelurahan, User created_by);
 
     ResponseEntity<?> createMentor(Long id, String namamentor, MultipartFile foto, String noktp,
-                                   String no_telepon, String status, Kelas class_name, Education pendidikan_univ,
+                                   String no_telepon, String status, Kelas class_id, Education pendidikan_terakhir,
                                    String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah, MultipartFile cv, MasterProvinsi provinsi, MasterKota kota,
                                    MasterKecamatan kecamatan, MasterKelurahan kelurahan, User created_by);
 

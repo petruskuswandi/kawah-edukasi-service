@@ -72,9 +72,11 @@ public class MentorServiceImpl implements MentorService{
         LocalDateTime now = LocalDateTime.now();
         int year = now.getYear();
         int jumlahdata = mentorRepository.jumlahmentor(year);
-        String generateKode = ("M"+dtf.format(now)+ String.format("%03d", jumlahdata+1));
+        String generateKode  = ("M"+dtf.format(now) + String.format("%03d", jumlahdata+1));
+        while (mentorRepository.cekkode(generateKode) > 0) {
+            generateKode = ("M"+dtf.format(now) + String.format("%03d", jumlahdata++));
+        }
         return generateKode;
-
     }
 
     @Override
@@ -87,7 +89,7 @@ public class MentorServiceImpl implements MentorService{
             Mentor checkNamaMentor = mentorRepository.findByNamamentor(namamentor).orElse(new Mentor());
             //cek nama mentor
             if (checkNamaMentor.getNamamentor() != null && !Objects.equals(id, checkNamaMentor)) {
-                result.setMessage("Error: Nama Mentor tidak boleh sama!");
+                result.setMessage("Error: Name mentor can't be same!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
@@ -95,31 +97,31 @@ public class MentorServiceImpl implements MentorService{
             }
 
             if(namamentor.isBlank()) {
-                result.setMessage("Error: Nama tidak boleh kosong");
+                result.setMessage("Error: Name can't be empty/null!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
             if(noktp.length() < 16 || noktp.isBlank()) {
-                result.setMessage("Error: No KTP tidak boleh kosong dan harus kurang dari 16 character");
+                result.setMessage("Error: Number KTP can't be empty/null and must be less than 16 characters!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
             if(no_telepon.length() < 10 && no_telepon.length() >= 13 || no_telepon.isBlank()) {
-                result.setMessage("Error: No Telepon tidak boleh kosong dan harus kurang dari 12 characters");
+                result.setMessage("Error: Number phone can't be empty/null and must be less than 12 numbers!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
             if(status.isBlank()) {
-                result.setMessage("Error: Status tidak boleh kosong");
+                result.setMessage("Error: Status can't be empty/null");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
             if(pendidikan_jurusan.isBlank()) {
-                result.setMessage("Error: Jurusan tidak boleh kosong");
+                result.setMessage("Error: Major can't be empty/null");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -146,7 +148,7 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setClass_name(classID);
+                mentor.setClass_id(classID);
             }
             if (!educationRepository.findById(educationID.getId()).isPresent()){
                 result.setSuccess(false);
@@ -156,7 +158,7 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setPendidikan_univ(educationID);
+                mentor.setPendidikan_terakhir(educationID);
             }
 
             //Set created_by Many to one User
@@ -269,7 +271,7 @@ public class MentorServiceImpl implements MentorService{
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(no_telepon.length() < 10 && no_telepon.length() >= 13 || no_telepon.isBlank()) {
+            if(no_telepon.length() < 10 && no_telepon.length() > 13 || no_telepon.isBlank()) {
                 result.setMessage("Error: No Telepon tidak boleh kosong dan harus kurang dari 12 characters");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
@@ -309,7 +311,7 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setClass_name(classID);
+                mentor.setClass_id(classID);
             }
 
             if (!educationRepository.findById(educationID.getId()).isPresent()){
@@ -320,7 +322,7 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setPendidikan_univ(educationID);
+                mentor.setPendidikan_terakhir(educationID);
             }
 
             //Set created_by Many to one User
