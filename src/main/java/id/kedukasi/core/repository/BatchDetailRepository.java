@@ -1,17 +1,21 @@
 package id.kedukasi.core.repository;
 
 import id.kedukasi.core.models.BatchDetail;
-import id.kedukasi.core.models.Peserta;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
 
 
 @Repository
 public interface BatchDetailRepository extends JpaRepository<BatchDetail, Long> {
 
     @Transactional
-    @Query("select bd from BatchDetail bd where bd.id=?1")
-    BatchDetail getBatchDetailById(Long id);
+    @Query(value = "select b.class_id from batch_class b where b.batch_id = :batchId",nativeQuery = true)
+    List<Long> getAllClassByBatch(@Param("batchId") long batchId);
+
 }

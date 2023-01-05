@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,9 +101,9 @@ public class EmailServiceImpl implements EmailService {
     }
   }
 
+
   @Override
   public boolean sendRegisterMail(Map<String, String> filesUpload, PesertaServiceImpl.SetPenambahanData setPenambahanData, Peserta pesertabaru, String pathfile) throws IOException, MessagingException, DocumentException {
-    InputStream imageIs = null;
     Path currentPath = Paths.get(".");
     Path absolutePath = currentPath.toAbsolutePath();
     String setPath = absolutePath + pathfile;
@@ -115,7 +116,9 @@ public class EmailServiceImpl implements EmailService {
     context.setVariable("keteranganLain", setPenambahanData);
 
     for(Map.Entry<String, String> data : filesUpload.entrySet()){
-      context.setVariable("file" + data.getKey(),urlstaging + "/peserta/image-response-entity/" + data.getValue());
+
+      context.setVariable("file" + data.getKey(),urlstaging + "/upload/" + data.getValue());
+
     }
 
     String process = templateEngine.process("register", context);

@@ -33,7 +33,7 @@ import java.util.Date;
 public class Peserta implements Serializable {
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE)
         private Long id;
 
         @JsonIgnoreProperties({"description", "banned","banned_time",
@@ -139,7 +139,7 @@ public class Peserta implements Serializable {
         // register
         @JsonIgnoreProperties({"created_at","updated_at","deleted","description"})
         @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "status_id", nullable = false, updatable = false)
+        @JoinColumn(name = "status_id", nullable = false)
         @NotNull(message = "Data Status Tidak Boleh Kosong")
         private Status status;
 
@@ -266,6 +266,12 @@ public class Peserta implements Serializable {
         // @NotNull(message = "Kesibukan int Tidak Boleh Kosong")
         @Column(name = "kesibukan")
         private Integer kesibukan;
+
+        // @NotNull(message = "Data Status Tidak Boleh Kosong")
+        @JsonIgnoreProperties({"created_at","updated_at","deleted","description"})
+        @ManyToOne(targetEntity = Status.class, fetch = FetchType.EAGER)
+        @JoinColumn(name = "kegiatan", nullable = false)
+        private Status kegiatan;
 
         /**
          * mempunyai laptop
