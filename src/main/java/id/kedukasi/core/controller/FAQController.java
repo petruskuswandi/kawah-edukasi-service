@@ -32,8 +32,11 @@ public class FAQController {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Result> getFAQ() {
-        return service.getFAQ();
+    public ResponseEntity<Result> getFAQ(
+        @RequestParam(name = "limit", defaultValue = "10") Integer limit,
+        @RequestParam(name = "page", defaultValue = "1") Integer page
+    ) {
+        return service.getFAQ(limit, page);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

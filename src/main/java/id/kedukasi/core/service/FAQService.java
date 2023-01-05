@@ -14,7 +14,7 @@ public interface FAQService {
     ResponseEntity<Result> createFAQ(FAQRequest FAQ);
 
     /* Implements to get FAQ */
-    ResponseEntity<Result> getFAQ();
+    ResponseEntity<Result> getFAQ(Integer limit, Integer page);
 
     /* Implements to get FAQ by id */
     ResponseEntity<Result> getFAQById(int id);
