@@ -20,6 +20,7 @@ import id.kedukasi.core.utils.StringUtil;
 import id.kedukasi.core.utils.UploadUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +37,7 @@ import javax.mail.MessagingException;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -48,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
+@Slf4j
 public class PesertaServiceImpl implements PesertaService {
     @Value("${app.upload-file-path}")
     private String pathUpload;
@@ -701,7 +700,6 @@ public class PesertaServiceImpl implements PesertaService {
             if (uploadImage != null) {
                 // peserta.setUploadImagePath(IOUtils.toByteArray(uploadImage.getInputStream()));
                 String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
-                peserta.setUploadImageName(nameImage);
                 String[] image = nameImage.split("\\.");
                 String format = image[image.length-1];
                 if (!format.equalsIgnoreCase("jpg")&&!format.equalsIgnoreCase("png")) {
@@ -859,19 +857,30 @@ public class PesertaServiceImpl implements PesertaService {
     }
 
     @Override
-    public ResponseEntity<?> changeToCalonPeserta(Long id, String uri) {
+    public ResponseEntity<?> changeToCalonPeserta(Long id, String uri, Integer statusId) {
         result = new Result();
         try {
-            if (!pesertaRepository.findById(id).isPresent()) {
+            Optional<Peserta> peserta = pesertaRepository.findById(id);
+            Optional<Status> status = statusRepository.findById(statusId);
+
+            if (!peserta.isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada calon peserta dengan id " + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+            } else if (!status.isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Error: id " + id + " bukan calon peserta");
+                result.setMessage("Error: tidak ada status dengan id" + statusId);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else if (peserta.get().getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+                result.setSuccess(false);
+                result.setMessage("Error: id " + id + " status bukan peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                pesertaRepository.statusPeserta(EnumStatusPeserta.CALON, id);
+                peserta.get().setStatus(status.get());
+                statusRepository.save(status.get());
+                result.setSuccess(true);
+                result.setMessage("Berhasil change status");
+                result.setCode(HttpStatus.OK.value());
             }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -883,23 +892,31 @@ public class PesertaServiceImpl implements PesertaService {
     public ResponseEntity<?> changeKelas(Long pesertaId, Long kelasId, String uri) {
         result = new Result();
         try {
-            Peserta peserta = pesertaRepository.findById(pesertaId).get();
-            Kelas kelas = kelasRepository.findById(kelasId).get();
-            if (!pesertaRepository.findById(pesertaId).isPresent()) {
+            log.info("id peserta " + pesertaId);
+            log.info("id kelas " + kelasId);
+            Optional<Peserta>peserta = pesertaRepository.findById(pesertaId);
+            Optional<Kelas>kelas = kelasRepository.findById(kelasId);
+            if (!peserta.isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada peserta dengan id " + pesertaId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (!kelasRepository.findById(kelasId).isPresent()) {
+            } else if (!kelas.isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada kelas dengan id " + kelasId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+            } else if (peserta.get().getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
                 result.setSuccess(false);
-                result.setMessage("Error: id " + pesertaId + " bukan calon peserta");
+                result.setMessage("Error: id " + pesertaId + " status bukan peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                // peserta.setKelas(kelas);
-                pesertaRepository.save(peserta);
+                log.info("kelas awal = " + peserta.get().getKelas().toString());
+//                peserta.get().setKelas(kelas.get());
+                peserta.get().setKelas(kelas.get());
+                pesertaRepository.save(peserta.get());
+                result.setSuccess(true);
+                result.setMessage("Berhasil change kelas");
+                result.setCode(HttpStatus.OK.value());
+                log.info("Berhasil change kelas peserta dengan id {}", pesertaId);
             }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
