@@ -44,6 +44,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -675,6 +676,17 @@ public class PesertaServiceImpl implements PesertaService {
             } else {
                 peserta.setKelas(kelasRepository.findById(kelasId).get());
             }
+            //kesibukan
+            Optional<Status> statusPeserta2 = statusRepository.findById(status);
+            if (!statusPeserta2.isPresent()) {
+                result.setMessage("Error: Status Id Belum Ada!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            } else {
+                peserta.setKegiatan(statusRepository.findById(status).get());
+            }
 
             // set batch
             if (!batchRepository.findById(batchId).isPresent()) {
@@ -869,6 +881,7 @@ public class PesertaServiceImpl implements PesertaService {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 peserta.get().setStatus(status.get());
+                peserta.get().setStatusPeserta(EnumStatusPeserta.CALON);
                 statusRepository.save(status.get());
                 result.setSuccess(true);
                 result.setMessage("Berhasil change status");

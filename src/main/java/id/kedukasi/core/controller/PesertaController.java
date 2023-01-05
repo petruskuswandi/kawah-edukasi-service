@@ -114,7 +114,7 @@ public class PesertaController {
 
             // tambahan
             @RequestPart(value = "Upload CV", required = false) MultipartFile uploadCv,
-            @RequestParam(value = "kesibukan", required = false) Integer kesibukan,
+            @RequestParam(value = "Status Id (Kesibukan)", required = false) Integer kesibukan,
             @RequestParam(value = "score Tets Awal", required = false) Integer scoreTetsAwal,
             @RequestParam(value = "score Test Akhir", required = false) Integer scoreTestAkhir,
             @RequestParam(value = "status Id", required = false) Integer status,
@@ -148,7 +148,7 @@ public class PesertaController {
 
             // tambahan
             @RequestPart(value = "Upload CV", required = false) MultipartFile uploadCv,
-            @RequestParam(value = "kesibukan", required = false) Integer kesibukan,
+            @RequestParam(value = "Status Id(Kesibukan)", required = false) Integer kesibukan,
             @RequestParam(value = "score Tets Awal", required = false) Integer scoreTetsAwal,
             @RequestParam(value = "score Test Akhir", required = false) Integer scoreTestAkhir,
             @RequestParam(value = "status Id", required = false) Integer status,
@@ -171,7 +171,7 @@ public class PesertaController {
     @PatchMapping(value = "/changeToCalonPeserta")
     // @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> changeToCalonPeserta(
-            @RequestParam(value = "id Calon Peserta", defaultValue = "0", required = true) Long id,
+            @RequestParam(value = "id Peserta", defaultValue = "0", required = true) Long id,
             @RequestParam(value = "Status id", defaultValue = "0", required = true) Integer statusId) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
