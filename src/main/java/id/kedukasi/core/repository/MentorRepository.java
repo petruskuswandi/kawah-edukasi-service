@@ -1,6 +1,5 @@
 package id.kedukasi.core.repository;
 
-import id.kedukasi.core.models.Batch;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +39,14 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
   int jumlahmentor(@Param("year") int year);
 
   @Transactional
+  @Query(value = "SELECT count(*) FROM mentors WHERE banned = false AND kode = :generateKode", nativeQuery = true)
+  int cekkode(@Param("generateKode") String generateKode);
+
+  @Transactional
+  @Query(value = "SELECT kode FROM mentors WHERE id = :id", nativeQuery = true)
+  String ambilkode(@Param("id") Long id);
+
+  @Transactional
   @Query(
           value = "SELECT * FROM mentors WHERE banned = false AND"+
                   "(:namamentor IS NULL OR namamentor LIKE %:namamentor%) "+
@@ -52,7 +59,4 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
 
   @Transactional
   Optional<Mentor> findByNamamentor(String namamentor);
-
-  @Transactional
-  Optional<Mentor> findByNoktp(String noktp);
 }

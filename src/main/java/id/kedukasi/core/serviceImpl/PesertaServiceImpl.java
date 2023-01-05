@@ -347,7 +347,7 @@ public class PesertaServiceImpl implements PesertaService {
         }
 
         // check status
-        Optional<Status> statusPeserta = statusRepository.findBystatusName("REGISTER");
+        Optional<Status> statusPeserta = statusRepository.findBystatusName("Register");
         if (!statusPeserta.isPresent()) {
             result.setMessage("Error: Status Belum Ada!");
             result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -511,7 +511,7 @@ public class PesertaServiceImpl implements PesertaService {
         Map<String, Object> dataPictures = new HashMap<>();
         Map<String, String> pictures = new HashMap<>();
 
-        String pathfile = "/src/main/resources/static/upload.documents/";
+        String pathfile = "/src/main/upload/";
         String id = String.valueOf(UUID.randomUUID());
         int[] idx = { 0 };
         files.forEach(file -> {
@@ -519,7 +519,7 @@ public class PesertaServiceImpl implements PesertaService {
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             String extension = FilenameUtils.getExtension(fileName).toLowerCase();
             String key = UUID.randomUUID() + "." + extension;
-
+            logger.info(idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
             saveFile(file, registerPeserta, String.valueOf(pesertabaru.getId()), "REGISTER", idx, key, pathfile);
             pictures.put(String.valueOf(idx[0]), idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
 
@@ -535,16 +535,8 @@ public class PesertaServiceImpl implements PesertaService {
     public ResponseEntity<Result> saveFile(MultipartFile file, Peserta registerPeserta, String id, String action,
                                            int[] idx, String key, String pathfile) {
         result = new Result();
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        // FileUpload FileDB = null;
 
         try {
-            String extension = FilenameUtils.getExtension(fileName).toLowerCase();
-            // String key = UUID.randomUUID() + "." + extension;
-
-            // FileDB = new FileUpload(registerPeserta,key, file.getContentType(),fileName,
-            // file.getBytes(),
-            // "REGISTER");
 
             Path currentPath = Paths.get(".");
             Path absolutePath = currentPath.toAbsolutePath();
@@ -884,7 +876,7 @@ public class PesertaServiceImpl implements PesertaService {
         result = new Result();
         try {
             Peserta peserta = pesertaRepository.findById(pesertaId).get();
-            Kelas kelas = kelasRepository.findById(kelasId).get();
+           // Kelas kelas = kelasRepository.findById(kelasId).get();
             if (!pesertaRepository.findById(pesertaId).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada peserta dengan id " + pesertaId);
