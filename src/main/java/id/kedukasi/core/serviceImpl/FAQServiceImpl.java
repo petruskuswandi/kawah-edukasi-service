@@ -91,14 +91,23 @@ public class FAQServiceImpl implements FAQService {
     }
 
     @Override
-    public ResponseEntity<Result> getFAQ() {
+    public ResponseEntity<Result> getFAQ(Integer limit, Integer page) {
         
         result = new Result();
 
+        int jumlahPage = (int) Math.ceil(faqRepository.count() / (double) limit);
+
+        if (limit < 1) { limit = 1; }
+        if (page < 1) { page = 1; }
+        if (page > jumlahPage) { page = jumlahPage; }
+
         try {
 
-            Map<String, List<FAQ>>  items = new HashMap<>();
-            items.put("items", faqRepository.findAll(Sort.by(Sort.Direction.ASC, "id")));
+            Map items = new HashMap();
+            List<FAQ> faq = faqRepository.findFAQData(limit.intValue(), page.intValue());
+            items.put("items", faq);
+            items.put("totalDataResult", faq.size());
+            items.put("totalData", faqRepository.count());
             result.setData(items);
 
         } catch (Exception e) {
