@@ -35,12 +35,12 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
   int deleteMentor(boolean banned, Long id);
 
   @Transactional
-  @Query(value = "SELECT count(*) FROM mentors WHERE banned = false AND DATE_PART('year', created_time) = :year", nativeQuery = true)
+  @Query(value = "SELECT count(*) FROM mentors WHERE DATE_PART('year', created_time) = :year", nativeQuery = true)
   int jumlahmentor(@Param("year") int year);
 
   @Transactional
-  @Query(value = "SELECT count(*) FROM mentors WHERE banned = false AND kode = :generateKode", nativeQuery = true)
-  int cekkode(@Param("generateKode") String generateKode);
+  @Query(value = "SELECT count(kode) FROM mentors WHERE kode = :kode", nativeQuery = true)
+  int cekkode(@Param("kode") String kode);
 
   @Transactional
   @Query(value = "SELECT kode FROM mentors WHERE id = :id", nativeQuery = true)
