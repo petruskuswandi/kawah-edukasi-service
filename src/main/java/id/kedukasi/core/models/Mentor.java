@@ -23,7 +23,6 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "mentors", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "namamentor"),
         @UniqueConstraint(columnNames = "kode")
 })
 @DynamicUpdate
