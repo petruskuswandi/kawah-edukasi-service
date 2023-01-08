@@ -86,7 +86,7 @@ public class MentorServiceImpl implements MentorService{
 
     @Override
     public ResponseEntity<?> updateMentor(Long id , String namamentor, MultipartFile foto, String noktp,
-                                          String no_telepon, String status, Kelas classID, Education educationID,
+                                          String no_telepon, String status, Kelas classID, Educations educationID,
                                           String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah,
                                           MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, User userID) {
         result = new Result();
@@ -239,7 +239,7 @@ public class MentorServiceImpl implements MentorService{
 
     @Override
     public ResponseEntity<?> createMentor(Long id , String namamentor, MultipartFile foto, String noktp,
-                                          String no_telepon, String status, Kelas classID, Education educationID,
+                                          String no_telepon, String status, Kelas classID, Educations educationID,
                                           String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah,
                                           MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, User userID) {
         result = new Result();
