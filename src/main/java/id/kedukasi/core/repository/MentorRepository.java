@@ -56,7 +56,4 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
   List<Mentor> findMentorData(@Param("namamentor") String search,
                             @Param("limit") int limit,
                             @Param("page") int page);
-
-  @Transactional
-  Optional<Mentor> findByNamamentor(String namamentor);
 }

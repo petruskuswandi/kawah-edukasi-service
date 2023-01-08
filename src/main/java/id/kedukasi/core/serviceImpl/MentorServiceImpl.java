@@ -91,16 +91,6 @@ public class MentorServiceImpl implements MentorService{
                                           MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, User userID) {
         result = new Result();
         try {
-            Mentor checkNamaMentor = mentorRepository.findByNamamentor(namamentor).orElse(new Mentor());
-            //cek nama mentor
-            if (checkNamaMentor.getNamamentor() != null && !Objects.equals(id, checkNamaMentor)) {
-                result.setMessage("Error: Name mentor can't be same!");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            }
-
             if(namamentor.isBlank()) {
                 result.setMessage("Error: Name can't be empty/null!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -254,16 +244,6 @@ public class MentorServiceImpl implements MentorService{
                                           MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, User userID) {
         result = new Result();
         try {
-            Mentor checkNamaMentor = mentorRepository.findByNamamentor(namamentor).orElse(new Mentor());
-            //cek nama mentor
-            if (checkNamaMentor.getNamamentor() != null && !Objects.equals(id, checkNamaMentor)) {
-                result.setMessage("Error: Nama Mentor tidak boleh sama!");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            }
-
             if(namamentor.isBlank()) {
                 result.setMessage("Error: Nama tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
