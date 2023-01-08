@@ -4,18 +4,21 @@ import id.kedukasi.core.models.*;
 import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.UserRepository;
 import id.kedukasi.core.request.KelasRequest;
+import id.kedukasi.core.request.SyillabusRequest;
 import id.kedukasi.core.request.UpdateKelasRequest;
 import id.kedukasi.core.service.KelasService;
 import id.kedukasi.core.utils.StringUtil;
+import org.hibernate.Session;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -39,6 +42,7 @@ public class KelasServiceImpl implements KelasService {
     @Override
     public Result getAllClass(String uri, String search, int limit, int page) {
         result = new Result();
+
         int jumlahpage = (int) Math.ceil(kelasRepository.count() /(double) limit);
 
         if (limit < 1) {
@@ -62,6 +66,10 @@ public class KelasServiceImpl implements KelasService {
             items.put("items", kelas);
             items.put("totalDataResult", kelas.size());
             items.put("totalData", kelasRepository.count());
+            Kelas kelas1 = new Kelas();
+            kelas1.setBanned(false);
+            Example<Kelas> example = Example.of(kelas1);
+            items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
 
             if (kelas.size() == 0) {
                 result.setMessage("Maaf Data Kelas yang Anda cari tidak tersedia");
@@ -84,6 +92,7 @@ public class KelasServiceImpl implements KelasService {
             Example<Kelas> example = Example.of(kelas);
             items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
             result.setData(items);
+
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
@@ -120,12 +129,18 @@ public class KelasServiceImpl implements KelasService {
     @Override
     public Result getClassById(Long id, String uri) {
         result = new Result();
+        Optional<Kelas> kelas = kelasRepository.findById(id);
         try {
             if (!kelasRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada kelas dengan id " + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else {
+            }if (kelas.get().isBanned() == true) {
+                result.setSuccess(false);
+                result.setMessage("Error: id " + id + "is banned");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            }
+            else {
                 Map items = new HashMap();
                 items.put("items", kelasRepository.findById(id).get());
                 result.setData(items);
