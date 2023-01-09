@@ -84,12 +84,12 @@ public class CalonPesertaController {
                      //tambahan
             @RequestParam(value = "jurusan") String jurusan,
             @RequestParam(value = "status Id", required = false) Integer status,
-            @RequestParam(value = "Status Id (kesibukan)", required = false) Integer kegiatan,
+            @RequestParam(value = "Status Id (kesibukan)", required = false) Integer kesibukan,
             @RequestParam(value = "Bersedia diluar kota") Boolean komitmen
     ) {
         Long id = 0L;
         return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
-                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv,jurusan,status,kegiatan,komitmen);
+                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv,jurusan,status,kesibukan,komitmen);
     }
 
     @PutMapping("/update")
@@ -117,11 +117,11 @@ public class CalonPesertaController {
              //tambahan
              @RequestParam(value = "jurusan") String jurusan,
              @RequestParam(value = "status Id", required = false) Integer status,
-             @RequestParam(value = "Status Id (kesibukan)", required = false) Integer kegiatan,
+             @RequestParam(value = "Status Id (kesibukan)", required = false) Integer kesibukan,
              @RequestParam(value = "komitmen") Boolean komitmen
     ) {
         return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
-                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv,jurusan,status,kegiatan,komitmen);
+                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv,jurusan,status,kesibukan,komitmen);
     }
 
     @PatchMapping(value = "/delete")

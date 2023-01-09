@@ -414,7 +414,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             }
 
             //kesibukan 
-            Optional<Status> statusPeserta2 = statusRepository.findById(status);
+            Optional<Status> statusPeserta2 = statusRepository.findById(kesibukan);
             if (!statusPeserta2.isPresent()) {
                 result.setMessage("Error: Status Id Belum Ada!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -422,7 +422,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                         .badRequest()
                         .body(result);
             } else {
-                peserta.setKegiatan(statusRepository.findById(status).get());
+                peserta.setKesibukan(statusRepository.findById(kesibukan).get());
             }
             //set jurusan
             peserta.setJurusan(jurusan);
