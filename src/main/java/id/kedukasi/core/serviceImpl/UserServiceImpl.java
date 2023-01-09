@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
 
     try {
       Map items = new HashMap();
-      List<User> user = userRepository.findUserData(search, limit.intValue(), page.intValue());
+      List<User> user = userRepository.findUserData(search.toLowerCase(), limit.intValue(), page.intValue());
       List<SubUser> subUser = new ArrayList<>();
       for (int i = 0; i < user.size(); i++) {
         User dataUser = user.get(i);

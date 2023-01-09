@@ -51,7 +51,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Transactional
   @Query(
     value = "SELECT * FROM users WHERE banned = false AND "+
-            "(:namaLengkap IS NULL OR nama_lengkap LIKE %:namaLengkap%) "+
+            "(:namaLengkap IS NULL OR LOWER(nama_lengkap) LIKE %:namaLengkap%) "+
             "ORDER BY id LIMIT :limit OFFSET :limit * (:page - 1)", 
     nativeQuery = true
   )
