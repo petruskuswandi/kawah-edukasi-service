@@ -264,14 +264,16 @@ public class Peserta implements Serializable {
          * 3. tidak keduanya
          */
         // @NotNull(message = "Kesibukan int Tidak Boleh Kosong")
-        @Column(name = "kesibukan")
-        private Integer kesibukan;
+        // @JsonIgnoreProperties({"created_at","updated_at","deleted","description"})
+        @ManyToOne(targetEntity = Status.class,fetch = FetchType.EAGER)
+        @JoinColumn(name = "kesibukan")
+        private Status kesibukan;
 
         // @NotNull(message = "Data Status Tidak Boleh Kosong")
-        @JsonIgnoreProperties({"created_at","updated_at","deleted","description"})
-        @ManyToOne(targetEntity = Status.class, fetch = FetchType.EAGER)
-        @JoinColumn(name = "kegiatan", nullable = false)
-        private Status kegiatan;
+        // @JsonIgnoreProperties({"created_at","updated_at","deleted","description"})
+        // @ManyToOne(targetEntity = Status.class, fetch = FetchType.EAGER)
+        // @JoinColumn(name = "kegiatan", nullable = false)
+        // private Status kegiatan;
 
         /**
          * mempunyai laptop
