@@ -400,7 +400,7 @@ public class MentorServiceImpl implements MentorService{
                 result.setMessage(banned == true ? "Success delete mentor" : "Success Backup mentor");
             } else {
                 result.setCode(400);
-                result.setMessage("Id its not found");
+                result.setMessage("Id " + id + " its not found");
                 result.setSuccess(false);
             }
         } catch (Exception e) {
@@ -417,7 +417,7 @@ public class MentorServiceImpl implements MentorService{
             Mentor mentor = mentorRepository.findById(id);
             if (mentor == null) {
                 result.setSuccess(false);
-                result.setMessage("Cannot find mentor");
+                result.setMessage("Cannot find id mentor" + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
