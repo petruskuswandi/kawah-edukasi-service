@@ -696,9 +696,10 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         List<Peserta> searchCalon = pesertaRepository.search(keyword.toLowerCase(), EnumStatusPeserta.CALON)
             .stream()
             .collect(Collectors.toList());
-         if(searchCalon.size() == 0) {
-            // Handle data not found here
-            result.setMessage("keyword tidak ada");
+         if(searchCalon.size() == 0 || searchCalon == null || searchCalon.isEmpty()) {
+            result.setSuccess(false);
+            result.setMessage("keyword not found");
+            result.setCode(HttpStatus.BAD_REQUEST.value());
         }
         else {
             items.put("items", pesertaRepository.search(keyword.toLowerCase(), EnumStatusPeserta.CALON));
