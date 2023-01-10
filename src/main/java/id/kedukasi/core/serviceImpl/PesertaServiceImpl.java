@@ -499,7 +499,7 @@ public class PesertaServiceImpl implements PesertaService {
         registerPeserta.setUserInstagram(p.getUserInstagram());
         registerPeserta.setAlasan(p.getAlasan());
         registerPeserta.setKelebihanKekurangan(p.getKelebihanKekurangan());
-        registerPeserta.setKesibukan(p.getKesibukan());
+        // registerPeserta.setKesibukan(p.getKesibukan());
         registerPeserta.setLaptop(p.isLaptop());
         registerPeserta.setKomitmen(p.isKomitmen());
         registerPeserta.setSiapBekerja(p.isSiapBekerja());
@@ -562,7 +562,7 @@ public class PesertaServiceImpl implements PesertaService {
                                            String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
                                            MultipartFile uploadImage, Long provinsiId, Long kotaId, Long kecamatanId,
                                            Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal, String nomorKtp,
-                                           MultipartFile uploadCv, Integer kesibukan, Integer scoreTetsAwal, Integer scoreTestAkhir,
+                                           MultipartFile uploadCv, Integer kesibukan, Integer scoreTestAwal, Integer scoreTestAkhir,
                                            Integer status, String namaProject, String jurusan) {
 
         result = new Result();
@@ -585,14 +585,14 @@ public class PesertaServiceImpl implements PesertaService {
                         .body(result);
             }
             // cek username
-            Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(namaPeserta).orElse(new Peserta());
-            if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
-                result.setMessage("Error: Username sudah digunakan!");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            }
+//            Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(namaPeserta).orElse(new Peserta());
+//            if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
+//                result.setMessage("Error: Username sudah digunakan!");
+//                result.setCode(HttpStatus.BAD_REQUEST.value());
+//                return ResponseEntity
+//                        .badRequest()
+//                        .body(result);
+//            }
             if (namaPeserta.isBlank()) {
                 result.setMessage("Error: Nama Peserta tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -677,7 +677,7 @@ public class PesertaServiceImpl implements PesertaService {
                 peserta.setKelas(kelasRepository.findById(kelasId).get());
             }
             //kesibukan
-            Optional<Status> statusPeserta2 = statusRepository.findById(status);
+            Optional<Status> statusPeserta2 = statusRepository.findById(kesibukan);
             if (!statusPeserta2.isPresent()) {
                 result.setMessage("Error: Status Id Belum Ada!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -685,7 +685,7 @@ public class PesertaServiceImpl implements PesertaService {
                         .badRequest()
                         .body(result);
             } else {
-                peserta.setKegiatan(statusRepository.findById(status).get());
+                peserta.setKesibukan(statusRepository.findById(kesibukan).get());
             }
 
             // set batch
@@ -761,7 +761,7 @@ public class PesertaServiceImpl implements PesertaService {
             }
 
 
-            peserta.setScoreTetsAwal(scoreTetsAwal);
+            peserta.setScoreTestAwal(scoreTestAwal);
             peserta.setScoreTestAkhir(scoreTestAkhir);
             // peserta.setStatusTes(statusTes);
             peserta.setNamaProject(namaProject);
@@ -934,7 +934,7 @@ public class PesertaServiceImpl implements PesertaService {
         result = new Result();
         try {
             Map items = new HashMap();
-            items.put("items", pesertaRepository.search(keyword, EnumStatusPeserta.PESERTA));
+            items.put("items", pesertaRepository.search(keyword.toLowerCase(), EnumStatusPeserta.PESERTA));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));

@@ -115,13 +115,13 @@ public class PesertaController {
             // tambahan
             @RequestPart(value = "Upload CV", required = false) MultipartFile uploadCv,
             @RequestParam(value = "Status Id (Kesibukan)", required = false) Integer kesibukan,
-            @RequestParam(value = "score Tets Awal", required = false) Integer scoreTetsAwal,
+            @RequestParam(value = "score Test Awal", required = false) Integer scoreTestAwal,
             @RequestParam(value = "score Test Akhir", required = false) Integer scoreTestAkhir,
             @RequestParam(value = "status Id", required = false) Integer status,
             @RequestParam(value = "nama project") String namaProject,
             @RequestParam(value = "jurusan") String jurusan) {
         Long id = 0L;
-        return service.updatePeserta(id, kelasId, batchId, namaPeserta, tanggalLahir, jenisKelamin, pendidikanTerakhir,noHp,email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi,kodeReferal, nomorKtp,uploadCv, kesibukan, scoreTetsAwal, scoreTestAkhir, status, namaProject, jurusan);
+        return service.updatePeserta(id, kelasId, batchId, namaPeserta, tanggalLahir, jenisKelamin, pendidikanTerakhir,noHp,email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi,kodeReferal, nomorKtp,uploadCv, kesibukan, scoreTestAwal, scoreTestAkhir, status, namaProject, jurusan);
     }
 
     @PutMapping("/update")
@@ -149,13 +149,13 @@ public class PesertaController {
             // tambahan
             @RequestPart(value = "Upload CV", required = false) MultipartFile uploadCv,
             @RequestParam(value = "Status Id(Kesibukan)", required = false) Integer kesibukan,
-            @RequestParam(value = "score Tets Awal", required = false) Integer scoreTetsAwal,
+            @RequestParam(value = "score Test Awal", required = false) Integer scoreTestAwal,
             @RequestParam(value = "score Test Akhir", required = false) Integer scoreTestAkhir,
             @RequestParam(value = "status Id", required = false) Integer status,
             @RequestParam(value = "nama project") String namaProject,
             @RequestParam(value = "jurusan") String jurusan) {
 
-        return service.updatePeserta(id, kelasId, batchId, namaPeserta, tanggalLahir, jenisKelamin, pendidikanTerakhir,noHp,email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi,kodeReferal, nomorKtp,uploadCv, kesibukan, scoreTetsAwal, scoreTestAkhir, status, namaProject, jurusan);
+        return service.updatePeserta(id, kelasId, batchId, namaPeserta, tanggalLahir, jenisKelamin, pendidikanTerakhir,noHp,email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi,kodeReferal, nomorKtp,uploadCv, kesibukan, scoreTestAwal, scoreTestAkhir, status, namaProject, jurusan);
     }
 
     @PatchMapping(value = "/delete")
