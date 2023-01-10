@@ -306,7 +306,7 @@ public class Peserta implements Serializable {
          * score test awal dan akhir
          */
         @Column(name = "score_test_awal")
-        private Integer scoreTetsAwal;
+        private Integer scoreTestAwal;
 
         @Column(name = "score_test_akhir")
         private Integer scoreTestAkhir;
