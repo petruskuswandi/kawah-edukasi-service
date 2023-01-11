@@ -6,7 +6,8 @@ import id.kedukasi.core.request.UpdateKelasRequest;
 import org.springframework.http.ResponseEntity;
 
 public interface KelasService {
-    Result getAllClass(String uri, String search,int limit,int page);
+    Result getAllClass(String uri, String search,long limit,long offset);
+
 
     Result getAllBannedKelas(String uri);
 

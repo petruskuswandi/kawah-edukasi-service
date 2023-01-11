@@ -26,15 +26,18 @@ public interface KelasRepository extends JpaRepository<Kelas,Long> {
 
     @Transactional
     @Query(
-            value = "SELECT * FROM classes WHERE "+
-                    "(:classname IS NULL OR LOWER(classname) LIKE %:classname%) "+
-                    "ORDER BY id LIMIT :limit OFFSET :limit * (:page - 1)",
+            value = "select * from classes WHERE banned = :banned and "+
+                    "(:classname is null or classname like %:classname%) "+
+                    "order by id ASC limit :limit offset :offset",
             nativeQuery = true
     )
     List<Kelas> findKelasData(@Param("classname") String search,
-                              @Param("limit") int limit,
-                              @Param("page") int page);
+                              @Param("banned") boolean banned,
+                              @Param("limit") long limit,
+                              @Param("offset") long offset);
 
+    @Query(value = "select count(*) from classes where banned = false", nativeQuery = true)
+    Long countKelasData(@Param("banned") boolean banned);
 
 
 //    @Transactional
