@@ -49,7 +49,7 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
   @Transactional
   @Query(
           value = "SELECT * FROM mentors WHERE banned = false AND"+
-                  "(:namamentor IS NULL OR namamentor LIKE %:namamentor%) "+
+                  "(:namamentor IS NULL OR LOWER(namamentor) LIKE %:namamentor%) "+
                   "ORDER BY id LIMIT :limit OFFSET :limit * (:page - 1)",
           nativeQuery = true
   )

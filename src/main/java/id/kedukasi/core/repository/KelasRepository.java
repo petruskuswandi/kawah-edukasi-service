@@ -1,6 +1,7 @@
 package id.kedukasi.core.repository;
 
 import id.kedukasi.core.models.Kelas;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,18 +26,21 @@ public interface KelasRepository extends JpaRepository<Kelas,Long> {
 
     @Transactional
     @Query(
-            value = "SELECT * FROM classes WHERE "+
-                    "(:classname IS NULL OR classname LIKE %:classname%) "+
-                    "ORDER BY id LIMIT :limit OFFSET :limit * (:page - 1)",
+            value = "select * from classes WHERE banned = :banned and "+
+                    "(:classname is null or classname like %:classname%) "+
+                    "order by id ASC limit :limit offset :offset",
             nativeQuery = true
     )
     List<Kelas> findKelasData(@Param("classname") String search,
-                             @Param("limit") int limit,
-                              @Param("page") int page);
+                              @Param("banned") boolean banned,
+                              @Param("limit") long limit,
+                              @Param("offset") long offset);
 
+    @Query(value = "select count(*) from classes where banned = false", nativeQuery = true)
+    Long countKelasData(@Param("banned") boolean banned);
 
 
 //    @Transactional
-//    @Query("select b from Batch b where b.classname = :idKelas")
+//    /    @Query("select b from Batch b where b.classname = :idKelas ")\
 //    List<Batch> getAllBatch(@Param("idKelas") Kelas idKelas);
 }

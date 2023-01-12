@@ -4,21 +4,17 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class UpdateBatchDetailRequest {
 
     @ApiModelProperty(example = "1", required = true)
-    private Long id;
-
-    @ApiModelProperty(example = "1", required = true)
     private Long batch;
 
-    @ApiModelProperty(example = "1", required = true)
-    private Long kelas;
-
-    @ApiModelProperty(example = "1", required = true)
-    private Long mentor;
+    @ApiModelProperty(required = true)
+    private List<NewBatchDetailRequest> list;
 
     @ApiModelProperty(example = "true", required = true)
     private boolean isDeleted;
@@ -26,8 +22,6 @@ public class UpdateBatchDetailRequest {
     public UpdateBatchDetailRequest() {
     }
 
-    public UpdateBatchDetailRequest(Long id, boolean isDeleted) {
-        this.id = id;
-        this.isDeleted = isDeleted;
+    public UpdateBatchDetailRequest( boolean isDeleted) {this.isDeleted = isDeleted;
     }
 }

@@ -10,12 +10,10 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 
-
 @Repository
 public interface BatchDetailRepository extends JpaRepository<BatchDetail, Long> {
 
     @Transactional
     @Query(value = "select b.class_id from batch_class b where b.batch_id = :batchId",nativeQuery = true)
     List<Long> getAllClassByBatch(@Param("batchId") long batchId);
-
 }

@@ -1,5 +1,6 @@
 package id.kedukasi.core.request.batchDetail;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import id.kedukasi.core.request.BatchListOAS;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -18,9 +19,11 @@ public class ByIdBatchDetail {
     public String description;
 
     @Schema
+    @JsonFormat(pattern = "yyyy-MM-dd")
     public Date startedtime;
 
     @Schema()
+    @JsonFormat(pattern = "yyyy-MM-dd")
     public Date endedtime;
 
     @Schema(example = "")

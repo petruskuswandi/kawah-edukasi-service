@@ -396,11 +396,17 @@ public class MentorServiceImpl implements MentorService{
         result = new Result();
         try {
             mentorRepository.deleteMentor(banned, id);
+            if (mentorRepository.existsById(id)){
+                result.setMessage(banned == true ? "Success delete mentor" : "Success Backup mentor");
+            } else {
+                result.setCode(400);
+                result.setMessage("Id its not found");
+                result.setSuccess(false);
+            }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
 
-        result.setMessage("Success delete Mentor");
         return ResponseEntity.ok(result);
     }
 
@@ -411,12 +417,13 @@ public class MentorServiceImpl implements MentorService{
             Mentor mentor = mentorRepository.findById(id);
             if (mentor == null) {
                 result.setSuccess(false);
-                result.setMessage("Cannot find mentor");
+                result.setMessage("Cannot find id mentor" + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
                 items.put("items", mentorRepository.findById(id));
                 result.setData(items);
+                result.setMessage("Success find id mentor");
             }
 
         } catch (Exception e) {
@@ -456,14 +463,18 @@ public class MentorServiceImpl implements MentorService{
             items.put("totalData", mentorRepository.count());
 
             if (batch.size() == 0) {
-                result.setMessage("Sorry Data Mentor it's not availabe!");
+                result.setCode(400);
+                result.setSuccess(false);
+                result.setData(batch.size());
+                result.setMessage("Sorry Data its null/empty");
+            } else {
+                result.setData(items);
+                result.setMessage("Success find Data Mentor");
             }
-            result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
 
-        result.setMessage(batch.size() == 0 ? "Sorry Data its null/empty" : "Success find Data Mentor");
         return result;
     }
 
