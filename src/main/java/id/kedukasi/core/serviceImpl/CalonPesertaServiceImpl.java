@@ -47,6 +47,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CalonPesertaServiceImpl implements CalonPesertaService {
@@ -206,13 +207,13 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             // }
             // cek username
             Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(namaPeserta).orElse(new Peserta());
-            if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
-                result.setMessage("Error: Username sudah digunakan!");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            }
+            // if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
+            //     result.setMessage("Error: Username sudah digunakan!");
+            //     result.setCode(HttpStatus.BAD_REQUEST.value());
+            //     return ResponseEntity
+            //             .badRequest()
+            //             .body(result);
+            // }
             if (namaPeserta.isBlank()) {
                 result.setMessage("Error: Nama Peserta tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -691,8 +692,19 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         result = new Result();
         try {
             Map items = new HashMap();
-            items.put("items", pesertaRepository.search(keyword, EnumStatusPeserta.CALON));
-            result.setData(items);
+
+        List<Peserta> searchCalon = pesertaRepository.search(keyword.toLowerCase(), EnumStatusPeserta.CALON)
+            .stream()
+            .collect(Collectors.toList());
+         if(searchCalon.size() == 0 || searchCalon == null || searchCalon.isEmpty()) {
+            result.setSuccess(false);
+            result.setMessage("keyword not found");
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+        }
+        else {
+            items.put("items", pesertaRepository.search(keyword.toLowerCase(), EnumStatusPeserta.CALON));
+            result.setData(items);    
+        }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
