@@ -32,4 +32,11 @@ public class ValidatorUtil {
         Matcher m = p.matcher(s);
         return (m.matches());
     }
+
+    public boolean isNumeric(String n){
+        Pattern p = Pattern.compile(
+                "^[0-9]+$");
+        Matcher m = p.matcher(n);
+        return (m.matches());
+    }
 }
