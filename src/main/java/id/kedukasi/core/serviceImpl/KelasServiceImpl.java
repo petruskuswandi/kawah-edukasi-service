@@ -2,6 +2,7 @@ package id.kedukasi.core.serviceImpl;
 
 import id.kedukasi.core.models.*;
 import id.kedukasi.core.repository.KelasRepository;
+import id.kedukasi.core.repository.UserRepository;
 import id.kedukasi.core.request.KelasRequest;
 import id.kedukasi.core.request.UpdateKelasRequest;
 import id.kedukasi.core.service.KelasService;
@@ -13,8 +14,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -32,21 +31,23 @@ public class KelasServiceImpl implements KelasService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Autowired
+    UserRepository userRepository;
+
     @Override
-    public Result getAllClass(String uri, String search, int limit, int page) {
+    public Result getAllClass(String uri, String search, long limit, long offset) {
         result = new Result();
         int jumlahpage = (int) Math.ceil(kelasRepository.count() /(double) limit);
 
-        if (limit < 1) {
-            limit = 1;
-        }
+        if (limit == -99) {
+            limit = kelasRepository.count();}
 
-        if (page > jumlahpage) {
-            page = jumlahpage;
-        }
+//        if (offset > jumlahpage) {
+//            offset = jumlahpage;
+//        }
 
-        if (page < 1 ) {
-            page= 1;
+        if (offset == -99 ) {
+            offset= 0;
         }
 
         if (search == null) {
@@ -54,11 +55,10 @@ public class KelasServiceImpl implements KelasService {
         }
         try {
             Map items = new HashMap();
-            List<Kelas> kelas = kelasRepository.findKelasData(search,limit,page);
+            List<Kelas> kelas = kelasRepository.findKelasData( search,false, limit, offset);
             items.put("items", kelas);
             items.put("totalDataResult", kelas.size());
-            items.put("totalData", kelasRepository.count());
-
+            items.put("totalData", kelasRepository.countKelasData(false));
             if (kelas.size() == 0) {
                 result.setMessage("Maaf Data Kelas yang Anda cari tidak tersedia");
             }
@@ -68,8 +68,6 @@ public class KelasServiceImpl implements KelasService {
         }
         return result;
     }
-
-
     @Override
     public Result getAllBannedKelas(String uri) {
         result = new Result();
@@ -80,6 +78,7 @@ public class KelasServiceImpl implements KelasService {
             Example<Kelas> example = Example.of(kelas);
             items.put("items", kelasRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
             result.setData(items);
+
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
@@ -116,12 +115,18 @@ public class KelasServiceImpl implements KelasService {
     @Override
     public Result getClassById(Long id, String uri) {
         result = new Result();
+        Optional<Kelas> kelas = kelasRepository.findById(id);
         try {
             if (!kelasRepository.findById(id).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada kelas dengan id " + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else {
+            }if (kelas.get().isBanned() == true) {
+                result.setSuccess(false);
+                result.setMessage("Error: id " + id + " is banned");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            }
+            else {
                 Map items = new HashMap();
                 items.put("items", kelasRepository.findById(id).get());
                 result.setData(items);
@@ -178,11 +183,20 @@ public class KelasServiceImpl implements KelasService {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
+            Optional<User> user = userRepository.findById(Request.getCreated_by());
+            if (!user.isPresent()){
+                result.setSuccess(false);
+                result.setMessage("Error: id User tidak ditemukan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                User user_id = userRepository.findById(Request.getCreated_by()).get();
+                Request.setCreated_by(user_id.getId());
+            }
 
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getClassName(), auth.getName());
-
-            kelasbaru.setId(Request.getId());
+//                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), auth.getName());
+            Kelas kelasbaru = new Kelas(Request.getId(), Request.getClassName(), Request.getDescription());
+            kelasbaru.setCreated_by(user.get());
             kelasRepository.save(kelasbaru);
 
             result.setMessage(Request.getId() == 0 ? "Berhasil membuat kelas baru!" : "Berhasil memperbarui kelas!");
@@ -217,11 +231,20 @@ public class KelasServiceImpl implements KelasService {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
+            Optional<User> user = Optional.ofNullable(userRepository.findById(Request.getCreated_by()));
+            if (!user.isPresent()){
+                result.setSuccess(false);
+                result.setMessage("Error: id User tidak ditemukan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                User user_id = userRepository.findById(Request.getCreated_by());
+                Request.setCreated_by(Math.toIntExact(user_id.getId()));
+            }
 
-
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), auth.getName());
-
+//                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), auth.getName());
+            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription());
+            kelasbaru.setCreated_by(user.get());
             kelasRepository.save(kelasbaru);
 
             result.setMessage("Berhasil membuat kelas baru!");
@@ -229,7 +252,6 @@ public class KelasServiceImpl implements KelasService {
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
-
         return ResponseEntity.ok(result);
     }
 

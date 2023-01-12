@@ -68,7 +68,7 @@ public class CalonPesertaController {
             @RequestParam(value = "Nama Peserta") String namaPeserta,
             @RequestParam(value = "Tanggal Lahir") String tanggalLahir,
             @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
-            @RequestParam(value = "Pendidikan Terakhir") String pendidikanTerakhir,
+            @RequestParam(value = "Education Id (Pendidikan Terakhir)") String pendidikanTerakhir,
             @RequestParam(value = "No Hp") String noHp,
             @RequestParam(value = "Email") String email,
             @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
@@ -84,8 +84,8 @@ public class CalonPesertaController {
                      //tambahan
             @RequestParam(value = "jurusan") String jurusan,
             @RequestParam(value = "status Id", required = false) Integer status,
-            @RequestParam(value = "kesibukan", required = false) Integer kesibukan,
-            @RequestParam(value = "komitmen") String komitmen
+            @RequestParam(value = "Status Id (kesibukan)", required = false) Integer kesibukan,
+            @RequestParam(value = "Bersedia diluar kota") Boolean komitmen
     ) {
         Long id = 0L;
         return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
@@ -101,7 +101,7 @@ public class CalonPesertaController {
             @RequestParam(value = "Nama Peserta") String namaPeserta,
             @RequestParam(value = "Tanggal Lahir") String tanggalLahir,
             @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
-            @RequestParam(value = "Pendidikan Terakhir") String pendidikanTerakhir,
+            @RequestParam(value = "Education Id (Pendidikan Terakhir)") String pendidikanTerakhir,
             @RequestParam(value = "No Hp") String noHp,
             @RequestParam(value = "Email") String email,
             @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
@@ -117,8 +117,8 @@ public class CalonPesertaController {
              //tambahan
              @RequestParam(value = "jurusan") String jurusan,
              @RequestParam(value = "status Id", required = false) Integer status,
-             @RequestParam(value = "kesibukan", required = false) Integer kesibukan,
-             @RequestParam(value = "komitmen") String komitmen
+             @RequestParam(value = "Status Id (kesibukan)", required = false) Integer kesibukan,
+             @RequestParam(value = "komitmen") Boolean komitmen
     ) {
         return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
                 email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv,jurusan,status,kesibukan,komitmen);
@@ -136,11 +136,12 @@ public class CalonPesertaController {
 
     @PatchMapping(value = "/changeToPeserta")
     public ResponseEntity<?> changeToPeserta(
-            @RequestParam(value = "id", defaultValue = "0", required = true) Long id
+            @RequestParam(value = "id Calon Peserta", defaultValue = "0", required = true) Long id,
+            @RequestParam(value = "Status Id", defaultValue = "0", required = true) Integer statusId
     ) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
-        return service.changeToPeserta(id, uri);
+        return service.changeToPeserta(id,statusId, uri);
     }
 
     @PatchMapping(value = "/changeStatusTes")

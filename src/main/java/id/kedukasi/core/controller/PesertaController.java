@@ -1,18 +1,14 @@
 package id.kedukasi.core.controller;
 
-import com.google.gson.Gson;
 import com.lowagie.text.DocumentException;
 
-import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.Result;
-import id.kedukasi.core.request.RegisterRequest;
 import id.kedukasi.core.service.PesertaService;
 import id.kedukasi.core.utils.StringUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -122,14 +114,14 @@ public class PesertaController {
 
             // tambahan
             @RequestPart(value = "Upload CV", required = false) MultipartFile uploadCv,
-            @RequestParam(value = "kesibukan", required = false) Integer kesibukan,
-            @RequestParam(value = "score Tets Awal", required = false) Integer scoreTetsAwal,
+            @RequestParam(value = "Status Id (Kesibukan)", required = false) Integer kesibukan,
+            @RequestParam(value = "score Test Awal", required = false) Integer scoreTestAwal,
             @RequestParam(value = "score Test Akhir", required = false) Integer scoreTestAkhir,
             @RequestParam(value = "status Id", required = false) Integer status,
             @RequestParam(value = "nama project") String namaProject,
             @RequestParam(value = "jurusan") String jurusan) {
         Long id = 0L;
-        return service.updatePeserta(id, kelasId, batchId, namaPeserta, tanggalLahir, jenisKelamin, pendidikanTerakhir,noHp,email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi,kodeReferal, nomorKtp,uploadCv, kesibukan, scoreTetsAwal, scoreTestAkhir, status, namaProject, jurusan);
+        return service.updatePeserta(id, kelasId, batchId, namaPeserta, tanggalLahir, jenisKelamin, pendidikanTerakhir,noHp,email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi,kodeReferal, nomorKtp,uploadCv, kesibukan, scoreTestAwal, scoreTestAkhir, status, namaProject, jurusan);
     }
 
     @PutMapping("/update")
@@ -156,14 +148,14 @@ public class PesertaController {
 
             // tambahan
             @RequestPart(value = "Upload CV", required = false) MultipartFile uploadCv,
-            @RequestParam(value = "kesibukan", required = false) Integer kesibukan,
-            @RequestParam(value = "score Tets Awal", required = false) Integer scoreTetsAwal,
+            @RequestParam(value = "Status Id(Kesibukan)", required = false) Integer kesibukan,
+            @RequestParam(value = "score Test Awal", required = false) Integer scoreTestAwal,
             @RequestParam(value = "score Test Akhir", required = false) Integer scoreTestAkhir,
             @RequestParam(value = "status Id", required = false) Integer status,
             @RequestParam(value = "nama project") String namaProject,
             @RequestParam(value = "jurusan") String jurusan) {
 
-        return service.updatePeserta(id, kelasId, batchId, namaPeserta, tanggalLahir, jenisKelamin, pendidikanTerakhir,noHp,email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi,kodeReferal, nomorKtp,uploadCv, kesibukan, scoreTetsAwal, scoreTestAkhir, status, namaProject, jurusan);
+        return service.updatePeserta(id, kelasId, batchId, namaPeserta, tanggalLahir, jenisKelamin, pendidikanTerakhir,noHp,email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi,kodeReferal, nomorKtp,uploadCv, kesibukan, scoreTestAwal, scoreTestAkhir, status, namaProject, jurusan);
     }
 
     @PatchMapping(value = "/delete")
@@ -179,10 +171,11 @@ public class PesertaController {
     @PatchMapping(value = "/changeToCalonPeserta")
     // @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> changeToCalonPeserta(
-            @RequestParam(value = "id", defaultValue = "0", required = true) Long id) {
+            @RequestParam(value = "id Peserta", defaultValue = "0", required = true) Long id,
+            @RequestParam(value = "Status id", defaultValue = "0", required = true) Integer statusId) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
-        return service.changeToCalonPeserta(id, uri);
+        return service.changeToCalonPeserta(id, uri, statusId);
     }
 
     @PatchMapping(value = ("/changeKelas"))

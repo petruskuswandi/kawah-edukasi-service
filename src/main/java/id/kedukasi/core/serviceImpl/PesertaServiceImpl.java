@@ -20,6 +20,7 @@ import id.kedukasi.core.utils.StringUtil;
 import id.kedukasi.core.utils.UploadUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,18 +37,17 @@ import javax.mail.MessagingException;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class PesertaServiceImpl implements PesertaService {
     @Value("${app.upload-file-path}")
     private String pathUpload;
@@ -347,7 +347,7 @@ public class PesertaServiceImpl implements PesertaService {
         }
 
         // check status
-        Optional<Status> statusPeserta = statusRepository.findBystatusName("REGISTER");
+        Optional<Status> statusPeserta = statusRepository.findBystatusName("Register");
         if (!statusPeserta.isPresent()) {
             result.setMessage("Error: Status Belum Ada!");
             result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -499,7 +499,7 @@ public class PesertaServiceImpl implements PesertaService {
         registerPeserta.setUserInstagram(p.getUserInstagram());
         registerPeserta.setAlasan(p.getAlasan());
         registerPeserta.setKelebihanKekurangan(p.getKelebihanKekurangan());
-        registerPeserta.setKesibukan(p.getKesibukan());
+        // registerPeserta.setKesibukan(p.getKesibukan());
         registerPeserta.setLaptop(p.isLaptop());
         registerPeserta.setKomitmen(p.isKomitmen());
         registerPeserta.setSiapBekerja(p.isSiapBekerja());
@@ -511,7 +511,7 @@ public class PesertaServiceImpl implements PesertaService {
         Map<String, Object> dataPictures = new HashMap<>();
         Map<String, String> pictures = new HashMap<>();
 
-        String pathfile = "/src/main/resources/static/upload.documents/";
+        String pathfile = "/src/main/upload/";
         String id = String.valueOf(UUID.randomUUID());
         int[] idx = { 0 };
         files.forEach(file -> {
@@ -519,7 +519,7 @@ public class PesertaServiceImpl implements PesertaService {
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             String extension = FilenameUtils.getExtension(fileName).toLowerCase();
             String key = UUID.randomUUID() + "." + extension;
-
+            logger.info(idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
             saveFile(file, registerPeserta, String.valueOf(pesertabaru.getId()), "REGISTER", idx, key, pathfile);
             pictures.put(String.valueOf(idx[0]), idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
 
@@ -535,16 +535,8 @@ public class PesertaServiceImpl implements PesertaService {
     public ResponseEntity<Result> saveFile(MultipartFile file, Peserta registerPeserta, String id, String action,
                                            int[] idx, String key, String pathfile) {
         result = new Result();
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        // FileUpload FileDB = null;
 
         try {
-            String extension = FilenameUtils.getExtension(fileName).toLowerCase();
-            // String key = UUID.randomUUID() + "." + extension;
-
-            // FileDB = new FileUpload(registerPeserta,key, file.getContentType(),fileName,
-            // file.getBytes(),
-            // "REGISTER");
 
             Path currentPath = Paths.get(".");
             Path absolutePath = currentPath.toAbsolutePath();
@@ -570,7 +562,7 @@ public class PesertaServiceImpl implements PesertaService {
                                            String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
                                            MultipartFile uploadImage, Long provinsiId, Long kotaId, Long kecamatanId,
                                            Long kelurahanId, String alamatRumah, String motivasi, String kodeReferal, String nomorKtp,
-                                           MultipartFile uploadCv, Integer kesibukan, Integer scoreTetsAwal, Integer scoreTestAkhir,
+                                           MultipartFile uploadCv, Integer kesibukan, Integer scoreTestAwal, Integer scoreTestAkhir,
                                            Integer status, String namaProject, String jurusan) {
 
         result = new Result();
@@ -593,14 +585,14 @@ public class PesertaServiceImpl implements PesertaService {
                         .body(result);
             }
             // cek username
-            Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(namaPeserta).orElse(new Peserta());
-            if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
-                result.setMessage("Error: Username sudah digunakan!");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            }
+//            Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(namaPeserta).orElse(new Peserta());
+//            if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
+//                result.setMessage("Error: Username sudah digunakan!");
+//                result.setCode(HttpStatus.BAD_REQUEST.value());
+//                return ResponseEntity
+//                        .badRequest()
+//                        .body(result);
+//            }
             if (namaPeserta.isBlank()) {
                 result.setMessage("Error: Nama Peserta tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -684,6 +676,17 @@ public class PesertaServiceImpl implements PesertaService {
             } else {
                 peserta.setKelas(kelasRepository.findById(kelasId).get());
             }
+            //kesibukan
+            Optional<Status> statusPeserta2 = statusRepository.findById(kesibukan);
+            if (!statusPeserta2.isPresent()) {
+                result.setMessage("Error: Status Id Belum Ada!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            } else {
+                peserta.setKesibukan(statusRepository.findById(kesibukan).get());
+            }
 
             // set batch
             if (!batchRepository.findById(batchId).isPresent()) {
@@ -701,7 +704,6 @@ public class PesertaServiceImpl implements PesertaService {
             if (uploadImage != null) {
                 // peserta.setUploadImagePath(IOUtils.toByteArray(uploadImage.getInputStream()));
                 String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
-                peserta.setUploadImageName(nameImage);
                 String[] image = nameImage.split("\\.");
                 String format = image[image.length-1];
                 if (!format.equalsIgnoreCase("jpg")&&!format.equalsIgnoreCase("png")) {
@@ -759,7 +761,7 @@ public class PesertaServiceImpl implements PesertaService {
             }
 
 
-            peserta.setScoreTetsAwal(scoreTetsAwal);
+            peserta.setScoreTestAwal(scoreTestAwal);
             peserta.setScoreTestAkhir(scoreTestAkhir);
             // peserta.setStatusTes(statusTes);
             peserta.setNamaProject(namaProject);
@@ -859,19 +861,31 @@ public class PesertaServiceImpl implements PesertaService {
     }
 
     @Override
-    public ResponseEntity<?> changeToCalonPeserta(Long id, String uri) {
+    public ResponseEntity<?> changeToCalonPeserta(Long id, String uri, Integer statusId) {
         result = new Result();
         try {
-            if (!pesertaRepository.findById(id).isPresent()) {
+            Optional<Peserta> peserta = pesertaRepository.findById(id);
+            Optional<Status> status = statusRepository.findById(statusId);
+
+            if (!peserta.isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada calon peserta dengan id " + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+            } else if (!status.isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Error: id " + id + " bukan calon peserta");
+                result.setMessage("Error: tidak ada status dengan id" + statusId);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else if (peserta.get().getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+                result.setSuccess(false);
+                result.setMessage("Error: id " + id + " status bukan peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                pesertaRepository.statusPeserta(EnumStatusPeserta.CALON, id);
+                peserta.get().setStatus(status.get());
+                peserta.get().setStatusPeserta(EnumStatusPeserta.CALON);
+                statusRepository.save(status.get());
+                result.setSuccess(true);
+                result.setMessage("Berhasil change status");
+                result.setCode(HttpStatus.OK.value());
             }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -883,23 +897,31 @@ public class PesertaServiceImpl implements PesertaService {
     public ResponseEntity<?> changeKelas(Long pesertaId, Long kelasId, String uri) {
         result = new Result();
         try {
-            Peserta peserta = pesertaRepository.findById(pesertaId).get();
-            Kelas kelas = kelasRepository.findById(kelasId).get();
-            if (!pesertaRepository.findById(pesertaId).isPresent()) {
+            log.info("id peserta " + pesertaId);
+            log.info("id kelas " + kelasId);
+            Optional<Peserta>peserta = pesertaRepository.findById(pesertaId);
+            Optional<Kelas>kelas = kelasRepository.findById(kelasId);
+            if (!peserta.isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada peserta dengan id " + pesertaId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (!kelasRepository.findById(kelasId).isPresent()) {
+            } else if (!kelas.isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada kelas dengan id " + kelasId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (peserta.getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
+            } else if (peserta.get().getStatusPeserta().equals(EnumStatusPeserta.CALON)) {
                 result.setSuccess(false);
-                result.setMessage("Error: id " + pesertaId + " bukan calon peserta");
+                result.setMessage("Error: id " + pesertaId + " status bukan peserta");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                // peserta.setKelas(kelas);
-                pesertaRepository.save(peserta);
+                log.info("kelas awal = " + peserta.get().getKelas().toString());
+//                peserta.get().setKelas(kelas.get());
+                peserta.get().setKelas(kelas.get());
+                pesertaRepository.save(peserta.get());
+                result.setSuccess(true);
+                result.setMessage("Berhasil change kelas");
+                result.setCode(HttpStatus.OK.value());
+                log.info("Berhasil change kelas peserta dengan id {}", pesertaId);
             }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -912,7 +934,7 @@ public class PesertaServiceImpl implements PesertaService {
         result = new Result();
         try {
             Map items = new HashMap();
-            items.put("items", pesertaRepository.search(keyword, EnumStatusPeserta.PESERTA));
+            items.put("items", pesertaRepository.search(keyword.toLowerCase(), EnumStatusPeserta.PESERTA));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));

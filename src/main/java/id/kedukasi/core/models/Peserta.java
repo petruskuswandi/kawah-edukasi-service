@@ -33,7 +33,7 @@ import java.util.Date;
 public class Peserta implements Serializable {
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE)
         private Long id;
 
         @JsonIgnoreProperties({"description", "banned","banned_time",
@@ -139,14 +139,14 @@ public class Peserta implements Serializable {
         // register
         @JsonIgnoreProperties({"created_at","updated_at","deleted","description"})
         @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "status_id", nullable = false, updatable = false)
+        @JoinColumn(name = "status_id", nullable = false)
         @NotNull(message = "Data Status Tidak Boleh Kosong")
         private Status status;
 
         @JsonIgnoreProperties({"description","created_time","updated_time","created_at","updated_at","deleted"})
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "education_id", nullable = true, updatable = false)
-        private Education tingkat_pendidikan;
+        private Educations tingkat_pendidikan;
 
         // register
         @NotEmpty(message = "Alamat Tidak Boleh Kosong")
@@ -264,8 +264,16 @@ public class Peserta implements Serializable {
          * 3. tidak keduanya
          */
         // @NotNull(message = "Kesibukan int Tidak Boleh Kosong")
-        @Column(name = "kesibukan")
-        private Integer kesibukan;
+        // @JsonIgnoreProperties({"created_at","updated_at","deleted","description"})
+        @ManyToOne(targetEntity = Status.class,fetch = FetchType.EAGER)
+        @JoinColumn(name = "kesibukan")
+        private Status kesibukan;
+
+        // @NotNull(message = "Data Status Tidak Boleh Kosong")
+        // @JsonIgnoreProperties({"created_at","updated_at","deleted","description"})
+        // @ManyToOne(targetEntity = Status.class, fetch = FetchType.EAGER)
+        // @JoinColumn(name = "kegiatan", nullable = false)
+        // private Status kegiatan;
 
         /**
          * mempunyai laptop
@@ -288,7 +296,7 @@ public class Peserta implements Serializable {
         // peserta
         @JsonIgnoreProperties({"description", "banned","banned_time", "created_by","created_time","updated_time"})
         @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "class_id", nullable = true, updatable = false)
+        @JoinColumn(name = "class_id", nullable = true)
         private Kelas kelas;
 
         // @ManyToOne(fetch = FetchType.EAGER)
@@ -298,7 +306,7 @@ public class Peserta implements Serializable {
          * score test awal dan akhir
          */
         @Column(name = "score_test_awal")
-        private Integer scoreTetsAwal;
+        private Integer scoreTestAwal;
 
         @Column(name = "score_test_akhir")
         private Integer scoreTestAkhir;

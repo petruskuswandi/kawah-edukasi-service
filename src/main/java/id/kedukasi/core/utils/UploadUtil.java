@@ -13,7 +13,7 @@ public class UploadUtil {
 
     public static void saveCV(String pathUpload, String namaPeserta, String nomorKtp, MultipartFile uploadCv, Peserta peserta) throws IOException {
         //save upload CV
-        String customNameCV = nomorKtp + "_" + namaPeserta + ".pdf";
+        String customNameCV = nomorKtp + "_" + namaPeserta.replace(" ", "_") + ".pdf";
         peserta.setUploadCv(customNameCV);
         //save column upload cv path
         peserta.setUploadCvPath(pathUpload + "/documents/" + customNameCV);
@@ -25,7 +25,9 @@ public class UploadUtil {
     }
 
     public static void saveImage(String pathUpload, String namaPeserta, MultipartFile uploadImage, String nomorKtp, Peserta peserta, String format) throws IOException {
-        String customNameImage = "profile_" + nomorKtp + "_" + namaPeserta + "." + format;
+        String customNameImage = "profile_" + nomorKtp + "_" + namaPeserta.replace(" ", "_") + "." + format;
+        //save column image name
+        peserta.setUploadImageName(customNameImage);
         //save column upload image path
         peserta.setUploadImagePath(pathUpload + "/image/" + customNameImage);
         //save to folder

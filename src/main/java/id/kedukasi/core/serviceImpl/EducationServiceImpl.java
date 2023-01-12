@@ -1,7 +1,8 @@
 package id.kedukasi.core.serviceImpl;
 
 
-import id.kedukasi.core.models.Education;
+
+import id.kedukasi.core.models.Educations;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.repository.EducationRepository;
 import id.kedukasi.core.request.SaveEducationRequest;
@@ -57,14 +58,14 @@ public class EducationServiceImpl implements EducationService {
         }
 
         try {
-            Education byName = repository.findByName(req.getName());
+            Educations byName = repository.findByName(req.getName());
             if (byName!=null){
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 result.setMessage("name sudah ada");
                 result.setSuccess(false);
                 return ResponseEntity.ok(result);
             }
-            Education education = new Education();
+            Educations education = new Educations();
             education.setName(req.getName());
             education.setDescription(req.getDescription());
             repository.save(education);
@@ -104,8 +105,8 @@ public class EducationServiceImpl implements EducationService {
         }
 
         try {
-            Optional<Education> educationById = repository.findById(id);
-            Education education = educationById.get();
+            Optional<Educations> educationById = repository.findById(id);
+            Educations education = educationById.get();
             education.setName(req.getName());
             education.setDescription(req.getDescription());
 
@@ -127,7 +128,7 @@ public class EducationServiceImpl implements EducationService {
 
         result = new Result();
         try {
-            Optional<Education> byId = repository.findById(id);
+            Optional<Educations> byId = repository.findById(id);
 
             if (!byId.isPresent()) {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -154,7 +155,7 @@ public class EducationServiceImpl implements EducationService {
         result = new Result();
         try {
             //find all data
-            List<Education> allEducation = repository.findAll();
+            List<Educations> allEducation = repository.findAll();
 
             //set response
             result.setCode(HttpStatus.OK.value());
@@ -176,7 +177,7 @@ public class EducationServiceImpl implements EducationService {
         result = new Result();
         try {
             //find by id
-            Optional<Education> byId = repository.findById(id);
+            Optional<Educations> byId = repository.findById(id);
 
             if (!byId.isPresent()) {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
