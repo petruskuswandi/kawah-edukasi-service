@@ -13,23 +13,14 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class FileUploadUtil {
-    static String uploadPath = null;
+
     public static String saveFile(String fileName, MultipartFile multipartFile) throws IOException {
 
-        //Create directory logic
-        ApplicationHome home = new ApplicationHome();
-        String proposedDir = home.getDir().getAbsolutePath() + "/upload-files";
-        File finalDir = new File(proposedDir);
-        if(!finalDir.exists()) {
-            finalDir.mkdir();
-        }
-        //End
-
-        uploadPath = proposedDir;
+        String proposedDir = createDir();
         Path uploadDirectory = Paths.get(proposedDir);
 
         //Generate random string for fileCode
-        String fileCode = RandomString.make(8);;
+        String fileCode = RandomString.make(8);
         //End
 
         //Save file
@@ -44,7 +35,16 @@ public class FileUploadUtil {
         return fileCode;
     }
 
-    public static String getUploadPath() {
-        return uploadPath;
+    //Create directory logic
+    public static String createDir() {
+
+        ApplicationHome home = new ApplicationHome();
+        String proposedDir = home.getDir().getAbsolutePath() + "/upload-files";
+        File finalDir = new File(proposedDir);
+        if(!finalDir.exists()) {
+            finalDir.mkdir();
+        }
+        return proposedDir;
     }
+
 }

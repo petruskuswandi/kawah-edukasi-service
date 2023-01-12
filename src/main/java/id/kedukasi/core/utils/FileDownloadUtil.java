@@ -13,17 +13,14 @@ public class FileDownloadUtil {
     private static Path foundFile;
     public static Resource getFileAsResource(String fileCode) throws IOException {
 
-        //Validate file path
-        if (FileUploadUtil.getUploadPath() == null) {
-            return null;
-        }
+        String proposedDir = FileUploadUtil.createDir();
+        foundFile = null;
 
-        //Get file path
-        Path uploadDirectory = Paths.get(FileUploadUtil.getUploadPath());
+        Path uploadDirectory = Paths.get(proposedDir);
 
         //Search file
         Files.list(uploadDirectory).forEach(file -> {
-            if (file.getFileName().toString().startsWith(fileCode)) {
+            if (file.getFileName().toString().substring(0, 8).equals(fileCode)) {
                 foundFile = file;
                 return;
             }
