@@ -19,7 +19,9 @@ public class FileHandleController {
 
     @PostMapping("/uploadFile")
     public ResponseEntity<?> uploadFile(
-            @RequestPart("file") MultipartFile multipartFile) {
+            @RequestPart("file") MultipartFile multipartFile,
+            @RequestParam("userId") Integer userId
+    ) {
 
         Long size = multipartFile.getSize();
 
@@ -32,7 +34,7 @@ public class FileHandleController {
 
 
         try {
-            String fileCode = FileUploadUtil.saveFile(fileName, multipartFile);
+            String fileCode = FileUploadUtil.saveFile(fileName, userId, multipartFile);
             FileUploadResponse response = new FileUploadResponse();
 
             response.setFileName(fileName);
