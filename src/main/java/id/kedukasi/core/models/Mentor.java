@@ -29,7 +29,9 @@ import lombok.Setter;
 @Setter
 public class Mentor implements Serializable {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(
+          strategy= GenerationType.AUTO,
+          generator="native")
   private Long id;
 
   @NotBlank

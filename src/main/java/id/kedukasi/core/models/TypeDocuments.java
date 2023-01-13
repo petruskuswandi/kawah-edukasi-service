@@ -17,7 +17,9 @@ public class TypeDocuments {
      * - DELETE
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(
+            strategy= GenerationType.AUTO,
+            generator="native")
     private int id;
 
     @Column(name="type_name", nullable = false, length = 10)
