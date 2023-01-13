@@ -5,7 +5,6 @@ import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -35,16 +34,20 @@ public class Mentor implements Serializable {
 
   @NotBlank
   @Size(max = 100)
+  @Column(name = "namamentor")
   private String namamentor;
 
   @NotBlank
   @Size(max = 20)
+  @Column(name = "kode")
   private String kode;
 
   @NotBlank
   @Size(max = 16)
+  @Column(name = "noktp")
   private String noktp;
 
+  @Column(name = "no_telepon")
   private String no_telepon;
 
   @Lob
@@ -57,7 +60,7 @@ public class Mentor implements Serializable {
   @ApiModelProperty(hidden = true)
   private byte[] cv;
 
-
+  @Column(name = "status")
   private String status;
 
   @JsonIgnoreProperties({"description", "banned", "banned_time", "banned_time", "created_by", "created_time", "updated_time"})
@@ -71,7 +74,7 @@ public class Mentor implements Serializable {
   @JoinColumn(name = "pendidikan_terakhir")
   private Educations pendidikan_terakhir;
 
-
+  @Column(name = "pendidikan_jurusan")
   private String pendidikan_jurusan;
 
   @Column(name = "tgl_start")
@@ -84,7 +87,7 @@ public class Mentor implements Serializable {
   @Temporal(TemporalType.DATE)
   private Date tgl_stop;
 
-
+  @Column(name = "alamat_rumah")
   private String alamat_rumah;
 
 
