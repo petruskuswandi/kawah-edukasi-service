@@ -11,9 +11,9 @@ import java.nio.file.Paths;
 public class FileDownloadUtil {
 
     private static Path foundFile;
-    public static Resource getFileAsResource(String fileCode) throws IOException {
+    public static Resource getFileAsResource(String fileCode, Integer userId) throws IOException {
 
-        String proposedDir = FileUploadUtil.createDir();
+        String proposedDir = FileUploadUtil.createDir(userId);
         foundFile = null;
 
         Path uploadDirectory = Paths.get(proposedDir);

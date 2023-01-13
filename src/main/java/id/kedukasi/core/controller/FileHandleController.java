@@ -48,13 +48,16 @@ public class FileHandleController {
         }
     }
 
-    @GetMapping("/downloadFile/{fileCode}")
-    public ResponseEntity<?> downloadFile(@PathVariable("fileCode") String fileCode) {
+    @GetMapping("/downloadFile/{userId}/{fileCode}")
+    public ResponseEntity<?> downloadFile(
+            @PathVariable("fileCode") String fileCode,
+            @PathVariable("userId") Integer userId
+    ) {
 
         Resource fileAsResource = null;
 
         try {
-            fileAsResource = FileDownloadUtil.getFileAsResource(fileCode);
+            fileAsResource = FileDownloadUtil.getFileAsResource(fileCode, userId);
         } catch (IOException e) {
             return ResponseEntity.internalServerError().build();
         }

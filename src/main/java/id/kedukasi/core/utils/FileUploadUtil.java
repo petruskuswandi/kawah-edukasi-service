@@ -16,7 +16,7 @@ public class FileUploadUtil {
 
     public static String saveFile(String fileName, Integer userId, MultipartFile multipartFile) throws IOException {
 
-        String proposedDir = createDir();
+        String proposedDir = createDir(userId);
         Path uploadDirectory = Paths.get(proposedDir);
 
         //Generate random string for fileCode
@@ -36,10 +36,13 @@ public class FileUploadUtil {
     }
 
     //Create directory logic
-    public static String createDir() {
+    public static String createDir(Integer userId) {
 
         ApplicationHome home = new ApplicationHome();
         String proposedDir = home.getDir().getAbsolutePath() + "/upload-files";
+        if (userId != null) {
+            proposedDir = home.getDir().getAbsolutePath() + "/upload-files/" + userId;
+        }
         File finalDir = new File(proposedDir);
         if(!finalDir.exists()) {
             finalDir.mkdir();
