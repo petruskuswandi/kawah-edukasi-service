@@ -21,7 +21,7 @@ public class FileHandleController {
        return fileHandleService.uploadFile(multipartFile);
     }
 
-    @GetMapping("/downloadFile/{fileCode}")
+    @GetMapping("/downloadFile/utility/{fileCode}")
     public ResponseEntity<?> downloadUtilityFile(@PathVariable("fileCode") String fileCode) {
         return fileHandleService.downloadUtilityFile(fileCode);
     }
@@ -34,7 +34,7 @@ public class FileHandleController {
         return fileHandleService.downloadUserFile(userId, fileCode);
     }
 
-    @GetMapping("/previewFile/{fileCode}")
+    @GetMapping("/previewFile/utility/{fileCode}")
     public ResponseEntity<?> previewUtilityFile(@PathVariable("fileCode") String fileCode) throws IOException {
         return fileHandleService.previewUtilityFile(fileCode);
     }
