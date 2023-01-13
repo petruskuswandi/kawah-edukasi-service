@@ -6,7 +6,7 @@ public class PathGeneratorUtil {
         if (userId != null) {
             return "/downloadFile/" + userId + "/" + fileCode;
         }
-        return "/downloadFile/" + fileCode;
+        return "/downloadFile/utility/" + fileCode;
     }
 
 }

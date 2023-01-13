@@ -39,7 +39,7 @@ public class FileUploadUtil {
     public static String createDir(Integer userId) {
 
         ApplicationHome home = new ApplicationHome();
-        String proposedDir = home.getDir().getAbsolutePath() + "/upload-files";
+        String proposedDir = home.getDir().getAbsolutePath() + "/upload-files/utility";
         if (userId != null) {
             proposedDir = home.getDir().getAbsolutePath() + "/upload-files/" + userId;
         }

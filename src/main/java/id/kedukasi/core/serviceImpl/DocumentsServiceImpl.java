@@ -67,14 +67,17 @@ public class DocumentsServiceImpl implements DocumentsService {
                 newDocuments.setUser(user.get());
             }
 
+            //Saving file process
             //Get file name
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
             //Save file
             String fileCode = FileUploadUtil.saveFile(fileName, userId, multipartFile);
 
+            //Set file name and path name
             newDocuments.setPathName(PathGeneratorUtil.generate(userId, fileCode));
             newDocuments.setFileName(fileName);
+            //End
 
             documentsRepository.save(newDocuments);
             result.setMessage("Berhasil membuat document baru");
@@ -168,14 +171,18 @@ public class DocumentsServiceImpl implements DocumentsService {
                 documentsOld.get().setUser(user.get());
             }
 
+            //Saving file process
             //Get file name
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
             //Save file
             String fileCode = FileUploadUtil.saveFile(fileName, userId, multipartFile);
 
+            //Save path name and file name in DB
             documentsOld.get().setPathName(PathGeneratorUtil.generate(userId, fileCode));
             documentsOld.get().setFileName(fileName);
+            //End
+
             documentsOld.get().setUpdatedTime(new Date());
 
 
