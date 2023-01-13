@@ -19,19 +19,12 @@ public class FileHandleController {
 
     @PostMapping("/uploadFile")
     public ResponseEntity<?> uploadFile(
-            @RequestPart("file") MultipartFile multipartFile,
-            @RequestParam("userId") Integer userId
+            @RequestPart(value = "file", required = true) MultipartFile multipartFile,
+            @RequestParam(value = "userId", required = false) Integer userId
     ) {
 
         Long size = multipartFile.getSize();
-
-        //Validate file size
-        if (size > 10000000) {
-            return new ResponseEntity<>("Error: File harus kurang dari 10MB", HttpStatus.BAD_REQUEST);
-        }
-
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-
 
         try {
             String fileCode = FileUploadUtil.saveFile(fileName, userId, multipartFile);

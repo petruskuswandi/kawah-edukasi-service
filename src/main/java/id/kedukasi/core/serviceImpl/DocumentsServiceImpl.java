@@ -5,10 +5,10 @@ import id.kedukasi.core.repository.DocumentsRepository;
 import id.kedukasi.core.repository.StatusRepository;
 import id.kedukasi.core.repository.TypeDocumentsRepository;
 import id.kedukasi.core.repository.UserRepository;
-import id.kedukasi.core.request.DocumentsRequest;
 import id.kedukasi.core.request.UpdateDocumentsRequest;
 import id.kedukasi.core.service.DocumentsService;
 import id.kedukasi.core.utils.FileUploadUtil;
+import id.kedukasi.core.utils.PathGeneratorUtil;
 import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,6 @@ public class DocumentsServiceImpl implements DocumentsService {
     public ResponseEntity<Result> createDocument(Integer userId, Integer statusId, MultipartFile multipartFile) {
         result = new Result();
         try {
-            System.out.println(multipartFile.getOriginalFilename());
             //Set status
             Optional<Status> status = statusRepository.findById(statusId);
             Documents newDocuments = new Documents();
@@ -68,17 +67,19 @@ public class DocumentsServiceImpl implements DocumentsService {
                 newDocuments.setUser(user.get());
             }
 
+            //Get file name
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
             //Save file
             String fileCode = FileUploadUtil.saveFile(fileName, userId, multipartFile);
 
-            newDocuments.setPathName("/downloadFile/" + userId + "/" + fileCode);
+            newDocuments.setPathName(PathGeneratorUtil.generate(userId, fileCode));
             newDocuments.setFileName(fileName);
 
             documentsRepository.save(newDocuments);
             result.setMessage("Berhasil membuat document baru");
             result.setCode(HttpStatus.OK.value());
+            result.setData(newDocuments);
             return ResponseEntity.ok(result);
 
         } catch (Exception e) {
@@ -138,39 +139,45 @@ public class DocumentsServiceImpl implements DocumentsService {
     }
 
     @Override
-    public ResponseEntity<Result> updateDocuments(UpdateDocumentsRequest updateDocuments) {
+    public ResponseEntity<Result> updateDocuments(Integer documentId, Integer userId, Integer statusId, MultipartFile multipartFile) {
         result = new Result();
         try {
-            Optional<Documents> documentsOld = documentsRepository.findById(updateDocuments.getId());
+            Optional<Documents> documentsOld = documentsRepository.findById(documentId);
             if (documentsOld.isEmpty() || documentsOld.get().isBanned()) {
                 result.setSuccess(false);
-                result.setMessage("Document dengan id " + updateDocuments.getId() + " tidak ditemukan");
+                result.setMessage("Document dengan id " + documentId + " tidak ditemukan");
                 return ResponseEntity.badRequest().body(result);
             }
             //Set status
-            Optional<Status> status = statusRepository.findById(updateDocuments.getStatus());
+            Optional<Status> status = statusRepository.findById(statusId);
             if (status.isEmpty() || status.get().isDeleted()) {
                 result.setSuccess(false);
-                result.setMessage("Status dengan id " + updateDocuments.getStatus() + " tidak ditemukan");
+                result.setMessage("Status dengan id " + statusId + " tidak ditemukan");
                 return ResponseEntity.badRequest().body(result);
             } else {
                 documentsOld.get().setStatus(status.get());
             }
 
             //Set user
-            Optional<User> user = Optional.ofNullable(userRepository.findById(updateDocuments.getUser()));
+            Optional<User> user = Optional.ofNullable(userRepository.findById(userId));
             if (user.isEmpty() || user.get().isBanned()) {
                 result.setSuccess(false);
-                result.setMessage("User dengan id " + updateDocuments.getUser() + " tidak ditemukan");
+                result.setMessage("User dengan id " + userId + " tidak ditemukan");
                 return ResponseEntity.badRequest().body(result);
             } else {
                 documentsOld.get().setUser(user.get());
             }
 
-            //Set updated time path and file name
+            //Get file name
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+
+            //Save file
+            String fileCode = FileUploadUtil.saveFile(fileName, userId, multipartFile);
+
+            documentsOld.get().setPathName(PathGeneratorUtil.generate(userId, fileCode));
+            documentsOld.get().setFileName(fileName);
             documentsOld.get().setUpdatedTime(new Date());
-            documentsOld.get().setPathName(updateDocuments.getPathName());
-            documentsOld.get().setFileName(updateDocuments.getFileName());
+
 
             documentsRepository.save(documentsOld.get());
             return ResponseEntity.ok(result);

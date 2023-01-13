@@ -29,7 +29,7 @@ public class DocumentsController {
     public ResponseEntity<Result> createDocument(
             @RequestParam("userId") Integer userId,
             @RequestParam("statusId") Integer statusId,
-            @RequestPart("file") MultipartFile multipartFile
+            @RequestPart(value = "file", required = true) MultipartFile multipartFile
             ) {
         return service.createDocument(userId, statusId, multipartFile);
     }
@@ -40,8 +40,13 @@ public class DocumentsController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Result> updateDocuments(@Valid @RequestBody UpdateDocumentsRequest documents) {
-        return service.updateDocuments(documents);
+    public ResponseEntity<Result> updateDocuments(
+            @RequestParam("documentId") Integer documentId,
+            @RequestParam("userId") Integer userId,
+            @RequestParam("statusId") Integer statusId,
+            @RequestPart(value = "file", required = true) MultipartFile multipartFile
+    ) {
+        return service.updateDocuments(documentId, userId, statusId, multipartFile);
     }
 
     @GetMapping(value = "/user/{id}", produces = APPLICATION_JSON_VALUE)
