@@ -8,6 +8,7 @@ import id.kedukasi.core.repository.UserRepository;
 import id.kedukasi.core.request.DocumentsRequest;
 import id.kedukasi.core.request.UpdateDocumentsRequest;
 import id.kedukasi.core.service.DocumentsService;
+import id.kedukasi.core.utils.FileUploadUtil;
 import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +70,10 @@ public class DocumentsServiceImpl implements DocumentsService {
 
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
-            newDocuments.setPathName("cc");
+            //Save file
+            String fileCode = FileUploadUtil.saveFile(fileName, userId, multipartFile);
+
+            newDocuments.setPathName("/downloadFile/" + userId + "/" + fileCode);
             newDocuments.setFileName(fileName);
 
             documentsRepository.save(newDocuments);
