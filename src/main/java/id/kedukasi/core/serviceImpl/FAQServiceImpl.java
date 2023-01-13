@@ -82,7 +82,10 @@ public class FAQServiceImpl implements FAQService {
         } catch (Exception e) {
 
             logger.error(stringUtil.getError(e));
-
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
 
         return ResponseEntity.ok(result);
@@ -102,7 +105,7 @@ public class FAQServiceImpl implements FAQService {
 
         try {
 
-            Map items = new HashMap();
+            Map<String, Object> items = new HashMap<>();
             List<FAQ> faq = faqRepository.findFAQData(limit.intValue(), page.intValue());
             items.put("items", faq);
             items.put("totalDataResult", faq.size());
@@ -112,6 +115,10 @@ public class FAQServiceImpl implements FAQService {
         } catch (Exception e) {
 
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
 
         }
 
@@ -141,6 +148,10 @@ public class FAQServiceImpl implements FAQService {
         } catch (Exception e) {
 
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
             
         }
 
@@ -198,6 +209,10 @@ public class FAQServiceImpl implements FAQService {
         } catch (Exception e) {
 
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
 
         }
 
@@ -229,6 +244,10 @@ public class FAQServiceImpl implements FAQService {
         } catch (Exception e) {
 
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
 
         }
 

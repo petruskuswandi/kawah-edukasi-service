@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
     if (search == null) { search = ""; }
 
     try {
-      Map items = new HashMap();
+      Map<String, Object> items = new HashMap<>();
       List<User> user = userRepository.findUserData(search.toLowerCase(), limit.intValue(), page.intValue());
       List<SubUser> subUser = new ArrayList<>();
       for (int i = 0; i < user.size(); i++) {
@@ -144,6 +144,10 @@ public class UserServiceImpl implements UserService {
       result.setData(items);
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
+      result.setSuccess(false);
+      result.setMessage(e.getCause().getCause().getMessage());
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return result;
     }
     return result;
   }
@@ -158,7 +162,7 @@ public class UserServiceImpl implements UserService {
         result.setMessage("cannot find user");
         result.setCode(HttpStatus.BAD_REQUEST.value());
       } else {
-        Map items = new HashMap();
+        Map<String, User> items = new HashMap<>();
         items.put("items", userRepository.findById(id));
         result.setData(items);
       }
