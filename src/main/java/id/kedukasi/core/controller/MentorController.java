@@ -59,7 +59,7 @@ public class MentorController {
   @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
   public Result getMentorData(@RequestParam(required = false, name = "search") String search,
                              @RequestParam(value = "limit", defaultValue = "10") Integer limit,
-                             @RequestParam(value = "offset", defaultValue = "1") Integer page) {
+                             @RequestParam(value = "offset", defaultValue = "0") Integer page) {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
     return service.getMentorData(uri, search, limit, page);

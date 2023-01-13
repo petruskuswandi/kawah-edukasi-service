@@ -50,7 +50,7 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
   @Query(
           value = "SELECT * FROM mentors WHERE banned = false AND"+
                   "(:namamentor IS NULL OR LOWER(namamentor) LIKE %:namamentor%) "+
-                  "ORDER BY id LIMIT :limit OFFSET :limit * (:page - 1)",
+                  "ORDER BY id LIMIT :limit OFFSET :page",
           nativeQuery = true
   )
   List<Mentor> findMentorData(@Param("namamentor") String search,
