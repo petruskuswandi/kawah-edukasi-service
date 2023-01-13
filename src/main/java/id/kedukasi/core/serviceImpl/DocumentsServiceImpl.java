@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -40,33 +42,35 @@ public class DocumentsServiceImpl implements DocumentsService {
     @Autowired
     TypeDocumentsRepository typeDocumentsRepository;
     @Override
-    public ResponseEntity<Result> createDocument(DocumentsRequest documents) {
+    public ResponseEntity<Result> createDocument(Integer userId, Integer statusId, MultipartFile multipartFile) {
         result = new Result();
         try {
-
+            System.out.println(multipartFile.getOriginalFilename());
             //Set status
-            Optional<Status> status = statusRepository.findById(documents.getStatus());
+            Optional<Status> status = statusRepository.findById(statusId);
             Documents newDocuments = new Documents();
             if (status.isEmpty() || status.get().isDeleted()) {
                 result.setSuccess(false);
-                result.setMessage("Status dengan id " + documents.getStatus() + " tidak ditemukan");
+                result.setMessage("Status dengan id " + statusId + " tidak ditemukan");
                 return ResponseEntity.badRequest().body(result);
             } else {
                 newDocuments.setStatus(status.get());
             }
 
             //Set user
-            Optional<User> user = Optional.ofNullable(userRepository.findById(documents.getUser()));
+            Optional<User> user = Optional.ofNullable(userRepository.findById(userId));
             if (user.isEmpty() || user.get().isBanned()) {
                 result.setSuccess(false);
-                result.setMessage("User dengan id " + documents.getUser() + " tidak ditemukan");
+                result.setMessage("User dengan id " + userId + " tidak ditemukan");
                 return ResponseEntity.badRequest().body(result);
             } else {
                 newDocuments.setUser(user.get());
             }
 
-            newDocuments.setPathName(documents.getPathName());
-            newDocuments.setFileName(documents.getFileName());
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+
+            newDocuments.setPathName("cc");
+            newDocuments.setFileName(fileName);
 
             documentsRepository.save(newDocuments);
             result.setMessage("Berhasil membuat document baru");

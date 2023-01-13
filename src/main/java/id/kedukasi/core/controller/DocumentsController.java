@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -25,8 +26,12 @@ public class DocumentsController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PostMapping("/create")
-    public ResponseEntity<Result> createDocument(@Valid @RequestBody DocumentsRequest document) {
-        return service.createDocument(document);
+    public ResponseEntity<Result> createDocument(
+            @RequestParam("userId") Integer userId,
+            @RequestParam("statusId") Integer statusId,
+            @RequestPart("file") MultipartFile multipartFile
+            ) {
+        return service.createDocument(userId, statusId, multipartFile);
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)

@@ -73,9 +73,4 @@ public class Documents implements Serializable{
     @JsonFormat(pattern = "yyyy/MM/dd, HH:mm:ss", timezone = "Asia/Jakarta")
     private Date bannedTime;
 
-//    @Column(name = "waktu_banned")
-//    @Temporal(TemporalType.TIMESTAMP)
-//    @JsonFormat(pattern = "yyyy/MM/dd, HH:mm:ss", timezone = "Asia/Jakarta")
-//    private Date waktuBanned;
-
 }
