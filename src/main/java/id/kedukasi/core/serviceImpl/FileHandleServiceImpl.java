@@ -43,6 +43,7 @@ public class FileHandleServiceImpl implements FileHandleService {
             response.setFileCode(fileCode);
             response.setSize(size);
             response.setDownloadUri(PathGeneratorUtil.generate(null, fileCode));
+            result.setMessage("Data berhasil disimpan, harap catat file code/download uri karena record tidak disimpan dalam db!");
             result.setData(response);
             return ResponseEntity.ok(result);
         } catch (IOException io) {
@@ -52,7 +53,7 @@ public class FileHandleServiceImpl implements FileHandleService {
     }
 
     @Override
-    public ResponseEntity<?> downloadUserFile(Integer userId, String fileCode) {
+    public ResponseEntity<?> downloadUserFile(Integer userId, String fileCode) throws IOException {
         result = new Result();
         Resource fileAsResource = null;
 
@@ -77,17 +78,11 @@ public class FileHandleServiceImpl implements FileHandleService {
             return ResponseEntity.internalServerError().build();
         }
 
-        String contentType = "application/octet-stream";
-        String headerValue = "attachment; filename=\"" + fileAsResource.getFilename() + "\"";
-
-        return ResponseEntity.ok().
-                contentType(MediaType.parseMediaType(contentType)).
-                header(HttpHeaders.CONTENT_DISPOSITION, headerValue).
-                body(fileAsResource);
+        return responses("ccc", "cccc", fileAsResource);
     }
 
     @Override
-    public ResponseEntity<?> downloadUtilityFile(String fileCode) {
+    public ResponseEntity<?> downloadUtilityFile(String fileCode) throws IOException {
         result = new Result();
         Resource fileAsResource = null;
 
@@ -103,13 +98,7 @@ public class FileHandleServiceImpl implements FileHandleService {
             return ResponseEntity.internalServerError().build();
         }
 
-        String contentType = "application/octet-stream";
-        String headerValue = "attachment; filename=\"" + fileAsResource.getFilename() + "\"";
-
-        return ResponseEntity.ok().
-                contentType(MediaType.parseMediaType(contentType)).
-                header(HttpHeaders.CONTENT_DISPOSITION, headerValue).
-                body(fileAsResource);
+        return responses("ccc", "cccc", fileAsResource);
     }
 
     @Override
@@ -139,31 +128,11 @@ public class FileHandleServiceImpl implements FileHandleService {
             return ResponseEntity.internalServerError().build();
         }
 
-        String headerValue = "Content Disposition; filename=\"" + fileAsResource.getFilename() + "\"";
         String endFileName = fileAsResource.getFilename();
         String fileTypeThreeChar = endFileName.substring(endFileName.length() - 3);
         String fileTypeFourChar = endFileName.substring(endFileName.length() - 4);
 
-        if (fileTypeThreeChar.equals("jpg") || fileTypeFourChar.equals("jpeg")
-                || fileTypeThreeChar.equals("png") || fileTypeThreeChar.equals("JPG")
-                || fileTypeFourChar.equals("JPEG") || fileTypeThreeChar.equals("PNG")) {
-
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .contentLength(fileAsResource.contentLength())
-                    .contentType(MediaType.IMAGE_JPEG)
-                    .contentType(MediaType.IMAGE_PNG)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
-                    .body(fileAsResource);
-        }
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .contentLength(fileAsResource.contentLength())
-                .contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
-                .body(fileAsResource);
-
+        return responses(fileTypeThreeChar, fileTypeFourChar, fileAsResource);
     }
 
     @Override
@@ -185,35 +154,52 @@ public class FileHandleServiceImpl implements FileHandleService {
             return ResponseEntity.internalServerError().build();
         }
 
-        String headerValue = "Content Disposition; filename=\"" + fileAsResource.getFilename() + "\"";
         String endFileName = fileAsResource.getFilename();
         String fileTypeThreeChar = endFileName.substring(endFileName.length() - 3);
         String fileTypeFourChar = endFileName.substring(endFileName.length() - 4);
 
-        if (fileTypeThreeChar.equals("jpg") || fileTypeFourChar.equals("jpeg")
-                || fileTypeThreeChar.equals("png") || fileTypeThreeChar.equals("JPG")
-                || fileTypeFourChar.equals("JPEG") || fileTypeThreeChar.equals("PNG")) {
-
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .contentLength(fileAsResource.contentLength())
-                    .contentType(MediaType.IMAGE_JPEG)
-                    .contentType(MediaType.IMAGE_PNG)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
-                    .body(fileAsResource);
-        }
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .contentLength(fileAsResource.contentLength())
-                .contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
-                .body(fileAsResource);
+        return responses(fileTypeThreeChar, fileTypeFourChar, fileAsResource);
     }
 
     @Override
     public ResponseEntity<?> resetAllFiles() {
         return null;
+    }
+
+    private ResponseEntity<?> responses(
+            String fileTypeThreeChar,
+            String fileTypeFourChar,
+            Resource fileAsResource)
+            throws IOException
+            {
+        String headerValue = "Content Disposition; filename=\"" + fileAsResource.getFilename() + "\"";
+        if (fileTypeThreeChar.equalsIgnoreCase("jpg") || fileTypeFourChar.equalsIgnoreCase("jpeg")
+                || fileTypeThreeChar.equalsIgnoreCase("png")) {
+
+            return ResponseEntity.ok()
+                    .contentLength(fileAsResource.contentLength())
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .contentType(MediaType.IMAGE_PNG)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
+                    .body(fileAsResource);
+
+        } else if (fileTypeThreeChar.equalsIgnoreCase("pdf")) {
+
+            return ResponseEntity.ok()
+                    .contentLength(fileAsResource.contentLength())
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
+                    .body(fileAsResource);
+        } else {
+
+            String contentType = "application/octet-stream";
+            String headerValueNew = "attachment; filename=\"" + fileAsResource.getFilename() + "\"";
+
+            return ResponseEntity.ok().
+                    contentType(MediaType.parseMediaType(contentType)).
+                    header(HttpHeaders.CONTENT_DISPOSITION, headerValueNew).
+                    body(fileAsResource);
+        }
     }
 
 }

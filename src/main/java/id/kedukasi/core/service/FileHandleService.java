@@ -8,8 +8,8 @@ import java.io.IOException;
 
 public interface FileHandleService {
     ResponseEntity<?> uploadFile(MultipartFile multipartFile);
-    ResponseEntity<?> downloadUserFile(Integer userId, String fileCode);
-    ResponseEntity<?> downloadUtilityFile(String fileCode);
+    ResponseEntity<?> downloadUserFile(Integer userId, String fileCode) throws IOException;
+    ResponseEntity<?> downloadUtilityFile(String fileCode) throws IOException;
     ResponseEntity<?> previewUserFile(Integer userId, String fileCode) throws IOException;
     ResponseEntity<?> previewUtilityFile(String fileCode) throws IOException;
     ResponseEntity<?> resetAllFiles();
