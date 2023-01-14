@@ -13,6 +13,8 @@ import id.kedukasi.core.models.wilayah.MasterKecamatan;
 import id.kedukasi.core.models.wilayah.MasterKelurahan;
 import id.kedukasi.core.models.wilayah.MasterKota;
 import id.kedukasi.core.models.wilayah.MasterProvinsi;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -24,6 +26,8 @@ import lombok.Setter;
 @Table(name = "mentors", uniqueConstraints = {
         @UniqueConstraint(columnNames = "kode")
 })
+@Data
+@AllArgsConstructor
 @DynamicUpdate
 @Getter
 @Setter
@@ -33,16 +37,19 @@ public class Mentor implements Serializable {
   private Long id;
 
   @NotBlank
+  @Column(name = "namamentor")
   @Size(max = 100)
   @Column(name = "namamentor")
   private String namamentor;
 
   @NotBlank
+  @Column(name = "kode")
   @Size(max = 20)
   @Column(name = "kode")
   private String kode;
 
   @NotBlank
+  @Column(name = "noktp")
   @Size(max = 16)
   @Column(name = "noktp")
   private String noktp;
@@ -142,7 +149,6 @@ public class Mentor implements Serializable {
   public Mentor(String namamentor, String noktp, String no_telepon, String status,
                 String pendidikan_jurusan, Date tgl_start, Date tgl_stop,  String alamat_rumah) {
     Date date = new Date();
-
     this.namamentor = namamentor;
     this.noktp = noktp;
     this.no_telepon = no_telepon;
