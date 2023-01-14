@@ -37,7 +37,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User implements Serializable {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(
+          strategy= GenerationType.AUTO,
+          generator="native")
   private Long id;
 
   @NotBlank
