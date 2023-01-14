@@ -445,19 +445,19 @@ public class MentorServiceImpl implements MentorService{
         if (search == null) {
             search = "";
         }
-        List<Mentor> batch = null;
+        List<Mentor> mentor = null;
         try {
             Map items = new HashMap();
-            batch = mentorRepository.findMentorData(search, limit, page.intValue());
-            items.put("items", batch);
-            items.put("totalDataResult", batch.size());
-            items.put("totalData", mentorRepository.count());
+            mentor = mentorRepository.findMentorData(search, limit, page.intValue());
+            items.put("items", mentor);
+            items.put("totalDataResult", mentor.size());
+            items.put("totalData", mentorRepository.bannedfalse());
 
-            if (batch.size() == 0) {
+            if (mentor.size() == 0 || limit > mentorRepository.bannedfalse()) {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 result.setSuccess(false);
-                result.setData(batch.size());
-                result.setMessage("Sorry Data its null/empty");
+                result.setData(limit > mentorRepository.bannedfalse() ? 0 : mentor.size());
+                result.setMessage(mentor.size() != 0 ? "Sorry limit exceeds size data mentor" : "Sorry data mentor is null");
             } else {
                 result.setData(items);
                 result.setMessage("Success find Data Mentor");
