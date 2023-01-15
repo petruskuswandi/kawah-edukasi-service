@@ -641,6 +641,14 @@ public class PesertaServiceImpl implements PesertaService {
                         .badRequest()
                         .body(result);
             }
+            //cek KTP
+            if (!validator.isNumeric(nomorKtp)||nomorKtp.length()!=16) {
+               result.setMessage("Error : nomor KTP harus berupa angka dan 16 karakter");
+               result.setCode(HttpStatus.BAD_REQUEST.value());
+               return ResponseEntity
+                       .badRequest()
+                       .body(result);
+            }
             // cek nomer hp
             if (!validator.isPhoneValid(noHp)) {
                 result.setMessage("Error: nomor telepon tidak boleh kosong dan gunakan format 08xxx/+628xxx/628xxx!");

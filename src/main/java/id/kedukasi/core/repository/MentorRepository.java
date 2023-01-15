@@ -43,6 +43,9 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
   int cekkode(@Param("kode") String kode);
 
   @Transactional
+  @Query(value = "SELECT count(*) FROM mentors WHERE banned = false", nativeQuery = true)
+  int bannedfalse();
+  @Transactional
   @Query(value = "SELECT kode FROM mentors WHERE id = :id", nativeQuery = true)
   String ambilkode(@Param("id") Long id);
 
@@ -50,7 +53,7 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
   @Query(
           value = "SELECT * FROM mentors WHERE banned = false AND"+
                   "(:namamentor IS NULL OR LOWER(namamentor) LIKE %:namamentor%) "+
-                  "ORDER BY id LIMIT :limit OFFSET :limit * (:page - 1)",
+                  "ORDER BY id LIMIT :limit OFFSET :page",
           nativeQuery = true
   )
   List<Mentor> findMentorData(@Param("namamentor") String search,

@@ -60,7 +60,7 @@ public class KelasServiceImpl implements KelasService {
             items.put("totalDataResult", kelas.size());
             items.put("totalData", kelasRepository.countKelasData(false));
             if (kelas.size() == 0) {
-                result.setMessage("Maaf Data Kelas yang Anda cari tidak tersedia");
+                result.setMessage("Data tidak ada");
             }
             result.setData(items);
         } catch (Exception e) {

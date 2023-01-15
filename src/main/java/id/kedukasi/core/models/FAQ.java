@@ -16,7 +16,9 @@ public class FAQ {
     
     /* Properties */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy= GenerationType.AUTO,
+            generator="native")
     private Integer id;
 
     @Column(length = 500)
