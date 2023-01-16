@@ -120,6 +120,8 @@ public class UserServiceImpl implements UserService {
     
     // limit 0 or negative integer
     if (limit < 1) { limit = 1; }
+    // jumlah page 0 or less, set to 1
+    if (jumlahPage < 1) { jumlahPage = 1; }
     // page greater then jumlah page
     if (page > jumlahPage) { page = jumlahPage; }
     // page 0 or negative integer
@@ -743,11 +745,11 @@ class SubUser {
   private String email;
   private String noHp;
   private Role role;
-  private boolean status;
+  private Boolean status;
 
   public SubUser() {}
 
-  public SubUser(Long id, String namaLengkap, String email, String noHp, Role role, boolean status) {
+  public SubUser(Long id, String namaLengkap, String email, String noHp, Role role, Boolean status) {
     this.id = id;
     this.namaLengkap = namaLengkap;
     this.email = email;
@@ -776,7 +778,7 @@ class SubUser {
       return role;
   }
 
-  public boolean isStatus() {
+  public Boolean isStatus() {
       return status;
   }
   

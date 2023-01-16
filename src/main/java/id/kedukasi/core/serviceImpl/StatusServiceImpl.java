@@ -338,6 +338,7 @@ public class StatusServiceImpl implements StatusService {
         int jumlahPage = (int) Math.ceil(statusRepository.count() / (double) limit);
         if (limit < 1) { limit = 1; }
         if (page < 1) { page = 1; }
+        if (jumlahPage < 1) { jumlahPage = 1; }
         if (page > jumlahPage) { page = jumlahPage; }
         if (flag == null) { flag = ""; }
         if (subFlag == null) { subFlag = ""; }
