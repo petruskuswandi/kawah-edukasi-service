@@ -39,19 +39,16 @@ public class Mentor implements Serializable {
   private Long id;
 
   @NotBlank
-  @Column(name = "namamentor")
   @Size(max = 100)
   @Column(name = "namamentor")
   private String namamentor;
 
   @NotBlank
-  @Column(name = "kode")
   @Size(max = 20)
   @Column(name = "kode")
   private String kode;
 
   @NotBlank
-  @Column(name = "noktp")
   @Size(max = 16)
   @Column(name = "noktp")
   private String noktp;
