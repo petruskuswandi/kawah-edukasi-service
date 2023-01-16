@@ -116,7 +116,10 @@ public class UserServiceImpl implements UserService {
   public Result getUserData(String uri, String search, Integer limit, Integer page) {
     result = new Result();
 
-    int jumlahPage = (int) Math.ceil(userRepository.count() / (double) limit);
+    Integer total = userRepository.totalUnbannedUser();
+    if (total == null) { total = 0; }
+
+    int jumlahPage = (int) Math.ceil(total.intValue() / (double) limit);
     
     // limit 0 or negative integer
     if (limit < 1) { limit = 1; }
@@ -142,7 +145,7 @@ public class UserServiceImpl implements UserService {
       }
       items.put("items", subUser);
       items.put("totalDataResult", subUser.size());
-      items.put("totalData", userRepository.count());
+      items.put("totalData", total);
       result.setData(items);
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
@@ -471,9 +474,27 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<?> deleteUser(boolean banned, long id, String uri) {
     result = new Result();
     try {
-      userRepository.deleteUser(banned, id);
+      int response = userRepository.deleteUser(banned, id);
+      if (response == 1) {
+        result.setCode(HttpStatus.OK.value());
+        result.setSuccess(true);
+        if (banned == true) {
+          result.setMessage("User berhasil di-banned.");
+        } else {
+          result.setMessage("User berhasil di-unbanned.");
+        }
+      } else {
+        result.setSuccess(false);
+        result.setMessage("Id User tidak ditemukan!");
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.badRequest().body(result);
+      }
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
+      result.setSuccess(false);
+      result.setMessage(e.getCause().getCause().getMessage());
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return ResponseEntity.badRequest().body(result);
     }
 
     return ResponseEntity.ok(result);

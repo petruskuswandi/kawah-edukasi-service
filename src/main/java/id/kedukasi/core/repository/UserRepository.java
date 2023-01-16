@@ -60,6 +60,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
                           @Param("page") int page);
 
   @Transactional
+  @Query(
+    value = "SELECT count(*) FROM users WHERE banned = false",
+    nativeQuery = true
+  )
+  Integer totalUnbannedUser();
+
+  @Transactional
   User findById(long id);
 
   @Modifying

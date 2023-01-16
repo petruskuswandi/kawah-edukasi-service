@@ -133,7 +133,7 @@ public class FAQServiceImpl implements FAQService {
 
         try {
 
-            Optional<FAQ> faq = faqRepository.findById(id);
+            Optional<FAQ> faq = faqRepository.selectFAQById(id);
 
             if (!faq.isPresent()) {
                 result.setSuccess(false);
