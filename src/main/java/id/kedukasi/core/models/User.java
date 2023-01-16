@@ -37,7 +37,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User implements Serializable {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(
+          strategy= GenerationType.AUTO,
+          generator="native")
   private Long id;
 
   @NotBlank
@@ -75,9 +77,9 @@ public class User implements Serializable {
   @JoinColumn(name = "role_id")
   private Role role;
 
-  private boolean isLogin;
-  private boolean isActive;
-  private boolean isVerified;
+  private Boolean isLogin;
+  private Boolean isActive;
+  private Boolean isVerified;
 
   @Size(max = 6)
   @ApiModelProperty(hidden = true)

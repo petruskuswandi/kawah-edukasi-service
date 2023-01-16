@@ -34,7 +34,9 @@ import lombok.Setter;
 public class SyillabusDetail {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(
+            strategy= GenerationType.AUTO,
+            generator="native")
     private Long id;
 
     @JsonIgnoreProperties({"description", "banned","banned_time", "created_time","updated_time"})

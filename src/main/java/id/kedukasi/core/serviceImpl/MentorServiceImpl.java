@@ -127,7 +127,6 @@ public class MentorServiceImpl implements MentorService{
                 return ResponseEntity.badRequest().body(result);
             }
 
-
             Mentor mentor = new Mentor(namamentor, noktp, no_telepon, status,
                     pendidikan_jurusan, tgl_start, tgl_stop, alamat_rumah);
 
@@ -223,6 +222,9 @@ public class MentorServiceImpl implements MentorService{
             if (id!=0) {
                 Date date = new Date();
                 mentor.setUpdated_time(date);
+            } else {
+                mentor.setCreated_time(null);
+                mentor.setBanned_time(null);
             }
 
             mentorRepository.save(mentor);
@@ -232,6 +234,10 @@ public class MentorServiceImpl implements MentorService{
 
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
 
         return ResponseEntity.ok(result);
@@ -376,7 +382,10 @@ public class MentorServiceImpl implements MentorService{
 
             if (id!=0) {
                 Date date = new Date();
-                mentor.setUpdated_time(date);
+                mentor.setCreated_time(date);
+            } else {
+                mentor.setUpdated_time(null);
+                mentor.setBanned_time(null);
             }
 
             mentorRepository.save(mentor);
@@ -386,6 +395,10 @@ public class MentorServiceImpl implements MentorService{
 
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
 
         return ResponseEntity.ok(result);
@@ -399,12 +412,16 @@ public class MentorServiceImpl implements MentorService{
             if (mentorRepository.existsById(id)){
                 result.setMessage(banned == true ? "Success delete mentor" : "Success Backup mentor");
             } else {
-                result.setCode(400);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
                 result.setMessage("Id its not found");
                 result.setSuccess(false);
             }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
 
         return ResponseEntity.ok(result);
@@ -417,7 +434,7 @@ public class MentorServiceImpl implements MentorService{
             Mentor mentor = mentorRepository.findById(id);
             if (mentor == null) {
                 result.setSuccess(false);
-                result.setMessage("Cannot find id mentor" + id);
+                result.setMessage("Cannot find id mentor");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map items = new HashMap();
@@ -437,36 +454,22 @@ public class MentorServiceImpl implements MentorService{
     public Result getMentorData(String uri, String search, Integer limit, Integer page) {
         result = new Result();
 
-        int jumlahpage = (int) Math.ceil(mentorRepository.count() / (double) limit);
-
-        if (limit < 1) {
-            limit = 1;
-        }
-
-        if (page > jumlahpage) {
-            page = jumlahpage;
-        }
-
-        if (page < 1) {
-            page = 1;
-        }
-
         if (search == null) {
             search = "";
         }
-        List<Mentor> batch = null;
+        List<Mentor> mentor = null;
         try {
             Map items = new HashMap();
-            batch = mentorRepository.findMentorData(search, limit, page.intValue());
-            items.put("items", batch);
-            items.put("totalDataResult", batch.size());
-            items.put("totalData", mentorRepository.count());
+            mentor = mentorRepository.findMentorData(search, limit, page.intValue());
+            items.put("items", mentor);
+            items.put("totalDataResult", mentor.size());
+            items.put("totalData", mentorRepository.bannedfalse());
 
-            if (batch.size() == 0) {
-                result.setCode(400);
+            if (mentor.size() == 0 || limit > mentorRepository.bannedfalse()) {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
                 result.setSuccess(false);
-                result.setData(batch.size());
-                result.setMessage("Sorry Data its null/empty");
+                result.setData(limit > mentorRepository.bannedfalse() ? 0 : mentor.size());
+                result.setMessage(mentor.size() != 0 ? "Sorry limit exceeds size data mentor" : "Sorry data mentor is null");
             } else {
                 result.setData(items);
                 result.setMessage("Success find Data Mentor");

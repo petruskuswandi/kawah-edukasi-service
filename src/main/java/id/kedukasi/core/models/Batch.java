@@ -24,7 +24,9 @@ import java.util.Date;
 public class Batch implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy= GenerationType.AUTO,
+            generator="native")
     private Long id;
 
     @NotBlank

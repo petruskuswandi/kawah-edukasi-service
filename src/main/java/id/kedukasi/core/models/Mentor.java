@@ -5,7 +5,6 @@ import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -14,6 +13,8 @@ import id.kedukasi.core.models.wilayah.MasterKecamatan;
 import id.kedukasi.core.models.wilayah.MasterKelurahan;
 import id.kedukasi.core.models.wilayah.MasterKota;
 import id.kedukasi.core.models.wilayah.MasterProvinsi;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -25,26 +26,34 @@ import lombok.Setter;
 @Table(name = "mentors", uniqueConstraints = {
         @UniqueConstraint(columnNames = "kode")
 })
+@Data
+@AllArgsConstructor
 @DynamicUpdate
 @Getter
 @Setter
 public class Mentor implements Serializable {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(
+          strategy= GenerationType.AUTO,
+          generator="native")
   private Long id;
 
   @NotBlank
   @Size(max = 100)
+  @Column(name = "namamentor")
   private String namamentor;
 
   @NotBlank
   @Size(max = 20)
+  @Column(name = "kode")
   private String kode;
 
   @NotBlank
   @Size(max = 16)
+  @Column(name = "noktp")
   private String noktp;
 
+  @Column(name = "no_telepon")
   private String no_telepon;
 
   @Lob
@@ -57,7 +66,7 @@ public class Mentor implements Serializable {
   @ApiModelProperty(hidden = true)
   private byte[] cv;
 
-
+  @Column(name = "status")
   private String status;
 
   @JsonIgnoreProperties({"description", "banned", "banned_time", "banned_time", "created_by", "created_time", "updated_time"})
@@ -71,7 +80,7 @@ public class Mentor implements Serializable {
   @JoinColumn(name = "pendidikan_terakhir")
   private Educations pendidikan_terakhir;
 
-
+  @Column(name = "pendidikan_jurusan")
   private String pendidikan_jurusan;
 
   @Column(name = "tgl_start")
@@ -84,7 +93,7 @@ public class Mentor implements Serializable {
   @Temporal(TemporalType.DATE)
   private Date tgl_stop;
 
-
+  @Column(name = "alamat_rumah")
   private String alamat_rumah;
 
 
@@ -139,7 +148,6 @@ public class Mentor implements Serializable {
   public Mentor(String namamentor, String noktp, String no_telepon, String status,
                 String pendidikan_jurusan, Date tgl_start, Date tgl_stop,  String alamat_rumah) {
     Date date = new Date();
-
     this.namamentor = namamentor;
     this.noktp = noktp;
     this.no_telepon = no_telepon;

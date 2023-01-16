@@ -120,6 +120,8 @@ public class UserServiceImpl implements UserService {
     
     // limit 0 or negative integer
     if (limit < 1) { limit = 1; }
+    // jumlah page 0 or less, set to 1
+    if (jumlahPage < 1) { jumlahPage = 1; }
     // page greater then jumlah page
     if (page > jumlahPage) { page = jumlahPage; }
     // page 0 or negative integer
@@ -128,7 +130,7 @@ public class UserServiceImpl implements UserService {
     if (search == null) { search = ""; }
 
     try {
-      Map items = new HashMap();
+      Map<String, Object> items = new HashMap<>();
       List<User> user = userRepository.findUserData(search.toLowerCase(), limit.intValue(), page.intValue());
       List<SubUser> subUser = new ArrayList<>();
       for (int i = 0; i < user.size(); i++) {
@@ -144,6 +146,10 @@ public class UserServiceImpl implements UserService {
       result.setData(items);
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
+      result.setSuccess(false);
+      result.setMessage(e.getCause().getCause().getMessage());
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return result;
     }
     return result;
   }
@@ -158,7 +164,7 @@ public class UserServiceImpl implements UserService {
         result.setMessage("cannot find user");
         result.setCode(HttpStatus.BAD_REQUEST.value());
       } else {
-        Map items = new HashMap();
+        Map<String, User> items = new HashMap<>();
         items.put("items", userRepository.findById(id));
         result.setData(items);
       }
@@ -739,11 +745,11 @@ class SubUser {
   private String email;
   private String noHp;
   private Role role;
-  private boolean status;
+  private Boolean status;
 
   public SubUser() {}
 
-  public SubUser(Long id, String namaLengkap, String email, String noHp, Role role, boolean status) {
+  public SubUser(Long id, String namaLengkap, String email, String noHp, Role role, Boolean status) {
     this.id = id;
     this.namaLengkap = namaLengkap;
     this.email = email;
@@ -772,7 +778,7 @@ class SubUser {
       return role;
   }
 
-  public boolean isStatus() {
+  public Boolean isStatus() {
       return status;
   }
   

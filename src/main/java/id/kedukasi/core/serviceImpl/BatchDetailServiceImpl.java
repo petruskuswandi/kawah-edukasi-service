@@ -95,6 +95,10 @@ public class BatchDetailServiceImpl implements BatchDetailService {
                 result.setCode(HttpStatus.OK.value());
             }catch (Exception e){
                 logger.error(stringUtil.getError(e));
+                result.setSuccess(false);
+                result.setMessage(e.getCause().getCause().getMessage());
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
             }
             return ResponseEntity.ok(result);
     }
@@ -116,6 +120,10 @@ public class BatchDetailServiceImpl implements BatchDetailService {
             }
         } catch (Exception e){
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
@@ -178,6 +186,10 @@ public class BatchDetailServiceImpl implements BatchDetailService {
             result.setCode(HttpStatus.OK.value());
         }catch (Exception e){
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }

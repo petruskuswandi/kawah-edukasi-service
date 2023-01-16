@@ -82,7 +82,10 @@ public class FAQServiceImpl implements FAQService {
         } catch (Exception e) {
 
             logger.error(stringUtil.getError(e));
-
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
 
         return ResponseEntity.ok(result);
@@ -98,11 +101,12 @@ public class FAQServiceImpl implements FAQService {
 
         if (limit < 1) { limit = 1; }
         if (page < 1) { page = 1; }
+        if (jumlahPage < 1) { jumlahPage = 1; }
         if (page > jumlahPage) { page = jumlahPage; }
 
         try {
 
-            Map items = new HashMap();
+            Map<String, Object> items = new HashMap<>();
             List<FAQ> faq = faqRepository.findFAQData(limit.intValue(), page.intValue());
             items.put("items", faq);
             items.put("totalDataResult", faq.size());
@@ -112,6 +116,10 @@ public class FAQServiceImpl implements FAQService {
         } catch (Exception e) {
 
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
 
         }
 
@@ -133,14 +141,18 @@ public class FAQServiceImpl implements FAQService {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             } else {
-                Map<String, FAQ> items = new HashMap<>();
-                items.put("items", faq.get());
+                Map<String, Optional<FAQ>> items = new HashMap<>();
+                items.put("items", faq);
                 result.setData(items);
             }
 
         } catch (Exception e) {
 
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
             
         }
 
@@ -198,6 +210,10 @@ public class FAQServiceImpl implements FAQService {
         } catch (Exception e) {
 
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
 
         }
 
@@ -229,6 +245,10 @@ public class FAQServiceImpl implements FAQService {
         } catch (Exception e) {
 
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
 
         }
 

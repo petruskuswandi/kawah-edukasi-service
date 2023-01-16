@@ -148,6 +148,10 @@ public class StatusServiceImpl implements StatusService {
 
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
 
         return ResponseEntity.ok(result);
@@ -301,6 +305,10 @@ public class StatusServiceImpl implements StatusService {
 
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
 
         return ResponseEntity.ok(result);
@@ -315,6 +323,10 @@ public class StatusServiceImpl implements StatusService {
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
@@ -322,14 +334,25 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public ResponseEntity<Result> getStatus(String flag, String subFlag, Integer limit, Integer page) {
         result = new Result();
+
+        int jumlahPage = (int) Math.ceil(statusRepository.count() / (double) limit);
+        if (limit < 1) { limit = 1; }
+        if (page < 1) { page = 1; }
+        if (jumlahPage < 1) { jumlahPage = 1; }
+        if (page > jumlahPage) { page = jumlahPage; }
         if (flag == null) { flag = ""; }
         if (subFlag == null) { subFlag = ""; }
+
         try {
             Map<String, List<Status>> items = new HashMap<>();
             items.put("items", statusRepository.getStatus(flag.toLowerCase(), subFlag.toLowerCase(), limit, page));
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
@@ -351,6 +374,10 @@ public class StatusServiceImpl implements StatusService {
 
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
@@ -372,6 +399,10 @@ public class StatusServiceImpl implements StatusService {
 
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
