@@ -16,13 +16,13 @@ public class FileHandleController {
 
     @PostMapping("/uploadFile")
     public ResponseEntity<?> uploadFile(
-            @RequestPart(value = "file", required = true) MultipartFile multipartFile
+            @RequestPart(value = "file") MultipartFile multipartFile
     ) {
        return fileHandleService.uploadFile(multipartFile);
     }
 
     @GetMapping("/downloadFile/utility/{fileCode}")
-    public ResponseEntity<?> downloadUtilityFile(@PathVariable("fileCode") String fileCode) {
+    public ResponseEntity<?> downloadUtilityFile(@PathVariable("fileCode") String fileCode) throws IOException {
         return fileHandleService.downloadUtilityFile(fileCode);
     }
 
@@ -30,7 +30,7 @@ public class FileHandleController {
     public ResponseEntity<?> downloadUserFile(
             @PathVariable("fileCode") String fileCode,
             @PathVariable("userId") Integer userId
-    ) {
+    ) throws IOException {
         return fileHandleService.downloadUserFile(userId, fileCode);
     }
 
