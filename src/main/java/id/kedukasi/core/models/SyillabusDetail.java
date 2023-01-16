@@ -28,7 +28,9 @@ import lombok.Setter;
 public class SyillabusDetail {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(
+            strategy= GenerationType.AUTO,
+            generator="native")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)

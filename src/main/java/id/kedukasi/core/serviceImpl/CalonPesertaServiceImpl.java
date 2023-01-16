@@ -206,7 +206,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             // .body(result);
             // }
             // cek username
-            Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(namaPeserta).orElse(new Peserta());
+            // Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(namaPeserta).orElse(new Peserta());
             // if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
             //     result.setMessage("Error: Username sudah digunakan!");
             //     result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -271,7 +271,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                         .body(result);
             }
             Peserta checkNoHp = pesertaRepository.findByNoHp(noHp).orElse(new Peserta());
-            if (checkNoHp.getNoHp() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
+            if (checkNoHp.getNoHp() != null ) {
                 result.setMessage("Error: No HP sudah digunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
@@ -279,7 +279,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                         .body(result);
             }
             Peserta checkNoKtp = pesertaRepository.findByNomorKtp(nomorKtp).orElse(new Peserta());
-            if (checkNoKtp.getNomorKtp() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
+            if (checkNoKtp.getNomorKtp() != null) {
                 result.setMessage("Error: Nomor Ktp sudah digunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
