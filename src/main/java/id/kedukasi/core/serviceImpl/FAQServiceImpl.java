@@ -101,6 +101,7 @@ public class FAQServiceImpl implements FAQService {
 
         if (limit < 1) { limit = 1; }
         if (page < 1) { page = 1; }
+        if (jumlahPage < 1) { jumlahPage = 1; }
         if (page > jumlahPage) { page = jumlahPage; }
 
         try {
@@ -132,7 +133,7 @@ public class FAQServiceImpl implements FAQService {
 
         try {
 
-            Optional<FAQ> faq = faqRepository.findById(id);
+            Optional<FAQ> faq = faqRepository.selectFAQById(id);
 
             if (!faq.isPresent()) {
                 result.setSuccess(false);
@@ -140,8 +141,8 @@ public class FAQServiceImpl implements FAQService {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             } else {
-                Map<String, FAQ> items = new HashMap<>();
-                items.put("items", faq.get());
+                Map<String, Optional<FAQ>> items = new HashMap<>();
+                items.put("items", faq);
                 result.setData(items);
             }
 

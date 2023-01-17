@@ -4,6 +4,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -35,6 +37,7 @@ public class Syillabus {
     @Column(name="description", nullable = false, length = 500)
     private String description;
 
+    @JsonIgnoreProperties({ "deleted", "created_at","updated_at"})
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "attachments_id", nullable = false)
     @NotNull(message = "Data Attachments Tidak Boleh Kosong")

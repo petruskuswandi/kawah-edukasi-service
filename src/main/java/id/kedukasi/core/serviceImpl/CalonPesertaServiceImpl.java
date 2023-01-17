@@ -115,7 +115,13 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         //null long condition
         if(offset == -99){
             offset = 0;
+        }else if(offset > limit){
+            result.setSuccess(false);
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            result.setMessage("data tidak ada");
+   
         }
+     
         try {
             Map items = new HashMap();
             List<Peserta> getDataCalon = pesertaRepository.getAllPagination(EnumStatusPeserta.CALON.toString(),false,search,limit,offset);
@@ -125,6 +131,10 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage("Error: Tidak ada calon peserta dengan id ");
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+           
         }
         return result;
     }
@@ -493,6 +503,10 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                     .body(result);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
@@ -556,6 +570,10 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
@@ -590,6 +608,10 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
@@ -621,32 +643,13 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                  result.setCode(HttpStatus.OK.value());
              }
 
-
-
-//            if (!pesertaRepository.findById(calonPesertaId).isPresent()) {
-//                    result.setSuccess(false);
-//                    result.setMessage("Error: Tidak ada calon peserta dengan id " + calonPesertaId);
-//                    result.setCode(HttpStatus.BAD_REQUEST.value());
-//                }
-//
-//                  // set kelas
-//            Kelas kelas = kelasRepository.findById(kelasId).get();
-//            if (!kelasRepository.findById(kelasId).isPresent()) {
-//                result.setSuccess(false);
-//                result.setMessage("Error: Tidak ada kelas dengan id " + kelasId);
-//                result.setCode(HttpStatus.BAD_REQUEST.value());
-//                return ResponseEntity
-//                        .badRequest()
-//                        .body(result);
-//            } else {
-//                calonPeserta.setKelas(kelas);
-//            }
-//            pesertaRepository.save(calonPeserta);
-
-    
-            
+          
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
