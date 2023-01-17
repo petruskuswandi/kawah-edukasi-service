@@ -1,10 +1,8 @@
 package id.kedukasi.core.controller;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 
 import id.kedukasi.core.models.Result;
-import id.kedukasi.core.request.DocumentsRequest;
-import id.kedukasi.core.request.UpdateDocumentsRequest;
 import id.kedukasi.core.service.DocumentsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +27,10 @@ public class DocumentsController {
     public ResponseEntity<Result> createDocument(
             @RequestParam("userId") Integer userId,
             @RequestParam("statusId") Integer statusId,
-            @RequestPart(value = "file", required = true) MultipartFile multipartFile
+            @RequestPart(value = "file") MultipartFile multipartFile,
+            HttpServletRequest request
             ) {
-        return service.createDocument(userId, statusId, multipartFile);
+        return service.createDocument(userId, statusId, multipartFile, request);
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
@@ -44,9 +43,11 @@ public class DocumentsController {
             @RequestParam("documentId") Integer documentId,
             @RequestParam("userId") Integer userId,
             @RequestParam("statusId") Integer statusId,
-            @RequestPart(value = "file", required = true) MultipartFile multipartFile
+            @RequestPart(value = "file") MultipartFile multipartFile,
+            HttpServletRequest request
     ) {
-        return service.updateDocuments(documentId, userId, statusId, multipartFile);
+
+        return service.updateDocuments(documentId, userId, statusId, multipartFile, request);
     }
 
     @GetMapping(value = "/user/{id}", produces = APPLICATION_JSON_VALUE)
