@@ -14,7 +14,11 @@ import id.kedukasi.core.models.FAQ;
 @Repository
 public interface FAQRepository extends JpaRepository<FAQ, Integer> {
 
-    /* Native query select untuk mendapatkan data FAQ dengan id tertentu */
+    /**
+     * Native query select untuk mendapatkan data FAQ dengan id tertentu
+     * @param id : id dari data yang diambil
+     * @return data FAQ sesuai id
+     */
     @Transactional
     @Query(
         value = "SELECT * FROM faqs WHERE id = :id",
@@ -22,7 +26,12 @@ public interface FAQRepository extends JpaRepository<FAQ, Integer> {
     )
     Optional<FAQ> selectFAQById(@Param("id") int id);
     
-    /* Native query select dengan limit dan offset (page) untuk mendapatkan data FAQ */
+    /**
+     * Native query select dengan limit dan offset (page) untuk mendapatkan data FAQ
+     * @param limit : batas data pada satu halaman
+     * @param page : mengatur halaman yang tampil
+     * @return daftar data FAQ
+     */
     @Transactional
     @Query(
         value = "SELECT * FROM faqs ORDER BY id LIMIT :limit OFFSET :limit * (:page - 1)",
