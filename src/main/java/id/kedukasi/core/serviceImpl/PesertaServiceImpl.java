@@ -941,9 +941,16 @@ public class PesertaServiceImpl implements PesertaService {
     public Result searchPeserta(String keyword) {
         result = new Result();
         try {
-            Map items = new HashMap();
-            items.put("items", pesertaRepository.search(keyword.toLowerCase(), EnumStatusPeserta.PESERTA));
-            result.setData(items);
+            List<Peserta> search = pesertaRepository.search(keyword.toLowerCase(), EnumStatusPeserta.PESERTA);
+            if (search.isEmpty()) {
+                result.setSuccess(false);
+                result.setMessage("Tidak ada peserta dengan keyword " + keyword);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                Map items = new HashMap();
+                items.put("items", search);
+                result.setData(items);
+            }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
