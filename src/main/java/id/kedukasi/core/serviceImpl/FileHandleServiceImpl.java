@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class FileHandleServiceImpl implements FileHandleService {
     private Result result;
 
     @Override
-    public ResponseEntity<?> uploadFile(MultipartFile multipartFile) {
+    public ResponseEntity<?> uploadFile(MultipartFile multipartFile, HttpServletRequest request) {
         result = new Result();
 
         Long size = multipartFile.getSize();
@@ -37,12 +38,12 @@ public class FileHandleServiceImpl implements FileHandleService {
         Result result = new Result();
 
         try {
-            String fileCode = FileUploadUtil.saveFile(fileName, null, multipartFile);
+            String fileCode = FileUploadUtil.saveFile(fileName, multipartFile);
             FileUploadResponse response = new FileUploadResponse();
             response.setFileName(fileName);
             response.setFileCode(fileCode);
             response.setSize(size);
-            response.setDownloadUri(PathGeneratorUtil.generate(null, fileCode));
+            response.setDownloadUri(PathGeneratorUtil.generate(fileCode, request));
             result.setMessage("Data berhasil disimpan, harap catat file code/download uri karena record tidak disimpan dalam db!");
             result.setData(response);
             return ResponseEntity.ok(result);
@@ -53,41 +54,12 @@ public class FileHandleServiceImpl implements FileHandleService {
     }
 
     @Override
-    public ResponseEntity<?> downloadUserFile(Integer userId, String fileCode) throws IOException {
-        result = new Result();
-        Resource fileAsResource = null;
-
-        //Find user
-        Optional<User> user = Optional.ofNullable(userRepository.findById(userId));
-        if (user.isEmpty()) {
-            result.setSuccess(false);
-            result.setCode(400);
-            result.setMessage("User dengan " + userId + " tidak ditemukan");
-            return ResponseEntity.badRequest().body(result);
-        }
-
-        try {
-            fileAsResource = FileDownloadUtil.getFileAsResource(fileCode, userId);
-            if (fileAsResource == null) {
-                result.setSuccess(false);
-                result.setCode(400);
-                result.setMessage("File dengan kode " + fileCode + " tidak ditemukan");
-                return ResponseEntity.badRequest().body(result);
-            }
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();
-        }
-
-        return responses("ccc", "cccc", fileAsResource);
-    }
-
-    @Override
     public ResponseEntity<?> downloadUtilityFile(String fileCode) throws IOException {
         result = new Result();
         Resource fileAsResource = null;
 
         try {
-            fileAsResource = FileDownloadUtil.getFileAsResource(fileCode, null);
+            fileAsResource = FileDownloadUtil.getFileAsResource(fileCode);
             if (fileAsResource == null) {
                 result.setSuccess(false);
                 result.setCode(400);
@@ -99,40 +71,6 @@ public class FileHandleServiceImpl implements FileHandleService {
         }
 
         return responses("ccc", "cccc", fileAsResource);
-    }
-
-    @Override
-    public ResponseEntity<?> previewUserFile(Integer userId, String fileCode) throws IOException {
-
-        result = new Result();
-        Resource fileAsResource = null;
-
-        //Find user
-        Optional<User> user = Optional.ofNullable(userRepository.findById(userId));
-        if (user.isEmpty()) {
-            result.setSuccess(false);
-            result.setCode(400);
-            result.setMessage("User dengan " + userId + " tidak ditemukan");
-            return ResponseEntity.badRequest().body(result);
-        }
-
-        try {
-            fileAsResource = FileDownloadUtil.getFileAsResource(fileCode, userId);
-            if (fileAsResource == null) {
-                result.setSuccess(false);
-                result.setCode(400);
-                result.setMessage("File dengan kode " + fileCode + " tidak ditemukan");
-                return ResponseEntity.badRequest().body(result);
-            }
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();
-        }
-
-        String endFileName = fileAsResource.getFilename();
-        String fileTypeThreeChar = endFileName.substring(endFileName.length() - 3);
-        String fileTypeFourChar = endFileName.substring(endFileName.length() - 4);
-
-        return responses(fileTypeThreeChar, fileTypeFourChar, fileAsResource);
     }
 
     @Override
@@ -143,7 +81,7 @@ public class FileHandleServiceImpl implements FileHandleService {
         Resource fileAsResource = null;
 
         try {
-            fileAsResource = FileDownloadUtil.getFileAsResource(fileCode, null);
+            fileAsResource = FileDownloadUtil.getFileAsResource(fileCode);
             if (fileAsResource == null) {
                 result.setSuccess(false);
                 result.setCode(400);

@@ -5,7 +5,6 @@ import id.kedukasi.core.repository.DocumentsRepository;
 import id.kedukasi.core.repository.StatusRepository;
 import id.kedukasi.core.repository.TypeDocumentsRepository;
 import id.kedukasi.core.repository.UserRepository;
-import id.kedukasi.core.request.UpdateDocumentsRequest;
 import id.kedukasi.core.service.DocumentsService;
 import id.kedukasi.core.utils.FileUploadUtil;
 import id.kedukasi.core.utils.PathGeneratorUtil;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Service
@@ -43,7 +43,7 @@ public class DocumentsServiceImpl implements DocumentsService {
     @Autowired
     TypeDocumentsRepository typeDocumentsRepository;
     @Override
-    public ResponseEntity<Result> createDocument(Integer userId, Integer statusId, MultipartFile multipartFile) {
+    public ResponseEntity<Result> createDocument(Integer userId, Integer statusId, MultipartFile multipartFile, HttpServletRequest request) {
         result = new Result();
         try {
             //Set status
@@ -72,11 +72,10 @@ public class DocumentsServiceImpl implements DocumentsService {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
             //Save file
-            String fileCode = FileUploadUtil.saveFile(fileName, userId, multipartFile);
+            String fileCode = FileUploadUtil.saveFile(fileName, multipartFile);
 
             //Set file name and path name
-            newDocuments.setPathName(PathGeneratorUtil.generate(userId, fileCode));
-            newDocuments.setFileName(fileName);
+            newDocuments.setPathName(PathGeneratorUtil.generate(fileCode, request));
             //End
 
             documentsRepository.save(newDocuments);
@@ -142,7 +141,7 @@ public class DocumentsServiceImpl implements DocumentsService {
     }
 
     @Override
-    public ResponseEntity<Result> updateDocuments(Integer documentId, Integer userId, Integer statusId, MultipartFile multipartFile) {
+    public ResponseEntity<Result> updateDocuments(Integer documentId, Integer userId, Integer statusId, MultipartFile multipartFile, HttpServletRequest request) {
         result = new Result();
         try {
             Optional<Documents> documentsOld = documentsRepository.findById(documentId);
@@ -176,15 +175,11 @@ public class DocumentsServiceImpl implements DocumentsService {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
             //Save file
-            String fileCode = FileUploadUtil.saveFile(fileName, userId, multipartFile);
+            String fileCode = FileUploadUtil.saveFile(fileName, multipartFile);
 
             //Save path name and file name in DB
-            documentsOld.get().setPathName(PathGeneratorUtil.generate(userId, fileCode));
-            documentsOld.get().setFileName(fileName);
+            documentsOld.get().setPathName(PathGeneratorUtil.generate(fileCode, request));
             //End
-
-            documentsOld.get().setUpdatedTime(new Date());
-
 
             documentsRepository.save(documentsOld.get());
             return ResponseEntity.ok(result);
@@ -207,7 +202,6 @@ public class DocumentsServiceImpl implements DocumentsService {
                 return ResponseEntity.badRequest().body(result);
             }
             documents.get().setBanned(true);
-            documents.get().setBannedTime(new Date());
             documentsRepository.save(documents.get());
             result.setMessage("Berhasil delete Documents!");
             result.setCode(HttpStatus.OK.value());

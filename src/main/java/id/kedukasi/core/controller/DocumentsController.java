@@ -1,5 +1,6 @@
 package id.kedukasi.core.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import id.kedukasi.core.models.Result;
@@ -29,9 +30,10 @@ public class DocumentsController {
     public ResponseEntity<Result> createDocument(
             @RequestParam("userId") Integer userId,
             @RequestParam("statusId") Integer statusId,
-            @RequestPart(value = "file", required = true) MultipartFile multipartFile
+            @RequestPart(value = "file", required = true) MultipartFile multipartFile,
+            HttpServletRequest request
             ) {
-        return service.createDocument(userId, statusId, multipartFile);
+        return service.createDocument(userId, statusId, multipartFile, request);
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
@@ -44,9 +46,11 @@ public class DocumentsController {
             @RequestParam("documentId") Integer documentId,
             @RequestParam("userId") Integer userId,
             @RequestParam("statusId") Integer statusId,
-            @RequestPart(value = "file", required = true) MultipartFile multipartFile
+            @RequestPart(value = "file", required = true) MultipartFile multipartFile,
+            HttpServletRequest request
     ) {
-        return service.updateDocuments(documentId, userId, statusId, multipartFile);
+
+        return service.updateDocuments(documentId, userId, statusId, multipartFile, request);
     }
 
     @GetMapping(value = "/user/{id}", produces = APPLICATION_JSON_VALUE)

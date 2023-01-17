@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @CrossOrigin
@@ -16,9 +17,10 @@ public class FileHandleController {
 
     @PostMapping("/uploadFile")
     public ResponseEntity<?> uploadFile(
-            @RequestPart(value = "file") MultipartFile multipartFile
+            @RequestPart(value = "file") MultipartFile multipartFile,
+            HttpServletRequest request
     ) {
-       return fileHandleService.uploadFile(multipartFile);
+       return fileHandleService.uploadFile(multipartFile, request);
     }
 
     @GetMapping("/downloadFile/utility/{fileCode}")
@@ -26,25 +28,9 @@ public class FileHandleController {
         return fileHandleService.downloadUtilityFile(fileCode);
     }
 
-    @GetMapping("/downloadFile/{userId}/{fileCode}")
-    public ResponseEntity<?> downloadUserFile(
-            @PathVariable("fileCode") String fileCode,
-            @PathVariable("userId") Integer userId
-    ) throws IOException {
-        return fileHandleService.downloadUserFile(userId, fileCode);
-    }
-
     @GetMapping("/previewFile/utility/{fileCode}")
     public ResponseEntity<?> previewUtilityFile(@PathVariable("fileCode") String fileCode) throws IOException {
         return fileHandleService.previewUtilityFile(fileCode);
-    }
-
-    @GetMapping("/previewFile/{userId}/{fileCode}")
-    public ResponseEntity<?> previewUserFile(
-            @PathVariable("fileCode") String fileCode,
-            @PathVariable("userId") Integer userId
-    ) throws IOException {
-        return fileHandleService.previewUserFile(userId, fileCode);
     }
 
 

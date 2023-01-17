@@ -6,16 +6,18 @@ import id.kedukasi.core.request.UpdateDocumentsRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface DocumentsService {
     ResponseEntity<Result> getDocumentByUserId(Long id);
     // implements update documents
-    ResponseEntity<Result> updateDocuments(Integer documentId, Integer userId, Integer statusId, MultipartFile multipartFile);
+    ResponseEntity<Result> updateDocuments(Integer documentId, Integer userId, Integer statusId, MultipartFile multipartFile, HttpServletRequest request);
 
     // implements delete documents
     ResponseEntity<Result> deleteDocuments(Integer id);
 
     // implements create documents
-    ResponseEntity<Result> createDocument(Integer userId, Integer statusId, MultipartFile multipartFile);
+    ResponseEntity<Result> createDocument(Integer userId, Integer statusId, MultipartFile multipartFile, HttpServletRequest request);
 
     // implements get documents by id
     ResponseEntity<Result> getDocumentById(Integer id);
