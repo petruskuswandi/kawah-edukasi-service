@@ -72,11 +72,4 @@ public interface StatusRepository extends JpaRepository<Status,Integer> {
                            @Param("subFlag") String subFlag, 
                            @Param("limit") int limit, 
                            @Param("page") int page);
-
-    @Transactional
-    @Query(
-        value = "SELECT count(*) FROM status WHERE is_deleted = false",
-        nativeQuery = true
-    )
-    Integer totalUndeletedStatus();
 }

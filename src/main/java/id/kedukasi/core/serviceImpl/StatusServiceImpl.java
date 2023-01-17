@@ -335,13 +335,9 @@ public class StatusServiceImpl implements StatusService {
     public ResponseEntity<Result> getStatus(String flag, String subFlag, Integer limit, Integer page) {
         result = new Result();
 
-        Integer total = statusRepository.totalUndeletedStatus();
-        if (total == null) { total = 0; }
-
-        int jumlahPage = (int) Math.ceil(total.intValue() / (double) limit);
+        int jumlahPage = (int) Math.ceil(statusRepository.count() / (double) limit);
         if (limit < 1) { limit = 1; }
         if (page < 1) { page = 1; }
-        if (jumlahPage < 1) { jumlahPage = 1; }
         if (page > jumlahPage) { page = jumlahPage; }
         if (flag == null) { flag = ""; }
         if (subFlag == null) { subFlag = ""; }

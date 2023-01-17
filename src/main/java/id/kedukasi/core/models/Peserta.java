@@ -137,7 +137,7 @@ public class Peserta implements Serializable {
         private MasterKelurahan kelurahan;
 
         // register
-        @JsonIgnoreProperties({"created_at","updated_at","deleted","description","flag", "subFlag"})
+        @JsonIgnoreProperties({"created_at","updated_at","deleted","description"})
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "status_id", nullable = false)
         @NotNull(message = "Data Status Tidak Boleh Kosong")
@@ -161,12 +161,10 @@ public class Peserta implements Serializable {
         @Column(name = "kode_referal")
         private String kodeReferal;
 
-    
         @Enumerated(EnumType.STRING)
         @Column(name = "statusTes", length = 20)
         private EnumStatusTes statusTes;
 
-     
         @Enumerated(EnumType.STRING)
         @Column(name = "statusPeserta", length = 20)
         private EnumStatusPeserta statusPeserta;
@@ -266,7 +264,7 @@ public class Peserta implements Serializable {
          * 3. tidak keduanya
          */
         // @NotNull(message = "Kesibukan int Tidak Boleh Kosong")
-        @JsonIgnoreProperties({"created_at","updated_at","deleted","description","flag", "subFlag"})
+        // @JsonIgnoreProperties({"created_at","updated_at","deleted","description"})
         @ManyToOne(targetEntity = Status.class,fetch = FetchType.EAGER)
         @JoinColumn(name = "kesibukan")
         private Status kesibukan;

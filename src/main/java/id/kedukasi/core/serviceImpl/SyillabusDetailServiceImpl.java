@@ -1,16 +1,10 @@
 package id.kedukasi.core.serviceImpl;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,113 +52,37 @@ public class SyillabusDetailServiceImpl implements SyillabusDetailService{
         result = new Result();
         try {
             SyillabusDetail Syillabusdetail = new SyillabusDetail();
+
             // set syillabus
-            List<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabusId());
-            // Syillabusdetail.setSyillabus(syillabus);
-
-            // for(int i = 0; i < syillabus.size(); i++){
-                if(syillabus.stream().anyMatch(s -> s.getId() == null))
-                {
-                    result.setSuccess(false);
-                    result.setMessage("syillabus not found");
-                    result.setCode(HttpStatus.BAD_REQUEST.value());
-       
-                }
-                else {
-                    Syillabusdetail.setSyillabus(syillabus);
-                }
-            // }
-    
-
+            Optional<Syillabus> syillabus = syillabusRepository.findById(syillabusDetail.getSyillabus());
             // Optional<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabus());
-            // if (syillabus.stream() == null){
-            //     result.setSuccess(false);
-            //     // result.setMessage("Error : Syillabus id " + syillabus.getId() + "tidak ditemukan");
-            //     result.setMessage("syillabus tidak ada");
-            //     result.setCode(HttpStatus.BAD_REQUEST.value());
-            // } else {
-            //     // Syillabus syillabus2 = syillabusRepository.findById(syillabusDetail.getSyillabus()).get();
-            //     Syillabusdetail.setSyillabus(syillabus);
-            // }
-            // for (int i = 0;i < syillabus.size(); i++){
-            //     if(syillabus.stream() != null){
-            //     result.setSuccess(false);
-            //     // result.setMessage("Error : Syillabus id " + syillabus.getId() + "tidak ditemukan");
-            //     result.setMessage("syillabus tidak ada");
-            //     result.setCode(HttpStatus.BAD_REQUEST.value());
-            //     }
-            //     else {
-            //             // Syillabus syillabus2 = syillabusRepository.findById(syillabusDetail.getSyillabus()).get();
-            //             Syillabusdetail.setSyillabus(syillabus);
-            //         }
-            // }
-            
-            // List<Syillabus> filteredEntities = syillabus.stream().filter(entity -> !idsNotExist.contains(entity.getId())).collect(Collectors.toList());
-            // if (syillabus.stream().anyMatch(entity -> idsNotExist.contains(entity.getId()))) {
-            //     // Do something
-            // }
-
-
-            // if(syillabus.stream().anyMatch(Objects::isNull)){
-            //     // Syillabusdetail.setSyillabus(syillabus);  
-            //   result.setSuccess(false);
-            //   result.setMessage("syillabus not found");
-            //   result.setCode(HttpStatus.BAD_REQUEST.value());
-            // }else {
-            //         Syillabusdetail.setSyillabus(syillabus);             
-                 
-            // }
-
-
-            // Optional<List> syllabusOptional = Optional.ofNullable(syillabus);
-            // if(!syllabusOptional.isPresent()){
-            //     //tampilkan pesan bahwa list kosong
-            //     result.setMessage("syillabus not found");
-            // }
-            // for(int i = 0; i < syllabusOptional.get().size(); i++){
-            //     if(syllabusOptional.get().get(i)==null){
-            //         //tampilkan pesan bahwa ada data kosong
-            //         result.setMessage("syillabus not found");
-            //     } else {
-            //         Syillabusdetail.setSyillabus(syillabus);  
-            //     }
-            // }
-
-
-            // for(Syillabus obj : syillabus){
-            //     if(obj.getId() == null || obj.getId() == 0){
-            //         //tampilkan pesan bahwa ada data kosong
-            //         result.setMessage("syillabus not found");
-            //     }
-            //     else {
-            //         Syillabusdetail.setSyillabus(syillabus);  
-            //     }
-            // }
-             
+            if (!syillabus.isPresent()){
+                result.setSuccess(false);
+                result.setMessage("Error : Syillabus tidak ditemukan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                Syillabus syillabus2 = syillabusRepository.findById(syillabusDetail.getSyillabus()).get();
+                Syillabusdetail.setSyillabus(syillabus2);
+            }
 
             // set class
-            Optional<Kelas> kelas = kelasRepository.findById(syillabusDetail.getKelasId());
+            Optional<Kelas> kelas = kelasRepository.findById(syillabusDetail.getKelas());
             if (!kelas.isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Class tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else{
-                Kelas kelas2 = kelasRepository.findById(syillabusDetail.getKelasId()).get();
+                Kelas kelas2 = kelasRepository.findById(syillabusDetail.getKelas()).get();
                 Syillabusdetail.setKelas(kelas2);
             }
 
             syillabusDetailRepository.save(Syillabusdetail);
             
             result.setMessage("Berhasil Membuat syillabus detail baru");
-            result.setData(syillabusDetail);
             result.setCode(HttpStatus.OK.value());
 
         }catch (Exception e){
             logger.error(stringUtil.getError(e));
-            result.setSuccess(false);
-            result.setMessage(e.getCause().getCause().getMessage());
-            result.setCode(HttpStatus.BAD_REQUEST.value());
-            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
       
@@ -238,18 +156,16 @@ public class SyillabusDetailServiceImpl implements SyillabusDetailService{
             } else {
                 SyillabusDetail Syillabusdetail = new SyillabusDetail(syillabusDetail.getId(), syillabusDetail.isDeleted());
 
-                // Syillabus syillabus = syillabusRepository.findById(syillabusDetail.getSyillabus()).get();
-                List<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabusId());
-                // if (!syillabusRepository.findAllById(syillabus.get()).isPresent()) {
-                //     result.setSuccess(false);
-                //     result.setMessage("Syillabus tidak ditemukan");
-                //     result.setCode(HttpStatus.BAD_REQUEST.value());
-                // }else {
-                //     // Syillabusdetail.setSyillabus(syillabus);
-                // }
-                Syillabusdetail.setSyillabus(syillabus);
+                Syillabus syillabus = syillabusRepository.findById(syillabusDetail.getSyillabus()).get();
+                if (!syillabusRepository.findById(syillabus.getId()).isPresent()) {
+                    result.setSuccess(false);
+                    result.setMessage("Syillabus tidak ditemukan");
+                    result.setCode(HttpStatus.BAD_REQUEST.value());
+                }else {
+                    Syillabusdetail.setSyillabus(syillabus);
+                }
 
-                Kelas kelas = kelasRepository.findById(syillabusDetail.getKelasId()).get();
+                Kelas kelas = kelasRepository.findById(syillabusDetail.getKelas()).get();
                 if (!kelasRepository.findById(kelas.getId()).isPresent()){
                     result.setSuccess(false);
                     result.setMessage("Error: Tidak ada Kelas dengan id " + kelas.getId());

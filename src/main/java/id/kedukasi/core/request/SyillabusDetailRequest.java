@@ -11,12 +11,12 @@ import lombok.Setter;
 public class SyillabusDetailRequest {
     
     @ApiModelProperty(example = "1", required = true)
-    private Long kelasId;
+    private Long kelas;
 
-    // @ApiModelProperty(example = "1", required = true)
-    @ApiModelProperty(example = "[\"1\",\"2\",\"3\"]")
-    private List<Long> syillabusId;
-    // private Long syillabus;
+    @ApiModelProperty(example = "1", required = true)
+    // @ApiModelProperty(example = "[\"item1\",\"item2\",\"item3\"]")
+    // private List<Long> syillabus;
+    private Long syillabus;
 
     public SyillabusDetailRequest() {
     }

@@ -116,15 +116,10 @@ public class UserServiceImpl implements UserService {
   public Result getUserData(String uri, String search, Integer limit, Integer page) {
     result = new Result();
 
-    Integer total = userRepository.totalUnbannedUser();
-    if (total == null) { total = 0; }
-
-    int jumlahPage = (int) Math.ceil(total.intValue() / (double) limit);
+    int jumlahPage = (int) Math.ceil(userRepository.count() / (double) limit);
     
     // limit 0 or negative integer
     if (limit < 1) { limit = 1; }
-    // jumlah page 0 or less, set to 1
-    if (jumlahPage < 1) { jumlahPage = 1; }
     // page greater then jumlah page
     if (page > jumlahPage) { page = jumlahPage; }
     // page 0 or negative integer
@@ -145,7 +140,7 @@ public class UserServiceImpl implements UserService {
       }
       items.put("items", subUser);
       items.put("totalDataResult", subUser.size());
-      items.put("totalData", total);
+      items.put("totalData", userRepository.count());
       result.setData(items);
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
@@ -474,27 +469,9 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<?> deleteUser(boolean banned, long id, String uri) {
     result = new Result();
     try {
-      int response = userRepository.deleteUser(banned, id);
-      if (response == 1) {
-        result.setCode(HttpStatus.OK.value());
-        result.setSuccess(true);
-        if (banned == true) {
-          result.setMessage("User berhasil di-banned.");
-        } else {
-          result.setMessage("User berhasil di-unbanned.");
-        }
-      } else {
-        result.setSuccess(false);
-        result.setMessage("Id User tidak ditemukan!");
-        result.setCode(HttpStatus.BAD_REQUEST.value());
-        return ResponseEntity.badRequest().body(result);
-      }
+      userRepository.deleteUser(banned, id);
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
-      result.setSuccess(false);
-      result.setMessage(e.getCause().getCause().getMessage());
-      result.setCode(HttpStatus.BAD_REQUEST.value());
-      return ResponseEntity.badRequest().body(result);
     }
 
     return ResponseEntity.ok(result);
@@ -766,11 +743,11 @@ class SubUser {
   private String email;
   private String noHp;
   private Role role;
-  private Boolean status;
+  private boolean status;
 
   public SubUser() {}
 
-  public SubUser(Long id, String namaLengkap, String email, String noHp, Role role, Boolean status) {
+  public SubUser(Long id, String namaLengkap, String email, String noHp, Role role, boolean status) {
     this.id = id;
     this.namaLengkap = namaLengkap;
     this.email = email;
@@ -799,7 +776,7 @@ class SubUser {
       return role;
   }
 
-  public Boolean isStatus() {
+  public boolean isStatus() {
       return status;
   }
   

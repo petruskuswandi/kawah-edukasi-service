@@ -59,11 +59,11 @@ public class SyillabusServiceImpl implements SyillabusService{
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
-            // if(syillabus.getSyillabusName().length() > 30 || syillabus.getSyillabusName().isBlank()|| syillabus.getSyillabusName().isEmpty()) {
-            //     result.setMessage("Error: nama Syillabus tidak boleh kosong dan harus kurang dari 30 karakter");
-            //     result.setCode(HttpStatus.BAD_REQUEST.value());
-            //     return ResponseEntity.badRequest().body(result);
-            // }
+            if(syillabus.getSyillabusName().length() > 30 || syillabus.getSyillabusName().isBlank()|| syillabus.getSyillabusName().isEmpty()) {
+                result.setMessage("Error: nama Syillabus tidak boleh kosong dan harus kurang dari 30 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
 
             Syillabus newSyillabus = new Syillabus(syillabus.getSyillabusName(), syillabus.getDescription(),false);
 
@@ -84,11 +84,6 @@ public class SyillabusServiceImpl implements SyillabusService{
             result.setCode(HttpStatus.OK.value());
         }catch (Exception e) {
             logger.error(stringUtil.getError(e));
-            result.setSuccess(false);
-            result.setMessage(e.getCause().getCause().getMessage());
-            result.setCode(HttpStatus.BAD_REQUEST.value());
-            return ResponseEntity.badRequest().body(result);
-
         }
         return ResponseEntity.ok(result);
     }
@@ -136,10 +131,6 @@ public class SyillabusServiceImpl implements SyillabusService{
 
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
-              result.setSuccess(false);
-            result.setMessage(e.getCause().getCause().getMessage());
-            result.setCode(HttpStatus.BAD_REQUEST.value());
-            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
