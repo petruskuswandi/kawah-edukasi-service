@@ -1,7 +1,10 @@
 package id.kedukasi.core.utils;
 
+import id.kedukasi.core.models.Result;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.boot.system.ApplicationHome;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -23,6 +26,11 @@ public class FileUploadUtil {
     }
 
     public static String saveFile(String fileName, MultipartFile multipartFile) throws IOException {
+
+        //Validasi file size harus kurang dari 7MB
+        if (multipartFile.getSize() > 7340032) {
+            return null;
+        }
 
         //Get file type of the file
         String fileTypeThreeChar = fileName.substring(fileName.length() - 3).toLowerCase();

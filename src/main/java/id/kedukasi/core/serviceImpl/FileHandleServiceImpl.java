@@ -39,6 +39,15 @@ public class FileHandleServiceImpl implements FileHandleService {
 
         try {
             String fileCode = FileUploadUtil.saveFile(fileName, multipartFile);
+
+            //Validasi file size
+            if (fileCode == null) {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setMessage("File harus kurang dari 7MB");
+                return ResponseEntity.badRequest().body(result);
+            }
+
             FileUploadResponse response = new FileUploadResponse();
             response.setFileName(fileName);
             response.setFileCode(fileCode);

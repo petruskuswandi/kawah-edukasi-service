@@ -74,7 +74,15 @@ public class DocumentsServiceImpl implements DocumentsService {
             //Save file
             String fileCode = FileUploadUtil.saveFile(fileName, multipartFile);
 
-            //Set file name and path name
+            //Validasi file size
+            if (fileCode == null) {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setMessage("File harus kurang dari 7MB");
+                return ResponseEntity.badRequest().body(result);
+            }
+
+            //Set path name
             newDocuments.setPathName(PathGeneratorUtil.generate(fileCode, request));
             //End
 
@@ -176,6 +184,14 @@ public class DocumentsServiceImpl implements DocumentsService {
 
             //Save file
             String fileCode = FileUploadUtil.saveFile(fileName, multipartFile);
+
+            //Validasi file size
+            if (fileCode == null) {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setMessage("File harus kurang dari 7MB");
+                return ResponseEntity.badRequest().body(result);
+            }
 
             //Save path name and file name in DB
             documentsOld.get().setPathName(PathGeneratorUtil.generate(fileCode, request));
