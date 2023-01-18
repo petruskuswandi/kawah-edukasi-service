@@ -27,6 +27,7 @@ public class FileUploadUtil {
 
     public static String saveFile(String fileName, MultipartFile multipartFile) throws IOException {
 
+        //Validasi file size harus kurang dari 7MB
         if (multipartFile.getSize() > 7340032) {
             return null;
         }
