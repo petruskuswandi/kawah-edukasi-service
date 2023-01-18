@@ -77,9 +77,9 @@ public class User implements Serializable {
   @JoinColumn(name = "role_id")
   private Role role;
 
-  private boolean isLogin;
-  private boolean isActive;
-  private boolean isVerified;
+  private Boolean isLogin;
+  private Boolean isActive;
+  private Boolean isVerified;
 
   @Size(max = 6)
   @ApiModelProperty(hidden = true)
