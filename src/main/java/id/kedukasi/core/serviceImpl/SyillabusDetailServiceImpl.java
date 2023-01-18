@@ -215,6 +215,7 @@ public class SyillabusDetailServiceImpl implements SyillabusDetailService{
                 result.setMessage("Error: Tidak ada  Syillabus Detail dengan id" + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
+                syillabusDetailRepository.deletesyillabusDetailList(id);
                 syillabusDetailRepository.deleteById(id);
                 result.setMessage("Berhasil delete Syillabus Detail");
                 result.setCode(HttpStatus.OK.value());
