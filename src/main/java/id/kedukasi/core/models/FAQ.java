@@ -30,11 +30,13 @@ public class FAQ {
     /* Constructor */
     public FAQ() {}
 
+    /* Constructor for create data */
     public FAQ(String question, String answer) {
         this.question = question;
         this.answer = answer;
     }
 
+    /* Constructor for update data */
     public FAQ(Integer id, String question, String answer) {
         this.id = id;
         this.question = question;
@@ -49,6 +51,14 @@ public class FAQ {
     public void setId(Integer id) {
         this.id = id;
     }
+    
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
 
     public String getAnswer() {
         return answer;
@@ -56,14 +66,6 @@ public class FAQ {
 
     public void setAnswer(String answer) {
         this.answer = answer;
-    }
-
-    public String getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
     }
 
 }

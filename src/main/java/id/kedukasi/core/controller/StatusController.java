@@ -34,6 +34,14 @@ public class StatusController {
         return service.deleteStatusById(id);
     }
 
+    @PatchMapping(value = "/delete")
+    public ResponseEntity<Result> softDeleteStatus(
+        @RequestParam(value = "id", defaultValue = "0", required = true) int id,
+        @RequestParam(value = "deleted", defaultValue = "false") boolean deleted
+    ) {
+        return service.softDeleteStatus(id, deleted);
+    }
+
     // @GetMapping(value = "/get/all", produces = APPLICATION_JSON_VALUE)
     // public ResponseEntity<Result> getAllStatus() {
     //     return service.getAllStatus();
