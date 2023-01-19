@@ -1,7 +1,11 @@
 package id.kedukasi.core.request;
-
+import java.util.List;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class UpdateSyllabusRequest {
     
     @ApiModelProperty(example = "1", required = true)
@@ -16,8 +20,8 @@ public class UpdateSyllabusRequest {
     @ApiModelProperty(example = "true", required = true)
     private boolean softDelete;
 
-    @ApiModelProperty(example = "1", required = true)
-    private Long attachment;
+    @ApiModelProperty(example = "[\"1\",\"2\",\"3\"]")
+    private List<Long> attachmentId;
 
 
     public UpdateSyllabusRequest() {
@@ -30,43 +34,4 @@ public class UpdateSyllabusRequest {
         this.softDelete = softDelete;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getSyllabusName() {
-        return syllabusName;
-    }
-
-    public void setSyllabusName(String syllabusName) {
-        this.syllabusName = syllabusName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isSoftDelete() {
-        return softDelete;
-    }
-
-    public void setSoftDelete(boolean softDelete) {
-        this.softDelete = softDelete;
-    }
-
-    public Long getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(Long attachment) {
-        this.attachment = attachment;
-    }
 }

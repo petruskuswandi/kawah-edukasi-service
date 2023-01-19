@@ -1,5 +1,7 @@
 package id.kedukasi.core.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,5 +23,5 @@ public interface SyillabusDetailRepository extends JpaRepository<SyillabusDetail
     @Query(value = "delete from syillabus_detail_syillabus where syillabus_detail_id=:id",nativeQuery = true)
     void deletesyillabusDetailList(Long id);
 
-
+ 
 }
