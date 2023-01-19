@@ -9,7 +9,6 @@ import id.kedukasi.core.models.wilayah.MasterKecamatan;
 import id.kedukasi.core.models.wilayah.MasterKelurahan;
 import id.kedukasi.core.models.wilayah.MasterKota;
 import id.kedukasi.core.models.wilayah.MasterProvinsi;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -1,15 +1,12 @@
 package id.kedukasi.core.serviceImpl;
 
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import id.kedukasi.core.models.*;
 import id.kedukasi.core.models.wilayah.MasterProvinsi;
-import id.kedukasi.core.repository.EducationRepository;
-import id.kedukasi.core.repository.UserRepository;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,53 +18,21 @@ import org.springframework.web.multipart.MultipartFile;
 import id.kedukasi.core.models.wilayah.MasterKecamatan;
 import id.kedukasi.core.models.wilayah.MasterKelurahan;
 import id.kedukasi.core.models.wilayah.MasterKota;
-import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.MentorRepository;
-import id.kedukasi.core.repository.wilayah.KecamatanRepository;
-import id.kedukasi.core.repository.wilayah.KelurahanRepository;
-import id.kedukasi.core.repository.wilayah.KotaRepository;
-import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
 import id.kedukasi.core.service.MentorService;
-import id.kedukasi.core.utils.GlobalUtil;
 import id.kedukasi.core.utils.StringUtil;
-import org.w3c.dom.ranges.Range;
-
-import java.util.stream.IntStream;
 
 @Service
 public class MentorServiceImpl implements MentorService{
 
     @Autowired
     MentorRepository mentorRepository;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    KelasRepository kelasRepository;
-
-    @Autowired
-    ProvinsiRepository provinsiRepository;
-
-    @Autowired
-    KotaRepository kotaRepository;
-
-    @Autowired
-    KecamatanRepository kecamatanRepository;
-
-    @Autowired
-    KelurahanRepository kelurahanRepository;
-
-    @Autowired
-    EducationRepository educationRepository;
-
     @Autowired
     StringUtil stringUtil;
 
     private Result result;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    LocalDateTime now = LocalDateTime.now();
     private String generatekode(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMyyyy");
         LocalDateTime now = LocalDateTime.now();
@@ -83,42 +48,43 @@ public class MentorServiceImpl implements MentorService{
 
     @Override
     public ResponseEntity<Result> updateMentor(Long id , String namamentor, MultipartFile foto, String noktp,
-                                          String no_telepon, String status, Kelas classID, Educations educationID,
-                                          String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah,
-                                          MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, User userID) {
+                                               String no_telepon, String status, Kelas classID, Educations educationID,
+                                               String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah,
+                                               MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, User userID) {
         result = new Result();
         try {
-            if(namamentor.isBlank() || namamentor.isEmpty()) {
+            if(namamentor == null) {
                 result.setMessage("Error: Name can't be empty/null!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(noktp.length() < 16 || noktp.isBlank()) {
-                result.setMessage("Error: Number KTP can't be empty/null and must be less than 16 characters!");
+            if(noktp == null || noktp.length() != 16) {
+                result.setSuccess(false);
+                result.setMessage("Error: No KTP harus sama dengan 16 character dan tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(no_telepon.length() < 10 && no_telepon.length() >= 13 || no_telepon.isBlank()) {
+            if(no_telepon.length() < 11 || no_telepon.length() > 14 || no_telepon == null) {
                 result.setMessage("Error: Number phone can't be empty/null and must be less than 12 numbers!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(status.isBlank() || status.isEmpty()) {
+            if(status == null) {
                 result.setMessage("Error: Status can't be empty/null");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(pendidikan_jurusan.isBlank()) {
+            if(pendidikan_jurusan == null) {
                 result.setMessage("Error: Major can't be empty/null");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(alamat_rumah.isBlank()) {
+            if(alamat_rumah == null) {
                 result.setMessage("Error: Alamat tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
@@ -255,47 +221,47 @@ public class MentorServiceImpl implements MentorService{
 
     @Override
     public ResponseEntity<Result> createMentor(Long id , String namamentor, MultipartFile foto, String noktp,
-                                          String no_telepon, String status, Kelas classID, Educations educationID,
-                                          String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah,
-                                          MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, User userID) {
+                                               String no_telepon, String status, Kelas classID, Educations educationID,
+                                               String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah,
+                                               MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, User userID) {
         result = new Result();
         try {
-            if(namamentor.isBlank() || namamentor.isEmpty()) {
+            if(namamentor == null) {
                 result.setSuccess(false);
                 result.setMessage("Error: Name can't be empty/null!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(noktp.length() < 16 || noktp.isBlank()) {
+            if(noktp == null || noktp.length() != 16) {
                 result.setSuccess(false);
-                result.setMessage("Error: No KTP tidak boleh kosong dan harus kurang dari 16 character");
+                result.setMessage("Error: No KTP harus sama dengan 16 character dan tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(no_telepon.length() < 10 || no_telepon.length() > 13 || no_telepon.isBlank()) {
+            if(no_telepon.length() < 11 || no_telepon.length() > 14 || no_telepon == null) {
                 result.setSuccess(false);
-                result.setMessage("Error: No Telepon tidak boleh kosong dan harus kurang dari 13 characters");
+                result.setMessage("Error: No Telepon tidak boleh kosong dan tidak boleh dari 13 characters dan kurang dari 10");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(status.isBlank() || status.isEmpty()) {
+            if(status == null) {
                 result.setSuccess(false);
                 result.setMessage("Error: Status tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(pendidikan_jurusan.isBlank()) {
+            if(pendidikan_jurusan == null) {
                 result.setSuccess(false);
                 result.setMessage("Error: Jurusan tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(alamat_rumah.isBlank() || alamat_rumah.isEmpty()) {
+            if(alamat_rumah == null) {
                 result.setSuccess(false);
                 result.setMessage("Error: Alamat tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
