@@ -48,7 +48,7 @@ public class FileUploadUtil {
         Path uploadDirectory = Paths.get(proposedDir);
 
         //Generate random string for fileCode
-        String fileCode = RandomString.make(4);
+        String fileCode = RandomString.make(5);
         //End
 
         String fileTypeCode = null;
