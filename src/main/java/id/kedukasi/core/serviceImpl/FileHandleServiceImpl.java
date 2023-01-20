@@ -5,10 +5,9 @@ import id.kedukasi.core.models.User;
 import id.kedukasi.core.repository.UserRepository;
 import id.kedukasi.core.response.FileUploadResponse;
 import id.kedukasi.core.service.FileHandleService;
-import id.kedukasi.core.utils.FileDownloadUtil;
-import id.kedukasi.core.utils.FileUploadUtil;
-import id.kedukasi.core.utils.PathGeneratorUtil;
+import id.kedukasi.core.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,6 +27,9 @@ public class FileHandleServiceImpl implements FileHandleService {
     @Autowired
     UserRepository userRepository;
     private Result result;
+
+    @Value("${app.url.staging}")
+    String baseUrl;
 
     @Override
     public ResponseEntity<?> uploadFile(MultipartFile multipartFile, HttpServletRequest request) {
@@ -52,10 +54,14 @@ public class FileHandleServiceImpl implements FileHandleService {
             response.setFileName(fileName);
             response.setFileCode(fileCode);
             response.setSize(size);
-            response.setDownloadUri(PathGeneratorUtil.generate(fileCode, request));
+
+            //Path generator
+            response.setDownloadUri(PathGeneratorUtil.generate(fileCode, baseUrl));
             result.setMessage("Data berhasil disimpan, harap catat file code/download uri karena record tidak disimpan dalam db!");
             result.setData(response);
+            System.out.println(baseUrl);
             return ResponseEntity.ok(result);
+
         } catch (IOException io) {
             return ResponseEntity.internalServerError().build();
         }
