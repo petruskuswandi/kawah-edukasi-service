@@ -19,12 +19,12 @@ public interface MentorService {
     ResponseEntity<Result> updateMentor(Long id, String namamentor, MultipartFile foto, String noktp,
                                    String no_telepon, String status, Kelas class_id, Educations pendidikan_terakhir,
                                    String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah, MultipartFile cv, MasterProvinsi provinsi, MasterKota kota,
-                                   MasterKecamatan kecamatan, MasterKelurahan kelurahan, User created_by);
+                                   MasterKecamatan kecamatan, MasterKelurahan kelurahan, Integer userId);
 
     ResponseEntity<Result> createMentor(Long id, String namamentor, MultipartFile foto, String noktp,
                                    String no_telepon, String status, Kelas class_id, Educations pendidikan_terakhir,
                                    String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah, MultipartFile cv, MasterProvinsi provinsi, MasterKota kota,
-                                   MasterKecamatan kecamatan, MasterKelurahan kelurahan, User created_by);
+                                   MasterKecamatan kecamatan, MasterKelurahan kelurahan, Integer userId);
 
     ResponseEntity<Result> deleteMentor(boolean banned, long id, String uri);
 

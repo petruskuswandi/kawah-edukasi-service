@@ -90,12 +90,12 @@ public class MentorController {
           @RequestParam(value = "Kota", required = false) MasterKota kota,
           @RequestParam(value = "Kecamatan", required = false) MasterKecamatan kecamatan,
           @RequestParam(value = "Kelurahan", required = false) MasterKelurahan kelurahan,
-          @RequestParam(value = "Created by User Id", required = false) User created_by)
+          @RequestParam(value = "Created by User Id", required = false) Integer userId)
   {
     Long id = 0L;
     return service.createMentor(id, nama_mentor, foto, no_ktp, no_telepon, status,
             class_id, pendidikan_terakhir, pendidikan_jurusan, tgl_start,
-            tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan, created_by);
+            tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan, userId);
   }
 
   @PutMapping("/update")
@@ -116,10 +116,10 @@ public class MentorController {
                                         @RequestParam(value = "Kota",defaultValue = "0", required = false) MasterKota kota,
                                         @RequestParam(value = "Kecamatan",defaultValue = "0", required = false) MasterKecamatan kecamatan,
                                         @RequestParam(value = "Kelurahan",defaultValue = "0", required = false) MasterKelurahan kelurahan,
-                                        @RequestParam(value = "Created By User ID", defaultValue = "0", required = false) User created_by) {
+                                        @RequestParam(value = "Created By User ID", defaultValue = "0", required = false) Integer userId) {
     return service.updateMentor(id, nama_mentor, foto, no_ktp, no_telepon, status,
             class_id, pendidikan_terakhir, pendidikan_jurusan, tgl_start,
-            tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan, created_by);
+            tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan, userId);
   }
 
   @PatchMapping(value = "/delete")

@@ -1,19 +1,29 @@
 package id.kedukasi.core.serviceImpl;
 
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import id.kedukasi.core.models.*;
 import id.kedukasi.core.models.wilayah.MasterProvinsi;
-import org.apache.commons.io.IOUtils;
+import id.kedukasi.core.repository.UserRepository;
+import net.bytebuddy.utility.RandomString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import id.kedukasi.core.models.wilayah.MasterKecamatan;
 import id.kedukasi.core.models.wilayah.MasterKelurahan;
@@ -32,6 +42,8 @@ public class MentorServiceImpl implements MentorService{
 
     private Result result;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private UserRepository userRepository;
 
     private String generatekode(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMyyyy");
@@ -46,11 +58,54 @@ public class MentorServiceImpl implements MentorService{
         return generateKode;
     }
 
+    private String saveFile(String fileName, Integer userId, MultipartFile multipartFile) throws IOException {
+
+        String proposedDir = createDir(userId);
+        Path uploadDirectory = Paths.get(proposedDir);
+
+        //Generate random string for fileCode
+        String fileCode = RandomString.make(8);
+        //End
+
+        //Save file
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            Path filePath = uploadDirectory.resolve(fileCode + " - " + fileName);
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ioe) {
+            throw new IOException("Error: Gagal menyimpan file " + fileName, ioe);
+        }
+        //End
+
+        return fileCode;
+    }
+
+    //Create directory logic
+    private static String createDir(Integer userId) {
+
+        ApplicationHome home = new ApplicationHome();
+        String separator = File.separator;
+        String proposedDir = home.getDir().getAbsolutePath() + separator + "upload-files" + separator + "utility";
+        if (userId != null) {
+            proposedDir = home.getDir().getAbsolutePath() + separator + "upload-files" + separator + userId;
+        }
+        File finalDir = new File(proposedDir);
+        if(!finalDir.exists()) {
+            finalDir.mkdirs();
+        }
+        return proposedDir;
+    }
+    private static String generate(Integer userId, String fileCode) {
+        if (userId != null) {
+            return "/downloadFile/" + userId + "/" + fileCode;
+        }
+        return "/downloadFile/utility/" + fileCode;
+    }
+
     @Override
     public ResponseEntity<Result> updateMentor(Long id , String namamentor, MultipartFile foto, String noktp,
                                                String no_telepon, String status, Kelas classID, Educations educationID,
                                                String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah,
-                                               MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, User userID) {
+                                               MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, Integer userId) {
         result = new Result();
         try {
             if(namamentor == null) {
@@ -90,12 +145,6 @@ public class MentorServiceImpl implements MentorService{
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if (id == null){
-                result.setMessage("Error: Id tidak boleh kosong");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity.badRequest().body(result);
-            }
-
             Mentor mentor = new Mentor(namamentor, noktp, no_telepon, status,
                     pendidikan_jurusan, tgl_start, tgl_stop, alamat_rumah);
 
@@ -125,7 +174,8 @@ public class MentorServiceImpl implements MentorService{
             }
 
             //Set created_by Many to one User
-            if (userID == null) {
+            Optional<User> user = Optional.ofNullable(userRepository.findById(userId));
+            if (user == null) {
                 result.setSuccess(false);
                 result.setMessage("User tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -133,17 +183,21 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setCreated_by(userID);
+                mentor.setCreated_by(user.get());
             }
 
             //set foto
             if (foto!=null) {
-                mentor.setFoto(IOUtils.toByteArray(foto.getInputStream()));
+                String fileFotoName = StringUtils.cleanPath(foto.getOriginalFilename());
+                String fileCode = saveFile(fileFotoName, userId, foto);
+                mentor.setFoto(generate(userId, fileCode));
             }
 
             //set cv
             if (cv!=null) {
-                mentor.setCv(IOUtils.toByteArray(cv.getInputStream()));
+                String fileCvName = StringUtils.cleanPath(cv.getOriginalFilename());
+                String fileCode = saveFile(fileCvName, userId, cv);
+                mentor.setCv(generate(userId, fileCode));
             }
 
             //set provinsi
@@ -223,7 +277,7 @@ public class MentorServiceImpl implements MentorService{
     public ResponseEntity<Result> createMentor(Long id , String namamentor, MultipartFile foto, String noktp,
                                                String no_telepon, String status, Kelas classID, Educations educationID,
                                                String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah,
-                                               MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, User userID) {
+                                               MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, Integer userId) {
         result = new Result();
         try {
             if(namamentor == null) {
@@ -240,9 +294,9 @@ public class MentorServiceImpl implements MentorService{
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(no_telepon.length() < 11 || no_telepon.length() > 14 || no_telepon == null) {
+            if (no_telepon == null || no_telepon != null && no_telepon.length() < 11 || no_telepon.length() > 13 && no_telepon != null) {
                 result.setSuccess(false);
-                result.setMessage("Error: No Telepon tidak boleh kosong dan tidak boleh dari 13 characters dan kurang dari 10");
+                result.setMessage("Error: No Telepon tidak boleh kosong dan No Telepon tidak boleh lebih dari 13 dan kurang dari 10");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -298,8 +352,18 @@ public class MentorServiceImpl implements MentorService{
                 mentor.setPendidikan_terakhir(educationID);
             }
 
-            //Set created_by Many to one User
-            if (userID == null) {
+            if (userId == null) {
+                result.setSuccess(false);
+                result.setMessage("User tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            //Set created_by Many to one User;
+            Optional<User> userID = Optional.ofNullable(userRepository.findById(userId));
+            if (userID.isEmpty() || userID.get().isBanned()) {
                 result.setSuccess(false);
                 result.setMessage("User tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -307,17 +371,21 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setCreated_by(userID);
+                mentor.setCreated_by(userID.get());
             }
 
             //set foto
             if (foto!=null) {
-                mentor.setFoto(IOUtils.toByteArray(foto.getInputStream()));
+                String fileFotoName = StringUtils.cleanPath(foto.getOriginalFilename());
+                String fileCode = saveFile(fileFotoName, userId, foto);
+                mentor.setFoto(generate(userId, fileCode));
             }
 
             //set cv
             if (cv!=null) {
-                mentor.setCv(IOUtils.toByteArray(cv.getInputStream()));
+                String fileCvName = StringUtils.cleanPath(cv.getOriginalFilename());
+                String fileCode = saveFile(fileCvName, userId, cv);
+                mentor.setCv(generate(userId, fileCode));
             }
 
             //set provinsi

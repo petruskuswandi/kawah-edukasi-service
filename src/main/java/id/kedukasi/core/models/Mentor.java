@@ -50,15 +50,13 @@ public class Mentor implements Serializable {
   @Column(name = "no_telepon")
   private String no_telepon;
 
-  @Lob
   @Column(name = "foto")
   @ApiModelProperty(hidden = true)
-  private byte[] foto;
+  private String foto;
 
-  @Lob
   @Column(name = "cv")
   @ApiModelProperty(hidden = true)
-  private byte[] cv;
+  private String cv;
 
   @Column(name = "status")
   private String status;
