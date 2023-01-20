@@ -24,6 +24,11 @@ public class FileUploadUtil {
 
     public static String saveFile(String fileName, MultipartFile multipartFile) throws IOException {
 
+        //Validasi file size harus kurang dari 7MB
+        if (multipartFile.getSize() > 7340032) {
+            return null;
+        }
+
         //Get file type of the file
         String fileTypeThreeChar = fileName.substring(fileName.length() - 3).toLowerCase();
         String fileTypeFourChar = fileName.substring(fileName.length() - 4).toLowerCase();
@@ -40,7 +45,7 @@ public class FileUploadUtil {
         Path uploadDirectory = Paths.get(proposedDir);
 
         //Generate random string for fileCode
-        String fileCode = RandomString.make(4);
+        String fileCode = RandomString.make(5);
         //End
 
         String fileTypeCode = null;

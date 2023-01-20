@@ -39,7 +39,7 @@ public class Peserta implements Serializable {
         @JsonIgnoreProperties({"description", "banned","banned_time",
                 "startedtime","endedtime","created_by","created_time","updated_time"})
         @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "batch_id", updatable = false)
+        @JoinColumn(name = "batch_id")
         // @NotNull(message = "Data Batch Tidak Boleh Kosong")
         private Batch batch;
 //        @ManyToOne(fetch = FetchType.EAGER)
@@ -100,39 +100,39 @@ public class Peserta implements Serializable {
 //        @ApiModelProperty(hidden = true)
 //        private byte[] uploadCv;
 
-        @Column(name = "uploadImagePath", updatable = false)
+        @Column(name = "uploadImagePath")
         @ApiModelProperty(hidden = true)
         private String uploadImagePath;
 
-        @Column(name = "upload_img_name", updatable = false)
+        @Column(name = "upload_img_name")
         @ApiModelProperty(hidden = true)
         private String uploadImageName;
 
         // register
         @JsonIgnoreProperties({"alt_name","latitude","longitude"})
         @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "provinsi_id", nullable = false, updatable = false)
+        @JoinColumn(name = "provinsi_id", nullable = false)
         @NotNull(message = "Data Provinsi Tidak Boleh Kosong")
         private MasterProvinsi provinsi;
 
         // register
         @JsonIgnoreProperties({"alt_name","latitude","longitude"})
         @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "kota_id", nullable = false, updatable = false)
+        @JoinColumn(name = "kota_id", nullable = false)
         @NotNull(message = "Data Kota Tidak Boleh Kosong")
         private MasterKota kota;
 
         // register
         @JsonIgnoreProperties({"alt_name","latitude","longitude"})
         @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "kecamatan_id", nullable = false, updatable = false)
+        @JoinColumn(name = "kecamatan_id", nullable = false)
         @NotNull(message = "Data Kecamatan Tidak Boleh Kosong")
         private MasterKecamatan kecamatan;
 
         // register
         @JsonIgnoreProperties({"alt_name","latitude","longitude"})
         @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "kelurahan_id", nullable = false, updatable = false)
+        @JoinColumn(name = "kelurahan_id", nullable = false)
         @NotNull(message = "Data Kelurahan Tidak Boleh Kosong")
         private MasterKelurahan kelurahan;
 
@@ -145,7 +145,7 @@ public class Peserta implements Serializable {
 
         @JsonIgnoreProperties({"description","created_time","updated_time","created_at","updated_at","deleted"})
         @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "education_id", nullable = true, updatable = false)
+        @JoinColumn(name = "education_id", nullable = true)
         private Educations tingkat_pendidikan;
 
         // register
@@ -185,7 +185,7 @@ public class Peserta implements Serializable {
         private Date banned_time;
 
         @CreationTimestamp
-        @Column(name = "created_time", updatable = false)
+        @Column(name = "created_time")
         @Temporal(TemporalType.TIMESTAMP)
         @JsonFormat(pattern = "yyyy/MM/dd")
         private Date created_time;
@@ -318,11 +318,11 @@ public class Peserta implements Serializable {
         @Column(name = "score_test_akhir")
         private Integer scoreTestAkhir;
 
-        @Column(name = "upload_cv", updatable = false)
+        @Column(name = "upload_cv")
         @ApiModelProperty(hidden = true)
         private String uploadCv;
 
-        @Column(name = "upload_cv_path", updatable = false)
+        @Column(name = "upload_cv_path")
         @ApiModelProperty(hidden = true)
         private String uploadCvPath;
 
