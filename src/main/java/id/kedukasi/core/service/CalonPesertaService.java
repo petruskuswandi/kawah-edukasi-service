@@ -22,11 +22,11 @@ public interface CalonPesertaService {
 
     ResponseEntity<?> changeToPeserta(Long id,Integer statusId, String uri);
 
-    ResponseEntity<?> changeStatusTes(Long statusTesOrd, Long id, String uri);
+    ResponseEntity<?> changeStatusTes(Long calonPesertaId,Integer statusId,  String uri);
 
     ResponseEntity<?> changeKelas(Long calonPesertaId, Long kelasId, String uri);
 
-    Result filterByStatusTes(Long statusTesOrd);
+    // Result filterByStatusTes(Long statusTesOrd);
 
     Result searchCalonPeserta(String keyword);
 

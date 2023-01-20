@@ -162,9 +162,14 @@ public class Peserta implements Serializable {
         private String kodeReferal;
 
     
-        @Enumerated(EnumType.STRING)
-        @Column(name = "statusTes", length = 20)
-        private EnumStatusTes statusTes;
+        // @Enumerated(EnumType.STRING)
+        // @Column(name = "statusTes", length = 20)
+        // private EnumStatusTes statusTes;
+        // @Enumerated(EnumType.STRING)
+        @JsonIgnoreProperties({"created_at","updated_at","deleted","description","flag", "subFlag"})
+        @ManyToOne(targetEntity = Status.class,fetch = FetchType.EAGER)
+        @JoinColumn(name = "statusTes", nullable = true)
+        private Status statusTes;
 
      
         @Enumerated(EnumType.STRING)
