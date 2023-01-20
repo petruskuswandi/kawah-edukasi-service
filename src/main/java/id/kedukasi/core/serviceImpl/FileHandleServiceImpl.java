@@ -1,7 +1,6 @@
 package id.kedukasi.core.serviceImpl;
 
 import id.kedukasi.core.models.Result;
-import id.kedukasi.core.models.User;
 import id.kedukasi.core.repository.UserRepository;
 import id.kedukasi.core.response.FileUploadResponse;
 import id.kedukasi.core.service.FileHandleService;
@@ -19,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Optional;
 
 @Service
 public class FileHandleServiceImpl implements FileHandleService {
