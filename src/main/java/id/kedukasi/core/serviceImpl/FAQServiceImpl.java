@@ -133,17 +133,18 @@ public class FAQServiceImpl implements FAQService {
 
         try {
 
-            Optional<FAQ> faq = faqRepository.findById(id);
+            Optional<FAQ> faq = faqRepository.selectFAQById(id);
 
+            /* Validasi ketika id data tidak ditemukan */
             if (!faq.isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Error: FAQ tidak ditemukan!");
+                result.setMessage("Error: Id FAQ tidak ditemukan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             } else {
-                Map<String, Optional<FAQ>> items = new HashMap<>();
-                items.put("items", faq);
-                result.setData(items);
+                Map<String, Optional<FAQ>> item = new HashMap<>();
+                item.put("item", faq);
+                result.setData(item);
             }
 
         } catch (Exception e) {
@@ -166,6 +167,7 @@ public class FAQServiceImpl implements FAQService {
 
         try {
 
+            /* Validasi ketika data question kosong */
             if (updateFAQ.getQuestion().isBlank() || updateFAQ.getQuestion().isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Question tidak boleh kosong!");
@@ -173,6 +175,7 @@ public class FAQServiceImpl implements FAQService {
                 return ResponseEntity.badRequest().body(result);
             }
 
+            /* Validasi ketika panjang question lebih dari 500 huruf */
             if (updateFAQ.getQuestion().length() > 500) {
                 result.setSuccess(false);
                 result.setMessage("Error: Question terlalu panjang. Maksimal 500 huruf!");
@@ -180,6 +183,7 @@ public class FAQServiceImpl implements FAQService {
                 return ResponseEntity.badRequest().body(result);
             }
 
+            /* Validasi ketika data answer kosong */
             if (updateFAQ.getAnswer().isBlank() || updateFAQ.getAnswer().isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Answer tidak boleh kosong!");
@@ -187,6 +191,7 @@ public class FAQServiceImpl implements FAQService {
                 return ResponseEntity.badRequest().body(result);
             }
 
+            /* Validasi ketika panjang question lebih dari 500 huruf */
             if (updateFAQ.getAnswer().length() > 500) {
                 result.setSuccess(false);
                 result.setMessage("Error: Answer terlalu panjang. Maksimal 500 huruf!");
@@ -194,9 +199,10 @@ public class FAQServiceImpl implements FAQService {
                 return ResponseEntity.badRequest().body(result);
             }
 
+            /* Validasi ketika id data tidak ditemukan */
             if (!faqRepository.findById(updateFAQ.getId()).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Error: FAQ tidak ditemukan");
+                result.setMessage("Error: Id FAQ tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             } else {
@@ -230,9 +236,10 @@ public class FAQServiceImpl implements FAQService {
 
             Optional<FAQ> faq = faqRepository.findById(id);
 
+            /* Validasi ketika id data tidak ditemukan */
             if (!faq.isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Error: FAQ tidak ditemukan!");
+                result.setMessage("Error: Id FAQ tidak ditemukan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             } else {

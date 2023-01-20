@@ -292,7 +292,7 @@ public class StatusServiceImpl implements StatusService {
 
             if (!statusRepository.findById(status.getId()).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Error: Tidak ada Status dengan id " +status.getId());
+                result.setMessage("Error: id Status tidak ditemukan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Status update = new Status(putId,putStatusName, putDescription, putFlag, putSubFlag, status.getisDeleted());
@@ -335,7 +335,10 @@ public class StatusServiceImpl implements StatusService {
     public ResponseEntity<Result> getStatus(String flag, String subFlag, Integer limit, Integer page) {
         result = new Result();
 
-        int jumlahPage = (int) Math.ceil(statusRepository.count() / (double) limit);
+        Integer total = statusRepository.totalUndeletedStatus();
+        if (total == null) { total = 0; }
+
+        int jumlahPage = (int) Math.ceil(total.intValue() / (double) limit);
         if (limit < 1) { limit = 1; }
         if (page < 1) { page = 1; }
         if (jumlahPage < 1) { jumlahPage = 1; }
@@ -344,8 +347,11 @@ public class StatusServiceImpl implements StatusService {
         if (subFlag == null) { subFlag = ""; }
 
         try {
-            Map<String, List<Status>> items = new HashMap<>();
-            items.put("items", statusRepository.getStatus(flag.toLowerCase(), subFlag.toLowerCase(), limit, page));
+            Map<String, Object> items = new HashMap<>();
+            List<Status> status = statusRepository.getStatus(flag.toLowerCase(), subFlag.toLowerCase(), limit, page);
+            items.put("items", status);
+            items.put("totalDataResult", status.size());
+            items.put("totalData", total);
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -364,7 +370,7 @@ public class StatusServiceImpl implements StatusService {
             Optional<Status> status = statusRepository.findById(id);
             if (!status.isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Error: Tidak ada status dengan id " + id);
+                result.setMessage("Error: id Status tidak ditemukan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map<String, Status> items = new HashMap<>();
@@ -389,7 +395,7 @@ public class StatusServiceImpl implements StatusService {
             Optional<Status> status = statusRepository.findById(id);
             if (!status.isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Error: Tidak ada status dengan id " + id);
+                result.setMessage("Error: id Status tidak ditemukan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 statusRepository.deleteById(id);
@@ -406,6 +412,40 @@ public class StatusServiceImpl implements StatusService {
         }
         return ResponseEntity.ok(result);
     }
+
+    @Override
+    public ResponseEntity<Result> softDeleteStatus(int id, boolean deleted) {
+        result = new Result();
+
+        try {
+            int response = statusRepository.deleteStatus(id, deleted);
+            if (response == 1) {
+                result.setCode(HttpStatus.OK.value());
+                result.setSuccess(true);
+                if (deleted == true) {
+                    result.setMessage("Status berhasil di soft delete.");
+                } else {
+                    result.setMessage("Status berhasil di un-soft delete.");
+                }
+            } else {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setMessage("Error: id Status tidak ditemukan!");
+                return ResponseEntity.badRequest().body(result);
+            }
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
+        }
+
+        return ResponseEntity.ok(result);
+    }
+
+    
+
 }
 
 

@@ -1,8 +1,11 @@
 package id.kedukasi.core.request;
-
+import java.util.List;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
-
+@Getter
+@Setter
 public class SyillabusRequest {
 
     @ApiModelProperty(example = "nama syllabus", required = true)
@@ -11,38 +14,11 @@ public class SyillabusRequest {
     @ApiModelProperty(example = "deskripsi", required = true)
     private String description;
 
-    @ApiModelProperty(example = "1", required = true)
-    private Long attachment;
+    @ApiModelProperty(example = "[\"1\",\"2\",\"3\"]")
+    private List<Long> attachmentId;
 
     public SyillabusRequest() {
     }
 
-    public SyillabusRequest(String syillabusName, String description) {
-        this.syillabusName = syillabusName;
-        this.description = description;
-    }
 
-    public String getSyillabusName() {
-        return syillabusName;
-    }
-
-    public void setSyillabusName(String syillabusName) {
-        this.syillabusName = syillabusName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Long getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(Long attachment) {
-        this.attachment = attachment;
-    }
 }

@@ -2,6 +2,7 @@ package id.kedukasi.core.repository;
 
 import id.kedukasi.core.models.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -72,4 +73,16 @@ public interface StatusRepository extends JpaRepository<Status,Integer> {
                            @Param("subFlag") String subFlag, 
                            @Param("limit") int limit, 
                            @Param("page") int page);
+
+    @Transactional
+    @Query(
+        value = "SELECT count(*) FROM status WHERE is_deleted = false",
+        nativeQuery = true
+    )
+    Integer totalUndeletedStatus();
+
+    @Modifying
+    @Transactional
+    @Query("update Status s set s.isDeleted = ?2 where s.id = ?1")
+    int deleteStatus(int id, boolean deleted);
 }

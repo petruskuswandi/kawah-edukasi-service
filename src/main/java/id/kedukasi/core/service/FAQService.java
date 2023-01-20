@@ -10,19 +10,19 @@ import id.kedukasi.core.request.UpdateFAQRequest;
 @Service
 public interface FAQService {
 
-    /* Implements to create FAQ */
+    /* Implementasi untuk membuat data baru pada service FAQ */
     ResponseEntity<Result> createFAQ(FAQRequest FAQ);
 
-    /* Implements to get FAQ */
+    /* Implementasi untuk mendapatkan beberapa data pada service FAQ */
     ResponseEntity<Result> getFAQ(Integer limit, Integer page);
 
-    /* Implements to get FAQ by id */
+    /* Implementasi untuk mendapatkan data berdasarkan id pada service FAQ */
     ResponseEntity<Result> getFAQById(int id);
 
-    /* Implements to update data FAQ */
+    /* Implementasi untuk memperbarui data pada service FAQ */
     ResponseEntity<Result> updateFAQ(UpdateFAQRequest updateFAQ);
 
-    /* Implements to Delete data FAQ */
+    /* Implementasi untuk menghapus data pada service FAQ */
     ResponseEntity<Result> deleteFAQById(int id);
     
 }

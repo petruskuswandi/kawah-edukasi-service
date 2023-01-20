@@ -37,6 +37,7 @@ import javax.mail.MessagingException;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -135,12 +136,18 @@ public class PesertaServiceImpl implements PesertaService {
         StringBuilder sb = new StringBuilder();
         try {
             Map items = new HashMap();
-            List<Peserta> peserta = pesertaRepository.getAllPagination(EnumStatusPeserta.PESERTA.toString(), false,
-                    search, limit, offset);
-            items.put("items", peserta);
-            items.put("totalDataResult", peserta.size());
-            items.put("totalData", pesertaRepository.getCountByStatus(EnumStatusPeserta.PESERTA.toString()));
 
+            List<Peserta> peserta = pesertaRepository.getAllPagination(EnumStatusPeserta.PESERTA.toString(), false,
+                    search.toLowerCase(), limit, offset);
+            if (peserta.size()==0) {
+                result.setSuccess(false);
+                result.setMessage("Error : Tidak ada peserta yang anda cari");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            }else {
+                items.put("items", peserta);
+                items.put("totalDataResult", peserta.size());
+                items.put("totalData", pesertaRepository.getCountByStatus(EnumStatusPeserta.PESERTA.toString()));
+            }
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -941,9 +948,16 @@ public class PesertaServiceImpl implements PesertaService {
     public Result searchPeserta(String keyword) {
         result = new Result();
         try {
-            Map items = new HashMap();
-            items.put("items", pesertaRepository.search(keyword.toLowerCase(), EnumStatusPeserta.PESERTA));
-            result.setData(items);
+            List<Peserta> search = pesertaRepository.search(keyword.toLowerCase(), EnumStatusPeserta.PESERTA);
+            if (search.isEmpty()) {
+                result.setSuccess(false);
+                result.setMessage("Tidak ada peserta dengan keyword " + keyword);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                Map items = new HashMap();
+                items.put("items", search);
+                result.setData(items);
+            }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }

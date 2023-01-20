@@ -25,4 +25,7 @@ public interface StatusService {
     
     //implements delete status by id
     ResponseEntity<Result> deleteStatusById(int id);
+
+    //implements soft delete status by id
+    ResponseEntity<Result> softDeleteStatus(int id, boolean deleted);
 }

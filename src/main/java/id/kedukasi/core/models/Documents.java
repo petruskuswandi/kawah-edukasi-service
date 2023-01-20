@@ -40,10 +40,7 @@ public class Documents implements Serializable{
     @Column(name = "path_name", nullable = false)
     private String pathName;
 
-    @Column(name = "file_name", nullable = false)
-    private String fileName;
-
-    @JsonIgnoreProperties({"created_at", "updated_at", "deleted", "description"})
+    @JsonIgnoreProperties({"created_at", "updated_at", "deleted", "description", "flag", "subFlag"})
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
     private Status status;
@@ -57,20 +54,5 @@ public class Documents implements Serializable{
 
     @Column(name = "is_banned")
     private boolean banned;
-
-    @Column(name = "created_time", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy/MM/dd, HH:mm:ss", timezone = "Asia/Jakarta")
-    private Date createdTime = new Date();
-
-    @Column(name = "updated_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy/MM/dd, HH:mm:ss", timezone = "Asia/Jakarta")
-    private Date updatedTime = new Date();
-
-    @Column(name = "banned_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy/MM/dd, HH:mm:ss", timezone = "Asia/Jakarta")
-    private Date bannedTime;
 
 }
