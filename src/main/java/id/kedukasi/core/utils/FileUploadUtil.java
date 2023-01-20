@@ -1,10 +1,7 @@
 package id.kedukasi.core.utils;
 
-import id.kedukasi.core.models.Result;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.boot.system.ApplicationHome;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -48,7 +45,7 @@ public class FileUploadUtil {
         Path uploadDirectory = Paths.get(proposedDir);
 
         //Generate random string for fileCode
-        String fileCode = RandomString.make(4);
+        String fileCode = RandomString.make(5);
         //End
 
         String fileTypeCode = null;

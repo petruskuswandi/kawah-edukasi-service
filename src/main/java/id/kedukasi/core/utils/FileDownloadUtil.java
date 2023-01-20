@@ -25,7 +25,7 @@ public class FileDownloadUtil {
 
         //Search file
         Files.list(uploadDirectory).forEach(file -> {
-            if (file.getFileName().toString().substring(3, 7).equals(fileCode.substring(3, 7))) {
+            if (file.getFileName().toString().substring(3, 8).equals(fileCode.substring(3, 8))) {
                 foundFile = file;
                 return;
             }
