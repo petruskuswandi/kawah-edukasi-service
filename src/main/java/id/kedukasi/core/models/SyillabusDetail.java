@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -47,7 +48,12 @@ public class SyillabusDetail {
 
     @JsonIgnoreProperties({"description", "deleted","banned_time", "created_at","updated_at"})
     @ManyToMany(targetEntity = Syillabus.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "syillabus_id", nullable = false)
+    // @JoinColumn(name = "syillabus_id", nullable = false)
+    @JoinTable(
+        name = "syillabus_detail_syillabus",
+        joinColumns = @JoinColumn(name = "syillabus_detail_id"),
+        inverseJoinColumns = @JoinColumn(name = "syillabus_id")
+    )
     @NotNull(message = "syillabus id tidak boleh kosong")
     // private Syillabus syillabus;
     public List<Syillabus> syillabus;

@@ -58,89 +58,22 @@ public class SyillabusDetailServiceImpl implements SyillabusDetailService{
         result = new Result();
         try {
             SyillabusDetail Syillabusdetail = new SyillabusDetail();
-            // set syillabus
-            List<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabusId());
-            // Syillabusdetail.setSyillabus(syillabus);
-
-            // for(int i = 0; i < syillabus.size(); i++){
-                if(syillabus.stream().anyMatch(s -> s.getId() == null))
-                {
+            // // set syillabus
+         
+            for (Long syillabusId : syillabusDetail.getSyillabusId()) {
+                if(!syillabusRepository.existsById(syillabusId)) {
                     result.setSuccess(false);
-                    result.setMessage("syillabus not found");
+                    result.setMessage("Error: Syillabus dengan ID " + syillabusId + " tidak ditemukan");
                     result.setCode(HttpStatus.BAD_REQUEST.value());
-       
-                }
-                else {
+                    return ResponseEntity.badRequest().body(result);
+                }else {
+                    List<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabusId());
                     Syillabusdetail.setSyillabus(syillabus);
                 }
-            // }
+            }
     
 
-            // Optional<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabus());
-            // if (syillabus.stream() == null){
-            //     result.setSuccess(false);
-            //     // result.setMessage("Error : Syillabus id " + syillabus.getId() + "tidak ditemukan");
-            //     result.setMessage("syillabus tidak ada");
-            //     result.setCode(HttpStatus.BAD_REQUEST.value());
-            // } else {
-            //     // Syillabus syillabus2 = syillabusRepository.findById(syillabusDetail.getSyillabus()).get();
-            //     Syillabusdetail.setSyillabus(syillabus);
-            // }
-            // for (int i = 0;i < syillabus.size(); i++){
-            //     if(syillabus.stream() != null){
-            //     result.setSuccess(false);
-            //     // result.setMessage("Error : Syillabus id " + syillabus.getId() + "tidak ditemukan");
-            //     result.setMessage("syillabus tidak ada");
-            //     result.setCode(HttpStatus.BAD_REQUEST.value());
-            //     }
-            //     else {
-            //             // Syillabus syillabus2 = syillabusRepository.findById(syillabusDetail.getSyillabus()).get();
-            //             Syillabusdetail.setSyillabus(syillabus);
-            //         }
-            // }
-            
-            // List<Syillabus> filteredEntities = syillabus.stream().filter(entity -> !idsNotExist.contains(entity.getId())).collect(Collectors.toList());
-            // if (syillabus.stream().anyMatch(entity -> idsNotExist.contains(entity.getId()))) {
-            //     // Do something
-            // }
-
-
-            // if(syillabus.stream().anyMatch(Objects::isNull)){
-            //     // Syillabusdetail.setSyillabus(syillabus);  
-            //   result.setSuccess(false);
-            //   result.setMessage("syillabus not found");
-            //   result.setCode(HttpStatus.BAD_REQUEST.value());
-            // }else {
-            //         Syillabusdetail.setSyillabus(syillabus);             
-                 
-            // }
-
-
-            // Optional<List> syllabusOptional = Optional.ofNullable(syillabus);
-            // if(!syllabusOptional.isPresent()){
-            //     //tampilkan pesan bahwa list kosong
-            //     result.setMessage("syillabus not found");
-            // }
-            // for(int i = 0; i < syllabusOptional.get().size(); i++){
-            //     if(syllabusOptional.get().get(i)==null){
-            //         //tampilkan pesan bahwa ada data kosong
-            //         result.setMessage("syillabus not found");
-            //     } else {
-            //         Syillabusdetail.setSyillabus(syillabus);  
-            //     }
-            // }
-
-
-            // for(Syillabus obj : syillabus){
-            //     if(obj.getId() == null || obj.getId() == 0){
-            //         //tampilkan pesan bahwa ada data kosong
-            //         result.setMessage("syillabus not found");
-            //     }
-            //     else {
-            //         Syillabusdetail.setSyillabus(syillabus);  
-            //     }
-            // }
-             
+          
 
             // set class
             Optional<Kelas> kelas = kelasRepository.findById(syillabusDetail.getKelasId());
@@ -215,6 +148,7 @@ public class SyillabusDetailServiceImpl implements SyillabusDetailService{
                 result.setMessage("Error: Tidak ada  Syillabus Detail dengan id" + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
+                syillabusDetailRepository.deletesyillabusDetailList(id);
                 syillabusDetailRepository.deleteById(id);
                 result.setMessage("Berhasil delete Syillabus Detail");
                 result.setCode(HttpStatus.OK.value());
@@ -238,16 +172,27 @@ public class SyillabusDetailServiceImpl implements SyillabusDetailService{
             } else {
                 SyillabusDetail Syillabusdetail = new SyillabusDetail(syillabusDetail.getId(), syillabusDetail.isDeleted());
 
-                // Syillabus syillabus = syillabusRepository.findById(syillabusDetail.getSyillabus()).get();
-                List<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabusId());
-                // if (!syillabusRepository.findAllById(syillabus.get()).isPresent()) {
-                //     result.setSuccess(false);
-                //     result.setMessage("Syillabus tidak ditemukan");
-                //     result.setCode(HttpStatus.BAD_REQUEST.value());
-                // }else {
-                //     // Syillabusdetail.setSyillabus(syillabus);
-                // }
-                Syillabusdetail.setSyillabus(syillabus);
+                // // Syillabus syillabus = syillabusRepository.findById(syillabusDetail.getSyillabus()).get();
+                // List<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabusId());
+                // // if (!syillabusRepository.findAllById(syillabus.get()).isPresent()) {
+                // //     result.setSuccess(false);
+                // //     result.setMessage("Syillabus tidak ditemukan");
+                // //     result.setCode(HttpStatus.BAD_REQUEST.value());
+                // // }else {
+                // //     // Syillabusdetail.setSyillabus(syillabus);
+                // // }
+                // Syillabusdetail.setSyillabus(syillabus);
+                for (Long syillabusId : syillabusDetail.getSyillabusId()) {
+                    if(!syillabusRepository.existsById(syillabusId)) {
+                        result.setSuccess(false);
+                        result.setMessage("Error: Syillabus dengan ID " + syillabusId + " tidak ditemukan");
+                        result.setCode(HttpStatus.BAD_REQUEST.value());
+                        return ResponseEntity.badRequest().body(result);
+                    }else {
+                        List<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabusId());
+                        Syillabusdetail.setSyillabus(syillabus);
+                    }
+                }
 
                 Kelas kelas = kelasRepository.findById(syillabusDetail.getKelasId()).get();
                 if (!kelasRepository.findById(kelas.getId()).isPresent()){

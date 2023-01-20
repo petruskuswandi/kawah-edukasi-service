@@ -18,4 +18,6 @@ public interface SyillabusService {
     ResponseEntity<Result> getSyillabusById(Long id);
 
     ResponseEntity<Result> deleteSyillabus(Long id);
+
+    ResponseEntity<Result> softDeleteSyillabus(Long id);
 }
