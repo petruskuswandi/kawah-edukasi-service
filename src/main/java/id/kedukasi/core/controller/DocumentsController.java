@@ -1,7 +1,5 @@
 package id.kedukasi.core.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.service.DocumentsService;
 import org.slf4j.Logger;
@@ -27,10 +25,9 @@ public class DocumentsController {
     public ResponseEntity<Result> createDocument(
             @RequestParam("userId") Integer userId,
             @RequestParam("statusId") Integer statusId,
-            @RequestPart(value = "file") MultipartFile multipartFile,
-            HttpServletRequest request
+            @RequestPart(value = "file") MultipartFile multipartFile
             ) {
-        return service.createDocument(userId, statusId, multipartFile, request);
+        return service.createDocument(userId, statusId, multipartFile);
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
@@ -43,11 +40,10 @@ public class DocumentsController {
             @RequestParam("documentId") Integer documentId,
             @RequestParam("userId") Integer userId,
             @RequestParam("statusId") Integer statusId,
-            @RequestPart(value = "file") MultipartFile multipartFile,
-            HttpServletRequest request
+            @RequestPart(value = "file") MultipartFile multipartFile
     ) {
 
-        return service.updateDocuments(documentId, userId, statusId, multipartFile, request);
+        return service.updateDocuments(documentId, userId, statusId, multipartFile);
     }
 
     @GetMapping(value = "/user/{id}", produces = APPLICATION_JSON_VALUE)

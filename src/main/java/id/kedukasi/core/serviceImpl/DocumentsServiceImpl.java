@@ -12,13 +12,13 @@ import id.kedukasi.core.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Service
@@ -40,10 +40,13 @@ public class DocumentsServiceImpl implements DocumentsService {
     @Autowired
     UserRepository userRepository;
 
+    @Value("${app.url.staging}")
+    String baseUrl;
+
     @Autowired
     TypeDocumentsRepository typeDocumentsRepository;
     @Override
-    public ResponseEntity<Result> createDocument(Integer userId, Integer statusId, MultipartFile multipartFile, HttpServletRequest request) {
+    public ResponseEntity<Result> createDocument(Integer userId, Integer statusId, MultipartFile multipartFile) {
         result = new Result();
         try {
             //Set status
@@ -83,7 +86,7 @@ public class DocumentsServiceImpl implements DocumentsService {
             }
 
             //Set path name
-            newDocuments.setPathName(PathGeneratorUtil.generate(fileCode, request));
+            newDocuments.setPathName(PathGeneratorUtil.generate(fileCode, baseUrl));
             //End
 
             documentsRepository.save(newDocuments);
@@ -149,7 +152,7 @@ public class DocumentsServiceImpl implements DocumentsService {
     }
 
     @Override
-    public ResponseEntity<Result> updateDocuments(Integer documentId, Integer userId, Integer statusId, MultipartFile multipartFile, HttpServletRequest request) {
+    public ResponseEntity<Result> updateDocuments(Integer documentId, Integer userId, Integer statusId, MultipartFile multipartFile) {
         result = new Result();
         try {
             Optional<Documents> documentsOld = documentsRepository.findById(documentId);
@@ -194,7 +197,7 @@ public class DocumentsServiceImpl implements DocumentsService {
             }
 
             //Save path name and file name in DB
-            documentsOld.get().setPathName(PathGeneratorUtil.generate(fileCode, request));
+            documentsOld.get().setPathName(PathGeneratorUtil.generate(fileCode, baseUrl));
             //End
 
             documentsRepository.save(documentsOld.get());
