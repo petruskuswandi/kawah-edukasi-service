@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class FileHandleServiceImpl implements FileHandleService {
@@ -57,7 +58,6 @@ public class FileHandleServiceImpl implements FileHandleService {
             response.setDownloadUri(PathGeneratorUtil.generate(fileCode, baseUrl));
             result.setMessage("Data berhasil disimpan, harap catat file code/download uri karena record tidak disimpan dalam db!");
             result.setData(response);
-            System.out.println(baseUrl);
             return ResponseEntity.ok(result);
 
         } catch (IOException io) {
@@ -65,6 +65,7 @@ public class FileHandleServiceImpl implements FileHandleService {
         }
 
     }
+
 
     @Override
     public ResponseEntity<?> downloadUtilityFile(String fileCode) throws IOException {
