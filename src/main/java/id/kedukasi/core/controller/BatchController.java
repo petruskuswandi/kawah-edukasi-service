@@ -1,6 +1,7 @@
 package id.kedukasi.core.controller;
 
 import id.kedukasi.core.models.Result;
+import id.kedukasi.core.models.User;
 import id.kedukasi.core.request.BatchRequest;
 import id.kedukasi.core.request.CreateBatchRequest;
 import id.kedukasi.core.service.BatchService;
@@ -36,7 +37,7 @@ public class BatchController {
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     public Result getBatchData(@RequestParam(required = false, name = "search") String search,
                                @RequestParam(value = "limit", defaultValue = "10") Integer limit,
-                               @RequestParam(value = "offset", defaultValue = "1") Integer page) {
+                               @RequestParam(value = "offset", defaultValue = "0") Integer page) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
         return service.getBatchData(uri, search, limit, page);
@@ -48,27 +49,6 @@ public class BatchController {
         logger.info(uri);
         return service.getBatchById(id, uri);
     }
-
-//    @GetMapping(value = "/class/{id}",produces = APPLICATION_JSON_VALUE)
-//    public Result getClassByBatch(@PathVariable("id") long id){
-//        String uri = stringUtil.getLogParam(request);
-//        logger.info(uri);
-//        return service.getAllClassByBatch(id);
-//    }
-
-//    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-//    public Result getClassBybatch(@PathVariable("id") Long id) {
-//        String uri = stringUtil.getLogParam(request);
-//        logger.info(uri);
-//        return service.getClassBybatch(id, uri);
-//    }
-////
-//    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-//    public Result getMentorClassByBatch(@PathVariable("id") Long id) {
-//        String uri = stringUtil.getLogParam(request);
-//        logger.info(uri);
-//        return service.getMentorClassByBatch(id, uri);
-//    }
 
     //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/create")
