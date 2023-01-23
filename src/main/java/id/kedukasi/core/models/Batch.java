@@ -1,6 +1,7 @@
 package id.kedukasi.core.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
@@ -41,7 +42,7 @@ public class Batch implements Serializable {
     private boolean banned;
 
     @Column(name = "banned_time")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date banned_time;
 
@@ -55,9 +56,10 @@ public class Batch implements Serializable {
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endedtime;
-
-    @Column(name = "created_by", updatable = false)
-    private String created_by;
+    @JsonIgnoreProperties({"profilePicture","profilePicturePath","email","password","namaLengkap","noHp","role","isLogin","isActive","tokenVerification","created_time","updated_time","banned","banned_time","verified"})
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "created_by")
+    private User created_by;
 
     @Column(name = "created_time", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -73,18 +75,32 @@ public class Batch implements Serializable {
     }
 
 
-    public Batch(String batchname, String description,Date startedtime, Date endedtime) {
+    public Batch(String batchname, String description,Date startedtime, Date endedtime, User created_by) {
         Date date = new Date();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         this.batchname = batchname;
         this.description = description;
         this.startedtime = startedtime;
         this.endedtime = endedtime;
-        this.created_by = auth.getName();
         this.created_time = date;
         this.updated_time = date;
+        this.created_by = created_by;
         this.banned = false;
         this.banned_time = date;
+    }
+
+    //constructur untuk create
+    public Batch(String batchname, String description, Date startedtime, Date endedtime) {
+        this.batchname = batchname;
+        this.description = description;
+        this.startedtime = startedtime;
+        this.endedtime = endedtime;
+    }
+
+    public Batch(Long id, String batchname, Date startedtime, Date endedtime) {
+        this.id = id;
+        this.batchname = batchname;
+        this.startedtime = startedtime;
+        this.endedtime = endedtime;
     }
 }

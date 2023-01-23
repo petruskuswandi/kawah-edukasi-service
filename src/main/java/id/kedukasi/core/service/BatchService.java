@@ -12,8 +12,6 @@ public interface BatchService {
     Result getBatchById(Long id, String uri);
     Result getAllBatchRunning(String uri);
 
-//    Result getAllClassByBatch(long batchId);
-
     ResponseEntity<?> updateBatch(BatchRequest batchRequest);
 
     ResponseEntity<?> createBatch(CreateBatchRequest createBatchRequest);
