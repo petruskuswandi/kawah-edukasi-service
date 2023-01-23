@@ -33,7 +33,9 @@ import java.util.Date;
 public class Peserta implements Serializable {
 
         @Id
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
+        @GeneratedValue(
+                strategy= GenerationType.AUTO,
+                generator="native")
         private Long id;
 
         @JsonIgnoreProperties({"description", "banned","banned_time",
