@@ -44,7 +44,7 @@ public class EmailServiceImpl implements EmailService {
   @Value("${spring.mail.email.admin}")
   private String emailadmin;
 
-  @Value("${app.url.staging}")
+  @Value("${app.url.staging.be}")
   private String urlstaging;
 
   @Value("${app.upload-file-path}")
