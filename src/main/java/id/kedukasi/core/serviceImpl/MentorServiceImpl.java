@@ -34,6 +34,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static id.kedukasi.core.utils.FileUploadUtil.saveFile;
+
 @Service
 public class MentorServiceImpl implements MentorService{
 
@@ -42,13 +44,13 @@ public class MentorServiceImpl implements MentorService{
     @Autowired
     StringUtil stringUtil;
 
-    @Value("${app.url.staging}")
-    String baseUrl;
-
     private Result result;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private UserRepository userRepository;
+
+    @Value("${app.url.staging}")
+    String baseUrl;
 
     private String generatekode(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMyyyy");
@@ -61,92 +63,6 @@ public class MentorServiceImpl implements MentorService{
             generateKode = ("M"+dtf.format(now) + String.format("%03d", jumlahdata++));
         }
         return generateKode;
-    }
-    private static final String[] documentTypes = {"pdf", "docx", "doc", "xls", "xlsx",
-            "ppt", "pptx", "odp", "key", "odt"};
-    private static final String[] imageTypes = {"png", "jpg", "bmp", "tif", "tiff", "jpeg"};
-
-    private static enum CODE {
-        IMG,//For images
-        DOC,//For documents
-        OTH //For other file formats
-    }
-
-    public static String saveFile(String fileName, MultipartFile multipartFile) throws IOException {
-
-        //Validasi file size harus kurang dari 7MB
-        if (multipartFile.getSize() > 7340032) {
-            return null;
-        }
-
-        //Get file type of the file
-        String fileTypeThreeChar = fileName.substring(fileName.length() - 3).toLowerCase();
-        String fileTypeFourChar = fileName.substring(fileName.length() - 4).toLowerCase();
-
-        //Check if file type is document
-        boolean isDocument = Arrays.stream(documentTypes).anyMatch(fileTypeThreeChar::equals) ||
-                Arrays.stream(documentTypes).anyMatch(fileTypeFourChar::equals);
-
-        //Check if file type is image
-        boolean isImage = Arrays.stream(imageTypes).anyMatch(fileTypeThreeChar::equals) ||
-                Arrays.stream(imageTypes).anyMatch(fileTypeFourChar::equals);
-
-        String proposedDir = createDir(isDocument, isImage);
-        Path uploadDirectory = Paths.get(proposedDir);
-
-        //Generate random string for fileCode
-        String fileCode = RandomString.make(5);
-        //End
-
-        String fileTypeCode = null;
-
-        //Save file
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-
-            Path filePath = uploadDirectory.resolve( CODE.OTH + fileCode + " - " + fileName);
-
-            //Add identification code
-            fileTypeCode = CODE.OTH + fileCode;
-
-            if (isDocument) {
-                filePath = uploadDirectory.resolve( CODE.DOC + fileCode + " - " + fileName);
-                fileTypeCode = CODE.DOC + fileCode;
-            } else if (isImage) {
-                filePath = uploadDirectory.resolve( CODE.IMG + fileCode + " - " + fileName);
-                fileTypeCode = CODE.IMG + fileCode;
-            }
-
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException ioe) {
-            throw new IOException("Error: Gagal menyimpan file " + fileName, ioe);
-        }
-        //End
-
-        return fileTypeCode;
-    }
-
-    //Create directory logic
-    public static String createDir(boolean isDocument, boolean isImage) {
-
-        ApplicationHome home = new ApplicationHome();
-        String separator = File.separator;
-
-        //If the file type is neither document/image it will be saved to 'others' folder
-        String proposedDir = home.getDir().getAbsolutePath() + separator + "upload-files" + separator + "others";
-
-        //Manage directory for different file types
-        if (isDocument) {
-            proposedDir = home.getDir().getAbsolutePath() + separator + "upload-files" + separator + "documents";
-        } else if (isImage) {
-            proposedDir = home.getDir().getAbsolutePath() + separator + "upload-files" + separator + "images";
-        }
-
-        File finalDir = new File(proposedDir);
-        if(!finalDir.exists()) {
-            finalDir.mkdirs(); //Create dir paths
-        }
-
-        return proposedDir;
     }
 
     @Override
@@ -192,6 +108,29 @@ public class MentorServiceImpl implements MentorService{
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
+            if (tgl_start == null) {
+                result.setMessage("Error : Start date is null/empty");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (tgl_stop == null) {
+                result.setMessage("Error : Ended Time is null/empty");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (tgl_start.after(tgl_stop)){
+                result.setMessage("Error : Start date tidak boleh lebih besar dari end date");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
 
             Mentor mentor = new Mentor(namamentor, noktp, no_telepon, status,
                     pendidikan_jurusan, tgl_start, tgl_stop, alamat_rumah);
@@ -233,6 +172,7 @@ public class MentorServiceImpl implements MentorService{
             } else {
                 mentor.setCreated_by(user.get());
             }
+
 
             //set foto
             if (foto!=null) {
@@ -490,6 +430,29 @@ public class MentorServiceImpl implements MentorService{
             } else {
                 mentor.setUpdated_time(null);
                 mentor.setBanned_time(null);
+            }
+            if (tgl_start == null) {
+                result.setMessage("Error : Start date is null/empty");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (tgl_stop == null) {
+                result.setMessage("Error : Ended Time is null/empty");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (tgl_start.after(tgl_stop)){
+                result.setMessage("Error : Start date tidak boleh lebih besar dari end date");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             }
 
             mentorRepository.save(mentor);
