@@ -139,7 +139,7 @@ public class BatchServiceImpl implements BatchService {
             }
 
             if (createBatchRequest.getEndedtime() == null){
-                result.setMessage("Error: Started Time is Null/Empty");
+                result.setMessage("Error: Ended Time is Null/Empty");
                 return ResponseEntity
                         .badRequest()
                         .body(result);
@@ -215,27 +215,25 @@ public class BatchServiceImpl implements BatchService {
             }
             // cek Stardate tidak boleh lebih besar dari end date
             if(batchRequest.getStartedtime().after(batchRequest.getEndedtime())){
-                result.setMessage("Error : Start date tidak boleh lebih besar dari end date ");
+                result.setMessage("Error : Start date tidak boleh lebih besar dari end date");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             }
             if (batchRequest.getEndedtime() == null){
-                result.setMessage("Error: Started Time is Null/Empty");
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            }
-            // cek Stardate tidak boleh lebih besar dari end date
-            if(batchRequest.getStartedtime().after(batchRequest.getEndedtime())){
-                result.setMessage("Error : Start date tidak boleh lebih besar dari end date ");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setMessage("Error: Ended Time is Null/Empty");
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             }
 
+            if (batchRequest.getStartedtime() == null){
+                result.setMessage("Error: Started Time is Null/Empty");
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
             Optional<User> user = Optional.ofNullable(userRepository.findById(batchRequest.getCreated_by()));
             if (!user.isPresent()){
                 result.setSuccess(false);
