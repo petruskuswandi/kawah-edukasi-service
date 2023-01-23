@@ -17,7 +17,9 @@ import id.kedukasi.core.repository.wilayah.KotaRepository;
 import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
 import id.kedukasi.core.service.CalonPesertaService;
 import id.kedukasi.core.service.FilesStorageService;
+import id.kedukasi.core.utils.FileUploadUtil;
 import id.kedukasi.core.utils.GlobalUtil;
+import id.kedukasi.core.utils.PathGeneratorUtil;
 import id.kedukasi.core.utils.StringUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -52,8 +54,11 @@ import java.util.stream.Collectors;
 @Service
 public class CalonPesertaServiceImpl implements CalonPesertaService {
 
-     @Value("${app.upload-file-path}")
-     private String folderPath;
+    //  @Value("${app.upload-file-path}")
+    //  private String folderPath;
+    @Value("${app.url.staging}")
+    String baseUrl;
+
 
     @Autowired
     private ResourceLoader resourceLoader;
@@ -132,7 +137,6 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
             result.setSuccess(false);
-            result.setMessage("Error: Tidak ada calon peserta dengan id ");
             result.setCode(HttpStatus.BAD_REQUEST.value());
            
         }
@@ -296,7 +300,7 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                         .badRequest()
                         .body(result);
             }
-            if (!validator.isNumeric(nomorKtp)||nomorKtp.length() <= 16) {
+            if (!validator.isNumeric(nomorKtp)||nomorKtp.length() < 16) {
                 result.setMessage("Error : nomor KTP harus berupa angka dan minimal 16 karakter");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
@@ -350,62 +354,106 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             peserta.setBatch(batchRepository.findById(batchId).get());
             }
 
-            // set image
-             if (uploadImage != null) {
-                String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
-                nameImage = nameImage.replaceAll(" ", "_");
-                peserta.setUploadImageName(nameImage);
+            // // set image
+            //  if (uploadImage != null) {
+            //     String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
+            //     nameImage = nameImage.replaceAll(" ", "_");
+            //     peserta.setUploadImageName(nameImage);
 
-                // format path name          
-                String[] name = nameImage.split("\\.");
-                if(!name[name.length-1].equalsIgnoreCase("jpg")&&!name[name.length-1].equalsIgnoreCase("png")){
-                    result.setSuccess(false);
-                    result.setMessage("Error: Format image harus jpg & png");
-                    result.setCode(HttpStatus.BAD_REQUEST.value());
-                    return ResponseEntity
-                            .badRequest()
-                            .body(result);
-                }
-                 String namaImage = nomorKtp + "_" + namaPeserta + "." + name[name.length-1];
-                 namaImage = namaImage.replaceAll(" ", "_");
-                 String fileName = String.format(folderPath + "/" + namaImage);
-                 peserta.setUploadImagePath(fileName);
-                // save file to folder
-                 String filePath = folderPath +"/image"+ File.separator + namaImage;
-                 OutputStream out = new FileOutputStream(filePath);
-                 out.write(uploadImage.getBytes());
-                 out.close();
+            //     // format path name          
+            //     String[] name = nameImage.split("\\.");
+            //     if(!name[name.length-1].equalsIgnoreCase("jpg")&&!name[name.length-1].equalsIgnoreCase("png")){
+            //         result.setSuccess(false);
+            //         result.setMessage("Error: Format image harus jpg & png");
+            //         result.setCode(HttpStatus.BAD_REQUEST.value());
+            //         return ResponseEntity
+            //                 .badRequest()
+            //                 .body(result);
+            //     }
+            //      String namaImage = nomorKtp + "_" + namaPeserta + "." + name[name.length-1];
+            //      namaImage = namaImage.replaceAll(" ", "_");
+            //      String fileName = String.format(folderPath + "/" + namaImage);
+            //      peserta.setUploadImagePath(fileName);
+            //     // save file to folder
+            //      String filePath = folderPath +"/image"+ File.separator + namaImage;
+            //      OutputStream out = new FileOutputStream(filePath);
+            //      out.write(uploadImage.getBytes());
+            //      out.close();
 
-             }
+            //  }
 
-               // set cv 
-            if (uploadCv != null) {
-                String nameFile = StringUtils.cleanPath(uploadCv.getOriginalFilename());
-                nameFile = nameFile.replaceAll(" ", "_");
-                peserta.setUploadImageName(nameFile);
+            //    // set cv 
+            // if (uploadCv != null) {
+            //     String nameFile = StringUtils.cleanPath(uploadCv.getOriginalFilename());
+            //     nameFile = nameFile.replaceAll(" ", "_");
+            //     peserta.setUploadImageName(nameFile);
 
-                // format path name   
-            String[] name = nameFile.split("\\.");
-            if(!name[name.length-1].equalsIgnoreCase("pdf")&&!name[name.length-1].equalsIgnoreCase("docx")){
-                result.setSuccess(false);
-                result.setMessage("Error: format cv harus pdf dan docx");
+            //     // format path name   
+            // String[] name = nameFile.split("\\.");
+            // if(!name[name.length-1].equalsIgnoreCase("pdf")&&!name[name.length-1].equalsIgnoreCase("docx")){
+            //     result.setSuccess(false);
+            //     result.setMessage("Error: format cv harus pdf dan docx");
+            //     result.setCode(HttpStatus.BAD_REQUEST.value());
+            //     return ResponseEntity
+            //             .badRequest()
+            //             .body(result);
+            // }
+            // String customNameCV = nomorKtp + "_" + namaPeserta + "." + name[name.length-1];
+            // customNameCV = customNameCV.replaceAll(" ", "_");
+            // peserta.setUploadCv(customNameCV);
+
+            // peserta.setUploadCvPath(folderPath +"/" + customNameCV );
+
+            // String filePath = folderPath +"/documents"+ File.separator + customNameCV;
+            // OutputStream out = new FileOutputStream(filePath);
+            // out.write(uploadCv.getBytes());
+            // out.close();  
+
+            // }
+
+            
+            //Saving Image process
+            //Get Image name
+            String imageName = StringUtils.cleanPath(uploadImage.getOriginalFilename());
+            imageName = imageName.replaceAll(" ", "_");
+            peserta.setUploadImageName(imageName);
+
+            //Save file
+            String fileCode = FileUploadUtil.saveFile(imageName, uploadImage);
+
+            //Validasi Image size
+            if (fileCode == null) {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
+                result.setSuccess(false);
+                result.setMessage("File harus kurang dari 7MB");
+                return ResponseEntity.badRequest().body(result);
             }
-            String customNameCV = nomorKtp + "_" + namaPeserta + "." + name[name.length-1];
-            customNameCV = customNameCV.replaceAll(" ", "_");
-            peserta.setUploadCv(customNameCV);
 
-            peserta.setUploadCvPath(folderPath +"/" + customNameCV );
+            //Set path name
+            peserta.setUploadImagePath(PathGeneratorUtil.generate(fileCode,baseUrl));
+            //End
 
-            String filePath = folderPath +"/documents"+ File.separator + customNameCV;
-            OutputStream out = new FileOutputStream(filePath);
-            out.write(uploadCv.getBytes());
-            out.close();  
+               
+            //Saving CV process
+            //Get CV name
+            String cvName = StringUtils.cleanPath(uploadCv.getOriginalFilename());
+            cvName = cvName.replaceAll(" ", "_");
+            peserta.setUploadCv(cvName);
 
+            //Save file
+            String fileCodeCv = FileUploadUtil.saveFile(cvName, uploadImage);
+
+            //Validasi file size
+            if (fileCodeCv == null) {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setMessage("File harus kurang dari 7MB");
+                return ResponseEntity.badRequest().body(result);
             }
+
+            //Set CV name
+            peserta.setUploadCvPath(PathGeneratorUtil.generate(fileCodeCv,baseUrl));
+            //End
 
             //set pendidikan terkahir
             if (!educationRepository.findById(Integer.valueOf(pendidikanTerakhir)).isPresent()) {
