@@ -46,7 +46,7 @@ public class BatchServiceImpl implements BatchService {
             List<Batch> batch = batchRepository.findBatchData(search.toLowerCase(), limit, page.intValue());
             items.put("items", batch);
             items.put("totalDataResult", batch.size());
-            items.put("totalData", batchRepository.count());
+            items.put("totalData", batchRepository.bannedfalse());
 
             if (batch.size() == 0 || limit > batchRepository.bannedfalse()) {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
