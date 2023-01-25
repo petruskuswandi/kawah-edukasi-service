@@ -40,7 +40,7 @@ public class SignupRequest {
   private String noHp;
 
   @ApiModelProperty(example = "false", required = true)
-  private boolean isActive;
+  private Boolean isActive;
 
   public String getUsername() {
     return username;
@@ -92,11 +92,11 @@ public class SignupRequest {
     this.role = role;
   }
 
-  public boolean getIsActive() {
+  public Boolean getIsActive() {
       return isActive;
   }
 
-  public void setIsActive(boolean isActive) {
+  public void setIsActive(Boolean isActive) {
       this.isActive = isActive;
   }
   
