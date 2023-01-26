@@ -16,10 +16,7 @@ import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
 import id.kedukasi.core.request.RegisterRequest;
 import id.kedukasi.core.service.EmailService;
 import id.kedukasi.core.service.PesertaService;
-import id.kedukasi.core.utils.FileUploadUtil;
-import id.kedukasi.core.utils.StringUtil;
-import id.kedukasi.core.utils.UploadUtil;
-import id.kedukasi.core.utils.ValidatorUtil;
+import id.kedukasi.core.utils.*;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -751,41 +748,85 @@ public class PesertaServiceImpl implements PesertaService {
                 peserta.setBatch(batchRepository.findById(batchId).get());
             }
 
-            // set image
-            if (uploadImage != null) {
-                // peserta.setUploadImagePath(IOUtils.toByteArray(uploadImage.getInputStream()));
-                String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
-                String[] image = nameImage.split("\\.");
-                String format = image[image.length-1];
-                if (!format.equalsIgnoreCase("jpg")&&!format.equalsIgnoreCase("png")) {
-                    result.setSuccess(false);
-                    result.setMessage("Error: File Image harus format jpg atau png");
-                    result.setCode(HttpStatus.BAD_REQUEST.value());
-                    return ResponseEntity
-                            .badRequest()
-                            .body(result);
-                }
-                //save Image
-                UploadUtil.saveImage(pathUpload, namaPeserta, uploadImage, nomorKtp, peserta, format);
+//            // set image
+//            if (uploadImage != null) {
+//                // peserta.setUploadImagePath(IOUtils.toByteArray(uploadImage.getInputStream()));
+//                String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
+//                String[] image = nameImage.split("\\.");
+//                String format = image[image.length-1];
+//                if (!format.equalsIgnoreCase("jpg")&&!format.equalsIgnoreCase("png")) {
+//                    result.setSuccess(false);
+//                    result.setMessage("Error: File Image harus format jpg atau png");
+//                    result.setCode(HttpStatus.BAD_REQUEST.value());
+//                    return ResponseEntity
+//                            .badRequest()
+//                            .body(result);
+//                }
+//                //save Image
+//                UploadUtil.saveImage(pathUpload, namaPeserta, uploadImage, nomorKtp, peserta, format);
+//
+//            }
+//            // set cv
+//            if (uploadCv != null) {
+//                //get original name
+//                String nameCV = StringUtils.cleanPath(uploadCv.getOriginalFilename());
+//                //proses validasi file pdf
+//                String[] name = nameCV.split("\\.");
+//                if (!name[name.length-1].equals("pdf")){
+//                    result.setSuccess(false);
+//                    result.setMessage("Error: File CV harus format pdf");
+//                    result.setCode(HttpStatus.BAD_REQUEST.value());
+//                    return ResponseEntity
+//                            .badRequest()
+//                            .body(result);
+//                }
+//                //save CV
+//                UploadUtil.saveCV(pathUpload, namaPeserta, nomorKtp, uploadCv, peserta);
+//            }
 
+            //Saving Image process
+            //Get Image name
+            String imageName = StringUtils.cleanPath(uploadImage.getOriginalFilename());
+            imageName = imageName.replaceAll(" ", "_");
+            peserta.setUploadImageName(imageName);
+
+            //Save file
+            String fileCode = FileUploadUtil.saveFile(imageName, uploadImage);
+
+            //Validasi Image size
+            if (fileCode == null) {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setMessage("File harus kurang dari 7MB");
+                return ResponseEntity.badRequest().body(result);
             }
-            // set cv
-            if (uploadCv != null) {
-                //get original name
-                String nameCV = StringUtils.cleanPath(uploadCv.getOriginalFilename());
-                //proses validasi file pdf
-                String[] name = nameCV.split("\\.");
-                if (!name[name.length-1].equals("pdf")){
-                    result.setSuccess(false);
-                    result.setMessage("Error: File CV harus format pdf");
-                    result.setCode(HttpStatus.BAD_REQUEST.value());
-                    return ResponseEntity
-                            .badRequest()
-                            .body(result);
-                }
-                //save CV
-                UploadUtil.saveCV(pathUpload, namaPeserta, nomorKtp, uploadCv, peserta);
+
+            //Set path name
+            peserta.setUploadImagePath(PathGeneratorUtil.generate(fileCode,pathUpload));
+            //End
+
+
+            //Saving CV process
+            //Get CV name
+            String cvName = StringUtils.cleanPath(uploadCv.getOriginalFilename());
+            cvName = cvName.replaceAll(" ", "_");
+            peserta.setUploadCv(cvName);
+
+            //Save file
+            String fileCodeCv = FileUploadUtil.saveFile(cvName, uploadImage);
+
+            //Validasi file size
+            if (fileCodeCv == null) {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setMessage("File harus kurang dari 7MB");
+                return ResponseEntity.badRequest().body(result);
             }
+
+            //Set CV name
+            peserta.setUploadCvPath(PathGeneratorUtil.generate(fileCodeCv,pathUpload));
+            //End
+
             if (!educationRepository.findById(Integer.valueOf(pendidikanTerakhir)).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada pendidikan terakhir dengan id " + pendidikanTerakhir);
