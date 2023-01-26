@@ -38,8 +38,7 @@ public class User implements Serializable {
 
   @Id
   @GeneratedValue(
-          strategy= GenerationType.AUTO,
-          generator="native")
+          strategy= GenerationType.IDENTITY)
   private Long id;
 
   @NotBlank
