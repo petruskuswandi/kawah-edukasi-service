@@ -211,8 +211,8 @@ public class KelasServiceImpl implements KelasService {
     public ResponseEntity<Result> createClass(KelasRequest Request) {
         result = new Result();
         try {
-            Kelas checkClassname = kelasRepository.findByClassname(Request.getClassName()).orElse(new Kelas());
-            if (checkClassname.getClassname()!= null && !checkClassname.isBanned()) {
+            Kelas checkClassname = kelasRepository.findBanned(false, Request.getClassName()).orElse(new Kelas());
+            if (checkClassname.getClassname()!= null) {
                 result.setMessage("Error: Nama kelas sudah digunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
