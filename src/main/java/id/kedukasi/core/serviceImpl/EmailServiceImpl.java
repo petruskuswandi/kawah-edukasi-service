@@ -44,7 +44,7 @@ public class EmailServiceImpl implements EmailService {
   @Value("${spring.mail.email.admin}")
   private String emailadmin;
 
-  @Value("${app.url.staging}")
+  @Value("${app.url.staging.be}")
   private String urlstaging;
 
   @Value("${app.upload-file-path}")
@@ -103,10 +103,9 @@ public class EmailServiceImpl implements EmailService {
 
 
   @Override
-  public boolean sendRegisterMail(Map<String, String> filesUpload, PesertaServiceImpl.SetPenambahanData setPenambahanData, Peserta pesertabaru, String pathfile) throws IOException, MessagingException, DocumentException {
+  public boolean sendRegisterMail(Map<String, String> filesUpload, PesertaServiceImpl.SetPenambahanData setPenambahanData, Peserta pesertabaru) throws IOException, MessagingException, DocumentException {
     Path currentPath = Paths.get(".");
     Path absolutePath = currentPath.toAbsolutePath();
-    String setPath = absolutePath + pathfile;
     Map<String,String> dataFile = new HashMap<>();
     Context context = new Context();
     MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -117,8 +116,8 @@ public class EmailServiceImpl implements EmailService {
 
     for(Map.Entry<String, String> data : filesUpload.entrySet()){
 
-      context.setVariable("file" + data.getKey(),urlstaging + "/upload/" + data.getValue());
-
+      context.setVariable("file" + data.getKey(),urlstaging + "/previewFile/utility/" + data.getValue());
+      logger.info(urlstaging + "/previewFile/utility/" + data.getValue());
     }
 
     String process = templateEngine.process("register", context);
@@ -126,9 +125,9 @@ public class EmailServiceImpl implements EmailService {
     helper.setText(process, true);
     helper.setTo(emailadmin);
     javaMailSender.send(mimeMessage);
-    generatePdfFromHtml(process,pesertabaru.getId().toString(),"REGISTRASI_PESERTA");
+    //generatePdfFromHtml(process,pesertabaru.getId().toString(),"REGISTRASI_PESERTA");
 
-    logger.info(dataFile.toString());
+    //logger.info(dataFile.toString());
     return true;
   }
 

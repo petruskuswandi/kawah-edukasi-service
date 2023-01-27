@@ -33,7 +33,9 @@ import java.util.Date;
 public class Peserta implements Serializable {
 
         @Id
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
+        @GeneratedValue(
+                strategy= GenerationType.AUTO,
+                generator="native")
         private Long id;
 
         @JsonIgnoreProperties({"description", "banned","banned_time",
@@ -161,10 +163,10 @@ public class Peserta implements Serializable {
         @Column(name = "kode_referal")
         private String kodeReferal;
 
-    
-        @Enumerated(EnumType.STRING)
-        @Column(name = "statusTes", length = 20)
-        private EnumStatusTes statusTes;
+        @JsonIgnoreProperties({"created_at","updated_at","deleted","description","flag", "subFlag"})
+        @ManyToOne(targetEntity = Status.class,fetch = FetchType.EAGER)
+        @JoinColumn(name = "statusTes", nullable = true)
+        private Status statusTes;
 
      
         @Enumerated(EnumType.STRING)

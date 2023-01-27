@@ -18,6 +18,10 @@ public interface KelasRepository extends JpaRepository<Kelas,Long> {
     @Transactional
     Optional<Kelas> findByClassname(String username);
 
+    @Transactional
+    @Query(value = "select * from classes where banned = ?1 and classname = ?2",  nativeQuery = true)
+    Optional<Kelas> findBanned(boolean banned, String clasName);
+
 
     @Modifying
     @Transactional

@@ -25,6 +25,10 @@ public class RegisterRequest {
 
     @ApiModelProperty(example = "1", required = true)
     private Long batch;
+
+    @ApiModelProperty(example = "1", required = true)
+    private Long class_id;
+
     @ApiModelProperty(example = "udindev@gmail.com", required = true)
     private String email;
     @ApiModelProperty(example = "true", required = true)
@@ -64,6 +68,13 @@ public class RegisterRequest {
     private boolean siapBekerja;
 
 
+    public Long getClass_id() {
+        return class_id;
+    }
+
+    public void setClass_id(Long class_id) {
+        this.class_id = class_id;
+    }
 
     public Long getBatch() {
         return batch;
