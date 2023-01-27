@@ -21,16 +21,6 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
 
   @Modifying
   @Transactional
-  @Query("update Mentor m set m.foto = ?1 where m.id = ?2 ")
-  int updateFoto(byte[] image, Long id);
-
-  @Modifying
-  @Transactional
-  @Query("update Mentor m set m.cv = ?1 where m.id = ?2 ")
-  int updateCv(byte[] file, Long id);
-
-  @Modifying
-  @Transactional
   @Query("update Mentor m set m.banned = ?1, m.banned_time = CURRENT_TIMESTAMP where m.id = ?2")
   int deleteMentor(boolean banned, Long id);
 
@@ -45,6 +35,11 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
   @Transactional
   @Query(value = "SELECT count(*) FROM mentors WHERE banned = false", nativeQuery = true)
   int bannedfalse();
+
+  @Transactional
+  @Query(value = "SELECT * FROM mentors WHERE banned = ?1 AND email = ?2", nativeQuery = true)
+  Optional<Mentor> findByemail(boolean banned, String email);
+
   @Transactional
   @Query(value = "SELECT kode FROM mentors WHERE id = :id", nativeQuery = true)
   String ambilkode(@Param("id") Long id);

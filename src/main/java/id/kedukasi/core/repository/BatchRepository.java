@@ -23,14 +23,24 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
     @Transactional
     @Query(value = "SELECT count(*) FROM batches WHERE banned = false", nativeQuery = true)
     int bannedfalse();
+
+    @Transactional
+    @Query(value = "SELECT * FROM batches WHERE banned = ?1 AND batchname = ?2", nativeQuery = true)
+    Optional<Batch> findBanned(boolean banned, String batchname);
+
+    @Transactional
+    @Query(value = "SELECT * FROM batches WHERE started_time > CURRENT_DATE AND banned = false ORDER BY started_time ASC", nativeQuery = true)
+    List<Batch> findAllBatchRunning();
+
     @Transactional
     @Query(
             value = "SELECT * FROM batches WHERE banned = false AND"+
                     "(:batchname IS NULL OR LOWER(batchname) LIKE %:batchname%) "+
-                    "ORDER BY id LIMIT :limit OFFSET :page",
+                    "ORDER BY started_time ASC LIMIT :limit OFFSET :page",
             nativeQuery = true
     )
     List<Batch> findBatchData(@Param("batchname") String search,
                               @Param("limit") int limit,
                               @Param("page") int page);
+
 }

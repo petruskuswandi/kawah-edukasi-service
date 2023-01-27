@@ -14,12 +14,12 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
+import static javax.persistence.TemporalType.DATE;
+
 @Getter
 @Setter
 @Entity
-@Table(name = "batches",uniqueConstraints = {
-        @UniqueConstraint(columnNames = "batchname"),
-})
+@Table(name = "batches")
 
 @DynamicUpdate
 public class Batch implements Serializable {
@@ -43,18 +43,18 @@ public class Batch implements Serializable {
 
     @Column(name = "banned_time")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Jakarta")
     private Date banned_time;
 
     // menambahkan stadate & Endedate
     @Column(name = "started_time")
-    @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Temporal(DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Jakarta")
     private Date startedtime;
 
     @Column(name = "ended_time")
-    @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Temporal(DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Jakarta")
     private Date endedtime;
     @JsonIgnoreProperties({"profilePicture","profilePicturePath","email","password","namaLengkap","noHp","role","isLogin","isActive","tokenVerification","created_time","updated_time","banned","banned_time","verified"})
     @ManyToOne(fetch = FetchType.EAGER)
@@ -63,12 +63,12 @@ public class Batch implements Serializable {
 
     @Column(name = "created_time", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Jakarta")
     private Date created_time;
 
     @Column(name = "updated_time")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Jakarta")
     private Date updated_time;
 
     public Batch() {

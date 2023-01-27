@@ -87,16 +87,19 @@ public class BatchServiceImpl implements BatchService {
 
         return result;
     }
+
     public Result getAllBatchRunning(String uri) {
         result = new Result();
         try {
-
-            Map items = new HashMap();
-            Batch batch = new Batch();
-            batch.setBanned(false);
-            Example<Batch> example = Example.of(batch);
-            items.put("items", batchRepository.findAll(example, Sort.by(Sort.Direction.ASC,"batchname")));
-            result.setData(items);
+            if (batchRepository.findAllBatchRunning().isEmpty()){
+                result.setSuccess(false);
+                result.setMessage("cannot found batch running");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                Map items = new HashMap();
+                items.put("items", batchRepository.findAllBatchRunning());
+                result.setData(items);
+            }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
@@ -107,8 +110,8 @@ public class BatchServiceImpl implements BatchService {
         result = new Result();
         try {
             // cek Batch name sudah di gunakan apa tidak
-            Batch checkBatchname = batchRepository.findByBatchname(createBatchRequest.getBatchname()).orElse(new Batch());
-            if (checkBatchname.getBatchname()!= null) {
+            Batch checkBatchname = batchRepository.findBanned(false, createBatchRequest.getBatchname()).orElse(new Batch());
+            if (checkBatchname.getBatchname() != null) {
                 result.setMessage("Error: Batch telah di gunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
@@ -153,7 +156,7 @@ public class BatchServiceImpl implements BatchService {
                         .body(result);
             }
             Optional<User> user = Optional.ofNullable(userRepository.findById(createBatchRequest.getCreated_by()));
-            if (!user.isPresent()){
+            if (user == null){
                 result.setSuccess(false);
                 result.setMessage("Error: id User tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -161,6 +164,7 @@ public class BatchServiceImpl implements BatchService {
                 User user_id = userRepository.findById(createBatchRequest.getCreated_by());
                 createBatchRequest.setCreated_by(Math.toIntExact(user_id.getId()));
             }
+
             Batch batchbaru = new Batch(createBatchRequest.getBatchname(), createBatchRequest.getDescription(),
                     createBatchRequest.getStartedtime(),createBatchRequest.getEndedtime());
             Date date = new Date();
@@ -182,13 +186,16 @@ public class BatchServiceImpl implements BatchService {
         result = new Result();
         try {
             // cek Batch name sudah di gunakan apa tidak
-            Batch checkBatchname = batchRepository.findByBatchname(batchRequest.getBatchname()).orElse(new Batch());
-            if (checkBatchname.getBatchname()!= null && !Objects.equals(batchRequest.getId(), checkBatchname.getId()) && batchRepository.findByBatchname(batchRequest.getBatchname()).isPresent()) {
-                result.setMessage(!batchRepository.existsById(batchRequest.getId()) && batchRepository.findByBatchname(batchRequest.getBatchname()).isPresent() ? "Error: Batch telah digunakan!" : "Error: Batch id is not found");
+            Batch checkBatchname = batchRepository.findBanned(false, batchRequest.getBatchname()).orElse(new Batch());
+            Optional<Batch> checkBatchIdAndName = batchRepository.findById(checkBatchname.getId());
+            if (checkBatchname.getBatchname() != null && checkBatchIdAndName != null) {
+                result.setMessage("Error: Batch telah di gunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
                         .body(result);
+            } else {
+                checkBatchname.setBatchname(batchRequest.getBatchname());
             }
 
             if (!batchRepository.existsById(batchRequest.getId())){
