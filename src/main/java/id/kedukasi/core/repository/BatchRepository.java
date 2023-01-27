@@ -13,8 +13,6 @@ import java.util.Optional;
 
 @Repository
 public interface BatchRepository extends JpaRepository<Batch, Long> {
-    @Transactional
-    Optional<Batch> findByBatchname(String username);
     @Modifying
     @Transactional
     @Query("update Batch u set u.banned = ?1, u.banned_time = CURRENT_TIMESTAMP where u.id = ?2")
@@ -31,6 +29,10 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
     @Transactional
     @Query(value = "SELECT * FROM batches WHERE started_time > CURRENT_DATE AND banned = false ORDER BY started_time ASC", nativeQuery = true)
     List<Batch> findAllBatchRunning();
+
+    @Transactional
+    @Query(value = "SELECT * FROM batches WHERE batchname = ?1 AND id != 2 AND banned = false", nativeQuery = true)
+    Optional<Batch> findIdValidationName(String batchname, Long id);
 
     @Transactional
     @Query(

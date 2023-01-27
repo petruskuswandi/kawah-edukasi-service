@@ -186,17 +186,18 @@ public class BatchServiceImpl implements BatchService {
         result = new Result();
         try {
             // cek Batch name sudah di gunakan apa tidak
-            Batch checkBatchname = batchRepository.findBanned(false, batchRequest.getBatchname()).orElse(new Batch());
-            Optional<Batch> checkBatchIdAndName = batchRepository.findById(checkBatchname.getId());
-            if (checkBatchname.getBatchname() != null && checkBatchIdAndName != null) {
+            Batch batch = new Batch();
+            Batch checkBatchname = batchRepository.findIdValidationName(batchRequest.getBatchname(), batchRequest.getId()).orElse(new Batch());
+            if (checkBatchname.getBatchname() != null) {
                 result.setMessage("Error: Batch telah di gunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             } else {
-                checkBatchname.setBatchname(batchRequest.getBatchname());
+                batch.setBatchname(batchRequest.getBatchname());
             }
+
 
             if (!batchRepository.existsById(batchRequest.getId())){
                 result.setMessage("Error: Batch id is not found");

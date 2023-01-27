@@ -87,7 +87,7 @@ public class MentorServiceImpl implements MentorService{
         result = new Result();
         try {
             // cek email
-            Mentor cekemail = mentorRepository.findByemail(false, email).orElse(new Mentor());
+            Mentor cekemail = mentorRepository.findByemailUpdate(false, email, id).orElse(new Mentor());
             if (cekemail.getEmail() != null) {
                 result.setSuccess(false);
                 result.setMessage("Error: email has been used!");

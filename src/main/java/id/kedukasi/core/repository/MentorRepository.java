@@ -38,7 +38,10 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
 
   @Transactional
   @Query(value = "SELECT * FROM mentors WHERE banned = ?1 AND email = ?2", nativeQuery = true)
-  Optional<Mentor> findByemail(boolean banned, String email);
+  Optional<Mentor> findByemail(boolean banned,String email);
+  @Transactional
+  @Query(value = "SELECT * FROM mentors WHERE banned = ?1 AND email = ?2 AND id != ?3", nativeQuery = true)
+  Optional<Mentor> findByemailUpdate(boolean banned, String email, Long id);
 
   @Transactional
   @Query(value = "SELECT kode FROM mentors WHERE id = :id", nativeQuery = true)
