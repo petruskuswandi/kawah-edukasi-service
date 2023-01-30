@@ -13,9 +13,11 @@ public interface SyillabusService {
 
     ResponseEntity<Result> updateSyillabus(UpdateSyllabusRequest syillabus);
 
-    ResponseEntity<Result> getAllSyillabus();
+    Result getAllSyillabus(String uri, String search, long limit, long offset);
 
     ResponseEntity<Result> getSyillabusById(Long id);
 
     ResponseEntity<Result> deleteSyillabus(Long id);
+
+    ResponseEntity<Result> softDeleteSyillabus(Long id);
 }
