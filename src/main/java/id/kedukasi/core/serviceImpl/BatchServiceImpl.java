@@ -1,6 +1,7 @@
 package id.kedukasi.core.serviceImpl;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import id.kedukasi.core.models.*;
 import id.kedukasi.core.repository.BatchRepository;
 import id.kedukasi.core.repository.UserRepository;
@@ -17,6 +18,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -96,8 +101,25 @@ public class BatchServiceImpl implements BatchService {
                 result.setMessage("cannot found batch running");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                Map items = new HashMap();
-                items.put("items", batchRepository.findAllBatchRunning());
+                Map<String, Object> items = new HashMap();
+                String[] key = {"id", "batchname", "description", "banned", "banned_time", "started_time", "ended_time", "created_by", "created_time", "updated_time", "is_active"};
+                List<Object[]> obj = batchRepository.findAllBatchRunning();
+                List<Map<String, Object>> response = new ArrayList<>();
+                for(Object[] c : obj) {
+                    Map<String, Object> temp = new HashMap<>();
+                    for (int i = 0; i < key.length; i++) {
+                        if (c[i] instanceof Date){
+                            temp.put(key[i], new SimpleDateFormat("yyyy-MM-dd").format(c[i]));
+                        } else {
+                            temp.put(key[i], c[i]);
+                        }
+                    }
+                    if (temp.get("created_by") != null) {
+                        temp.replace("created_by", batchRepository.finduserbyid());
+                    }
+                    response.add(temp);
+                }
+                items.put("items", response);
                 result.setData(items);
             }
         } catch (Exception e) {
@@ -113,6 +135,14 @@ public class BatchServiceImpl implements BatchService {
             Batch checkBatchname = batchRepository.findBanned(false, createBatchRequest.getBatchname()).orElse(new Batch());
             if (checkBatchname.getBatchname() != null) {
                 result.setMessage("Error: Batch telah di gunakan!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (createBatchRequest.getBatchname().length() >= 30) {
+                result.setMessage("Error: Nama Batch lebih dari 30 character");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()

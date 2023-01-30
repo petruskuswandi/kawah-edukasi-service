@@ -1,5 +1,6 @@
 package id.kedukasi.core.repository;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import id.kedukasi.core.models.Batch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,8 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public interface BatchRepository extends JpaRepository<Batch, Long> {
@@ -27,11 +27,17 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
     Optional<Batch> findBanned(boolean banned, String batchname);
 
     @Transactional
-    @Query(value = "SELECT * FROM batches WHERE started_time > CURRENT_DATE AND banned = false ORDER BY started_time ASC", nativeQuery = true)
-    List<Batch> findAllBatchRunning();
+    @Query(value = "SELECT id, batchname, description, banned, banned_time, started_time, ended_time, created_by, created_time, updated_time, " +
+            "CASE WHEN started_time > CURRENT_DATE THEN CAST('true' AS boolean) ELSE CAST('false' AS boolean) END AS is_active " +
+            "FROM batches WHERE banned = false ORDER BY started_time ASC", nativeQuery = true)
+    List<Object[]> findAllBatchRunning();
 
     @Transactional
-    @Query(value = "SELECT * FROM batches WHERE batchname = ?1 AND id != 2 AND banned = false", nativeQuery = true)
+    @Query(value = "SELECT id, username FROM users", nativeQuery = true)
+    List<Object[]> finduserbyid();
+
+    @Transactional
+    @Query(value = "SELECT * FROM batches WHERE batchname = ?1 AND id != ?2 AND banned = false", nativeQuery = true)
     Optional<Batch> findIdValidationName(String batchname, Long id);
 
     @Transactional
