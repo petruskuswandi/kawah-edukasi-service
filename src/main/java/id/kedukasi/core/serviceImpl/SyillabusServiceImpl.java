@@ -8,6 +8,7 @@ import java.util.Optional;
 import id.kedukasi.core.models.Attachments;
 import id.kedukasi.core.models.TypeDocuments;
 import id.kedukasi.core.repository.AttachmentsRepository;
+import id.kedukasi.core.repository.KelasRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,27 +42,34 @@ public class SyillabusServiceImpl implements SyillabusService{
 
     @Autowired
     AttachmentsRepository attachmentsRepository;
+    @Autowired
+    private KelasRepository kelasRepository;
 
     @Override
     public ResponseEntity<Result> createSyllabus(SyillabusRequest syillabus) {
         result = new Result();
        
         try{
-            int syillabusName = syillabusRepository.findSyillabusName(syillabus.getSyillabusName().toLowerCase());
+            Syillabus checkSyillabus = syillabusRepository.findDellete(false, syillabus.getSyillabusName()).orElse(new Syillabus());
+//            int syillabusName = syillabusRepository.findSyillabusName(syillabus.getSyillabusName().toLowerCase());
             
-            if (syillabusName > 0) {
+            if (checkSyillabus.getSyillabusName() != null) {
                 result.setMessage("Error: nama syillabus sudah ada!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
-            
-            if(syillabus.getDescription().length()>500 ) {
-                result.setMessage("Error: Deskripsi harus kurang dari 500 karakter");
+            if (syillabus.getSyillabusName().length()<3 || syillabus.getSyillabusName().isBlank() || syillabus.getSyillabusName().length()>50){
+                result.setMessage("Error: nama syillabus tidak boleh kosong dan harus terdiri dari 3-50 karakter");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
-            Syillabus newSyillabus = new Syillabus(syillabus.getSyillabusName(), syillabus.getDescription(),false);
-         
+            if(syillabus.getDescription().length()>1000 || syillabus.getDescription().isBlank() ) {
+                result.setMessage("Error: Deskripsi tidak boleh kosong dan Deskripsi harus kurang dari 1000 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
+            Syillabus newSyillabus = new Syillabus(syillabus.getSyillabusName(), syillabus.getDescription());
+
             //set Attachments
             for (Long attachmentId : syillabus.getAttachmentId()) {
                 if(!attachmentsRepository.existsById(attachmentId)) {
@@ -95,17 +103,20 @@ public class SyillabusServiceImpl implements SyillabusService{
     @Override
     public ResponseEntity updateSyillabus(UpdateSyllabusRequest syillabus) {
        result = new Result();
-
         try {
-
             int syillabusName = syillabusRepository.findSyillabusName(syillabus.getSyllabusName().toLowerCase());
-            // if (syillabusName > 0) {
-            //     result.setMessage("Error: Nama Syillabus Telah Ada!");
-            //     result.setCode(HttpStatus.BAD_REQUEST.value());
-            //     return ResponseEntity.badRequest().body(result);
-            // }
-            if (syillabus.getDescription().length()>500 ) {
-                result.setMessage("Error: Deskripsi harus kurang dari 500 karakter");
+             if (syillabusName != Integer.parseInt(null)) {
+                 result.setMessage("Error: Nama Syillabus tidak boleh kosong ");
+                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                 return ResponseEntity.badRequest().body(result);
+             }
+             if (syillabus.getSyllabusName().length()<3 || syillabus.getSyllabusName().length()>50 || syillabus.getSyllabusName().isBlank()){
+                 result.setMessage("Error: Nama Syillabus tidak boleh kosong dan harus kurang dari 50 karakter");
+                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                 return ResponseEntity.badRequest().body(result);
+             }
+            if (syillabus.getSyllabusName().length()<3 || syillabus.getSyllabusName().length()>100 || syillabus.getSyllabusName().isBlank() ) {
+                result.setMessage("Error: Deskripsi harus kurang dari 1000 karakter");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -147,21 +158,35 @@ public class SyillabusServiceImpl implements SyillabusService{
     }
 
     @Override
-    public ResponseEntity<Result> getAllSyillabus() {
-       result = new Result();
-       try {
-        Map<String, List<Syillabus>> items = new HashMap<>();
-        Syillabus syillabus = new Syillabus();
-        Example<Syillabus> example = Example.of(syillabus);
-        items.put("items", syillabusRepository.findAll(example, Sort.by(Sort.Direction.ASC,"id")));
-        result.setData(items);
-       } catch (Exception e) {
-        logger.error(stringUtil.getError(e));
-       }
-       return ResponseEntity.ok(result);
+    public Result getAllSyillabus(String uri, String search, long limit, long offset) {
+        result = new Result();
+            if (limit == -99) {
+                limit = kelasRepository.count();
+            }
+            if (offset == -99) {
+                offset = 0;
+            }
+            if (search == null) {
+                search = "";
+            }
+            try {
+                Map items = new HashMap();
+                List<Syillabus> syillabus = syillabusRepository.findAllSyillabus(search,  limit, offset);
+                items.put("items", syillabus);
+                items.put("total Data Result", syillabus.size());
+                items.put("total Data", syillabusRepository.countSyillabusData());
+                if (syillabus.size() == 0) {
+                    result.setMessage("Data tidak ada");
+                }
+                result.setData(items);
+            }catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        return result;
     }
 
-    @Override
+
+        @Override
     public ResponseEntity<Result> getSyillabusById(Long id) {
         result = new Result();
         try {

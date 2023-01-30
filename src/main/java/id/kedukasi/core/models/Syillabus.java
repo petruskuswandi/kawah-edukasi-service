@@ -33,14 +33,14 @@ public class Syillabus {
      */
     @Id
     @GeneratedValue(
-            strategy= GenerationType.IDENTITY,
+            strategy= GenerationType.AUTO,
             generator="native")
     private Long id;
 
     @Column(name="syllabus_name",  length = 50)
     private String syillabusName;
 
-    @Column(name="description",  length = 500)
+    @Column(name="description",  length = 1000)
     private String description;
 
     @JsonIgnoreProperties({ "deleted", "created_at","updated_at"})
@@ -71,27 +71,20 @@ public class Syillabus {
     public Syillabus() {
     }
 
-    public Syillabus(Long id, String syillabusName, String description, boolean isDeleted, Date created_at,
-            Date updated_at) {
-        this.id = id;
-        this.syillabusName = syillabusName;
-        this.description = description;
-        this.isDeleted = isDeleted;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-    }
-
     public Syillabus(Long id, String syillabusName, String description, boolean isDeleted) {
+        Date date = new Date();
         this.id = id;
         this.syillabusName = syillabusName;
         this.description = description;
         this.isDeleted = isDeleted;
+        this.updated_at = date;
     }
 
-    public Syillabus(String syillabusName, String description, boolean isDeleted) {
+    public Syillabus(String syillabusName, String description) {
+        Date date = new Date();
+        this.created_at = date;
         this.syillabusName = syillabusName;
         this.description = description;
-        this.isDeleted = isDeleted;
     }
 
     // public Long getId() {
