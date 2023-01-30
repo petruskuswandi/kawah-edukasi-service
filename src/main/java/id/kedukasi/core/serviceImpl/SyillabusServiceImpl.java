@@ -82,7 +82,10 @@ public class SyillabusServiceImpl implements SyillabusService{
                     newSyillabus.setAttachments(attachments);
                 }
             }
+            
 
+            
+          
             syillabusRepository.save(newSyillabus);
             result.setMessage("Berhasil membuat syllabus baru!");
             result.setCode(HttpStatus.OK.value());

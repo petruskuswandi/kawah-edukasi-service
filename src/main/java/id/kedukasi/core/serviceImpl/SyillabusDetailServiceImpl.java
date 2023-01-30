@@ -1,10 +1,16 @@
 package id.kedukasi.core.serviceImpl;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,36 +58,46 @@ public class SyillabusDetailServiceImpl implements SyillabusDetailService{
         result = new Result();
         try {
             SyillabusDetail Syillabusdetail = new SyillabusDetail();
-
-            // set syillabus
-            Optional<Syillabus> syillabus = syillabusRepository.findById(syillabusDetail.getSyillabus());
-            if (!syillabus.isPresent()){
-                result.setSuccess(false);
-                result.setMessage("Error : Syillabus tidak ditemukan");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else {
-                Syillabus syillabus2 = syillabusRepository.findById(syillabusDetail.getSyillabus()).get();
-                Syillabusdetail.setSyillabus(syillabus2);
+            // // set syillabus
+         
+            for (Long syillabusId : syillabusDetail.getSyillabusId()) {
+                if(!syillabusRepository.existsById(syillabusId)) {
+                    result.setSuccess(false);
+                    result.setMessage("Error: Syillabus dengan ID " + syillabusId + " tidak ditemukan");
+                    result.setCode(HttpStatus.BAD_REQUEST.value());
+                    return ResponseEntity.badRequest().body(result);
+                }else {
+                    List<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabusId());
+                    Syillabusdetail.setSyillabus(syillabus);
+                }
             }
+    
+
+          
 
             // set class
-            Optional<Kelas> kelas = kelasRepository.findById(syillabusDetail.getKelas());
+            Optional<Kelas> kelas = kelasRepository.findById(syillabusDetail.getKelasId());
             if (!kelas.isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Class tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else{
-                Kelas kelas2 = kelasRepository.findById(syillabusDetail.getKelas()).get();
+                Kelas kelas2 = kelasRepository.findById(syillabusDetail.getKelasId()).get();
                 Syillabusdetail.setKelas(kelas2);
             }
 
             syillabusDetailRepository.save(Syillabusdetail);
             
             result.setMessage("Berhasil Membuat syillabus detail baru");
+            result.setData(syillabusDetail);
             result.setCode(HttpStatus.OK.value());
 
         }catch (Exception e){
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
       
@@ -132,6 +148,7 @@ public class SyillabusDetailServiceImpl implements SyillabusDetailService{
                 result.setMessage("Error: Tidak ada  Syillabus Detail dengan id" + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
+                syillabusDetailRepository.deletesyillabusDetailList(id);
                 syillabusDetailRepository.deleteById(id);
                 result.setMessage("Berhasil delete Syillabus Detail");
                 result.setCode(HttpStatus.OK.value());
@@ -155,16 +172,29 @@ public class SyillabusDetailServiceImpl implements SyillabusDetailService{
             } else {
                 SyillabusDetail Syillabusdetail = new SyillabusDetail(syillabusDetail.getId(), syillabusDetail.isDeleted());
 
-                Syillabus syillabus = syillabusRepository.findById(syillabusDetail.getSyillabus()).get();
-                if (!syillabusRepository.findById(syillabus.getId()).isPresent()) {
-                    result.setSuccess(false);
-                    result.setMessage("Syillabus tidak ditemukan");
-                    result.setCode(HttpStatus.BAD_REQUEST.value());
-                }else {
-                    Syillabusdetail.setSyillabus(syillabus);
+                // // Syillabus syillabus = syillabusRepository.findById(syillabusDetail.getSyillabus()).get();
+                // List<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabusId());
+                // // if (!syillabusRepository.findAllById(syillabus.get()).isPresent()) {
+                // //     result.setSuccess(false);
+                // //     result.setMessage("Syillabus tidak ditemukan");
+                // //     result.setCode(HttpStatus.BAD_REQUEST.value());
+                // // }else {
+                // //     // Syillabusdetail.setSyillabus(syillabus);
+                // // }
+                // Syillabusdetail.setSyillabus(syillabus);
+                for (Long syillabusId : syillabusDetail.getSyillabusId()) {
+                    if(!syillabusRepository.existsById(syillabusId)) {
+                        result.setSuccess(false);
+                        result.setMessage("Error: Syillabus dengan ID " + syillabusId + " tidak ditemukan");
+                        result.setCode(HttpStatus.BAD_REQUEST.value());
+                        return ResponseEntity.badRequest().body(result);
+                    }else {
+                        List<Syillabus> syillabus = syillabusRepository.findAllById(syillabusDetail.getSyillabusId());
+                        Syillabusdetail.setSyillabus(syillabus);
+                    }
                 }
 
-                Kelas kelas = kelasRepository.findById(syillabusDetail.getKelas()).get();
+                Kelas kelas = kelasRepository.findById(syillabusDetail.getKelasId()).get();
                 if (!kelasRepository.findById(kelas.getId()).isPresent()){
                     result.setSuccess(false);
                     result.setMessage("Error: Tidak ada Kelas dengan id " + kelas.getId());

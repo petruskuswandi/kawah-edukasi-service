@@ -3,12 +3,15 @@ package id.kedukasi.core.repository;
 import id.kedukasi.core.enums.EnumStatusPeserta;
 import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.Peserta;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +30,9 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
 
     @Transactional
     Optional<Peserta> findByNoHp(String noHp);
+
+    @Transactional
+    Optional<Peserta> findByNomorKtp(String nomorKtp);
 
     @Modifying
     @Transactional
@@ -54,7 +60,7 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
     int setUploadImagePath(String uploadImagePath, Long id);
 
     @Transactional
-    @Query("SELECT p FROM Peserta p WHERE p.namaPeserta LIKE %?1% AND p.statusPeserta = ?2")
+    @Query("SELECT p FROM Peserta p WHERE p.namaPeserta LIKE %?1% AND p.statusPeserta = ?2 AND p.banned = false")
     List<Peserta> search(String keyword, EnumStatusPeserta statusPeserta);
 
     @Transactional
@@ -74,11 +80,12 @@ public interface PesertaRepository extends JpaRepository<Peserta,Long> {
      */
     @Transactional
     @Query(value = "select p.* from Peserta p where p.status_peserta = :statusPeserta and p.banned = :banned and " +
-            "(:namaPeserta is null or p.nama_peserta like %:namaPeserta%) " +
+            "(:namaPeserta is null or LOWER(p.nama_peserta) like %:namaPeserta%) " +
             "order by p.id ASC limit :limit offset :offset",nativeQuery = true)
     List<Peserta> getAllPagination(@Param("statusPeserta") String statusPeserta,@Param("banned") boolean banned,
                          @Param("namaPeserta") String namaPeserta, @Param("limit")long limit,
                          @Param("offset") long offset);
+
 
     @Transactional
     @Query(value = "select count(p.*) from Peserta p where p.status_peserta = :statusPeserta and p.banned = false",nativeQuery = true)

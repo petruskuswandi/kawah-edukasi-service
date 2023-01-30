@@ -34,12 +34,28 @@ public class StatusController {
         return service.deleteStatusById(id);
     }
 
-    @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Result> getAllStatus() {
-        return service.getAllStatus();
+    @PatchMapping(value = "/delete")
+    public ResponseEntity<Result> softDeleteStatus(
+        @RequestParam(value = "id", defaultValue = "0", required = true) int id,
+        @RequestParam(value = "deleted", defaultValue = "false") boolean deleted
+    ) {
+        return service.softDeleteStatus(id, deleted);
     }
 
-    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
+    // @GetMapping(value = "/get/all", produces = APPLICATION_JSON_VALUE)
+    // public ResponseEntity<Result> getAllStatus() {
+    //     return service.getAllStatus();
+    // }
+
+    @GetMapping(value = "/get/", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Result> getStatus(@RequestParam(name = "flag", required = false) String flag,
+                                            @RequestParam(name = "sub flag", required = false) String subFlag,
+                                            @RequestParam(name = "limit", defaultValue = "10") Integer limit,
+                                            @RequestParam(name = "page", defaultValue = "1") Integer page) {
+        return service.getStatus(flag, subFlag, limit, page);
+    }
+
+    @GetMapping(value = "/get/{id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Result> getStatusById(@PathVariable("id") int id) {
         return service.getStatusById(id);
     }

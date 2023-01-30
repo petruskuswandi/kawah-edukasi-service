@@ -15,7 +15,9 @@ import java.util.Date;
 public class Attachments {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(
+            strategy= GenerationType.AUTO,
+            generator="native")
     private Long id;
 
     @Column(name="url", nullable = false, length = 50)

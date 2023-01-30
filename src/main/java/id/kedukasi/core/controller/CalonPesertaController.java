@@ -20,7 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @CrossOrigin
 @RestController
 @RequestMapping("/calonPeserta")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+// @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class CalonPesertaController {
 
 
@@ -68,7 +68,7 @@ public class CalonPesertaController {
             @RequestParam(value = "Nama Peserta") String namaPeserta,
             @RequestParam(value = "Tanggal Lahir") String tanggalLahir,
             @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
-            @RequestParam(value = "Pendidikan Terakhir") String pendidikanTerakhir,
+            @RequestParam(value = "Education Id (Pendidikan Terakhir)") String pendidikanTerakhir,
             @RequestParam(value = "No Hp") String noHp,
             @RequestParam(value = "Email") String email,
             @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
@@ -79,11 +79,17 @@ public class CalonPesertaController {
             @RequestParam(value = "Kelurahan", defaultValue = "0") Long kelurahan,
             @RequestParam(value = "Alamat Rumah") String alamatRumah,
             @RequestParam(value = "Motivasi") String motivasi,
-            @RequestParam(value = "Kode Referal",required = false) String kodeReferal
+            @RequestParam(value = "Kode Referal",required = false) String kodeReferal,
+
+                     //tambahan
+            @RequestParam(value = "jurusan") String jurusan,
+            @RequestParam(value = "status Id", required = false) Integer status,
+            @RequestParam(value = "Status Id (kesibukan)", required = false) Integer kesibukan,
+            @RequestParam(value = "Bersedia diluar kota") Boolean komitmen
     ) {
         Long id = 0L;
         return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
-                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv);
+                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv,jurusan,status,kesibukan,komitmen);
     }
 
     @PutMapping("/update")
@@ -95,7 +101,7 @@ public class CalonPesertaController {
             @RequestParam(value = "Nama Peserta") String namaPeserta,
             @RequestParam(value = "Tanggal Lahir") String tanggalLahir,
             @RequestParam(value = "Jenis Kelamin") String jenisKelamin,
-            @RequestParam(value = "Pendidikan Terakhir") String pendidikanTerakhir,
+            @RequestParam(value = "Education Id (Pendidikan Terakhir)") String pendidikanTerakhir,
             @RequestParam(value = "No Hp") String noHp,
             @RequestParam(value = "Email") String email,
             @RequestPart(value = "Upload Image", required = false) MultipartFile uploadImage,
@@ -106,10 +112,16 @@ public class CalonPesertaController {
             @RequestParam(value = "Kelurahan", defaultValue = "0") Long kelurahan,
             @RequestParam(value = "Alamat Rumah") String alamatRumah,
             @RequestParam(value = "Motivasi") String motivasi,
-            @RequestParam(value = "Kode Referal",required = false) String kodeReferal
+            @RequestParam(value = "Kode Referal",required = false) String kodeReferal,
+
+             //tambahan
+             @RequestParam(value = "jurusan") String jurusan,
+             @RequestParam(value = "status Id", required = false) Integer status,
+             @RequestParam(value = "Status Id (kesibukan)", required = false) Integer kesibukan,
+             @RequestParam(value = "komitmen") Boolean komitmen
     ) {
         return service.updateCalonPeserta(id,kelasId,batchId, namaPeserta,tanggalLahir,jenisKelamin, pendidikanTerakhir, noHp,
-                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv);
+                email, uploadImage, provinsi, kota, kecamatan, kelurahan, alamatRumah, motivasi, kodeReferal, nomorKtp, uploadCv,jurusan,status,kesibukan,komitmen);
     }
 
     @PatchMapping(value = "/delete")
@@ -124,21 +136,32 @@ public class CalonPesertaController {
 
     @PatchMapping(value = "/changeToPeserta")
     public ResponseEntity<?> changeToPeserta(
-            @RequestParam(value = "id", defaultValue = "0", required = true) Long id
+            @RequestParam(value = "id Calon Peserta", defaultValue = "0", required = true) Long id,
+            @RequestParam(value = "Status Id", defaultValue = "0", required = true) Integer statusId
     ) {
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
-        return service.changeToPeserta(id, uri);
+        return service.changeToPeserta(id,statusId, uri);
     }
 
-    @PatchMapping(value = "/changeStatusTes")
+    // @PatchMapping(value = "/changeStatusTes")
+    // public ResponseEntity<?> changeStatusTes(
+    //         @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
+    //         @RequestParam(value = "Status Tes", defaultValue = "0") Long statusTesOrd
+    // ) {
+    //     String uri = stringUtil.getLogParam(request);
+    //     logger.info(uri);
+    //     return service.changeStatusTes(statusTesOrd, id, uri);
+    // }
+
+    @PatchMapping(value = ("/changeStatusTes"))
     public ResponseEntity<?> changeStatusTes(
-            @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
-            @RequestParam(value = "Status Tes", defaultValue = "0") Long statusTesOrd
-    ) {
+            @RequestParam(value = "calonPesertaId", defaultValue = "0", required = true) Long calonPesertaId,
+            @RequestParam(value = "statusId", defaultValue = "0", required = true) Integer statusId) {
+
         String uri = stringUtil.getLogParam(request);
         logger.info(uri);
-        return service.changeStatusTes(statusTesOrd, id, uri);
+        return service.changeStatusTes(calonPesertaId,statusId, uri);
     }
 
     @PatchMapping(value = ("/changeKelas"))
@@ -152,12 +175,12 @@ public class CalonPesertaController {
     }
 
 
-    @GetMapping("/filterByStatusTes")
-    public Result filterByStatusTes(
-            @RequestParam(value = "statusTesOrd", defaultValue = "0", required = true) Long statusTesOrd
-    ) {
-        return service.filterByStatusTes(statusTesOrd);
-    }
+    // @GetMapping("/filterByStatusTes")
+    // public Result filterByStatusTes(
+    //         @RequestParam(value = "statusTesOrd", defaultValue = "0", required = true) Long statusTesOrd
+    // ) {
+    //     return service.filterByStatusTes(statusTesOrd);
+    // }
 
     @GetMapping("/searchCalonPeserta")
     public Result searchCalonPeserta(@RequestParam(value = "keyword",required = true) String keyword) {

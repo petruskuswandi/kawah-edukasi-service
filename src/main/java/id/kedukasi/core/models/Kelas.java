@@ -26,7 +26,9 @@ import java.util.Set;
 public class Kelas {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy= GenerationType.AUTO,
+            generator="native")
     private Long id;
 
     @NotBlank

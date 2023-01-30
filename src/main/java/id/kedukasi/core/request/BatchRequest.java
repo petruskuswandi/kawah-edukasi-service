@@ -12,18 +12,16 @@ import java.util.Date;
 public class BatchRequest {
     private  Long id;
 
-    @NotBlank
     private String batchname;
 
-    @NotBlank
     private String description;
 
-    @NotBlank
     @ApiModelProperty(example = "2000-12-01", required = true)
     private Date startedtime;
 
-    @NotBlank
     @ApiModelProperty(example = "2000-12-12", required = true)
     private Date endedtime;
+    @ApiModelProperty(example = "1", required = true)
+    private Integer created_by;
 
 }

@@ -15,17 +15,19 @@ import java.util.Date;
 @Entity
 @Table(name = "batch_detail")
 @DynamicUpdate
-public class BatchDetail {
+public class BatchDetail{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(
+            strategy= GenerationType.AUTO,
+            generator="native")
     private Long id;
 
     // relation
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "batch_id", nullable = false)
     @NotNull(message = "Data Batch Tidak Boleh Kosong")
-    private Batch batch;
+    public Batch batch;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "class_id", nullable = false)

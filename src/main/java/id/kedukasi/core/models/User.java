@@ -23,6 +23,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users"//,
@@ -36,7 +37,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class User implements Serializable {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(
+          strategy= GenerationType.IDENTITY)
   private Long id;
 
   @NotBlank
@@ -74,9 +76,9 @@ public class User implements Serializable {
   @JoinColumn(name = "role_id")
   private Role role;
 
-  private boolean isLogin;
-  private boolean isActive;
-  private boolean isVerified;
+  private Boolean isLogin;
+  private Boolean isActive;
+  private Boolean isVerified;
 
   @Size(max = 6)
   @ApiModelProperty(hidden = true)
@@ -169,6 +171,7 @@ public class User implements Serializable {
     this.email = email;
   }
 
+  @JsonIgnore
   public String getPassword() {
     return password;
   }

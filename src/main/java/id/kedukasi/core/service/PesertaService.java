@@ -1,6 +1,8 @@
 package id.kedukasi.core.service;
 
 import com.lowagie.text.DocumentException;
+
+import id.kedukasi.core.enums.EnumStatusTes;
 import id.kedukasi.core.models.Result;
 import id.kedukasi.core.request.RegisterRequest;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +27,11 @@ public interface PesertaService {
     ResponseEntity<?> updatePeserta(Long id, Long kelasId,Long batchId, String namaPeserta, String tanggalLahir,
                                     String jenisKelamin, String pendidikanTerakhir, String noHp, String email,
                                     MultipartFile uploadImage, Long provinsi, Long kota, Long kecamatan,
-                                    Long kelurahan, String alamatRumah, String motivasi, String kodeReferal, String nomorKtp);
+                                    Long kelurahan, String alamatRumah, String motivasi, String kodeReferal, String nomorKtp,MultipartFile uploadCv,Integer kesibukan, Integer scoreTestAwal,Integer scoreTestAkhir,Integer status,String namaProject,String jurusan);
 
     ResponseEntity<?> deletePeserta(boolean banned, Long id, String uri);
 
-    ResponseEntity<?> changeToCalonPeserta(Long id, String uri);
+    ResponseEntity<?> changeToCalonPeserta(Long id, String uri, Integer statusId);
 
     ResponseEntity<?> changeKelas(Long pesertaId, Long kelasId, String uri);
 

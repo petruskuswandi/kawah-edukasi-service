@@ -14,6 +14,9 @@ public interface StatusService {
     //implements get all status
     public ResponseEntity<Result> getAllStatus();
 
+    //implements get status by flag and sub-flag
+    ResponseEntity<Result> getStatus(String flag, String subFlag, Integer limit, Integer page);
+
     //implements get status by id
     public ResponseEntity<Result> getStatusById(int id);
 
@@ -22,4 +25,7 @@ public interface StatusService {
     
     //implements delete status by id
     ResponseEntity<Result> deleteStatusById(int id);
+
+    //implements soft delete status by id
+    ResponseEntity<Result> softDeleteStatus(int id, boolean deleted);
 }

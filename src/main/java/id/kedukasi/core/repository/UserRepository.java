@@ -21,7 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByEmail(String email);
 
   @Transactional
-  Boolean existsByUsername(String username);
+  @Query("select count(*) from User u where u.username = ?1 and u.banned != true")
+  Integer existsByUsername(String username);
 
   @Transactional
   @Query("select count(*) from User u where u.email = ?1 and u.banned != true")
@@ -50,13 +51,20 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Transactional
   @Query(
     value = "SELECT * FROM users WHERE banned = false AND "+
-            "(:namaLengkap IS NULL OR nama_lengkap LIKE %:namaLengkap%) "+
+            "(:namaLengkap IS NULL OR LOWER(nama_lengkap) LIKE %:namaLengkap%) "+
             "ORDER BY id LIMIT :limit OFFSET :limit * (:page - 1)", 
     nativeQuery = true
   )
   List<User> findUserData(@Param("namaLengkap") String search, 
                           @Param("limit") int limit, 
                           @Param("page") int page);
+
+  @Transactional
+  @Query(
+    value = "SELECT count(*) FROM users WHERE banned = false",
+    nativeQuery = true
+  )
+  Integer totalUnbannedUser();
 
   @Transactional
   User findById(long id);

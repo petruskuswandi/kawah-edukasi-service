@@ -7,14 +7,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class UserRequest implements Serializable {
 
   private Long id;
 
-  @NotBlank
-  @Size(min = 3, max = 20)
-  @ApiModelProperty(example = "iam123", required = true)
-  private String username;
+  // @Size(min = 3, max = 20)
+  // @ApiModelProperty(example = "iam123", required = true)
+  // private String username;
 
   @NotBlank
   @Size(max = 50)
@@ -25,11 +26,10 @@ public class UserRequest implements Serializable {
   @ApiModelProperty(example = "3", required = true)
   private Integer role;
 
-  @NotBlank
-  @Size(min = 6, max = 40)
-  @ApiModelProperty(example = "iam123", required = true)
-  @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%#*?&])[A-Za-z\\d@$!%#*?&]{8,}$",message = "Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!")
-  private String password;
+  // @Size(min = 6, max = 40)
+  // @ApiModelProperty(example = "iam123", required = true)
+  // @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%#*?&])[A-Za-z\\d@$!%#*?&]{8,}$",message = "Password must be longer than 8 characters,use at least 1 uppercase letter,spesial characters and not contain spaces!!")
+  // private String password;
 
   @Size(max = 50)
   @ApiModelProperty(example = "Nama Lengkap")
@@ -39,7 +39,7 @@ public class UserRequest implements Serializable {
   @ApiModelProperty(example = "08xxxx")
   private String noHp;
   
-  private boolean isActive;
+  private Boolean isActive;
 
   public Long getId() {
     return id;
@@ -49,13 +49,14 @@ public class UserRequest implements Serializable {
     this.id = id;
   }
 
-  public String getUsername() {
-    return username;
-  }
+  // public String getUsername() {
+  //   return username;
+  // }
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+  // @JsonIgnore
+  // public void setUsername(String username) {
+  //   this.username = username;
+  // }
 
   public String getEmail() {
     return email;
@@ -65,13 +66,14 @@ public class UserRequest implements Serializable {
     this.email = email;
   }
 
-  public String getPassword() {
-    return password;
-  }
+  // public String getPassword() {
+  //   return password;
+  // }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+  // @JsonIgnore
+  // public void setPassword(String password) {
+  //   this.password = password;
+  // }
 
   public String getNamaLengkap() {
     return namaLengkap;
@@ -97,11 +99,11 @@ public class UserRequest implements Serializable {
     this.role = role;
   }
 
-  public boolean isIsActive() {
+  public Boolean isIsActive() {
     return isActive;
   }
 
-  public void setIsActive(boolean isActive) {
+  public void setIsActive(Boolean isActive) {
     this.isActive = isActive;
   }
 

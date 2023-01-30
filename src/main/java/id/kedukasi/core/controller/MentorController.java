@@ -3,6 +3,14 @@ package id.kedukasi.core.controller;
 import javax.servlet.http.HttpServletRequest;
 // import javax.validation.Valid;
 
+
+import id.kedukasi.core.models.Educations;
+import id.kedukasi.core.models.Kelas;
+import id.kedukasi.core.models.User;
+import id.kedukasi.core.models.wilayah.MasterKecamatan;
+import id.kedukasi.core.models.wilayah.MasterKelurahan;
+import id.kedukasi.core.models.wilayah.MasterKota;
+import id.kedukasi.core.models.wilayah.MasterProvinsi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +42,7 @@ import id.kedukasi.core.utils.StringUtil;
 @CrossOrigin
 @RestController
 @RequestMapping("/mentor")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+// @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class MentorController {
 
   @Autowired
@@ -49,10 +57,12 @@ public class MentorController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
-  public Result getAll() {
+  public Result getMentorData(@RequestParam(required = false, name = "search") String search,
+                             @RequestParam(value = "limit", defaultValue = "10") Integer limit,
+                             @RequestParam(value = "offset", defaultValue = "0") Integer page) {
     String uri = stringUtil.getLogParam(request);
     logger.info(uri);
-    return service.getAllMentor(uri);
+    return service.getMentorData(uri, search, limit, page);
   }
 
   @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
@@ -63,57 +73,57 @@ public class MentorController {
   }
 
   @PostMapping("/create")
-  public ResponseEntity<?> createMentor(
-          @RequestParam(value = "Nama Mentor") String nama_mentor,
-          @RequestParam(value = "Kode Mentor") String kode,
+  public ResponseEntity<Result> createMentor(
+          @RequestParam(value = "Nama Mentor", required = false) String nama_mentor,
           @RequestPart(value = "Upload Image", required = false) MultipartFile foto,
-          @RequestParam(value = "No Ktp") String no_ktp,
-          @RequestParam(value = "No Telepon") String no_telepon,
-          @RequestParam(value = "Status") String status,
-          @RequestParam(value = "Class Name") Long class_name,
-          @RequestParam(value = "Pendidikan Univ") String pendidikan_univ,
-          @RequestParam(value = "Pendidikan Jurusan") String pendidikan_jurusan,
-          @RequestParam(value = "Tanggal Start") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_start,
-          @RequestParam(value = "Tanggal Stop") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
-          @RequestParam(value = "Alamat Rumah") String alamat_rumah,
+          @RequestParam(value = "No Ktp", required = false) String no_ktp,
+          @RequestParam(value = "No Telepon", required = false) String no_telepon,
+          @RequestParam(value = "Status", defaultValue = "Apply", required = false) String status,
+          @RequestParam(value = "Class Name by Class Id", required = false) Kelas class_id,
+          @RequestParam(value = "Pendidikan Terakhir by Education Id", required = false) Educations pendidikan_terakhir,
+          @RequestParam(value = "Pendidikan Jurusan", required = false) String pendidikan_jurusan,
+          @RequestParam(value = "Tanggal Start", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_start,
+          @RequestParam(value = "Tanggal Stop", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
+          @RequestParam(value = "Alamat Rumah", required = false) String alamat_rumah,
           @RequestPart(value = "Upload Cv", required = false) MultipartFile cv,
-          @RequestParam(value = "Provinsi") Long provinsi,
-          @RequestParam(value = "Kota") Long kota,
-          @RequestParam(value = "Kecamatan") Long kecamatan,
-          @RequestParam(value = "Kelurahan") Long kelurahan )
+          @RequestParam(value = "Provinsi", required = false) MasterProvinsi provinsi,
+          @RequestParam(value = "Kota", required = false) MasterKota kota,
+          @RequestParam(value = "Kecamatan", required = false) MasterKecamatan kecamatan,
+          @RequestParam(value = "Kelurahan", required = false) MasterKelurahan kelurahan,
+          @RequestParam(value = "Created by User Id", required = false) Integer userId)
   {
     Long id = 0L;
-    return service.updateMentor(id, nama_mentor, kode, foto, no_ktp, no_telepon, status,
-            class_name, pendidikan_univ, pendidikan_jurusan, tgl_start,
-            tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan);
+    return service.createMentor(id, nama_mentor, foto, no_ktp, no_telepon, status,
+            class_id, pendidikan_terakhir, pendidikan_jurusan, tgl_start,
+            tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan, userId);
   }
 
   @PutMapping("/update")
-  public ResponseEntity<?> updateMentor(@RequestParam(value = "Id",defaultValue = "0") Long id,
-                                        @RequestParam(value = "Nama Mentor") String nama_mentor,
-                                        @RequestParam(value = "Kode Mentor") String kode,
+  public ResponseEntity<Result> updateMentor(@RequestParam(value = "Id",defaultValue = "0") Long id,
+                                        @RequestParam(value = "Nama Mentor", required = false) String nama_mentor,
                                         @RequestPart(value = "Upload Image", required = false) MultipartFile foto,
-                                        @RequestParam(value = "No Ktp") String no_ktp,
-                                        @RequestParam(value = "No Telepon") String no_telepon,
-                                        @RequestParam(value = "Status") String status,
-                                        @RequestParam(value = "Class Name") Long class_name,
-                                        @RequestParam(value = "Pendidikan Univ") String pendidikan_univ,
-                                        @RequestParam(value = "Pendidikan Jurusan") String pendidikan_jurusan,
-                                        @RequestParam(value = "Tanggal Start") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_start,
-                                        @RequestParam(value = "Tanggal Stop") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
-                                        @RequestParam(value = "Alamat Rumah") String alamat_rumah,
+                                        @RequestParam(value = "No Ktp", required = false) String no_ktp,
+                                        @RequestParam(value = "No Telepon", required = false) String no_telepon,
+                                        @RequestParam(value = "Status", defaultValue = "Apply", required = false) String status,
+                                        @RequestParam(value = "Class Name by Class Id", required = false) Kelas class_id,
+                                        @RequestParam(value = "Pendidikan Terakhir by Education Id", required = false) Educations pendidikan_terakhir,
+                                        @RequestParam(value = "Pendidikan Jurusan", required = false) String pendidikan_jurusan,
+                                        @RequestParam(value = "Tanggal Start", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_start,
+                                        @RequestParam(value = "Tanggal Stop", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
+                                        @RequestParam(value = "Alamat Rumah",required = false) String alamat_rumah,
                                         @RequestPart(value = "Upload Cv", required = false) MultipartFile cv,
-                                        @RequestParam(value = "Provinsi",defaultValue = "0") Long provinsi,
-                                        @RequestParam(value = "Kota",defaultValue = "0") Long kota,
-                                        @RequestParam(value = "Kecamatan",defaultValue = "0") Long kecamatan,
-                                        @RequestParam(value = "Kelurahan",defaultValue = "0") Long kelurahan ) {
-    return service.updateMentor(id, nama_mentor, kode, foto, no_ktp, no_telepon, status,
-            class_name, pendidikan_univ, pendidikan_jurusan, tgl_start,
-            tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan);
+                                        @RequestParam(value = "Provinsi",defaultValue = "0", required = false) MasterProvinsi provinsi,
+                                        @RequestParam(value = "Kota",defaultValue = "0", required = false) MasterKota kota,
+                                        @RequestParam(value = "Kecamatan",defaultValue = "0", required = false) MasterKecamatan kecamatan,
+                                        @RequestParam(value = "Kelurahan",defaultValue = "0", required = false) MasterKelurahan kelurahan,
+                                        @RequestParam(value = "Created By User ID", defaultValue = "0", required = false) Integer userId) {
+    return service.updateMentor(id, nama_mentor, foto, no_ktp, no_telepon, status,
+            class_id, pendidikan_terakhir, pendidikan_jurusan, tgl_start,
+            tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan, userId);
   }
 
   @PatchMapping(value = "/delete")
-  public ResponseEntity<?> deleteMentor(
+  public ResponseEntity<Result> deleteMentor(
           @RequestParam(value = "id", defaultValue = "0", required = true) long id,
           @RequestParam(value = "banned", defaultValue = "true") boolean banned
   ) {
@@ -123,23 +133,4 @@ public class MentorController {
     return service.deleteMentor(banned, id, uri);
   }
 
-  // @PatchMapping(value = "/updateFotoBlob", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  // public ResponseEntity<?> updateFoto(
-  //     @RequestParam(value = "id", defaultValue = "0", required = true) long id,
-  //     @RequestPart("foto") MultipartFile foto) {
-
-  //   String uri = stringUtil.getLogParam(request);
-  //   logger.info(uri);
-  //   return service.updateFotoBlob(id, foto, uri);
-  // }
-
-  // @PatchMapping(value = "/updateCvBlob", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  // public ResponseEntity<?> updateCv(
-  //     @RequestParam(value = "id", defaultValue = "0", required = true) long id,
-  //     @RequestPart("cv") MultipartFile cv) {
-
-  //   String uri = stringUtil.getLogParam(request);
-  //   logger.info(uri);
-  //   return service.updateCvBlob(id, cv, uri);
-  // }
 }

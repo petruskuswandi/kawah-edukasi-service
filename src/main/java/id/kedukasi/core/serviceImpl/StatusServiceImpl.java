@@ -139,7 +139,7 @@ public class StatusServiceImpl implements StatusService {
                 return ResponseEntity.badRequest().body(result);
             }
 
-            Status newStatus = new Status(status.getStatusName().toUpperCase(), status.getDescription(), status.getFlag().toUpperCase(), status.getSubFlag().toUpperCase(),false);
+            Status newStatus = new Status(status.getStatusName(), status.getDescription(), status.getFlag(), status.getSubFlag(),false);
 
             statusRepository.save(newStatus);
 
@@ -148,6 +148,10 @@ public class StatusServiceImpl implements StatusService {
 
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
 
         return ResponseEntity.ok(result);
@@ -208,31 +212,31 @@ public class StatusServiceImpl implements StatusService {
             String putStatusName;
 
             if(status.getSubFlag() == null){
-                putSubFlag = statusRepository.findById(putId).get().getSubFlag().toUpperCase();
+                putSubFlag = statusRepository.findById(putId).get().getSubFlag();
                 // errorNotNullFlagMessage = "Sub Flag tidak boleh null, ";
             } else {
-                putSubFlag = status.getSubFlag().toUpperCase();
+                putSubFlag = status.getSubFlag();
             }
 
             if(status.getFlag() == null){
-                putFlag = statusRepository.findById(putId).get().getFlag().toUpperCase();
+                putFlag = statusRepository.findById(putId).get().getFlag();
                 // errorNotNullFlagMessage = "Flag tidak boleh null, ";
             } else {
-                putFlag = status.getFlag().toUpperCase();
+                putFlag = status.getFlag();
             }
 
             if(status.getDescription() == null){
-                putDescription = statusRepository.findById(putId).get().getDescription().toUpperCase();
+                putDescription = statusRepository.findById(putId).get().getDescription();
                 // errorNotNullDescriptionMessage = "Deskripsi Status tidak boleh null, ";
             } else {
-                putDescription = status.getDescription().toUpperCase();
+                putDescription = status.getDescription();
             }
 
             if(status.getStatusName() == null){
-                putStatusName = statusRepository.findById(putId).get().getStatusName().toUpperCase();
+                putStatusName = statusRepository.findById(putId).get().getStatusName();
                 //errorNotNullStatusNameMessage = "Nama Status tidak boleh null, ";
             } else {
-                putStatusName = status.getStatusName().toUpperCase();
+                putStatusName = status.getStatusName();
             }
 
             if (statusLength > 0) {
@@ -242,10 +246,10 @@ public class StatusServiceImpl implements StatusService {
 
                 for(int _id = statusInitialId; _id < statusLastId+2; _id++){
                     if(statusRepository.findById(_id).isPresent()){
-                        statusName = statusRepository.findById(_id).get().getStatusName().toUpperCase();
-                        flag = statusRepository.findById(_id).get().getFlag().toUpperCase();
-                        subFlag = statusRepository.findById(_id).get().getSubFlag().toUpperCase();
-                        if(statusName.equals(putStatusName) && flag.equals(putFlag) && subFlag.equals(putSubFlag) ){
+                        statusName = statusRepository.findById(_id).get().getStatusName().toLowerCase();
+                        flag = statusRepository.findById(_id).get().getFlag().toLowerCase();
+                        subFlag = statusRepository.findById(_id).get().getSubFlag().toLowerCase();
+                        if(statusName.equals(putStatusName.toLowerCase()) && flag.equals(putFlag.toLowerCase()) && subFlag.equals(putSubFlag.toLowerCase()) ){
                             if(putId != _id){
                                 errorUniqueStatusNameAndFlagAndSubFlagMessage = "Sudah Ada Kombinasi Nama Status, Flag dan Sub Flag yang Sama! pada Id = " + _id;
                                 break;
@@ -288,7 +292,7 @@ public class StatusServiceImpl implements StatusService {
 
             if (!statusRepository.findById(status.getId()).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Error: Tidak ada Status dengan id " +status.getId());
+                result.setMessage("Error: id Status tidak ditemukan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Status update = new Status(putId,putStatusName, putDescription, putFlag, putSubFlag, status.getisDeleted());
@@ -301,6 +305,10 @@ public class StatusServiceImpl implements StatusService {
 
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
 
         return ResponseEntity.ok(result);
@@ -315,6 +323,42 @@ public class StatusServiceImpl implements StatusService {
             result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @Override
+    public ResponseEntity<Result> getStatus(String flag, String subFlag, Integer limit, Integer page) {
+        result = new Result();
+
+        Integer total = statusRepository.totalUndeletedStatus();
+        if (total == null) { total = 0; }
+
+        int jumlahPage = (int) Math.ceil(total.intValue() / (double) limit);
+        if (limit < 1) { limit = 1; }
+        if (page < 1) { page = 1; }
+        if (jumlahPage < 1) { jumlahPage = 1; }
+        if (page > jumlahPage) { page = jumlahPage; }
+        if (flag == null) { flag = ""; }
+        if (subFlag == null) { subFlag = ""; }
+
+        try {
+            Map<String, Object> items = new HashMap<>();
+            List<Status> status = statusRepository.getStatus(flag.toLowerCase(), subFlag.toLowerCase(), limit, page);
+            items.put("items", status);
+            items.put("totalDataResult", status.size());
+            items.put("totalData", total);
+            result.setData(items);
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
@@ -326,7 +370,7 @@ public class StatusServiceImpl implements StatusService {
             Optional<Status> status = statusRepository.findById(id);
             if (!status.isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Error: Tidak ada status dengan id " + id);
+                result.setMessage("Error: id Status tidak ditemukan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 Map<String, Status> items = new HashMap<>();
@@ -336,6 +380,10 @@ public class StatusServiceImpl implements StatusService {
 
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
@@ -347,7 +395,7 @@ public class StatusServiceImpl implements StatusService {
             Optional<Status> status = statusRepository.findById(id);
             if (!status.isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Error: Tidak ada status dengan id " + id);
+                result.setMessage("Error: id Status tidak ditemukan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
                 statusRepository.deleteById(id);
@@ -357,9 +405,47 @@ public class StatusServiceImpl implements StatusService {
 
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
     }
+
+    @Override
+    public ResponseEntity<Result> softDeleteStatus(int id, boolean deleted) {
+        result = new Result();
+
+        try {
+            int response = statusRepository.deleteStatus(id, deleted);
+            if (response == 1) {
+                result.setCode(HttpStatus.OK.value());
+                result.setSuccess(true);
+                if (deleted == true) {
+                    result.setMessage("Status berhasil di soft delete.");
+                } else {
+                    result.setMessage("Status berhasil di un-soft delete.");
+                }
+            } else {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setMessage("Error: id Status tidak ditemukan!");
+                return ResponseEntity.badRequest().body(result);
+            }
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+            result.setSuccess(false);
+            result.setMessage(e.getCause().getCause().getMessage());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
+        }
+
+        return ResponseEntity.ok(result);
+    }
+
+    
+
 }
 
 

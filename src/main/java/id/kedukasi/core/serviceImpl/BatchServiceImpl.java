@@ -3,6 +3,7 @@ package id.kedukasi.core.serviceImpl;
 
 import id.kedukasi.core.models.*;
 import id.kedukasi.core.repository.BatchRepository;
+import id.kedukasi.core.repository.UserRepository;
 import id.kedukasi.core.request.BatchRequest;
 import id.kedukasi.core.request.CreateBatchRequest;
 import id.kedukasi.core.service.BatchService;
@@ -26,6 +27,8 @@ public class BatchServiceImpl implements BatchService {
     @Autowired
     StringUtil stringUtil;
 
+    @Autowired
+    UserRepository userRepository;
     private Result result;
 
 
@@ -35,34 +38,30 @@ public class BatchServiceImpl implements BatchService {
     public Result getBatchData(String uri, String search, Integer limit, Integer page) {
         result = new Result();
 
-        int jumlahpage = (int) Math.ceil(batchRepository.count() /(double) limit);
-
-        if (limit < 1) {
-            limit = 1;
-        }
-
-        if (page > jumlahpage) {
-            page = jumlahpage;
-        }
-
-        if (page < 1 ) {
-            page = 1;
-        }
-
         if (search == null) {
             search = "";
         }
         try {
             Map items = new HashMap();
-            List<Batch> batch = batchRepository.findBatchData(search, limit, page.intValue());
+            List<Batch> batch = batchRepository.findBatchData(search.toLowerCase(), limit, page.intValue());
             items.put("items", batch);
             items.put("totalDataResult", batch.size());
             items.put("totalData", batchRepository.count());
 
-            if (batch.size() == 0) {
-                result.setMessage("Maaf Data Batch yang Anda cari tidak tersedia");
+            if (batch.size() == 0 || limit > batchRepository.bannedfalse()) {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setData(limit > batchRepository.bannedfalse() ? 0 : batch.size());
+                result.setMessage(batch.size() != 0 ? "Sorry limit exceeds size data batch" : "Sorry data batch is null");
+            } else if (batch == null) {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setData(null);
+                result.setMessage("Sorry data batch is null");
+            } else {
+                result.setData(items);
+                result.setMessage("Success find Data Batch");
             }
-            result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
@@ -103,24 +102,6 @@ public class BatchServiceImpl implements BatchService {
         }
         return result;
     }
-
-//    @Override
-//    public Result getAllClassByBatch(long batchId) {
-//        result = new Result();
-//        Optional<Batch> batch = batchRepository.findById(batchId);
-//        if(!batch.isPresent()){
-//            result.setCode(404);
-//            result.setMessage("Batch Tidak Ada");
-//            return result;
-//        }
-////        List<Long> kelas_id = batchRepository.getAllClassByBatch(batchId);
-////        List<Kelas> kelas = kelasRepository.findAllById(kelas_id);
-//        result.setCode(200);
-//        result.setMessage("Berhasil Ambil Kelas");
-//        result.setData(kelas);
-//        return result;
-//    }
-
     @Override
     public ResponseEntity<?> createBatch(CreateBatchRequest createBatchRequest) {
         result = new Result();
@@ -134,6 +115,35 @@ public class BatchServiceImpl implements BatchService {
                         .badRequest()
                         .body(result);
             }
+
+            // cek nama batch kosong atau tidak
+            if (createBatchRequest.getBatchname().isEmpty()){
+                result.setMessage("Error: Batch Name is Null/Empty!");
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if(createBatchRequest.getDescription().isEmpty()) {
+                result.setMessage("Error: Description is Null/Empty!");
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (createBatchRequest.getStartedtime() == null) {
+                result.setMessage("Error: Started Time is Null/Empty");
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (createBatchRequest.getEndedtime() == null){
+                result.setMessage("Error: Ended Time is Null/Empty");
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
             // cek Stardate tidak boleh lebih besar dari end date
             if(createBatchRequest.getStartedtime().after(createBatchRequest.getEndedtime())){
                 result.setMessage("Error : Start date tidak boleh lebih besar dari end date ");
@@ -142,8 +152,20 @@ public class BatchServiceImpl implements BatchService {
                         .badRequest()
                         .body(result);
             }
+            Optional<User> user = Optional.ofNullable(userRepository.findById(createBatchRequest.getCreated_by()));
+            if (!user.isPresent()){
+                result.setSuccess(false);
+                result.setMessage("Error: id User tidak ditemukan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                User user_id = userRepository.findById(createBatchRequest.getCreated_by());
+                createBatchRequest.setCreated_by(Math.toIntExact(user_id.getId()));
+            }
             Batch batchbaru = new Batch(createBatchRequest.getBatchname(), createBatchRequest.getDescription(),
                     createBatchRequest.getStartedtime(),createBatchRequest.getEndedtime());
+            Date date = new Date();
+            batchbaru.setCreated_time(date);
+            batchbaru.setCreated_by(user.get());
             batchRepository.save(batchbaru);
 
             result.setMessage("Batch registered successfully!");
@@ -161,29 +183,77 @@ public class BatchServiceImpl implements BatchService {
         try {
             // cek Batch name sudah di gunakan apa tidak
             Batch checkBatchname = batchRepository.findByBatchname(batchRequest.getBatchname()).orElse(new Batch());
-            if (checkBatchname.getBatchname()!= null && !Objects.equals(batchRequest.getId(), checkBatchname.getId())) {
-                result.setMessage("Error: Batch telah di gunakan!");
+            if (checkBatchname.getBatchname()!= null && !Objects.equals(batchRequest.getId(), checkBatchname.getId()) && batchRepository.findByBatchname(batchRequest.getBatchname()).isPresent()) {
+                result.setMessage(!batchRepository.existsById(batchRequest.getId()) && batchRepository.findByBatchname(batchRequest.getBatchname()).isPresent() ? "Error: Batch telah digunakan!" : "Error: Batch id is not found");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (!batchRepository.existsById(batchRequest.getId())){
+                result.setMessage("Error: Batch id is not found");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            // cek nama batch kosong atau tidak
+            if (batchRequest.getBatchname().isEmpty()){
+                result.setMessage("Error: Batch Name is Null/Empty!");
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if(batchRequest.getDescription().isEmpty()) {
+                result.setMessage("Error: Description is Null/Empty!");
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             }
             // cek Stardate tidak boleh lebih besar dari end date
             if(batchRequest.getStartedtime().after(batchRequest.getEndedtime())){
-                result.setMessage("Error : Start date tidak boleh lebih besar dari end date ");
+                result.setMessage("Error : Start date tidak boleh lebih besar dari end date");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
                         .body(result);
             }
+            if (batchRequest.getEndedtime() == null){
+                result.setMessage("Error: Ended Time is Null/Empty");
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+
+            if (batchRequest.getStartedtime() == null){
+                result.setMessage("Error: Started Time is Null/Empty");
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+            }
+            Optional<User> user = Optional.ofNullable(userRepository.findById(batchRequest.getCreated_by()));
+            if (!user.isPresent()){
+                result.setSuccess(false);
+                result.setMessage("Error: id User tidak ditemukan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            } else {
+                User user_id = userRepository.findById(batchRequest.getCreated_by());
+                batchRequest.setCreated_by(Math.toIntExact(user_id.getId()));
+            }
 
             Batch batchbaru = new Batch(batchRequest.getBatchname(), batchRequest.getDescription(),
                     batchRequest.getStartedtime(),batchRequest.getEndedtime());
+            Date date = new Date();
 
+            batchbaru.setUpdated_time(date);
+            batchbaru.setCreated_by(user.get());
             batchbaru.setId(batchRequest.getId());
             batchRepository.save(batchbaru);
 
-            result.setMessage(batchRequest.getId() == 0 ? "Batch registered successfully!" : "Batch updated successfully!");
+            result.setMessage("Batch updated successfully!");
             result.setCode(HttpStatus.OK.value());
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -197,7 +267,13 @@ public class BatchServiceImpl implements BatchService {
         result = new Result();
         try {
             batchRepository.deleteBatch(banned, id);
-            result.setMessage(banned == true ? "Batch success delete!" : "Batch success backup!");
+            if (batchRepository.existsById(id)) {
+                result.setMessage(banned == true ? "Batch success delete!" : "Batch success backup!");
+            } else {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setMessage("Id its not found");
+                result.setSuccess(false);
+            }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
