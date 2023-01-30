@@ -45,41 +45,40 @@ public class SyillabusServiceImpl implements SyillabusService{
     @Override
     public ResponseEntity<Result> createSyllabus(SyillabusRequest syillabus) {
         result = new Result();
+       
         try{
             int syillabusName = syillabusRepository.findSyillabusName(syillabus.getSyillabusName().toLowerCase());
-
+            
             if (syillabusName > 0) {
                 result.setMessage("Error: nama syillabus sudah ada!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
-
+            
             if(syillabus.getDescription().length()>500 ) {
                 result.setMessage("Error: Deskripsi harus kurang dari 500 karakter");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
-            // if(syillabus.getSyillabusName().length() > 30 || syillabus.getSyillabusName().isBlank()|| syillabus.getSyillabusName().isEmpty()) {
-            //     result.setMessage("Error: nama Syillabus tidak boleh kosong dan harus kurang dari 30 karakter");
-            //     result.setCode(HttpStatus.BAD_REQUEST.value());
-            //     return ResponseEntity.badRequest().body(result);
-            // }
-
             Syillabus newSyillabus = new Syillabus(syillabus.getSyillabusName(), syillabus.getDescription(),false);
-
+         
             //set Attachments
-            Optional <Attachments> attachments = attachmentsRepository.findById(syillabus.getAttachment());
-            if (!attachments.isPresent()) {
-                result.setSuccess(false);
-                result.setMessage("Error: Attachments tidak ditemukan");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-            }else {
-                Attachments attachments1 = attachmentsRepository.findById(syillabus.getAttachment()).get();
-                newSyillabus.setAttachments(attachments1);
+            for (Long attachmentId : syillabus.getAttachmentId()) {
+                if(!attachmentsRepository.existsById(attachmentId)) {
+                    result.setSuccess(false);
+                    result.setMessage("Error: Attachment dengan ID " + attachmentId + " tidak ditemukan");
+                    result.setCode(HttpStatus.BAD_REQUEST.value());
+                    return ResponseEntity.badRequest().body(result);
+                }else {
+                    List<Attachments> attachments = attachmentsRepository.findAllById(syillabus.getAttachmentId());
+                    newSyillabus.setAttachments(attachments);
+                }
             }
+            
 
+            
+          
             syillabusRepository.save(newSyillabus);
-
             result.setMessage("Berhasil membuat syllabus baru!");
             result.setCode(HttpStatus.OK.value());
         }catch (Exception e) {
@@ -100,11 +99,11 @@ public class SyillabusServiceImpl implements SyillabusService{
         try {
 
             int syillabusName = syillabusRepository.findSyillabusName(syillabus.getSyllabusName().toLowerCase());
-            if (syillabusName > 0) {
-                result.setMessage("Error: Nama Syillabus Telah Ada!");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity.badRequest().body(result);
-            }
+            // if (syillabusName > 0) {
+            //     result.setMessage("Error: Nama Syillabus Telah Ada!");
+            //     result.setCode(HttpStatus.BAD_REQUEST.value());
+            //     return ResponseEntity.badRequest().body(result);
+            // }
             if (syillabus.getDescription().length()>500 ) {
                 result.setMessage("Error: Deskripsi harus kurang dari 500 karakter");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -118,14 +117,17 @@ public class SyillabusServiceImpl implements SyillabusService{
                 Syillabus update = new Syillabus(syillabus.getId(),syillabus.getSyllabusName(), syillabus.getDescription(),syillabus.isSoftDelete());
 
                 //set Attachments
-                Optional <Attachments> attachments = attachmentsRepository.findById(syillabus.getAttachment());
-                if (!attachments.isPresent()) {
-                    result.setSuccess(false);
-                    result.setMessage("Error: Attachments tidak ditemukan");
-                    result.setCode(HttpStatus.BAD_REQUEST.value());
-                }else {
-                    Attachments attachments1 = attachmentsRepository.findById(syillabus.getAttachment()).get();
-                    update.setAttachments(attachments1);
+      
+                for (Long attachmentId : syillabus.getAttachmentId()) {
+                    if(!attachmentsRepository.existsById(attachmentId)) {
+                        result.setSuccess(false);
+                        result.setMessage("Error: Attachment dengan ID " + attachmentId + " tidak ditemukan");
+                        result.setCode(HttpStatus.BAD_REQUEST.value());
+                        return ResponseEntity.badRequest().body(result);
+                    }else {
+                        List<Attachments> attachments = attachmentsRepository.findAllById(syillabus.getAttachmentId());
+                        update.setAttachments(attachments);
+                    }
                 }
 
                 syillabusRepository.save(update);
@@ -164,11 +166,16 @@ public class SyillabusServiceImpl implements SyillabusService{
         result = new Result();
         try {
             Optional<Syillabus> syillabus = syillabusRepository.findById(id);
+
             if(!syillabus.isPresent()){
                 result.setSuccess(false);
                 result.setMessage("Error : Tidak ada syillabus dengan id " + id);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else {
+            }else if(syillabus.get().isDeleted()){
+                result.setSuccess(false);
+                result.setMessage("Error : Tidak ada syillabus dengan id " + id);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            }else {
                 Map<String, Syillabus> items = new HashMap<>();
                 items.put("items", syillabus.get());
                 result.setData(items);
@@ -190,6 +197,7 @@ public class SyillabusServiceImpl implements SyillabusService{
             result.setCode(HttpStatus.BAD_REQUEST.value());
 
         } else {
+            syillabusRepository.deletesyillabusAttachmentList(id);
             syillabusRepository.deleteById(id);
             result.setMessage("Berhasil delete syilabus");
             result.setCode(HttpStatus.OK.value());
@@ -198,6 +206,29 @@ public class SyillabusServiceImpl implements SyillabusService{
         logger.error(stringUtil.getError(e));
        }
        return ResponseEntity.ok(result);
+    }
+
+    @Override
+    public ResponseEntity<Result> softDeleteSyillabus(Long id) {
+        result = new Result();
+        try {
+            Optional<Syillabus> syilabus = syillabusRepository.findById(id);
+            if (syilabus.isEmpty() || syilabus.get().isDeleted()) {
+                result.setSuccess(false);
+                result.setMessage("Error: Tidak ada syilabus dengan id " + id);
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
+            syilabus.get().setDeleted(true);
+            syillabusRepository.save(syilabus.get());
+            result.setMessage("Berhasil delete syilabus!");
+            result.setCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(result);
+
+        } catch (Exception e) {
+            logger.error(stringUtil.getError(e));
+            return ResponseEntity.badRequest().build();
+        }
     }
 
    

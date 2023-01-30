@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -45,11 +46,7 @@ public class SyillabusController {
         return service.updateSyillabus(syilabus);
     }
 
-    @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Result> deleteSyillabus(@PathVariable("id") Long id){
-        return service.deleteSyillabus(id);
-    }
-
+    
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Result> getAllSyillabus() {
         return service.getAllSyillabus();
@@ -58,5 +55,14 @@ public class SyillabusController {
     public ResponseEntity<Result> getSyillabusById(@PathVariable("id") Long id){
         return service.getSyillabusById(id);
     }
+    
+    @DeleteMapping(value = "/hardDeleted/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Result> deleteSyillabus(@PathVariable("id") Long id){
+        return service.deleteSyillabus(id);
+    }
 
+    @PatchMapping(value = "/softDeleted/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Result> softDeleteSyillabus(@PathVariable("id") Long id) {
+        return service.softDeleteSyillabus(id);
+    }
 }
