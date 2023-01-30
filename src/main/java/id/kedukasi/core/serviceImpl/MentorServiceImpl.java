@@ -2,15 +2,15 @@ package id.kedukasi.core.serviceImpl;
 
 
 import id.kedukasi.core.models.*;
-import id.kedukasi.core.models.wilayah.MasterKecamatan;
-import id.kedukasi.core.models.wilayah.MasterKelurahan;
-import id.kedukasi.core.models.wilayah.MasterKota;
-import id.kedukasi.core.models.wilayah.MasterProvinsi;
+import id.kedukasi.core.models.wilayah.*;
+import id.kedukasi.core.repository.EducationRepository;
+import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.MentorRepository;
 import id.kedukasi.core.repository.UserRepository;
 import id.kedukasi.core.service.MentorService;
 import id.kedukasi.core.utils.PathGeneratorUtil;
 import id.kedukasi.core.utils.StringUtil;
+import id.kedukasi.core.utils.ValidatorUtil;
 import net.bytebuddy.utility.RandomString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +43,8 @@ public class MentorServiceImpl implements MentorService{
     MentorRepository mentorRepository;
     @Autowired
     StringUtil stringUtil;
+    @Autowired
+    ValidatorUtil validatorUtil;
 
     private Result result;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -51,6 +53,18 @@ public class MentorServiceImpl implements MentorService{
 
     @Value("${app.url.staging}")
     String baseUrl;
+    @Autowired
+    private KelasRepository kelasRepository;
+    @Autowired
+    private EducationRepository educationRepository;
+    @Autowired
+    private MasterProvinsiRepository masterProvinsiRepository;
+    @Autowired
+    private MasterKotaRepository masterKotaRepository;
+    @Autowired
+    private MasterKecamatanRepository masterKecamatanRepository;
+    @Autowired
+    private MasterKelurahanRepository masterKelurahanRepository;
 
     private String generatekode(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMyyyy");
@@ -66,27 +80,43 @@ public class MentorServiceImpl implements MentorService{
     }
 
     @Override
-    public ResponseEntity<Result> updateMentor(Long id , String namamentor, MultipartFile foto, String noktp,
-                                               String no_telepon, String status, Kelas classID, Educations educationID,
+    public ResponseEntity<Result> updateMentor(Long id , String namamentor, String email, MultipartFile foto, String noktp,
+                                               String no_telepon, String status, Long classID, Integer educationID,
                                                String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah,
-                                               MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, Integer userId) {
+                                               MultipartFile cv, Long provinsiId, Long kotaId, Long kecamatanId, Long kelurahanId, Long userId) {
         result = new Result();
         try {
+            // cek email
+            Mentor cekemail = mentorRepository.findByemailUpdate(false, email, id).orElse(new Mentor());
+            if (cekemail.getEmail() != null) {
+                result.setSuccess(false);
+                result.setMessage("Error: email has been used!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
+
+            if (!validatorUtil.isEmailValid(email)){
+                result.setSuccess(false);
+                result.setMessage("Error: Invalid email!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
+
             if(namamentor == null) {
                 result.setMessage("Error: Name can't be empty/null!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(noktp == null || noktp.length() != 16) {
+            if(!validatorUtil.isNumeric(noktp) || noktp.length() != 16) {
                 result.setSuccess(false);
                 result.setMessage("Error: No KTP harus sama dengan 16 character dan tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(no_telepon.length() < 11 || no_telepon.length() > 14 || no_telepon == null) {
-                result.setMessage("Error: Number phone can't be empty/null and must be less than 12 numbers!");
+            if(no_telepon.length() < 11 || no_telepon.length() > 14 || no_telepon == null || !validatorUtil.isPhoneValid(no_telepon)) {
+                result.setMessage("Error: Number phone can't be empty/null, must be less than 12 numbers! use format 08xxx/+628xxx/628xxx!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -132,14 +162,15 @@ public class MentorServiceImpl implements MentorService{
                         .body(result);
             }
 
-            Mentor mentor = new Mentor(namamentor, noktp, no_telepon, status,
+            Mentor mentor = new Mentor(namamentor, email, noktp, no_telepon, status,
                     pendidikan_jurusan, tgl_start, tgl_stop, alamat_rumah);
 
             mentor.setId(id);
             mentor.setKode(mentorRepository.ambilkode(id));
 
             //set kelas
-            if (classID == null) {
+            Optional<Kelas> kelas = kelasRepository.findById(classID);
+            if (kelas.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Kelas tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -147,9 +178,11 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setClass_id(classID);
+                mentor.setClass_id(kelas.get());
             }
-            if (educationID == null){
+
+            Optional<Educations> pendidikan_terakhir = educationRepository.findById(educationID);
+            if (pendidikan_terakhir.isEmpty()){
                 result.setSuccess(false);
                 result.setMessage("Pendidikan tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -157,12 +190,12 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setPendidikan_terakhir(educationID);
+                mentor.setPendidikan_terakhir(pendidikan_terakhir.get());
             }
 
             //Set created_by Many to one User
-            Optional<User> user = Optional.ofNullable(userRepository.findById(userId));
-            if (user == null) {
+            Optional<User> user = userRepository.findById(userId);
+            if (user.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("User tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -189,7 +222,8 @@ public class MentorServiceImpl implements MentorService{
             }
 
             //set provinsi
-            if (provinsiId == null) {
+            Optional<MasterProvinsi> provinsi = masterProvinsiRepository.findById(provinsiId);
+            if (provinsi.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Provinsi tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -197,11 +231,12 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setProvinsi(provinsiId);
+                mentor.setProvinsi(provinsi.get());
             }
 
             //set kota
-            if (kotaId == null) {
+            Optional<MasterKota> kota = masterKotaRepository.findById(kotaId);
+            if (kota.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Kota tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -209,11 +244,12 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setKota(kotaId);
+                mentor.setKota(kota.get());
             }
 
             //set kecamatan
-            if (kecamatanId == null) {
+            Optional<MasterKecamatan> kecamatan = masterKecamatanRepository.findById(kecamatanId);
+            if (kecamatan.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Kecamatan tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -221,11 +257,12 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setKecamatan(kecamatanId);
+                mentor.setKecamatan(kecamatan.get());
             }
 
             //set kelurahan
-            if (kelurahanId == null) {
+            Optional<MasterKelurahan> kelurahan = masterKelurahanRepository.findById(kelurahanId);
+            if (kelurahan.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Kelurahan tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -233,7 +270,7 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setKelurahan(kelurahanId);
+                mentor.setKelurahan(kelurahan.get());
             }
 
             if (id!=0) {
@@ -262,12 +299,28 @@ public class MentorServiceImpl implements MentorService{
     }
 
     @Override
-    public ResponseEntity<Result> createMentor(Long id , String namamentor, MultipartFile foto, String noktp,
-                                               String no_telepon, String status, Kelas classID, Educations educationID,
+    public ResponseEntity<Result> createMentor(Long id , String namamentor, String email, MultipartFile foto, String noktp,
+                                               String no_telepon, String status, Long classID, Integer educationID,
                                                String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah,
-                                               MultipartFile cv, MasterProvinsi provinsiId, MasterKota kotaId, MasterKecamatan kecamatanId, MasterKelurahan kelurahanId, Integer userId) {
+                                               MultipartFile cv, Long provinsiId, Long kotaId, Long kecamatanId, Long kelurahanId, Long userId) {
         result = new Result();
         try {
+            // cek email
+            Mentor cekemail = mentorRepository.findByemail(false, email).orElse(new Mentor());
+            if (cekemail.getEmail() != null) {
+                result.setSuccess(false);
+                result.setMessage("Error: email has been used!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
+
+            if (!validatorUtil.isEmailValid(email)){
+                result.setSuccess(false);
+                result.setMessage("Error: Invalid email!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
+
             if(namamentor == null) {
                 result.setSuccess(false);
                 result.setMessage("Error: Name can't be empty/null!");
@@ -275,16 +328,15 @@ public class MentorServiceImpl implements MentorService{
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(noktp == null || noktp.length() != 16) {
+            if(!validatorUtil.isNumeric(noktp) || noktp.length() != 16 || noktp == null) {
                 result.setSuccess(false);
-                result.setMessage("Error: No KTP harus sama dengan 16 character dan tidak boleh kosong");
+                result.setMessage("Error: No KTP harus berupa angka dengan 16 character dan tidak boleh kosong");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if (no_telepon == null || no_telepon != null && no_telepon.length() < 11 || no_telepon.length() > 13 && no_telepon != null) {
-                result.setSuccess(false);
-                result.setMessage("Error: No Telepon tidak boleh kosong dan No Telepon tidak boleh lebih dari 13 dan kurang dari 10");
+            if(no_telepon.length() < 11 || no_telepon.length() > 14 || no_telepon == null || !validatorUtil.isPhoneValid(no_telepon)) {
+                result.setMessage("Error: Number phone can't be empty/null, must be less than 12 numbers! use format 08xxx/+628xxx/628xxx!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -311,14 +363,15 @@ public class MentorServiceImpl implements MentorService{
             }
 
 
-            Mentor mentor = new Mentor(namamentor, noktp, no_telepon, status,
+            Mentor mentor = new Mentor(namamentor, email, noktp, no_telepon, status,
                     pendidikan_jurusan, tgl_start, tgl_stop, alamat_rumah);
 
             mentor.setId(id);
             mentor.setKode(generatekode());
 
             //set kelas
-            if (classID == null) {
+            Optional<Kelas> kelas = kelasRepository.findById(classID);
+            if (kelas.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Kelas tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -326,10 +379,11 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setClass_id(classID);
+                mentor.setClass_id(kelas.get());
             }
 
-            if (educationID == null){
+            Optional<Educations> pendidikan_terakhir = educationRepository.findById(educationID);
+            if (pendidikan_terakhir.isEmpty()){
                 result.setSuccess(false);
                 result.setMessage("Pendidikan tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -337,21 +391,12 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setPendidikan_terakhir(educationID);
+                mentor.setPendidikan_terakhir(pendidikan_terakhir.get());
             }
 
-            if (userId == null) {
-                result.setSuccess(false);
-                result.setMessage("User tidak boleh kosong");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
-            }
-
-            //Set created_by Many to one User;
-            Optional<User> userID = Optional.ofNullable(userRepository.findById(userId));
-            if (userID.isEmpty() || userID.get().isBanned()) {
+            //Set created_by Many to one User
+            Optional<User> user = userRepository.findById(userId);
+            if (user.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("User tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -359,8 +404,9 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setCreated_by(userID.get());
+                mentor.setCreated_by(user.get());
             }
+
 
             //set foto
             if (foto!=null) {
@@ -377,7 +423,8 @@ public class MentorServiceImpl implements MentorService{
             }
 
             //set provinsi
-            if (provinsiId == null) {
+            Optional<MasterProvinsi> provinsi = masterProvinsiRepository.findById(provinsiId);
+            if (provinsi.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Provinsi tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -385,11 +432,12 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setProvinsi(provinsiId);
+                mentor.setProvinsi(provinsi.get());
             }
 
             //set kota
-            if (kotaId == null) {
+            Optional<MasterKota> kota = masterKotaRepository.findById(kotaId);
+            if (kota.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Kota tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -397,11 +445,12 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setKota(kotaId);
+                mentor.setKota(kota.get());
             }
 
             //set kecamatan
-            if (kecamatanId == null) {
+            Optional<MasterKecamatan> kecamatan = masterKecamatanRepository.findById(kecamatanId);
+            if (kecamatan.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Kecamatan tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -409,11 +458,12 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setKecamatan(kecamatanId);
+                mentor.setKecamatan(kecamatan.get());
             }
 
             //set kelurahan
-            if (kelurahanId == null) {
+            Optional<MasterKelurahan> kelurahan = masterKelurahanRepository.findById(kelurahanId);
+            if (kelurahan.isEmpty()) {
                 result.setSuccess(false);
                 result.setMessage("Kelurahan tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -421,7 +471,7 @@ public class MentorServiceImpl implements MentorService{
                         .badRequest()
                         .body(result);
             } else {
-                mentor.setKelurahan(kelurahanId);
+                mentor.setKelurahan(kelurahan.get());
             }
 
             if (id!=0) {

@@ -75,25 +75,26 @@ public class MentorController {
   @PostMapping("/create")
   public ResponseEntity<Result> createMentor(
           @RequestParam(value = "Nama Mentor", required = false) String nama_mentor,
+          @RequestParam(value = "Email", required = false) String email,
           @RequestPart(value = "Upload Image", required = false) MultipartFile foto,
           @RequestParam(value = "No Ktp", required = false) String no_ktp,
           @RequestParam(value = "No Telepon", required = false) String no_telepon,
           @RequestParam(value = "Status", defaultValue = "Apply", required = false) String status,
-          @RequestParam(value = "Class Name by Class Id", required = false) Kelas class_id,
-          @RequestParam(value = "Pendidikan Terakhir by Education Id", required = false) Educations pendidikan_terakhir,
+          @RequestParam(value = "Class Name by Class Id", required = false) Long class_id,
+          @RequestParam(value = "Pendidikan Terakhir by Education Id", required = false) Integer pendidikan_terakhir,
           @RequestParam(value = "Pendidikan Jurusan", required = false) String pendidikan_jurusan,
           @RequestParam(value = "Tanggal Start", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_start,
           @RequestParam(value = "Tanggal Stop", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
           @RequestParam(value = "Alamat Rumah", required = false) String alamat_rumah,
           @RequestPart(value = "Upload Cv", required = false) MultipartFile cv,
-          @RequestParam(value = "Provinsi", required = false) MasterProvinsi provinsi,
-          @RequestParam(value = "Kota", required = false) MasterKota kota,
-          @RequestParam(value = "Kecamatan", required = false) MasterKecamatan kecamatan,
-          @RequestParam(value = "Kelurahan", required = false) MasterKelurahan kelurahan,
-          @RequestParam(value = "Created by User Id", required = false) Integer userId)
+          @RequestParam(value = "Provinsi", required = false) Long provinsi,
+          @RequestParam(value = "Kota", required = false) Long kota,
+          @RequestParam(value = "Kecamatan", required = false) Long kecamatan,
+          @RequestParam(value = "Kelurahan", required = false) Long kelurahan,
+          @RequestParam(value = "Created by User Id", required = false) Long userId)
   {
     Long id = 0L;
-    return service.createMentor(id, nama_mentor, foto, no_ktp, no_telepon, status,
+    return service.createMentor(id, nama_mentor, email, foto, no_ktp, no_telepon, status,
             class_id, pendidikan_terakhir, pendidikan_jurusan, tgl_start,
             tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan, userId);
   }
@@ -101,23 +102,24 @@ public class MentorController {
   @PutMapping("/update")
   public ResponseEntity<Result> updateMentor(@RequestParam(value = "Id",defaultValue = "0") Long id,
                                         @RequestParam(value = "Nama Mentor", required = false) String nama_mentor,
+                                        @RequestParam(value = "Email", required = false) String email,
                                         @RequestPart(value = "Upload Image", required = false) MultipartFile foto,
                                         @RequestParam(value = "No Ktp", required = false) String no_ktp,
                                         @RequestParam(value = "No Telepon", required = false) String no_telepon,
                                         @RequestParam(value = "Status", defaultValue = "Apply", required = false) String status,
-                                        @RequestParam(value = "Class Name by Class Id", required = false) Kelas class_id,
-                                        @RequestParam(value = "Pendidikan Terakhir by Education Id", required = false) Educations pendidikan_terakhir,
+                                        @RequestParam(value = "Class Name by Class Id", required = false) Long class_id,
+                                        @RequestParam(value = "Pendidikan Terakhir by Education Id", required = false) Integer pendidikan_terakhir,
                                         @RequestParam(value = "Pendidikan Jurusan", required = false) String pendidikan_jurusan,
                                         @RequestParam(value = "Tanggal Start", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_start,
                                         @RequestParam(value = "Tanggal Stop", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date tgl_stop,
                                         @RequestParam(value = "Alamat Rumah",required = false) String alamat_rumah,
                                         @RequestPart(value = "Upload Cv", required = false) MultipartFile cv,
-                                        @RequestParam(value = "Provinsi",defaultValue = "0", required = false) MasterProvinsi provinsi,
-                                        @RequestParam(value = "Kota",defaultValue = "0", required = false) MasterKota kota,
-                                        @RequestParam(value = "Kecamatan",defaultValue = "0", required = false) MasterKecamatan kecamatan,
-                                        @RequestParam(value = "Kelurahan",defaultValue = "0", required = false) MasterKelurahan kelurahan,
-                                        @RequestParam(value = "Created By User ID", defaultValue = "0", required = false) Integer userId) {
-    return service.updateMentor(id, nama_mentor, foto, no_ktp, no_telepon, status,
+                                        @RequestParam(value = "Provinsi",defaultValue = "0", required = false) Long provinsi,
+                                        @RequestParam(value = "Kota",defaultValue = "0", required = false) Long kota,
+                                        @RequestParam(value = "Kecamatan",defaultValue = "0", required = false) Long kecamatan,
+                                        @RequestParam(value = "Kelurahan",defaultValue = "0", required = false) Long kelurahan,
+                                        @RequestParam(value = "Created By User ID", defaultValue = "0", required = false) Long userId) {
+    return service.updateMentor(id, nama_mentor, email, foto, no_ktp, no_telepon, status,
             class_id, pendidikan_terakhir, pendidikan_jurusan, tgl_start,
             tgl_stop, alamat_rumah, cv, provinsi, kota, kecamatan, kelurahan, userId);
   }

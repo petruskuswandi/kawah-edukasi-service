@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -20,9 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 
 @Entity
-@Table(name = "mentors", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "kode")
-})
+@Table(name = "mentors")
 
 @DynamicUpdate
 @Getter
@@ -35,15 +34,18 @@ public class Mentor implements Serializable {
           generator="native")
   private Long id;
 
-  @Size(max = 100)
+  @Size(max = 100, message = "Jumlah Karakter nama mentor 100 karakter")
   @Column(name = "namamentor")
   private String namamentor;
+  @Column(name = "email")
+  @Size(max = 100, message = "Jumlah Karakter Email maksimal 100 karakter")
+  @Pattern(regexp = "^(?=.{1,64})[A-Za-z0-9_\\-]+(\\.[A-Za-z0-9_\\-]+)*+@[^-]{3,}[A-Za-z0-9-]+(\\.[A-Za-z]{2,})*+$", message = "Format Email Tidak Sesuai")
+  private String email;
 
-  @Size(max = 20)
   @Column(name = "kode")
   private String kode;
 
-  @Size(max = 16)
+  @Size(max = 16, message = "Jumlah karakter noktp maksimal 16 karakter")
   @Column(name = "noktp")
   private String noktp;
 
@@ -87,7 +89,6 @@ public class Mentor implements Serializable {
 
   @Column(name = "alamat_rumah")
   private String alamat_rumah;
-
 
   @ManyToOne
   @JsonIgnoreProperties({"alt_name", "latitude", "longitude"})
@@ -137,10 +138,11 @@ public class Mentor implements Serializable {
   public Mentor() {
   }
 
-  public Mentor(String namamentor, String noktp, String no_telepon, String status,
+  public Mentor(String namamentor, String email, String noktp, String no_telepon, String status,
                 String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah) {
     Date date = new Date();
     this.namamentor = namamentor;
+    this.email = email;
     this.noktp = noktp;
     this.no_telepon = no_telepon;
     this.status = status;
