@@ -1,388 +1,380 @@
+
+
 <!DOCTYPE html>
-<html lang="en" style="margin: 0; padding: 0; overflow-x: hidden" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>E-Mail Template</title>
-  </head>
-  <body>
-    <main
-      style="
-        display: flex;
-        flex-direction: column;
-        padding: 3rem;
-        font-family: sans-serif;
-      "
-    >
-      <div
-        id="header"
-        style="
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-        "
-      >
-        <div
-          id="title"
-          style="display: flex; flex-direction: column; color: #2e2e2e"
-        >
-          <span style="font-size: 2rem; font-weight: 600">Data Register</span>
-          <span style="font-size: 1.5rem; font-weight: 300">Calon Peserta</span>
-        </div>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="147"
-          height="44"
-          viewBox="0 0 147 44"
-          fill="none"
-        >
-          <g clip-path="url(#clip0_5485_3079)">
-            <path
-              d="M66.8213 17.9428V1.32715H69.8363V8.09226H71.9753L75.8666 1.32715H79.1319L74.4444 9.23501V9.28072L79.405 17.9428H76.0258L71.9753 10.6863H69.8363V17.9428H66.8213Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M80.4404 14.5034C80.4404 13.9016 80.5655 13.3645 80.8158 12.8921C81.0662 12.4198 81.4113 12.0427 81.8512 11.7608C82.2836 11.4789 82.7425 11.2466 83.2279 11.0638C83.7058 10.8809 84.2329 10.7437 84.8094 10.6523C85.31 10.5761 85.7955 10.5228 86.2657 10.4923C86.6526 10.4695 87.0583 10.458 87.4832 10.458H87.8813V10.2866C87.8813 8.88486 87.1191 8.18397 85.5945 8.18397C85.109 8.18397 84.5894 8.28301 84.0357 8.48109C83.5047 8.67155 83.0838 8.86201 82.7729 9.05247L82.329 9.32673L81.2141 7.20121C81.3582 7.07932 81.5554 6.94218 81.8057 6.78982C82.0787 6.62222 82.6097 6.40509 83.3985 6.13845C84.2101 5.86418 85.0332 5.72705 85.8676 5.72705C87.4376 5.72705 88.6551 6.13845 89.5198 6.96123C90.3844 7.78401 90.8168 8.95724 90.8168 10.4809V17.9431H88.0862V16.9603L88.1316 16.1147H88.0862C88.0938 16.1147 88.0938 16.1223 88.0862 16.1375C88.0786 16.1528 88.0672 16.1795 88.052 16.2175C88.0369 16.2557 88.0179 16.2975 87.9952 16.3433C87.9269 16.4727 87.7941 16.6479 87.5969 16.8689C87.4452 17.0365 87.2215 17.2384 86.9257 17.4746C86.683 17.665 86.3303 17.8402 85.8676 18.0002C85.4276 18.1526 84.9649 18.2288 84.4794 18.2288C83.3569 18.2288 82.405 17.8935 81.6236 17.2232C80.8348 16.5451 80.4404 15.6386 80.4404 14.5034ZM83.4213 14.3663C83.4213 14.7776 83.5768 15.1395 83.8878 15.4519C84.1913 15.7566 84.635 15.909 85.219 15.909C85.9624 15.909 86.5957 15.5776 87.1191 14.9148C87.6425 14.252 87.9041 13.5359 87.9041 12.7665V12.4922H87.3922C84.7449 12.4922 83.4213 13.1169 83.4213 14.3663Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M92.5918 6.0127H95.7093L97.7803 13.852L98.0188 15.1091H98.0646C98.1483 14.6671 98.2427 14.2481 98.3488 13.852L100.533 6.03555H103.162L105.357 13.852L105.619 15.1091H105.665C105.725 14.6747 105.809 14.2558 105.915 13.852L107.986 6.0127H111.069L107.451 17.9431H104.174L102.16 11.1322L101.864 9.84089H101.819C101.766 10.2371 101.671 10.6675 101.534 11.1322L99.5317 17.9431H96.2212L92.5918 6.0127Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M112.025 14.5034C112.025 13.9016 112.15 13.3645 112.4 12.8921C112.651 12.4198 112.995 12.0427 113.435 11.7608C113.868 11.4789 114.327 11.2466 114.812 11.0638C115.29 10.8809 115.817 10.7437 116.394 10.6523C116.894 10.5761 117.38 10.5228 117.85 10.4923C118.237 10.4695 118.643 10.458 119.067 10.458H119.466V10.2866C119.466 8.88486 118.704 8.18397 117.178 8.18397C116.694 8.18397 116.174 8.28301 115.62 8.48109C115.089 8.67155 114.668 8.86201 114.357 9.05247L113.913 9.32673L112.799 7.20121C112.943 7.07932 113.139 6.94218 113.39 6.78982C113.663 6.62222 114.194 6.40509 114.983 6.13845C115.794 5.86418 116.618 5.72705 117.452 5.72705C119.022 5.72705 120.239 6.13845 121.105 6.96123C121.969 7.78401 122.401 8.95724 122.401 10.4809V17.9431H119.671V16.9603L119.716 16.1147H119.671C119.678 16.1147 119.678 16.1223 119.671 16.1375C119.663 16.1528 119.651 16.1795 119.637 16.2175C119.621 16.2557 119.602 16.2975 119.579 16.3433C119.511 16.4727 119.379 16.6479 119.181 16.8689C119.03 17.0365 118.806 17.2384 118.51 17.4746C118.267 17.665 117.914 17.8402 117.452 18.0002C117.012 18.1526 116.55 18.2288 116.064 18.2288C114.941 18.2288 113.989 17.8935 113.208 17.2232C112.419 16.5451 112.025 15.6386 112.025 14.5034ZM115.006 14.3663C115.006 14.7776 115.161 15.1395 115.472 15.4519C115.776 15.7566 116.22 15.909 116.804 15.909C117.546 15.909 118.18 15.5776 118.704 14.9148C119.227 14.252 119.489 13.5359 119.489 12.7665V12.4922H118.976C116.33 12.4922 115.006 13.1169 115.006 14.3663Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M125.473 17.9428V1.32715H128.431V7.08663L128.385 8.09226H128.431C128.757 7.45231 129.285 6.89617 130.013 6.42384C130.726 5.95912 131.568 5.72675 132.538 5.72675C135.285 5.72675 136.657 7.239 136.657 10.2635V17.9428H133.722V10.8806C133.722 10.0731 133.589 9.46736 133.324 9.06359C133.05 8.6522 132.554 8.44651 131.834 8.44651C131.074 8.44651 130.407 8.67506 129.831 9.13216C129.262 9.58165 128.86 10.1796 128.625 10.9263C128.495 11.3605 128.431 11.8748 128.431 12.469V17.9428H125.473Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M21.0833 15.3234L32.3831 3.97412L36.7153 8.32533L25.4155 19.6747L21.0833 15.3234Z"
-              fill="#FDCE2D"
-            />
-            <path
-              d="M66.8213 41.3466V24.731H76.7312V27.325H69.8363V31.6789H75.4V34.2844H69.8363V38.7526H77.0953V41.3466H66.8213Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M78.95 35.3814C78.95 33.4997 79.4506 31.9874 80.4519 30.8447C81.453 29.702 82.7463 29.1306 84.3316 29.1306C84.8322 29.1306 85.2835 29.1801 85.6856 29.2791C86.1103 29.3858 86.4402 29.5115 86.6754 29.6562C86.9257 29.8087 87.1306 29.961 87.2898 30.1133C87.4795 30.2885 87.597 30.4143 87.6425 30.4905L87.7563 30.6504H87.8018C87.7866 30.3762 87.779 30.1515 87.779 29.9762V24.731H90.7372V41.3466H87.9384V40.3639L87.9838 39.5867H87.9384C87.9308 39.602 87.9118 39.6363 87.8814 39.6896C87.8587 39.7353 87.836 39.7772 87.8132 39.8153C87.7677 39.8915 87.6349 40.0515 87.415 40.2953C87.2178 40.5162 86.9826 40.7219 86.7095 40.9124C86.4668 41.08 86.1103 41.2438 85.64 41.4037C85.1849 41.5562 84.7109 41.6323 84.2178 41.6323C82.6174 41.6323 81.3393 41.0533 80.3835 39.8953C79.4278 38.745 78.95 37.2404 78.95 35.3814ZM81.9309 35.3814C81.9309 36.5013 82.204 37.4041 82.7501 38.0897C83.2963 38.7755 84.0093 39.1183 84.8891 39.1183C85.7159 39.1183 86.4214 38.8021 87.0054 38.1697C87.5819 37.545 87.87 36.608 87.87 35.3586C87.87 34.353 87.6083 33.4883 87.085 32.7646C86.5616 32.0408 85.8372 31.6789 84.9119 31.6789C84.0623 31.6789 83.3531 32.0103 82.7842 32.6732C82.2154 33.3359 81.9309 34.2387 81.9309 35.3814Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M93.8433 37.0838V29.416H96.8015V36.4782C96.8015 37.2781 96.9381 37.8838 97.2111 38.2952C97.4844 38.7066 97.9624 38.9123 98.6448 38.9123C99.6689 38.9123 100.48 38.5237 101.08 37.7467C101.678 36.9773 101.978 36.0249 101.978 34.8898V29.416H104.937V41.3464H102.092V39.9865L102.138 39.1408H102.092C101.758 39.8189 101.228 40.4016 100.499 40.8893C99.7556 41.3844 98.9135 41.6321 97.9731 41.6321C95.22 41.6321 93.8433 40.116 93.8433 37.0838Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M108.202 41.3466V24.731H111.16V33.6216H112.628L115.495 29.4163H118.783L115.029 34.7415V34.7986L119.249 41.3466H115.848L112.707 36.1242H111.16V41.3466H108.202Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M120.057 37.9067C120.057 37.3049 120.183 36.7678 120.433 36.2954C120.683 35.8231 121.029 35.446 121.469 35.1641C121.901 34.8822 122.359 34.6499 122.845 34.4671C123.323 34.2842 123.85 34.1471 124.426 34.0556C124.927 33.9795 125.412 33.9262 125.883 33.8957C126.27 33.8728 126.675 33.8614 127.1 33.8614H127.499V33.6899C127.499 32.2882 126.736 31.5873 125.212 31.5873C124.726 31.5873 124.206 31.6864 123.652 31.8844C123.122 32.0749 122.701 32.2653 122.39 32.4558L121.946 32.7301L120.831 30.6046C120.975 30.4826 121.173 30.3456 121.423 30.1931C121.696 30.0255 122.227 29.8085 123.016 29.5418C123.828 29.2676 124.65 29.1304 125.484 29.1304C127.055 29.1304 128.272 29.5418 129.137 30.3645C130.002 31.1873 130.434 32.3606 130.434 33.8842V41.3464H127.703V40.3637L127.749 39.518H127.703C127.711 39.518 127.711 39.5256 127.703 39.5409C127.695 39.5561 127.685 39.5828 127.669 39.6209C127.653 39.659 127.635 39.7008 127.613 39.7466C127.544 39.8761 127.411 40.0513 127.214 40.2722C127.063 40.4398 126.839 40.6417 126.543 40.8779C126.3 41.0684 125.947 41.2436 125.484 41.4035C125.044 41.556 124.582 41.6321 124.096 41.6321C122.974 41.6321 122.022 41.2969 121.241 40.6265C120.451 39.9484 120.057 39.0419 120.057 37.9067ZM123.038 37.7696C123.038 38.181 123.194 38.5429 123.505 38.8553C123.808 39.1599 124.252 39.3124 124.836 39.3124C125.58 39.3124 126.213 38.9809 126.736 38.3182C127.259 37.6553 127.521 36.9392 127.521 36.1698V35.8955H127.009C124.362 35.8955 123.038 36.5202 123.038 37.7696Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M132.504 39.8722L133.859 37.7925C133.927 37.861 134.063 37.9791 134.268 38.1468C134.481 38.3143 134.853 38.5123 135.383 38.7409C135.945 38.9771 136.517 39.0952 137.101 39.0952C137.534 39.0952 137.902 39.0038 138.204 38.8209C138.508 38.6381 138.66 38.3714 138.66 38.021C138.66 37.7086 138.462 37.423 138.068 37.164C137.689 36.9125 137.207 36.6764 136.623 36.4554C136.115 36.265 135.547 36.0097 134.917 35.6898C134.355 35.4079 133.874 35.008 133.472 34.4899C133.077 33.9795 132.88 33.3624 132.88 32.6386C132.88 31.5645 133.309 30.7111 134.165 30.0789C135.023 29.4466 136.107 29.1304 137.42 29.1304C138.216 29.1304 138.948 29.2447 139.616 29.4732C140.283 29.7018 140.75 29.9303 141.015 30.1589L141.413 30.4903L140.31 32.6843C140.211 32.5929 140.097 32.4977 139.968 32.3987C139.786 32.2691 139.456 32.1168 138.978 31.9416C138.455 31.7511 137.928 31.6559 137.397 31.6559C136.98 31.6559 136.623 31.7473 136.327 31.9301C136.031 32.113 135.883 32.3796 135.883 32.7301C135.883 33.0348 136.081 33.3053 136.475 33.5414C136.877 33.7852 137.359 34.0138 137.92 34.227C138.49 34.448 139.058 34.6994 139.627 34.9813C140.204 35.2708 140.685 35.6707 141.072 36.1811C141.467 36.6993 141.663 37.3201 141.663 38.0439C141.663 39.0723 141.254 39.9256 140.435 40.6036C139.6 41.2893 138.496 41.6321 137.124 41.6321C136.259 41.6321 135.44 41.4835 134.667 41.1865C133.885 40.8893 133.328 40.5998 132.994 40.3179L132.504 39.8722Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M144.042 41.3466V29.4163H147V41.3466H144.042ZM144.042 27.3708V24.731H146.977V27.3708H144.042Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M41.9099 0C44.5641 0 46.589 0.711563 47.9845 2.13468C49.4075 3.53044 50.119 5.54198 50.119 8.16927V16.6259C50.119 18.3501 50.9672 19.2122 52.6637 19.2122H54.4697V24.5078H52.6637C50.9672 24.5078 50.119 25.3562 50.119 27.0531V35.5097C50.119 38.1643 49.4075 40.1896 47.9845 41.5853C46.589 43.0084 44.5641 43.72 41.9099 43.72H37.4771V38.3423H41.1711C42.895 38.3423 43.757 37.4939 43.757 35.797V27.0941C43.757 25.6436 43.9758 24.5352 44.4136 23.7689C44.8515 23.0026 45.7271 22.4005 47.0405 21.9626V21.7163C45.7271 21.2784 44.8515 20.6627 44.4136 19.869C43.9758 19.0754 43.757 17.9943 43.757 16.6259V7.88192C43.757 6.18512 42.895 5.33671 41.1711 5.33671H37.4771V0H41.9099Z"
-              fill="#009DA6"
-            />
-            <path
-              d="M12.5598 0C9.90557 0 7.88066 0.711563 6.48513 2.13468C5.06222 3.53044 4.35078 5.54198 4.35078 8.16927V16.6259C4.35078 18.3501 3.50252 19.2122 1.80598 19.2122H0V24.5078H1.80598C3.50252 24.5078 4.35078 25.3562 4.35078 27.0531V35.5097C4.35078 38.1643 5.06222 40.1896 6.48513 41.5853C7.88066 43.0084 9.90557 43.72 12.5598 43.72H16.9926V38.3423H13.2986C11.5748 38.3423 10.7128 37.4939 10.7128 35.797V27.0941C10.7128 25.6436 10.4939 24.5352 10.0561 23.7689C9.61824 23.0026 8.74261 22.4005 7.42916 21.9626V21.7163C8.74261 21.2784 9.61824 20.6627 10.0561 19.869C10.4939 19.0754 10.7128 17.9943 10.7128 16.6259V7.88192C10.7128 6.18512 11.5748 5.33671 13.2986 5.33671H16.9926V0H12.5598Z"
-              fill="#FDCE2D"
-            />
-            <path
-              d="M14.6653 21.7695L32.3828 39.5646L36.7158 35.2126L18.9983 17.4175L14.6653 21.7695Z"
-              fill="#FDCE2D"
-            />
-          </g>
-          <defs>
-            <clipPath id="clip0_5485_3079">
-              <rect width="147" height="44" fill="white" />
-            </clipPath>
-          </defs>
-        </svg>
-      </div>
-      <div
-        id="divider"
-        style="
-          height: 3px;
-          width: 100%;
-          background-color: rgba(0, 0, 0, 0.25);
-          margin-top: 3rem;
-          margin-bottom: 3rem;
-        "
-      ></div>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+      xmlns:v="urn:schemas-microsoft-com:vml"
+      xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta content="exported via StampReady" name="sr_export" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="format-detection" content="date=no" />
+  <meta name="format-detection" content="address=no" />
+  <meta name="format-detection" content="email=no" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <style>
 
-      <!-- content -->
-      <div
-        style="
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-        "
-      >
-        <div style="width: 50%; display: flex; flex-direction: column">
-          <table>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Nama Program</td>
-              <td style="flex: 1;">: <b th:text="${keteranganLain.namaProgram}"></b></td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Memilih Batch</td>
-              <td style="flex: 1;">: <b th:text="${keteranganLain.namaBatch}"></b></td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">E-Mail</td>
-              <td style="flex: 1;">: <b th:text="${peserta.email}"></b></td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Follow Akun IG</td>
-              <td style="flex: 1;">: <b th:text="${peserta.linkTwiitbon}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Membagikan Poster IG</td>
-              <td style="flex: 1;"></td>
-            </tr>
-          </table>
 
-          <table>
+
+
+		html {
+			width: 100%;
+		}
+
+		body {
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			-webkit-text-size-adjust: none;
+			-ms-text-size-adjust: none;
+		}
+
+		img {
+			display: block !important;
+			border: 0;
+			-ms-interpolation-mode: bicubic;
+		}
+
+		.ReadMsgBody {
+			width: 100%;
+		}
+
+		.ExternalClass {
+			width: 100%;
+		}
+
+		.ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+			line-height: 100%;
+		}
+
+		.images {
+			display: block !important;
+			width: 100% !important;
+		}
+
+		p {
+			margin: 0 !important;
+			padding: 0 !important;
+		}
+
+		a {
+			text-decoration: none !important;
+		}
+
+		img[class=follow], td[class=follow] {
+			width: 100% !important;
+			height: auto !important
+		}
+
+		@media only screen and (max-width: 650px) {
+			table[class=container-48] {
+				width: 100% !important;
+				min-width: 100% !important
+			}
+
+            table[class=container-48s] {
+				width: 90% !important;
+				min-width: 90% !important
+			}
+
+             table[class=container-48s1] {
+				width: 95% !important;
+				min-width: 95% !important
+			}
+
+
+			table[class=mobility-270] {
+				width: 270px !important;
+				min-width: 270px !important
+			}
+
+            th[class=column]{box-sizing: border-box;display: inline-block !important;line-height: inherit !important;width: 100% !important;word-break: break-word;}
+
+            img[class=follow], td[class=follow]{width:100%!important;height:auto!important}
+
+             td[class=loss]{display: none !important}
+
+             td[class=name]{width: 10px !important}
+
+		}
+
+	</style>
+
+  <!--[if gte mso 9]><xml>
+  <o:OfficeDocumentSettings>
+    <o:AllowPNG/>
+    <o:PixelsPerInch>96</o:PixelsPerInch>
+  </o:OfficeDocumentSettings>
+</xml><![endif]-->
+  <!--[if mso]><xml xmlns:w="urn:schemas-microsoft-com:office:word"><w:WordDocument><w:AutoHyphenation/></w:WordDocument></xml><![endif]-->
+
+</head>
+<body>
+
+<!--[if mso]>
+<style type="text/css">
+body, table, td {font-family: Arial, Helvetica, sans-serif !important;}
+</style>
+<![endif]-->
+
+
+
+
+
+
+
+<table  bgcolor="#ffffff" width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse">
+  <tr>
+
+    <td align="center">
+      <table class="container-48" style="border-collapse: collapse" border="0" cellpadding="0" cellspacing="0"><tr>
+
+        <td align="center">
+          <table  bgcolor="#ffffff" width="900" class="container-48" border="0" cellpadding="0" cellspacing="0"
+                  style="border-collapse: collapse;width: 900px;min-width: 900px">
             <tr>
-              <td><img th:src="${file1}" alt="file1" height="200" width="200" /></td>
-              <td><img th:src="${file2}" alt="file2" height="200" width="200" /></td>
-              <td><img th:src="${file3}" alt="file3" height="200" width="200" /></td>
-            </tr>
-          </table>
-        </div>
-        <div style="width: 50%; display: flex; flex-direction: column">
-          <table>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Bahasa program yang dikuasai</td>
-              <td style="flex: 1;">: <b th:text="${peserta.keteranganPemrograman}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Apa pernah mengikuti pelatihan lain? </td>
-              <td style="flex: 1;">: <b th:text="${peserta.namaBootcamp}"></b> </td>
-            </tr>
-          </table>
-          
-        </div>
-      </div>
+              <td align="center" style="border: 1px solid #eeeeee">
+                <table width="820" class="container-48s" border="0" cellpadding="0" cellspacing="0"
+                       style="border-collapse: collapse;width: 820px;min-width: 820px">
+                  <tr><td height="40">&nbsp;</td></tr>
+                  <tr>
+                    <td align="center">
 
-      <div
-        id="identitasdiri"
-        style="display: flex; flex-direction: column; color: #2e2e2e; margin-top: 3rem; margin-bottom: 3rem;"
-      >
-        <span style="font-size: 1.5rem; font-weight: 600">Identitas Diri</span>
-      </div>
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse">
+                        <tr>
+                          <th width="400" align="center">
 
-      
-      <!-- content -->
-      <div
-        style="
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-        "
-      >
-        <div style="width: 50%; display: flex; flex-direction: column">
-          <table>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Nama Lengkap</td>
-              <td style="flex: 1;">: <b th:text="${peserta.namaPeserta}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Tanggal Lahir</td>
-              <td style="flex: 1;">: <b th:text="${keteranganLain.tgllahir}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Alamat Domisili</td>
-              <td style="flex: 1;">: <b th:text="${peserta.alamatRumah}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Pendidikan Terakhir</td>
-              <td style="flex: 1;">: <b th:text="${peserta.sekolahUniversitas}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Nomor HP (WA)</td>
-              <td style="flex: 1;">: <b th:text="${peserta.noHp}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">E-Mail</td>
-              <td style="flex: 1;">: <b th:text="${peserta.email}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Username Instagram</td>
-              <td style="flex: 1;">: <b th:text="${peserta.userInstagram}"></b> </td>
+                            <table class="container-48" width="400" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse">
+                              <tr><td style="font-family:Helvetica, Arial, sans-serif;font-size: 20px;color: #000000;font-weight: 400"><strong>Data Register</strong><br>
+                                Calon Peserta</td></tr>
+                            </table>
+
+                          </th>
+                          <th width="20" align="center">
+
+                            <table  align="left" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
+                              <tr>
+                                <td width="1" height="30" style="width: 1px;font-size: 0px">
+                                  &nbsp;</td>
+                              </tr>
+                            </table>
+
+                          </th>
+                          <th width="400" align="center">
+
+                            <table class="container-48" width="400" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse">
+                              <tr><td align="right"><img width="140" style="width: 140px" src="https://d3k81ch9hvuctc.cloudfront.net/company/TEpBTE/images/9718073a-e004-4683-a2e1-05e7eccf13eb.png"></td></tr>
+                            </table>
+
+                          </th>
+                        </tr></table>
+
+                    </td>
+                  </tr>
+                  <tr><td height="20" style="border-bottom: 2px solid #eeeeee">&nbsp;</td></tr>
+                  <tr><td height="20">&nbsp;</td></tr>
+                  <tr>
+                    <td align="center">
+
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse">
+                        <tr>
+                          <th class="column" width="400" align="center" valign="top">
+
+                            <table class="container-48" width="400" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse">
+                              <tr><td valign="top">
+
+                                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse">
+                                  <tr>
+                                    <td valign="top" width="130" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Nama Program</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${keteranganLain.namaProgram}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="130" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Memilih Batch</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${keteranganLain.namaBatch}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="130" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">E-Mail</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${peserta.email}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="130" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Follow Akun IG</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${peserta.linkTwiitbon}]]</td>
+                                  </tr>
+                                </table>
+
+                              </td></tr>
+                            </table>
+
+                          </th>
+                          <th class="column" width="20" align="center">
+
+                            <table class="container-48" align="left" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
+                              <tr>
+                                <td width="1" height="30" style="width: 1px;font-size: 0px">
+                                  &nbsp;</td>
+                              </tr>
+                            </table>
+
+                          </th>
+                          <th class="column" width="400" align="center" valign="top">
+
+                            <table class="container-48" width="400" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse">
+                              <tr><td valign="top">
+
+                                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse">
+                                  <tr>
+                                    <td valign="top" width="260" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Bahasa program yang dikuasai</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${peserta.keteranganPemrograman}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="260" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Apa pernah mengikuti pelatihan lain?</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${peserta.namaBootcamp}]]</td>
+                                  </tr>
+
+                                </table>
+
+                              </td></tr>
+                            </table>
+
+                          </th>
+                        </tr></table>
+
+                    </td>
+                  </tr>
+                  <tr><td height="20" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Membagikan Poster IG</td></tr>
+                  <tr><td style="line-height: 10px;height: 10px;font-size: 0px">&nbsp;</td></tr>
+                  <tr><td>
+                    <table width="" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse">
+                      <tr>
+                        <td width="150"><img class="follow" width="150" style="width: 150px" th:src="${file1}"></td>
+                        <td width="20">&nbsp;</td>
+                        <td width="150"><img class="follow" width="150" style="width: 150px" th:src="${file2}">
+                        <td width="20">&nbsp;</td>
+                        <td width="150"><img class="follow" width="150" style="width: 150px" th:src="${file3}">
+                      </tr>
+                    </table>
+                  </td></tr>
+                  <tr><td height="20">&nbsp;</td></tr>
+                  <tr><td style="font-family:Helvetica, Arial, sans-serif;font-size: 20px;color: #000000;font-weight: 400">Identitas Diri</td></tr>
+                  <tr><td height="20">&nbsp;</td></tr>
+                  <tr>
+                    <td align="center">
+
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse">
+                        <tr>
+                          <th class="column" width="400" align="center" valign="top">
+
+                            <table class="container-48" width="400" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse">
+                              <tr><td valign="top">
+
+                                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse">
+                                  <tr>
+                                    <td valign="top" width="130" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Nama Lengkap</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">:
+                                      [[${peserta.namaPeserta}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="130" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Tanggal Lahir</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${keteranganLain.tgllahir}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="130" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Alamat Domisili</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">:
+                                      [[${peserta.alamatRumah}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="130" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Pendidikan Terakhir</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${peserta.sekolahUniversitas}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="130" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Nomor HP (WA)</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${peserta.noHp}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="130" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">E-Mail</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${peserta.email}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="130" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Username IG</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${peserta.userInstagram}]]</td>
+                                  </tr>
+                                </table>
+
+                              </td></tr>
+                            </table>
+
+                          </th>
+                          <th class="column" width="20" align="center">
+
+                            <table class="container-48" align="left" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
+                              <tr>
+                                <td width="1" height="30" style="width: 1px;font-size: 0px">
+                                  &nbsp;</td>
+                              </tr>
+                            </table>
+
+                          </th>
+                          <th class="column" width="400" align="center" valign="top">
+
+                            <table class="container-48" width="400" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse">
+                              <tr><td valign="top">
+
+                                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse">
+                                  <tr>
+                                    <td valign="top" width="260" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Alasan</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${peserta.alasan}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="260" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Kelebihan & Kekurangan</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${peserta.kelebihanKekurangan}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="260" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Kesibukan saat ini</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${keteranganLain.kesibukan}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="260" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Memiliki laptop atau PC?</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${keteranganLain.laptop}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="260" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Berkomitmen mengikuti hingga selesai?</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">: [[${keteranganLain.komitmen}]]</td>
+                                  </tr>
+                                  <tr>
+                                    <td valign="top" width="260" style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">Bersedia ditempatkan di Jakarta?</td>
+                                    <td style="font-family:'Arial', Helvetica, sans-serif;font-size: 14px;color: #000000;font-weight: 400;line-height: 22px">:
+                                      [[${keteranganLain.siapBekerja}]]
+                                    </td>
+                                  </tr>
+
+
+                                </table>
+
+                              </td></tr>
+                            </table>
+
+                          </th>
+                        </tr></table>
+
+                    </td>
+                  </tr>
+                  <tr><td height="40">&nbsp;</td></tr>
+                  <tr><td align="center" style="font-family:'Arial', Helvetica, sans-serif;font-size: 12px;color: #000000;font-weight: 400;line-height: 22px">2023 © Kawah Edukasi</td></tr>
+                  <tr><td height="40">&nbsp;</td></tr>
+
+                </table>
+              </td>
             </tr>
           </table>
-          
-        </div>
-        <div style="width: 50%; display: flex; flex-direction: column">
-          <table>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Alasan</td>
-              <td style="flex: 1;">: <b th:text="${peserta.alasan}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Kelebihan Dan Kekurangan </td>
-              <td style="flex: 1;">: <b th:text="${peserta.kelebihanKekurangan}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Kesibukan saat ini </td>
-              <td style="flex: 1;">: <b th:text="${keteranganLain.kesibukan}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Memiliki laptop atau PC? </td>
-              <td style="flex: 1;">: <b th:text="${keteranganLain.laptop}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Berkomitmen mengikuti hingga selesai? </td>
-              <td style="flex: 1;">: <b th:text="${keteranganLain.komitmen}"></b> </td>
-            </tr>
-            <tr style="
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-              ">
-              <td style="flex: 1;">Bersedia ditempatkan di Jakarta? </td>
-              <td style="flex: 1;">: <b th:text="${keteranganLain.siapBekerja}"></b> </td>
-            </tr>
-          </table>
-          
-        </div>
-      </div>
 
-      
-      <div
-        id="footer"
-        style="display: flex; flex-direction: column; color: #2e2e2e; margin-top: 3rem; margin-bottom: 3rem; justify-content: center; align-items: center;"
-      >
-        <span style="font-size: 1.5rem; font-weight: 500">2022 &copy; Kawah Edukasi </span>
-      </div>
-    </main>
-  </body>
-</html>
+        </td>
+      </tr></table>
+    </td>
+
+  </tr>
+</table>
+
+
+</body></html>
