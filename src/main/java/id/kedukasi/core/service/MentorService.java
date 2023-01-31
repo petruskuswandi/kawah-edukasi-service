@@ -9,7 +9,6 @@ import id.kedukasi.core.models.wilayah.MasterKecamatan;
 import id.kedukasi.core.models.wilayah.MasterKelurahan;
 import id.kedukasi.core.models.wilayah.MasterKota;
 import id.kedukasi.core.models.wilayah.MasterProvinsi;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,17 +16,17 @@ import id.kedukasi.core.models.Result;
 
 public interface MentorService {
 
-    ResponseEntity<?> updateMentor(Long id, String namamentor, MultipartFile foto, String noktp,
-                                   String no_telepon, String status, Kelas class_id, Educations pendidikan_terakhir,
-                                   String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah, MultipartFile cv, MasterProvinsi provinsi, MasterKota kota,
-                                   MasterKecamatan kecamatan, MasterKelurahan kelurahan, User created_by);
+    ResponseEntity<Result> updateMentor(Long id, String namamentor, String email, MultipartFile foto, String noktp,
+                                   String no_telepon, String status, Long class_id, Integer pendidikan_terakhir,
+                                   String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah, MultipartFile cv, Long provinsi, Long kota,
+                                   Long kecamatan, Long kelurahan, Long userId);
 
-    ResponseEntity<?> createMentor(Long id, String namamentor, MultipartFile foto, String noktp,
-                                   String no_telepon, String status, Kelas class_id, Educations pendidikan_terakhir,
-                                   String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah, MultipartFile cv, MasterProvinsi provinsi, MasterKota kota,
-                                   MasterKecamatan kecamatan, MasterKelurahan kelurahan, User created_by);
+    ResponseEntity<Result> createMentor(Long id, String namamentor, String email, MultipartFile foto, String noktp,
+                                   String no_telepon, String status, Long class_id, Integer pendidikan_terakhir,
+                                   String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah, MultipartFile cv, Long provinsi, Long kota,
+                                   Long kecamatan, Long kelurahan, Long userId);
 
-    ResponseEntity<?> deleteMentor(boolean banned, long id, String uri);
+    ResponseEntity<Result> deleteMentor(boolean banned, long id, String uri);
 
     Result getMentorById(long id, String uri);
 

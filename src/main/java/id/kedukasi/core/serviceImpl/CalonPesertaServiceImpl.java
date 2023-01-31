@@ -17,7 +17,9 @@ import id.kedukasi.core.repository.wilayah.KotaRepository;
 import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
 import id.kedukasi.core.service.CalonPesertaService;
 import id.kedukasi.core.service.FilesStorageService;
+import id.kedukasi.core.utils.FileUploadUtil;
 import id.kedukasi.core.utils.GlobalUtil;
+import id.kedukasi.core.utils.PathGeneratorUtil;
 import id.kedukasi.core.utils.StringUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -52,8 +54,11 @@ import java.util.stream.Collectors;
 @Service
 public class CalonPesertaServiceImpl implements CalonPesertaService {
 
-     @Value("${app.upload-file-path}")
-     private String folderPath;
+    //  @Value("${app.upload-file-path}")
+    //  private String folderPath;
+    @Value("${app.url.staging}")
+    String baseUrl;
+
 
     @Autowired
     private ResourceLoader resourceLoader;
@@ -132,7 +137,6 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
             result.setSuccess(false);
-            result.setMessage("Error: Tidak ada calon peserta dengan id ");
             result.setCode(HttpStatus.BAD_REQUEST.value());
            
         }
@@ -208,13 +212,13 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                         .badRequest()
                         .body(result);
             }
-            // if (nomorKtp.isBlank()) {
-            // result.setMessage("Error: KTP tidak boleh kosong!");
-            // result.setCode(HttpStatus.BAD_REQUEST.value());
-            // return ResponseEntity
-            // .badRequest()
-            // .body(result);
-            // }
+            if (nomorKtp.isBlank()) {
+                result.setMessage("Error: KTP tidak boleh kosong!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                .badRequest()
+                .body(result);
+            }
             // cek username
             // Peserta checkNamaPeserta = pesertaRepository.findByNamaPeserta(namaPeserta).orElse(new Peserta());
             // if (checkNamaPeserta.getNamaPeserta() != null && !Objects.equals(id, checkNamaPeserta.getId())) {
@@ -296,6 +300,13 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
                         .badRequest()
                         .body(result);
             }
+            if (!validator.isNumeric(nomorKtp)||nomorKtp.length() < 16) {
+                result.setMessage("Error : nomor KTP harus berupa angka dan minimal 16 karakter");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
+             }
             // cek status peserta
             Peserta checkStatusPeserta = pesertaRepository.findById(id).orElse(new Peserta());
             if (checkStatusPeserta.getStatusPeserta() != null
@@ -343,62 +354,106 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
             peserta.setBatch(batchRepository.findById(batchId).get());
             }
 
-            // set image
-             if (uploadImage != null) {
-                String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
-                nameImage = nameImage.replaceAll(" ", "_");
-                peserta.setUploadImageName(nameImage);
+            // // set image
+            //  if (uploadImage != null) {
+            //     String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
+            //     nameImage = nameImage.replaceAll(" ", "_");
+            //     peserta.setUploadImageName(nameImage);
 
-                // format path name          
-                String[] name = nameImage.split("\\.");
-                if(!name[name.length-1].equalsIgnoreCase("jpg")&&!name[name.length-1].equalsIgnoreCase("png")){
-                    result.setSuccess(false);
-                    result.setMessage("Error: Format image harus jpg & png");
-                    result.setCode(HttpStatus.BAD_REQUEST.value());
-                    return ResponseEntity
-                            .badRequest()
-                            .body(result);
-                }
-                 String namaImage = nomorKtp + "_" + namaPeserta + "." + name[name.length-1];
-                 namaImage = namaImage.replaceAll(" ", "_");
-                 String fileName = String.format(folderPath + "/" + namaImage);
-                 peserta.setUploadImagePath(fileName);
-                // save file to folder
-                 String filePath = folderPath +"/image"+ File.separator + namaImage;
-                 OutputStream out = new FileOutputStream(filePath);
-                 out.write(uploadImage.getBytes());
-                 out.close();
+            //     // format path name          
+            //     String[] name = nameImage.split("\\.");
+            //     if(!name[name.length-1].equalsIgnoreCase("jpg")&&!name[name.length-1].equalsIgnoreCase("png")){
+            //         result.setSuccess(false);
+            //         result.setMessage("Error: Format image harus jpg & png");
+            //         result.setCode(HttpStatus.BAD_REQUEST.value());
+            //         return ResponseEntity
+            //                 .badRequest()
+            //                 .body(result);
+            //     }
+            //      String namaImage = nomorKtp + "_" + namaPeserta + "." + name[name.length-1];
+            //      namaImage = namaImage.replaceAll(" ", "_");
+            //      String fileName = String.format(folderPath + "/" + namaImage);
+            //      peserta.setUploadImagePath(fileName);
+            //     // save file to folder
+            //      String filePath = folderPath +"/image"+ File.separator + namaImage;
+            //      OutputStream out = new FileOutputStream(filePath);
+            //      out.write(uploadImage.getBytes());
+            //      out.close();
 
-             }
+            //  }
 
-               // set cv 
-            if (uploadCv != null) {
-                String nameFile = StringUtils.cleanPath(uploadCv.getOriginalFilename());
-                nameFile = nameFile.replaceAll(" ", "_");
-                peserta.setUploadImageName(nameFile);
+            //    // set cv 
+            // if (uploadCv != null) {
+            //     String nameFile = StringUtils.cleanPath(uploadCv.getOriginalFilename());
+            //     nameFile = nameFile.replaceAll(" ", "_");
+            //     peserta.setUploadImageName(nameFile);
 
-                // format path name   
-            String[] name = nameFile.split("\\.");
-            if(!name[name.length-1].equalsIgnoreCase("pdf")&&!name[name.length-1].equalsIgnoreCase("docx")){
-                result.setSuccess(false);
-                result.setMessage("Error: format cv harus pdf dan docx");
+            //     // format path name   
+            // String[] name = nameFile.split("\\.");
+            // if(!name[name.length-1].equalsIgnoreCase("pdf")&&!name[name.length-1].equalsIgnoreCase("docx")){
+            //     result.setSuccess(false);
+            //     result.setMessage("Error: format cv harus pdf dan docx");
+            //     result.setCode(HttpStatus.BAD_REQUEST.value());
+            //     return ResponseEntity
+            //             .badRequest()
+            //             .body(result);
+            // }
+            // String customNameCV = nomorKtp + "_" + namaPeserta + "." + name[name.length-1];
+            // customNameCV = customNameCV.replaceAll(" ", "_");
+            // peserta.setUploadCv(customNameCV);
+
+            // peserta.setUploadCvPath(folderPath +"/" + customNameCV );
+
+            // String filePath = folderPath +"/documents"+ File.separator + customNameCV;
+            // OutputStream out = new FileOutputStream(filePath);
+            // out.write(uploadCv.getBytes());
+            // out.close();  
+
+            // }
+
+            
+            //Saving Image process
+            //Get Image name
+            String imageName = StringUtils.cleanPath(uploadImage.getOriginalFilename());
+            imageName = imageName.replaceAll(" ", "_");
+            peserta.setUploadImageName(imageName);
+
+            //Save file
+            String fileCode = FileUploadUtil.saveFile(imageName, uploadImage);
+
+            //Validasi Image size
+            if (fileCode == null) {
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-                return ResponseEntity
-                        .badRequest()
-                        .body(result);
+                result.setSuccess(false);
+                result.setMessage("File harus kurang dari 7MB");
+                return ResponseEntity.badRequest().body(result);
             }
-            String customNameCV = nomorKtp + "_" + namaPeserta + "." + name[name.length-1];
-            customNameCV = customNameCV.replaceAll(" ", "_");
-            peserta.setUploadCv(customNameCV);
 
-            peserta.setUploadCvPath(folderPath +"/" + customNameCV );
+            //Set path name
+            peserta.setUploadImagePath(PathGeneratorUtil.generate(fileCode,baseUrl));
+            //End
 
-            String filePath = folderPath +"/documents"+ File.separator + customNameCV;
-            OutputStream out = new FileOutputStream(filePath);
-            out.write(uploadCv.getBytes());
-            out.close();  
+               
+            //Saving CV process
+            //Get CV name
+            String cvName = StringUtils.cleanPath(uploadCv.getOriginalFilename());
+            cvName = cvName.replaceAll(" ", "_");
+            peserta.setUploadCv(cvName);
 
+            //Save file
+            String fileCodeCv = FileUploadUtil.saveFile(cvName, uploadImage);
+
+            //Validasi file size
+            if (fileCodeCv == null) {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setMessage("File harus kurang dari 7MB");
+                return ResponseEntity.badRequest().body(result);
             }
+
+            //Set CV name
+            peserta.setUploadCvPath(PathGeneratorUtil.generate(fileCodeCv,baseUrl));
+            //End
 
             //set pendidikan terkahir
             if (!educationRepository.findById(Integer.valueOf(pendidikanTerakhir)).isPresent()) {
@@ -440,6 +495,8 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
 
             //set komitmen
             peserta.setKomitmen(komitmen);
+
+            peserta.setStatusTes(null);
             
 
             // set provinsi
@@ -578,33 +635,70 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         return ResponseEntity.ok(result);
     }
 
+    // @Override
+    // public ResponseEntity<?> changeStatusTes(Long statusTesOrd, Long id, String uri) {
+    //     result = new Result();
+    //     try {
+    //         if (!pesertaRepository.findById(id).isPresent()) {
+    //             result.setSuccess(false);
+    //             result.setMessage("Error: Tidak ada calon peserta dengan id " + id);
+    //             result.setCode(HttpStatus.BAD_REQUEST.value());
+    //         } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
+    //             result.setSuccess(false);
+    //             result.setMessage("Error: id " + id + " bukan calon peserta");
+    //             result.setCode(HttpStatus.BAD_REQUEST.value());
+    //         } else {
+    //             if (statusTesOrd == 0) {
+    //                 pesertaRepository.statusTes(EnumStatusTes.LULUS, id);
+    //             } else if (statusTesOrd == 1) {
+    //                 pesertaRepository.statusTes(EnumStatusTes.MELAKSANAKANTES, id);
+    //             } else if (statusTesOrd == 2) {
+    //                 pesertaRepository.statusTes(EnumStatusTes.MENUNGGUFOLLOWUP, id);
+    //             } else {
+    //                 result.setMessage(
+    //                         "Error: gunakan 0 untuk Lulus, 1 untuk Melaksanakan Tes dan 2 untuk Menunggu Follow Up");
+    //                 result.setCode(HttpStatus.BAD_REQUEST.value());
+    //                 return ResponseEntity
+    //                         .badRequest()
+    //                         .body(result);
+    //             }
+    //         }
+    //     } catch (Exception e) {
+    //         logger.error(stringUtil.getError(e));
+    //         result.setSuccess(false);
+    //         result.setMessage(e.getCause().getCause().getMessage());
+    //         result.setCode(HttpStatus.BAD_REQUEST.value());
+    //         return ResponseEntity.badRequest().body(result);
+    //     }
+    //     return ResponseEntity.ok(result);
+    // }
     @Override
-    public ResponseEntity<?> changeStatusTes(Long statusTesOrd, Long id, String uri) {
+    public ResponseEntity<?> changeStatusTes(Long calonPesertaId,Integer statusId, String uri) {
         result = new Result();
         try {
-            if (!pesertaRepository.findById(id).isPresent()) {
+            Peserta calonPeserta = pesertaRepository.findById(calonPesertaId).orElse(null);
+            Status status = statusRepository.findById(statusId).orElse(null);
+            if (!pesertaRepository.findById(calonPesertaId).isPresent()) {
                 result.setSuccess(false);
-                result.setMessage("Error: Tidak ada calon peserta dengan id " + id);
+                result.setMessage("Error: Tidak ada calon peserta dengan id " + calonPesertaId);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
-            } else if (pesertaRepository.findById(id).get().getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
+            } else if (pesertaRepository.findById(calonPesertaId).get().getStatusPeserta().equals(EnumStatusPeserta.PESERTA)) {
                 result.setSuccess(false);
-                result.setMessage("Error: id " + id + " bukan calon peserta");
+                result.setMessage("Error: id " + calonPesertaId + " bukan calon peserta");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            }else if (!statusRepository.findById(statusId).isPresent()){
+                result.setSuccess(false);
+                result.setMessage("Error: Id Status tidak ditemukan");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+            }else if (pesertaRepository.findById(calonPesertaId).get().isBanned()) {
+                result.setSuccess(false);
+                result.setMessage("Error: Id Peserta tidak ditemukan");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
             } else {
-                if (statusTesOrd == 0) {
-                    pesertaRepository.statusTes(EnumStatusTes.LULUS, id);
-                } else if (statusTesOrd == 1) {
-                    pesertaRepository.statusTes(EnumStatusTes.MELAKSANAKANTES, id);
-                } else if (statusTesOrd == 2) {
-                    pesertaRepository.statusTes(EnumStatusTes.MENUNGGUFOLLOWUP, id);
-                } else {
-                    result.setMessage(
-                            "Error: gunakan 0 untuk Lulus, 1 untuk Melaksanakan Tes dan 2 untuk Menunggu Follow Up");
-                    result.setCode(HttpStatus.BAD_REQUEST.value());
-                    return ResponseEntity
-                            .badRequest()
-                            .body(result);
-                }
+                calonPeserta.setStatusTes(status);
+                pesertaRepository.save(calonPeserta);
+                result.setMessage( "Berhasil memperbarui status!");
+                result.setCode(HttpStatus.OK.value());
             }
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
@@ -654,41 +748,41 @@ public class CalonPesertaServiceImpl implements CalonPesertaService {
         return ResponseEntity.ok(result);
     }
 
-    @Override
-    public Result filterByStatusTes(Long statusTesOrd) {
-        result = new Result();
-        try {
-            Map items = new HashMap();
-            Peserta peserta = new Peserta();
-            if (statusTesOrd == 0) {
-                peserta.setStatusTes(EnumStatusTes.MELAKSANAKANTES);
-                peserta.setStatusPeserta(EnumStatusPeserta.CALON);
-                Example<Peserta> example = Example.of(peserta);
-                items.put("items", pesertaRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
-                result.setData(items);
-            } else if (statusTesOrd == 1) {
-                peserta.setStatusTes(EnumStatusTes.MENUNGGUFOLLOWUP);
-                peserta.setStatusPeserta(EnumStatusPeserta.CALON);
-                Example<Peserta> example = Example.of(peserta);
-                items.put("items", pesertaRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
-                result.setData(items);
-            } else if (statusTesOrd == 2) {
-                peserta.setStatusTes(EnumStatusTes.LULUS);
-                peserta.setStatusPeserta(EnumStatusPeserta.CALON);
-                Example<Peserta> example = Example.of(peserta);
-                items.put("items", pesertaRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
-                result.setData(items);
-            } else {
-                result.setMessage(
-                        "Error: gunakan 0 untuk Melaksanakan Tes, 1 untuk Menunggu Follow Up dan 2 untuk Lulus");
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                return result;
-            }
-        } catch (Exception e) {
-            logger.error(stringUtil.getError(e));
-        }
-        return result;
-    }
+    // @Override
+    // public Result filterByStatusTes(Long statusTesOrd) {
+    //     result = new Result();
+    //     try {
+    //         Map items = new HashMap();
+    //         Peserta peserta = new Peserta();
+    //         if (statusTesOrd == 0) {
+    //             peserta.setStatusTes(EnumStatusTes.MELAKSANAKANTES);
+    //             peserta.setStatusPeserta(EnumStatusPeserta.CALON);
+    //             Example<Peserta> example = Example.of(peserta);
+    //             items.put("items", pesertaRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
+    //             result.setData(items);
+    //         } else if (statusTesOrd == 1) {
+    //             peserta.setStatusTes(EnumStatusTes.MENUNGGUFOLLOWUP);
+    //             peserta.setStatusPeserta(EnumStatusPeserta.CALON);
+    //             Example<Peserta> example = Example.of(peserta);
+    //             items.put("items", pesertaRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
+    //             result.setData(items);
+    //         } else if (statusTesOrd == 2) {
+    //             peserta.setStatusTes(EnumStatusTes.LULUS);
+    //             peserta.setStatusPeserta(EnumStatusPeserta.CALON);
+    //             Example<Peserta> example = Example.of(peserta);
+    //             items.put("items", pesertaRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
+    //             result.setData(items);
+    //         } else {
+    //             result.setMessage(
+    //                     "Error: gunakan 0 untuk Melaksanakan Tes, 1 untuk Menunggu Follow Up dan 2 untuk Lulus");
+    //             result.setCode(HttpStatus.BAD_REQUEST.value());
+    //             return result;
+    //         }
+    //     } catch (Exception e) {
+    //         logger.error(stringUtil.getError(e));
+    //     }
+    //     return result;
+    // }
 
     @Override
     public Result searchCalonPeserta(String keyword) {

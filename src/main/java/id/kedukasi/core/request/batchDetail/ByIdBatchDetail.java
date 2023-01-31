@@ -1,6 +1,7 @@
 package id.kedukasi.core.request.batchDetail;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import id.kedukasi.core.models.User;
 import id.kedukasi.core.request.BatchListOAS;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -27,7 +28,7 @@ public class ByIdBatchDetail {
     public Date endedtime;
 
     @Schema(example = "")
-    public String created_by;
+    public User created_by;
 
     @Schema()
     public List<BatchListOAS> list;

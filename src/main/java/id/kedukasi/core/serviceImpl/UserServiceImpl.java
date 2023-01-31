@@ -150,7 +150,7 @@ public class UserServiceImpl implements UserService {
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
       result.setSuccess(false);
-      result.setMessage(e.getCause().getCause().getMessage());
+      result.setMessage(e.getMessage());
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return result;
     }
@@ -174,6 +174,10 @@ public class UserServiceImpl implements UserService {
 
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
+      result.setSuccess(false);
+      result.setMessage(e.getMessage());
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return result;
     }
 
     return result;
@@ -183,69 +187,118 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<?> createUser(SignupRequest signUpRequest) {
     result = new Result();
 
-    if(!validator.isEmailValid(signUpRequest.getEmail())) {
-      result.setMessage("Error: invalid email format!");
-      result.setCode(HttpStatus.BAD_REQUEST.value());
-      return ResponseEntity
-              .badRequest()
-              .body(result);
-    }
+    try {
+      String nama = signUpRequest.getNamaLengkap();
+      if (nama.isBlank() || nama.isEmpty()) {
+        result.setMessage("Error: Nama lengkap harus diisi!");
+        result.setSuccess(false);
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.badRequest().body(result);
+      }
 
-    if (!validator.isPhoneValid(signUpRequest.getNoHp())) {
-      result.setMessage("Error: invalid phone number!");
-      result.setCode(HttpStatus.BAD_REQUEST.value());
-      return ResponseEntity
-              .badRequest()
-              .body(result);
-    }
+      String email = signUpRequest.getEmail();
+      if (email.isBlank() || email.isEmpty()) {
+        result.setMessage("Error: Email harus diisi!");
+        result.setSuccess(false);
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.badRequest().body(result);
+      }
 
-    Integer checkUserEmail = userRepository.existsByEmail(signUpRequest.getEmail());
-    if (checkUserEmail != null && checkUserEmail > 0) {
-      result.setMessage("Error: Email is already in use!");
-      result.setCode(HttpStatus.BAD_REQUEST.value());
-      return ResponseEntity
-              .badRequest()
-              .body(result);
-    }
+      String nomorHp = signUpRequest.getNoHp();
+      if (nomorHp.isBlank() || nomorHp.isEmpty()) {
+        result.setMessage("Error: Nomor telepon harus diisi!");
+        result.setSuccess(false);
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.badRequest().body(result);
+      }
 
-    Integer checkUserNoHp = userRepository.existsByNoHp(signUpRequest.getNoHp());
-      if (checkUserNoHp != null && checkUserNoHp > 0) {
-        result.setMessage("Error: Phone number is already taken!");
+      if (!validator.isEmailValid(signUpRequest.getEmail())) {
+        result.setMessage("Error: Format email tidak sesuai!");
+        result.setSuccess(false);
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
                 .badRequest()
                 .body(result);
+      }
+
+      if (!validator.isPhoneValid(signUpRequest.getNoHp())) {
+        result.setMessage("Error: Nomor telepon tidak sesuai!");
+        result.setSuccess(false);
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity
+                .badRequest()
+                .body(result);
+      }
+
+      Integer checkUserEmail = userRepository.existsByEmail(signUpRequest.getEmail());
+      if (checkUserEmail != null && checkUserEmail > 0) {
+        result.setMessage("Error: Email sudah digunakan!");
+        result.setSuccess(false);
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity
+                .badRequest()
+                .body(result);
+      }
+
+      Integer checkUserNoHp = userRepository.existsByNoHp(signUpRequest.getNoHp());
+      if (checkUserNoHp != null && checkUserNoHp > 0) {
+          result.setMessage("Error: Nomor telepon sudah digunakan!");
+          result.setSuccess(false);
+          result.setCode(HttpStatus.BAD_REQUEST.value());
+          return ResponseEntity
+                  .badRequest()
+                  .body(result);
+      }
+
+      Optional<Role> role = roleRepository.findById(signUpRequest.getRole());
+      if (!role.isPresent()) {
+        result.setMessage("Error: Role tidak ditemukan!");
+        result.setSuccess(false);
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity
+                .badRequest()
+                .body(result);
+      }
+
+      if (signUpRequest.getIsActive() == null) {
+        signUpRequest.setIsActive(false);
+      }
+
+      String password = StringUtil.alphaNumericString();
+      String username = signUpRequest.getEmail().split("@")[0];
+      String token =  StringUtil.getRandomNumberString();
+
+      // Variable tampungan username
+      String tempUsername = username;
+      // Lakukan perulangan jika username sudah ada
+      while (userRepository.existsByUsername(username) > 0) {
+        Random rnd = new Random();
+        String newUsername = tempUsername + rnd.nextInt(100);
+        username = newUsername;
+      }
+      
+      // Lakukan perulangan jika ternyata token sudah digunakan
+      while (userRepository.existsByToken(token) > 0) {
+        token = StringUtil.getRandomNumberString();
+      }
+
+      User user = new User(username, signUpRequest.getEmail(), encoder.encode(password), signUpRequest.getNamaLengkap(),
+                          signUpRequest.getNoHp(), role.get(), signUpRequest.getIsActive(), token);
+      User userResult = userRepository.save(user);
+
+      if (userResult != null) {
+        sendActivationEmail(userResult.getEmail(), password, userResult.getTokenVerification());
+      }
+
+      result.setMessage("User berhasil dibuat.");
+      result.setCode(HttpStatus.OK.value());
+    } catch (Exception e) {
+      logger.error(stringUtil.getError(e));
+      result.setSuccess(false);
+      result.setMessage(e.getMessage());
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return ResponseEntity.badRequest().body(result);
     }
-
-    Role role = roleRepository.findById(signUpRequest.getRole()).orElse(null);
-    String password = StringUtil.alphaNumericString();
-    String username = signUpRequest.getEmail().split("@")[0];
-    String token =  StringUtil.getRandomNumberString();
-
-    // Variable tampungan username
-    String tempUsername = username;
-    // Lakukan perulangan jika username sudah ada
-    while (userRepository.existsByUsername(username) > 0) {
-      Random rnd = new Random();
-      String newUsername = tempUsername + rnd.nextInt(100);
-      username = newUsername;
-    }
-    
-    // Lakukan perulangan jika ternyata token sudah digunakan
-    while (userRepository.existsByToken(token) > 0) {
-      token = StringUtil.getRandomNumberString();
-    }
-
-    User user = new User(username, signUpRequest.getEmail(), encoder.encode(password), signUpRequest.getNamaLengkap(),
-                         signUpRequest.getNoHp(), role, signUpRequest.getIsActive(), token);
-    User userResult = userRepository.save(user);
-
-    if (userResult != null) {
-      sendActivationEmail(userResult.getEmail(), password, userResult.getTokenVerification());
-    }
-
-    result.setMessage("User registered successfully!");
-    result.setCode(HttpStatus.OK.value());
     return ResponseEntity.ok(result);
   }
 
@@ -263,7 +316,7 @@ public class UserServiceImpl implements UserService {
     User getUser = userRepository.findByEmail(loginRequest.getEmail()).orElse(new User());
 
     if(validator.isEmailValid(loginRequest.getEmail()) && getUser.getUsername() == null){
-      result.setSuccess(true);
+      result.setSuccess(false);
       result.setCode(HttpStatus.BAD_REQUEST.value());
       result.setMessage("Email not registered");
       return ResponseEntity.ok(result);
@@ -388,17 +441,31 @@ public class UserServiceImpl implements UserService {
   @Override
   public ResponseEntity<Result> updateUser(UserRequest userRequest) {
     result = new Result();
+
     try {
+      Optional<User> userLama = userRepository.findById(userRequest.getId());
+
+      if (!userLama.isPresent()) {
+        result.setCode(HttpStatus.BAD_REQUEST.value());
+        result.setSuccess(false);
+        result.setMessage("Error: Id user tidak ditemukan!");
+        return ResponseEntity
+                .badRequest()
+                .body(result);
+      }
+
       if (!validator.isPhoneValid(userRequest.getNoHp())) {
-        result.setMessage("Error: invalid phone number!");
+        result.setMessage("Error: Format telepon tidak sesuai!");
+        result.setSuccess(false);
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
                 .badRequest()
                 .body(result);
       }
 
-      if(!validator.isEmailValid(userRequest.getEmail())) {
-        result.setMessage("Error: invalid email format!");
+      if (!validator.isEmailValid(userRequest.getEmail())) {
+        result.setMessage("Error: Format email tidak sesuai!");
+        result.setSuccess(false);
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
                 .badRequest()
@@ -407,16 +474,8 @@ public class UserServiceImpl implements UserService {
 
       User checkUserEmail = userRepository.findByEmail(userRequest.getEmail()).orElse(new User());
       if (checkUserEmail.getEmail()!= null && checkUserEmail.isBanned() == false && !Objects.equals(userRequest.getId(), checkUserEmail.getId())) {
-        result.setMessage("Error: Email is already in use!");
-        result.setCode(HttpStatus.BAD_REQUEST.value());
-        return ResponseEntity
-                .badRequest()
-                .body(result);
-      }
-
-      User checkUserUsername = userRepository.findByUsername(userRequest.getUsername()).orElse(new User());
-      if (checkUserUsername.getUsername() != null && checkUserUsername.isBanned() == false && !Objects.equals(userRequest.getId(), checkUserUsername.getId())) {
-        result.setMessage("Error: Username is already taken!");
+        result.setMessage("Error: Email sudah digunakan!");
+        result.setSuccess(false);
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
                 .badRequest()
@@ -425,7 +484,8 @@ public class UserServiceImpl implements UserService {
 
       Role role = roleRepository.findById(userRequest.getRole()).orElse(null);
       if (role == null) {
-        result.setMessage("Error: Role not found!");
+        result.setMessage("Error: Role tidak ditemukan!");
+        result.setSuccess(false);
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
                 .badRequest()
@@ -435,24 +495,50 @@ public class UserServiceImpl implements UserService {
       /* Validasi ketika noHp sudah digunakan oleh user lain */
       Integer checkUserNoHp = userRepository.existsByNoHp(userRequest.getNoHp(), userRequest.getId());
       if (checkUserNoHp != null && checkUserNoHp > 0) {
-        result.setMessage("Error: Phone number is already taken!");
+        result.setMessage("Error: Nomor telepon sudah digunakan!");
+        result.setSuccess(false);
         result.setCode(HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
                 .badRequest()
                 .body(result);
       }
 
-      User user = new User(userRequest.getUsername(), userRequest.getEmail(),
-              encoder.encode(userRequest.getPassword()),userRequest.getNamaLengkap(), userRequest.getNoHp(),
-              StringUtil.getRandomNumberString(), role, userRequest.isIsActive(), true);
+      String username = userRequest.getEmail().split("@")[0];
+      // Variable tampungan username
+      String tempUsername = username;
+      // Lakukan perulangan jika username sudah ada
+      while (userRepository.existsByUsername(username) > 0) {
+        Random rnd = new Random();
+        String newUsername = tempUsername + rnd.nextInt(100);
+        username = newUsername;
+      }
+      
+      if (userRequest.isIsActive() == null) {
+        userRequest.setIsActive(userLama.get().isIsActive());
+      }
 
-      user.setId(userRequest.getId());
+      User user = userLama.get();
+
+      user.setUsername(username);
+      user.setNamaLengkap(userRequest.getNamaLengkap());
+      user.setEmail(userRequest.getEmail());
+      user.setNoHp(userRequest.getNoHp());
+      user.setRole(role);
+      user.setIsActive(userRequest.isIsActive());
+      if (userRequest.isIsActive() == true) {
+        user.setVerified(userRequest.isIsActive());
+      }
+
       userRepository.save(user);
 
-      result.setMessage("User updated successfully!");
+      result.setMessage("User berhasil di-update.");
       result.setCode(HttpStatus.OK.value());
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
+      result.setSuccess(false);
+      result.setMessage(e.getMessage());
+      result.setCode(HttpStatus.BAD_REQUEST.value());
+      return ResponseEntity.badRequest().body(result);
     }
 
     return ResponseEntity.ok(result);
@@ -492,7 +578,7 @@ public class UserServiceImpl implements UserService {
     } catch (Exception e) {
       logger.error(stringUtil.getError(e));
       result.setSuccess(false);
-      result.setMessage(e.getCause().getCause().getMessage());
+      result.setMessage(e.getMessage());
       result.setCode(HttpStatus.BAD_REQUEST.value());
       return ResponseEntity.badRequest().body(result);
     }

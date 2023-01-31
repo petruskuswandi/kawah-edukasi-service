@@ -211,7 +211,7 @@ public class KelasServiceImpl implements KelasService {
     public ResponseEntity<Result> createClass(KelasRequest Request) {
         result = new Result();
         try {
-            Kelas checkClassname = kelasRepository.findByClassname(Request.getClassName()).orElse(new Kelas());
+            Kelas checkClassname = kelasRepository.findBanned(false, Request.getClassName()).orElse(new Kelas());
             if (checkClassname.getClassname()!= null) {
                 result.setMessage("Error: Nama kelas sudah digunakan!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -239,8 +239,8 @@ public class KelasServiceImpl implements KelasService {
             } else {
                 User user_id = userRepository.findById(Request.getCreated_by());
                 Request.setCreated_by(Math.toIntExact(user_id.getId()));
-            }
 
+            }
 //                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //            Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription(), auth.getName());
             Kelas kelasbaru = new Kelas(Request.getClassName(), Request.getDescription());

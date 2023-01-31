@@ -19,5 +19,5 @@ public interface EmailService {
   String sendMailWithAttachment(EmailDetails details);
   ResponseEntity<Result> sendMailForgotPassword(EmailDetails details, User checkUserEmail, String urlendpoint);
 
-  boolean sendRegisterMail(Map<String, String> filesUpload, PesertaServiceImpl.SetPenambahanData setPenambahanData, Peserta pesertabaru, String pathfile) throws IOException, MessagingException, DocumentException;
+  boolean sendRegisterMail(Map<String, String> filesUpload, PesertaServiceImpl.SetPenambahanData setPenambahanData, Peserta pesertabaru) throws IOException, MessagingException, DocumentException;
 }

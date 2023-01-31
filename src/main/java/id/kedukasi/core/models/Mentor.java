@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -13,24 +14,19 @@ import id.kedukasi.core.models.wilayah.MasterKecamatan;
 import id.kedukasi.core.models.wilayah.MasterKelurahan;
 import id.kedukasi.core.models.wilayah.MasterKota;
 import id.kedukasi.core.models.wilayah.MasterProvinsi;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
 
 
 @Entity
-@Table(name = "mentors", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "kode")
-})
-@Data
-@AllArgsConstructor
+@Table(name = "mentors")
+
 @DynamicUpdate
 @Getter
 @Setter
+
 public class Mentor implements Serializable {
   @Id
   @GeneratedValue(
@@ -38,33 +34,31 @@ public class Mentor implements Serializable {
           generator="native")
   private Long id;
 
-  @NotBlank
-  @Size(max = 100)
+  @Size(max = 100, message = "Jumlah Karakter nama mentor 100 karakter")
   @Column(name = "namamentor")
   private String namamentor;
+  @Column(name = "email")
+  @Size(max = 100, message = "Jumlah Karakter Email maksimal 100 karakter")
+  @Pattern(regexp = "^(?=.{1,64})[A-Za-z0-9_\\-]+(\\.[A-Za-z0-9_\\-]+)*+@[^-]{3,}[A-Za-z0-9-]+(\\.[A-Za-z]{2,})*+$", message = "Format Email Tidak Sesuai")
+  private String email;
 
-  @NotBlank
-  @Size(max = 20)
   @Column(name = "kode")
   private String kode;
 
-  @NotBlank
-  @Size(max = 16)
+  @Size(max = 16, message = "Jumlah karakter noktp maksimal 16 karakter")
   @Column(name = "noktp")
   private String noktp;
 
   @Column(name = "no_telepon")
   private String no_telepon;
 
-  @Lob
   @Column(name = "foto")
   @ApiModelProperty(hidden = true)
-  private byte[] foto;
+  private String foto;
 
-  @Lob
   @Column(name = "cv")
   @ApiModelProperty(hidden = true)
-  private byte[] cv;
+  private String cv;
 
   @Column(name = "status")
   private String status;
@@ -95,7 +89,6 @@ public class Mentor implements Serializable {
 
   @Column(name = "alamat_rumah")
   private String alamat_rumah;
-
 
   @ManyToOne
   @JsonIgnoreProperties({"alt_name", "latitude", "longitude"})
@@ -145,10 +138,11 @@ public class Mentor implements Serializable {
   public Mentor() {
   }
 
-  public Mentor(String namamentor, String noktp, String no_telepon, String status,
-                String pendidikan_jurusan, Date tgl_start, Date tgl_stop,  String alamat_rumah) {
+  public Mentor(String namamentor, String email, String noktp, String no_telepon, String status,
+                String pendidikan_jurusan, Date tgl_start, Date tgl_stop, String alamat_rumah) {
     Date date = new Date();
     this.namamentor = namamentor;
+    this.email = email;
     this.noktp = noktp;
     this.no_telepon = no_telepon;
     this.status = status;

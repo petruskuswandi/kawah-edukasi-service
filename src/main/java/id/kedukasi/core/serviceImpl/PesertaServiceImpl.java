@@ -16,12 +16,9 @@ import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
 import id.kedukasi.core.request.RegisterRequest;
 import id.kedukasi.core.service.EmailService;
 import id.kedukasi.core.service.PesertaService;
-import id.kedukasi.core.utils.StringUtil;
-import id.kedukasi.core.utils.UploadUtil;
-import id.kedukasi.core.utils.ValidatorUtil;
+import id.kedukasi.core.utils.*;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +42,6 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -356,17 +352,39 @@ public class PesertaServiceImpl implements PesertaService {
         // check status
         Optional<Status> statusPeserta = statusRepository.findBystatusName("Register");
         if (!statusPeserta.isPresent()) {
-            result.setMessage("Error: Status Belum Ada!");
+            result.setMessage("Error: Status Peserta Belum Ada!");
             result.setCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity
                     .badRequest()
                     .body(result);
         }
 
+        // check status
+        Optional<Status> statusKesibukan = statusRepository.findById(p.getKesibukan());
+        if (!statusPeserta.isPresent()) {
+            result.setMessage("Error: Status Kesibukan Belum Ada!");
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity
+                    .badRequest()
+                    .body(result);
+        }
+
+        Optional<Kelas> kelas = kelasRepository.findById(p.getClass_id());
+
+        if (!kelas.isPresent()) {
+            result.setSuccess(false);
+            result.setMessage("Error: Tidak ada batch dengan id " + p.getBatch());
+            result.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(result);
+        } else {
+            registerPeserta.setKelas(kelas.get());
+            setPenambahanData.setNamaBatch(kelas.get().getClassname());
+        }
+
         Optional<Batch> batch = batchRepository.findById(p.getBatch());
         if (!batch.isPresent()) {
             result.setSuccess(false);
-            result.setMessage("Error: Tidak ada program dengan id " + p.getBatch());
+            result.setMessage("Error: Tidak ada batch dengan id " + p.getBatch());
             result.setCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(result);
         } else {
@@ -455,12 +473,12 @@ public class PesertaServiceImpl implements PesertaService {
          * 3. tidak keduanya
          */
 
-        setPenambahanData.setKesibukan("tidak Keduanya");
+        setPenambahanData.setKesibukan("Tidak Keduanya");
 
-        if (p.getKesibukan() == 1) {
+        if (statusKesibukan.get().getStatusName().equals("Kuliah/Sekolah")) {
             setPenambahanData.setKesibukan("Kuliah/Sekolah");
-        } else if (p.getKesibukan() == 2) {
-            setPenambahanData.setKesibukan("kerja");
+        } else if (statusKesibukan.get().getStatusName().equals("Kerja")) {
+            setPenambahanData.setKesibukan("Kerja");
         }
 
         setPenambahanData.setLaptop("Ya");
@@ -490,6 +508,7 @@ public class PesertaServiceImpl implements PesertaService {
         registerPeserta.setStatBootcamp(p.isStatBootcamp());
         registerPeserta.setNamaBootcamp(p.getNamaBootcamp());
 
+
         /**
          * selanjut nya
          */
@@ -506,33 +525,47 @@ public class PesertaServiceImpl implements PesertaService {
         registerPeserta.setUserInstagram(p.getUserInstagram());
         registerPeserta.setAlasan(p.getAlasan());
         registerPeserta.setKelebihanKekurangan(p.getKelebihanKekurangan());
-        // registerPeserta.setKesibukan(p.getKesibukan());
+        registerPeserta.setKesibukan(statusKesibukan.get());
         registerPeserta.setLaptop(p.isLaptop());
         registerPeserta.setKomitmen(p.isKomitmen());
         registerPeserta.setSiapBekerja(p.isSiapBekerja());
         registerPeserta.setStatusPeserta(EnumStatusPeserta.REGISTER);
         registerPeserta.setStatus(statusPeserta.get());
 
-
         Peserta pesertabaru = pesertaRepository.save(registerPeserta);
-        Map<String, Object> dataPictures = new HashMap<>();
+//        Map<String, Object> dataPictures = new HashMap<>();
         Map<String, String> pictures = new HashMap<>();
-
-        String pathfile = "/src/main/upload/";
-        String id = String.valueOf(UUID.randomUUID());
+//
+//        String pathfile = "/src/main/upload/";
+//        String id = String.valueOf(UUID.randomUUID());
         int[] idx = { 0 };
-        files.forEach(file -> {
+
+        for(MultipartFile file : files){
             idx[0]++;
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            String extension = FilenameUtils.getExtension(fileName).toLowerCase();
-            String key = UUID.randomUUID() + "." + extension;
-            logger.info(idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
-            saveFile(file, registerPeserta, String.valueOf(pesertabaru.getId()), "REGISTER", idx, key, pathfile);
-            pictures.put(String.valueOf(idx[0]), idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
+            try {
+                String filecode = FileUploadUtil.saveFile(fileName, file);
+                pictures.put(String.valueOf(idx[0]), filecode);
+                logger.info(filecode);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+       // files.forEach(file -> {
+            //Save file
 
-        });
 
-        emailService.sendRegisterMail(pictures, setPenambahanData, registerPeserta, pathfile);
+//            idx[0]++;
+//            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//            String extension = FilenameUtils.getExtension(fileName).toLowerCase();
+//            String key = UUID.randomUUID() + "." + extension;
+//            logger.info(idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
+//            saveFile(file, registerPeserta, String.valueOf(pesertabaru.getId()), "REGISTER", idx, key, pathfile);
+//            pictures.put(String.valueOf(idx[0]), idx[0] + "_" + pesertabaru.getId() + "_" + "REGISTER" + "_" + key);
+
+        //});
+        logger.info(pictures.toString());
+        emailService.sendRegisterMail(pictures, setPenambahanData, registerPeserta);
 
         result.setMessage("Registrasi Berhasil");
         result.setCode(HttpStatus.OK.value());
@@ -715,41 +748,85 @@ public class PesertaServiceImpl implements PesertaService {
                 peserta.setBatch(batchRepository.findById(batchId).get());
             }
 
-            // set image
-            if (uploadImage != null) {
-                // peserta.setUploadImagePath(IOUtils.toByteArray(uploadImage.getInputStream()));
-                String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
-                String[] image = nameImage.split("\\.");
-                String format = image[image.length-1];
-                if (!format.equalsIgnoreCase("jpg")&&!format.equalsIgnoreCase("png")) {
-                    result.setSuccess(false);
-                    result.setMessage("Error: File Image harus format jpg atau png");
-                    result.setCode(HttpStatus.BAD_REQUEST.value());
-                    return ResponseEntity
-                            .badRequest()
-                            .body(result);
-                }
-                //save Image
-                UploadUtil.saveImage(pathUpload, namaPeserta, uploadImage, nomorKtp, peserta, format);
+//            // set image
+//            if (uploadImage != null) {
+//                // peserta.setUploadImagePath(IOUtils.toByteArray(uploadImage.getInputStream()));
+//                String nameImage = StringUtils.cleanPath(uploadImage.getOriginalFilename());
+//                String[] image = nameImage.split("\\.");
+//                String format = image[image.length-1];
+//                if (!format.equalsIgnoreCase("jpg")&&!format.equalsIgnoreCase("png")) {
+//                    result.setSuccess(false);
+//                    result.setMessage("Error: File Image harus format jpg atau png");
+//                    result.setCode(HttpStatus.BAD_REQUEST.value());
+//                    return ResponseEntity
+//                            .badRequest()
+//                            .body(result);
+//                }
+//                //save Image
+//                UploadUtil.saveImage(pathUpload, namaPeserta, uploadImage, nomorKtp, peserta, format);
+//
+//            }
+//            // set cv
+//            if (uploadCv != null) {
+//                //get original name
+//                String nameCV = StringUtils.cleanPath(uploadCv.getOriginalFilename());
+//                //proses validasi file pdf
+//                String[] name = nameCV.split("\\.");
+//                if (!name[name.length-1].equals("pdf")){
+//                    result.setSuccess(false);
+//                    result.setMessage("Error: File CV harus format pdf");
+//                    result.setCode(HttpStatus.BAD_REQUEST.value());
+//                    return ResponseEntity
+//                            .badRequest()
+//                            .body(result);
+//                }
+//                //save CV
+//                UploadUtil.saveCV(pathUpload, namaPeserta, nomorKtp, uploadCv, peserta);
+//            }
 
+            //Saving Image process
+            //Get Image name
+            String imageName = StringUtils.cleanPath(uploadImage.getOriginalFilename());
+            imageName = imageName.replaceAll(" ", "_");
+            peserta.setUploadImageName(imageName);
+
+            //Save file
+            String fileCode = FileUploadUtil.saveFile(imageName, uploadImage);
+
+            //Validasi Image size
+            if (fileCode == null) {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setMessage("File harus kurang dari 7MB");
+                return ResponseEntity.badRequest().body(result);
             }
-            // set cv
-            if (uploadCv != null) {
-                //get original name
-                String nameCV = StringUtils.cleanPath(uploadCv.getOriginalFilename());
-                //proses validasi file pdf
-                String[] name = nameCV.split("\\.");
-                if (!name[name.length-1].equals("pdf")){
-                    result.setSuccess(false);
-                    result.setMessage("Error: File CV harus format pdf");
-                    result.setCode(HttpStatus.BAD_REQUEST.value());
-                    return ResponseEntity
-                            .badRequest()
-                            .body(result);
-                }
-                //save CV
-                UploadUtil.saveCV(pathUpload, namaPeserta, nomorKtp, uploadCv, peserta);
+
+            //Set path name
+            peserta.setUploadImagePath(PathGeneratorUtil.generate(fileCode,pathUpload));
+            //End
+
+
+            //Saving CV process
+            //Get CV name
+            String cvName = StringUtils.cleanPath(uploadCv.getOriginalFilename());
+            cvName = cvName.replaceAll(" ", "_");
+            peserta.setUploadCv(cvName);
+
+            //Save file
+            String fileCodeCv = FileUploadUtil.saveFile(cvName, uploadImage);
+
+            //Validasi file size
+            if (fileCodeCv == null) {
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                result.setSuccess(false);
+                result.setMessage("File harus kurang dari 7MB");
+                return ResponseEntity.badRequest().body(result);
             }
+
+            //Set CV name
+            peserta.setUploadCvPath(PathGeneratorUtil.generate(fileCodeCv,pathUpload));
+            //End
+
             if (!educationRepository.findById(Integer.valueOf(pendidikanTerakhir)).isPresent()) {
                 result.setSuccess(false);
                 result.setMessage("Error: Tidak ada pendidikan terakhir dengan id " + pendidikanTerakhir);
