@@ -7,6 +7,10 @@ import id.kedukasi.core.repository.EducationRepository;
 import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.MentorRepository;
 import id.kedukasi.core.repository.UserRepository;
+import id.kedukasi.core.repository.wilayah.KecamatanRepository;
+import id.kedukasi.core.repository.wilayah.KelurahanRepository;
+import id.kedukasi.core.repository.wilayah.KotaRepository;
+import id.kedukasi.core.repository.wilayah.ProvinsiRepository;
 import id.kedukasi.core.service.MentorService;
 import id.kedukasi.core.utils.PathGeneratorUtil;
 import id.kedukasi.core.utils.StringUtil;
@@ -58,13 +62,13 @@ public class MentorServiceImpl implements MentorService{
     @Autowired
     private EducationRepository educationRepository;
     @Autowired
-    private MasterProvinsiRepository masterProvinsiRepository;
+    private ProvinsiRepository masterProvinsiRepository;
     @Autowired
-    private MasterKotaRepository masterKotaRepository;
+    private KotaRepository masterKotaRepository;
     @Autowired
-    private MasterKecamatanRepository masterKecamatanRepository;
+    private KecamatanRepository masterKecamatanRepository;
     @Autowired
-    private MasterKelurahanRepository masterKelurahanRepository;
+    private KelurahanRepository masterKelurahanRepository;
 
     private String generatekode(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMyyyy");
