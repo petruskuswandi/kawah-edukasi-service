@@ -8,6 +8,7 @@ import id.kedukasi.core.repository.KelasRepository;
 import id.kedukasi.core.repository.MentorRepository;
 import id.kedukasi.core.repository.UserRepository;
 import id.kedukasi.core.service.MentorService;
+import id.kedukasi.core.utils.FileUploadUtil;
 import id.kedukasi.core.utils.PathGeneratorUtil;
 import id.kedukasi.core.utils.StringUtil;
 import id.kedukasi.core.utils.ValidatorUtil;
@@ -87,7 +88,7 @@ public class MentorServiceImpl implements MentorService{
         result = new Result();
         try {
             // cek email
-            Mentor cekemail = mentorRepository.findByemailUpdate(false, email, id).orElse(new Mentor());
+            Mentor cekemail = mentorRepository.findByUpdateEmail(email, id).orElse(new Mentor());
             if (cekemail.getEmail() != null) {
                 result.setSuccess(false);
                 result.setMessage("Error: email has been used!");
@@ -107,10 +108,26 @@ public class MentorServiceImpl implements MentorService{
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
+            //cek ktp
+            Mentor cekKTP = mentorRepository.findByUpdateKTP(noktp, id).orElse(new Mentor());
+            if (cekKTP.getNoktp() != null){
+                result.setSuccess(false);
+                result.setMessage("Error: ID card number has been used, contact admin!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
 
             if(!validatorUtil.isNumeric(noktp) || noktp.length() != 16) {
                 result.setSuccess(false);
-                result.setMessage("Error: No KTP harus sama dengan 16 character dan tidak boleh kosong");
+                result.setMessage("Error: ID card number must be 16 characters and cannot be empty");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
+
+            // cek no telepon
+            Mentor cektelpon = mentorRepository.findByUpdateNoTelepon(no_telepon, id).orElse(new Mentor());
+            if (cektelpon.getNo_telepon() != null){
+                result.setMessage("Error: Number phone has been used, contact admin!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -134,12 +151,12 @@ public class MentorServiceImpl implements MentorService{
             }
 
             if(alamat_rumah == null) {
-                result.setMessage("Error: Alamat tidak boleh kosong");
+                result.setMessage("Error: Address can't be empty/null");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
             if (tgl_start == null) {
-                result.setMessage("Error : Start date is null/empty");
+                result.setMessage("Error : Start date is empty/null");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
@@ -147,7 +164,7 @@ public class MentorServiceImpl implements MentorService{
             }
 
             if (tgl_stop == null) {
-                result.setMessage("Error : Ended Time is null/empty");
+                result.setMessage("Error : Ended Time is empty/null");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
@@ -155,7 +172,7 @@ public class MentorServiceImpl implements MentorService{
             }
 
             if (tgl_start.after(tgl_stop)){
-                result.setMessage("Error : Start date tidak boleh lebih besar dari end date");
+                result.setMessage("Error : The start date cannot be greater than the end date");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()
@@ -306,10 +323,10 @@ public class MentorServiceImpl implements MentorService{
         result = new Result();
         try {
             // cek email
-            Mentor cekemail = mentorRepository.findByemail(false, email).orElse(new Mentor());
+            Mentor cekemail = mentorRepository.findByemail(email).orElse(new Mentor());
             if (cekemail.getEmail() != null) {
                 result.setSuccess(false);
-                result.setMessage("Error: email has been used!");
+                result.setMessage("Error: email has been used, contact admin!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -327,10 +344,26 @@ public class MentorServiceImpl implements MentorService{
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
+            //cek ktp
+            Mentor cekKTP = mentorRepository.findByKTP(noktp).orElse(new Mentor());
+            if (cekKTP.getNoktp() != null){
+                result.setSuccess(false);
+                result.setMessage("Error: ID Card number has been used, contact admin!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
 
             if(!validatorUtil.isNumeric(noktp) || noktp.length() != 16 || noktp == null) {
                 result.setSuccess(false);
-                result.setMessage("Error: No KTP harus berupa angka dengan 16 character dan tidak boleh kosong");
+                result.setMessage("Error: ID card number must be 16 characters and cannot be empty");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
+            //cek no telpon
+            Mentor cektelpon = mentorRepository.findByNoTelepon(no_telepon).orElse(new Mentor());
+            if (cektelpon.getNo_telepon() != null) {
+                result.setSuccess(false);
+                result.setMessage("Error: Number phone has been used, contact admin!");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -343,21 +376,21 @@ public class MentorServiceImpl implements MentorService{
 
             if(status == null) {
                 result.setSuccess(false);
-                result.setMessage("Error: Status tidak boleh kosong");
+                result.setMessage("Error: Status can't be empty/null");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
             if(pendidikan_jurusan == null) {
                 result.setSuccess(false);
-                result.setMessage("Error: Jurusan tidak boleh kosong");
+                result.setMessage("Error: Major can't be empty/null");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
 
             if(alamat_rumah == null) {
                 result.setSuccess(false);
-                result.setMessage("Error: Alamat tidak boleh kosong");
+                result.setMessage("Error: Address can't be empty/null");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
@@ -498,7 +531,7 @@ public class MentorServiceImpl implements MentorService{
             }
 
             if (tgl_start.after(tgl_stop)){
-                result.setMessage("Error : Start date tidak boleh lebih besar dari end date");
+                result.setMessage("Error : The start date cannot be greater than the end date");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity
                         .badRequest()

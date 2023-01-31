@@ -37,11 +37,27 @@ public interface MentorRepository extends JpaRepository<Mentor, Long>{
   int bannedfalse();
 
   @Transactional
-  @Query(value = "SELECT * FROM mentors WHERE banned = ?1 AND email = ?2", nativeQuery = true)
-  Optional<Mentor> findByemail(boolean banned,String email);
+  @Query(value = "SELECT * FROM mentors WHERE banned = false AND email = ?1", nativeQuery = true)
+  Optional<Mentor> findByemail(String email);
+
   @Transactional
-  @Query(value = "SELECT * FROM mentors WHERE banned = ?1 AND email = ?2 AND id != ?3", nativeQuery = true)
-  Optional<Mentor> findByemailUpdate(boolean banned, String email, Long id);
+  @Query(value = "SELECT * FROM mentors WHERE banned = false AND email = ?1 AND id != ?2", nativeQuery = true)
+  Optional<Mentor> findByUpdateEmail(String email, Long id);
+
+  @Transactional
+  @Query(value = "SELECT * FROM mentors WHERE banned = false AND no_telepon = ?1", nativeQuery = true)
+  Optional<Mentor> findByNoTelepon(String no_telepon);
+
+  @Transactional
+  @Query(value = "SELECT * FROM mentors WHERE banned = false AND no_telepon = ?1 AND id !=?2", nativeQuery = true)
+  Optional<Mentor> findByUpdateNoTelepon(String no_telepon, Long id);
+
+  @Transactional
+  @Query(value = "SELECT * FROM mentors WHERE banned = false AND noktp = ?1", nativeQuery = true)
+  Optional<Mentor> findByKTP(String noktp);
+  @Transactional
+  @Query(value = "SELECT * FROM mentors WHERE banned = false AND noktp = ?1 AND id != ?2", nativeQuery = true)
+  Optional<Mentor> findByUpdateKTP(String noktp, Long id);
 
   @Transactional
   @Query(value = "SELECT kode FROM mentors WHERE id = :id", nativeQuery = true)
