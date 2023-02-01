@@ -53,7 +53,7 @@ public class BatchServiceImpl implements BatchService {
             items.put("totalDataResult", batch.size());
             items.put("totalData", batchRepository.bannedfalse());
             if (batch.size() == 0){
-                result.setMessage("Data");
+                result.setMessage("Data is not found");
             }
             result.setData(items);
         } catch (Exception e) {

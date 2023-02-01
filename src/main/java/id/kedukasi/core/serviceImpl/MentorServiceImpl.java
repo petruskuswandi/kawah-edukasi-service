@@ -650,7 +650,7 @@ public class MentorServiceImpl implements MentorService{
             items.put("totalDataResult", mentor.size());
             items.put("totalData", mentorRepository.bannedfalse());
             if (mentor.size() == 0){
-                result.setMessage("Data");
+                result.setMessage("Data is not found");
             }
             result.setData(items);
         } catch (Exception e) {
