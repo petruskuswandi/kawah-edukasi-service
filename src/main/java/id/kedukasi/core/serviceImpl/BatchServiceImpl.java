@@ -52,21 +52,10 @@ public class BatchServiceImpl implements BatchService {
             items.put("items", batch);
             items.put("totalDataResult", batch.size());
             items.put("totalData", batchRepository.bannedfalse());
-
-            if (batch.size() == 0 || limit > batchRepository.bannedfalse()) {
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                result.setSuccess(false);
-                result.setData(limit > batchRepository.bannedfalse() ? 0 : batch.size());
-                result.setMessage(batch.size() != 0 ? "Sorry limit exceeds size data batch" : "Sorry data batch is null");
-            } else if (batch == null) {
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                result.setSuccess(false);
-                result.setData(null);
-                result.setMessage("Sorry data batch is null");
-            } else {
-                result.setData(items);
-                result.setMessage("Success find Data Batch");
+            if (batch.size() == 0){
+                result.setMessage("Data");
             }
+            result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }

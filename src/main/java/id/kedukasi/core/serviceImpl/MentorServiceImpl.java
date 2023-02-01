@@ -87,6 +87,12 @@ public class MentorServiceImpl implements MentorService{
                                                MultipartFile cv, Long provinsiId, Long kotaId, Long kecamatanId, Long kelurahanId, Long userId) {
         result = new Result();
         try {
+            if (email == null) {
+                result.setSuccess(false);
+                result.setMessage("Error: Email can't be empty/null");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
             // cek email
             Mentor cekemail = mentorRepository.findByUpdateEmail(email, id).orElse(new Mentor());
             if (cekemail.getEmail() != null) {
@@ -105,9 +111,11 @@ public class MentorServiceImpl implements MentorService{
 
             if(namamentor == null) {
                 result.setMessage("Error: Name can't be empty/null!");
+                result.setSuccess(false);
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
+
             //cek ktp
             Mentor cekKTP = mentorRepository.findByUpdateKTP(noktp, id).orElse(new Mentor());
             if (cekKTP.getNoktp() != null){
@@ -117,7 +125,7 @@ public class MentorServiceImpl implements MentorService{
                 return ResponseEntity.badRequest().body(result);
             }
 
-            if(!validatorUtil.isNumeric(noktp) || noktp.length() != 16) {
+            if(!validatorUtil.isNumeric(noktp) || noktp.length() != 16 || noktp == null) {
                 result.setSuccess(false);
                 result.setMessage("Error: ID card number must be 16 characters and cannot be empty");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
@@ -148,6 +156,15 @@ public class MentorServiceImpl implements MentorService{
                 result.setMessage("Error: Major can't be empty/null");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
+            }
+
+            if (educationID == null) {
+                result.setSuccess(false);
+                result.setMessage("Pendidikan tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             }
 
             if(alamat_rumah == null) {
@@ -322,6 +339,12 @@ public class MentorServiceImpl implements MentorService{
                                                MultipartFile cv, Long provinsiId, Long kotaId, Long kecamatanId, Long kelurahanId, Long userId) {
         result = new Result();
         try {
+            if (email == null) {
+                result.setSuccess(false);
+                result.setMessage("Error: Email can't be empty/null!");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(result);
+            }
             // cek email
             Mentor cekemail = mentorRepository.findByemail(email).orElse(new Mentor());
             if (cekemail.getEmail() != null) {
@@ -344,6 +367,7 @@ public class MentorServiceImpl implements MentorService{
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
             }
+
             //cek ktp
             Mentor cekKTP = mentorRepository.findByKTP(noktp).orElse(new Mentor());
             if (cekKTP.getNoktp() != null){
@@ -386,6 +410,15 @@ public class MentorServiceImpl implements MentorService{
                 result.setMessage("Error: Major can't be empty/null");
                 result.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.badRequest().body(result);
+            }
+
+            if (educationID == null) {
+                result.setSuccess(false);
+                result.setMessage("Pendidikan tidak boleh kosong");
+                result.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity
+                        .badRequest()
+                        .body(result);
             }
 
             if(alamat_rumah == null) {
@@ -616,21 +649,10 @@ public class MentorServiceImpl implements MentorService{
             items.put("items", mentor);
             items.put("totalDataResult", mentor.size());
             items.put("totalData", mentorRepository.bannedfalse());
-
-            if (mentor.size() == 0 || limit > mentorRepository.bannedfalse()) {
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                result.setSuccess(false);
-                result.setData(limit > mentorRepository.bannedfalse() ? 0 : mentor.size());
-                result.setMessage(mentor.size() != 0 ? "Sorry limit exceeds size data mentor" : "Sorry data mentor is null");
-            } else if (mentor == null) {
-                result.setCode(HttpStatus.BAD_REQUEST.value());
-                result.setSuccess(false);
-                result.setData(null);
-                result.setMessage("Sorry data mentor is null");
-            } else {
-                result.setData(items);
-                result.setMessage("Success find Data Mentor");
+            if (mentor.size() == 0){
+                result.setMessage("Data");
             }
+            result.setData(items);
         } catch (Exception e) {
             logger.error(stringUtil.getError(e));
         }
